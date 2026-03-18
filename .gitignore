@@ -24,6 +24,9 @@ __pycache__/
 .claude/
 .vscode/
 
+# Personal archived releases
+version/
+
 # OS noise
 .DS_Store
 Thumbs.db
