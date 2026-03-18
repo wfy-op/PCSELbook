@@ -1,0 +1,260 @@
+\chapter{电注入、载流子输运与阈值电流}
+\label{ch:electrical}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 理解为什么阈值电流是一个由接触、输运、复合、孔径和温升共同决定的器件级量，而不是阈值增益的换单位版本。
+  \item 掌握电注入 PCSEL 中最基础的器件方程组：Poisson 方程、漂移-扩散方程、连续性方程，以及接触和界面条件如何进入求解。
+  \item 能够解释 current spreading layer、电流孔径、注入非均匀性与模式竞争之间的直接联系。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:threshold,ch:epitaxial-optics,ch:qw-gain} 中关于阈值增益、纵向重叠与有源区工程的内容。
+
+\section*{本章路线图}
+前两章已经把“哪一种有源区和纵向层栈更有希望满足目标模阈值增益”讲清楚，但真实器件还缺最后一条关键链：外部电流到底如何进入器件、沿哪些层扩展、在哪些区域变成量子阱载流子、又在哪些区域被串联电阻、漏电、复合和不均匀注入吃掉。本章就沿这条链展开。我们先重新定义阈值电流的器件含义，再讨论欧姆接触、肖特基接触、接触电阻与接触几何；随后引入 current spreading layer 和电流孔径，给出横向电流扩展的最小模型，再写出 Poisson+漂移-扩散+连续性方程组，最后把局域载流子分布与 \cref{ch:qw-gain} 的模增益公式重新接上，明确解释为什么纯冷腔结论和均匀增益模型在这里开始系统性失效。
+
+\section{阈值电流真正回答什么问题}
+\cref{ch:threshold} 给出的阈值增益 $g_{\mathrm{th}}$ 回答的是一个光学问题：目标模式要补偿多少总损耗。\cref{ch:qw-gain} 进一步把这个条件转成了材料增益与阈值载流子需求。但真实器件的阈值电流 $I_{\mathrm{th}}$ 回答的是更长的一句话：在给定接触、层栈、阻挡层、电阻、复合和温度条件下，需要施加多大的外部电流，才能在空间上形成足够接近设计目标的载流子分布，使目标模式的局域模增益达到阈值。
+
+这一定义里最重要的词是“空间上”。PCSEL 追求大面积面发射和单模工作，而大面积器件几乎不可能自动均匀注入。因此，阈值电流不只是“总载流子数够不够”的问题，而是“这些载流子在横向和纵向上分布得对不对”的问题。只要这一点不成立，前面章节中的冷腔排序就会被重新改写。
+
+\begin{IntuitionBox}
+阈值增益像是在问“水箱漏得多快”；阈值电流是在问“面对管道电阻、分流、局部堵塞和发热，水龙头究竟要开多大，水才能真正流到整个目标区域”。对大面积 PCSEL 而言，后一问才是器件问题的本体。
+\end{IntuitionBox}
+
+\section{欧姆接触和肖特基接触：它们在模型里不是文字说明，而是边界条件}
+接触是器件求解里最容易被“口头默认”的部分，但在电注入 PCSEL 中，它必须以边界条件的形式显式进入模型。欧姆接触（ohmic contact）的理想极限，是金属和半导体之间几乎不形成整流势垒，外加电压可以高效转化为载流子注入。工程上，欧姆接触常通过重掺杂接触层和合适金属体系实现，其最小模型通常写成接触电势已知，或写成表面法向电流与接触比电阻（specific contact resistivity）相关：
+\begin{equation}
+J_\perp = \frac{V_{\mathrm{metal}}-V_s}{\rho_c},
+\label{eq:ohmic_contact_bc}
+\end{equation}
+其中 $V_s$ 是半导体表面电势，$\rho_c$ 为接触比电阻。这里的单位应是 $\Omega\cdot\mathrm{m}^2$，而不是常见误写的 $\Omega/\mathrm{m}^2$。教材级量纲感可先记成：典型 GaAs 器件中，$p$ 侧欧姆接触的 $\rho_c$ 常落在 $10^{-6}$--$10^{-5}\,\Omega\cdot\mathrm{cm}^2$，$n$ 侧常在 $10^{-6}\,\Omega\cdot\mathrm{cm}^2$ 量级。\cref{eq:ohmic_contact_bc} 属于\textbf{电学边界模型}。它提醒我们：即便“欧姆”接触已经成立，接触仍然会通过有限的 $\rho_c$ 引入额外压降和非均匀注入。
+
+肖特基接触（Schottky contact）则对应明显的势垒和整流行为。其更贴近物理的边界模型通常写成热发射形式
+\begin{equation}
+J_\perp \approx A^{\ast\ast}T^2
+\exp\!\left(-\frac{q\Phi_B}{k_B T}\right)
+\left[\exp\!\left(\frac{qV}{k_B T}\right)-1\right],
+\label{eq:schottky_bc}
+\end{equation}
+其中 $\Phi_B$ 为势垒高度，$A^{\ast\ast}$ 为有效 Richardson 常数。\cref{eq:schottky_bc} 也是\textbf{电学边界模型}。它在 PCSEL 中的意义不在于鼓励你把每个接触都建成复杂的热发射边界，而在于提醒：如果接触没有真正做成低阻欧姆注入，却在模型里被理想欧姆边界替代，那么求得的阈值电流很可能过于乐观。
+
+\section{接触几何和接触电阻为什么会直接进入模式问题}
+接触不仅有材料问题，还有几何问题。PCSEL 常见的接触布局包括顶部环形接触、部分开窗接触、局部注入窗口以及带透明导电层的面接触方案。几何一旦有限，电流就不再能“从整个器件上表面同时垂直打进来”，而必须先在接触附近注入，再通过横向导电层扩展到其他区域。于是，接触几何本身就成为模式选择的一部分。
+
+如果接触只覆盖中心区域，中心附近更容易首先达到阈值载流子密度；如果接触为环形，边缘区域可能先获益；若透明 spreading layer 的片电阻过大，离接触越远的区域掉压越多，量子阱填充就越弱。这样一来，不同横向模因场分布不同，看到的有效模增益也不同。换句话说，接触几何不是纯电路细节，而是把 \cref{ch:qw-gain} 的局域增益模型投影到大面积模式上的第一道空间滤波器。
+
+\section[Current Spreading Layer]{什么是 current spreading layer，它在 PCSEL 里到底帮了什么忙}
+current spreading layer 的器件意义，可以用一句更精确的话概括：它不是单纯为了“把电流摊开一些”，而是为了让电流分布的空间尺度尽可能接近目标模式所需要的增益分布尺度。对于大面积 PCSEL，这一点决定性地重要。因为模式可以在整个孔阵上扩展，而金属接触和注入窗口通常远比这个模式范围更局部。若没有横向低阻 spreading layer，电流几乎一定在接触附近拥挤，远处区域难以注入。
+
+最小的二维 spreading 模型可写成薄层内的片电流连续方程
+\begin{equation}
+\nabla_{\perp}\cdot\big(\sigma_s t_s \nabla_{\perp} V_s\big) = J_{\perp},
+\label{eq:sheet_spreading}
+\end{equation}
+其中 $\sigma_s$ 是 spreading layer 电导率，$t_s$ 是其厚度，$V_s$ 为该层的横向电势，$J_{\perp}$ 是注入到下方结区的法向电流密度。\cref{eq:sheet_spreading} 属于\textbf{电学简化模型}。若再用局部传输关系
+\begin{equation}
+J_{\perp} \approx \frac{V_s - V_j}{\rho_c},
+\label{eq:vertical_transfer}
+\end{equation}
+则可以得到一个常见的工程估计：电流扩展长度约为
+\begin{equation}
+L_s \sim \sqrt{\frac{\rho_c}{R_{\square}}},
+\qquad
+R_{\square}=\frac{1}{\sigma_s t_s},
+\label{eq:spreading_length}
+\end{equation}
+其中 $R_{\square}$ 是 spreading layer 的片电阻。\cref{eq:spreading_length} 不是严格器件定理，而是\textbf{工程估计公式}。它的教学价值在于给出一个极清晰的判断：如果器件横向尺寸远大于 $L_s$，那就不应该再幻想“注入大体均匀”。
+
+这正是大面积 PCSEL 器件和许多小面积半导体激光器的关键差别之一：在小面积器件里，注入非均匀也许只是二阶修正；在大面积 PCSEL 里，它经常是模式竞争和阈值电流的主导变量。
+
+\section{为什么大面积器件不可能自动均匀注入}
+从上面的扩展长度公式已经可以看出，只要接触比电阻有限、spreading layer 片电阻有限、器件面积继续增大，横向电势就一定存在梯度，法向注入也一定存在空间起伏。这还只是最乐观的一层。真实 PCSEL 中还叠加了以下机制：
+\begin{itemize}
+  \item p 侧导电常常比 n 侧更差，因此横向掉压尤其容易发生在上侧；
+  \item 接触窗口、孔阵刻蚀区与绝缘区往往交替出现，导致横向导电路径本身并不均匀；
+  \item 异质结和阻挡层使不同区域的纵向注入阻抗不同；
+  \item 温升又会进一步改写局部电阻和注入效率。
+\end{itemize}
+因此，对大面积 PCSEL 来说，“均匀注入”不应被当作默认现实，而应被当作需要专门证明的特例。只要没有接触设计、spreading layer、孔径和热管理的联合论证，就不能把均匀增益模型视作器件模型的起点。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \draw[fill=red!15] (0,3.5) rectangle (8.4,4.1);
+    \draw[fill=orange!18] (0,2.8) rectangle (8.4,3.5);
+    \draw[fill=yellow!22] (0,2.15) rectangle (8.4,2.8);
+    \draw[fill=green!15] (0,0.9) rectangle (8.4,2.15);
+    \draw[fill=blue!10] (0,0) rectangle (8.4,0.9);
+    \node at (4.2,3.8) {Metal contact};
+    \node at (4.2,3.15) {Current spreading layer};
+    \node at (4.2,2.47) {p-cladding / upper SCH};
+    \node at (4.2,1.52) {MQW + lower SCH};
+    \node at (4.2,0.45) {n-side / substrate};
+    \foreach \x/\h in {1.2/1.25,2.0/1.45,2.8/1.55,3.6/1.65,4.4/1.55,5.2/1.35,6.0/1.05,6.8/0.8} {
+      \draw[-{Latex[length=2.5mm,width=1.4mm]},thick,cyan!70!black] (\x,3.3) -- ++(0,-\h);
+    }
+    \draw[decorate,decoration={brace,amplitude=5pt},thick] (0.25,3.5) -- node[left=5pt] {$R_{\square}$ controls spreading} (0.25,2.8);
+  \end{tikzpicture}
+  \caption{current spreading layer 与注入非均匀性的关系示意。即使总电流足够，只要横向扩展能力不足，量子阱中的有效载流子分布也不会自动均匀。}
+  \label{fig:current-spreading}
+\end{figure}
+
+\section{电流孔径、注入窗口与模式竞争为什么直接耦合}
+“电流孔径”在这里不应被狭义理解成某一种特定工艺结构，而应理解为：最终允许电流高效进入有源区的有效横向区域。它可能由金属开窗、绝缘层开口、局部氧化、隧穿结布局或 spreading layer 电势分布共同决定。对 PCSEL 来说，这个有效孔径很少恰好与目标模式的横向场分布完全一致。
+
+如果电流孔径比目标模式小得多，那么模式外围区域无法获得足够增益，结果会偏向那些更局域的模式；如果孔径形状本身不对称，则本该简并的模式可能被人为分裂，偏振和远场也可能一起偏移；如果孔径位置与接触几何共同导致中心与边缘注入差异，则模式竞争会从“谁损耗更低”转变为“谁更会吃到局域增益”。这就是为什么在 PCSEL 中，注入孔径和模式选择不能分属两个独立章节，它们实际上在器件里是同一件事的两个面。
+
+若只想先得到一个最小横向扩展模型，可把 current spreading layer 近似成一张片电阻为 $R_{\square}$ 的二维导电片，其片上电位 $V_s(x,y)$ 满足
+\begin{equation}
+\nabla_\parallel^2 V_s-\frac{V_s-V_{\mathrm{cont}}}{L_s^2}=0,
+\label{eq:current_spreading_sheet}
+\end{equation}
+其中 $V_{\mathrm{cont}}$ 是接触电位，$L_s$ 是电流扩展长度。\cref{eq:current_spreading_sheet} 当然不能替代完整漂移--扩散求解，但它在教学上非常有价值：只要 $L_s$ 明显小于器件横向尺寸，均匀注入就不再是默认可信假设。
+
+\section{漂移-扩散方程组：器件模型的骨架}
+把上面的直觉写成可求解模型，基础框架仍是 Poisson 方程、电子和空穴的漂移-扩散与连续性方程。首先是 Poisson 方程
+\begin{equation}
+-\nabla\cdot\big(\varepsilon \nabla \phi\big)
+=
+q\big(p-n+N_D^+-N_A^-\big),
+\label{eq:poisson_dd}
+\end{equation}
+其中 $\phi$ 为电势，$n,p$ 为电子与空穴浓度，$N_D^+,N_A^-$ 为离化施主和受主浓度。\cref{eq:poisson_dd} 属于\textbf{电学模型}。
+
+电子和空穴电流密度写为
+\begin{align}
+\bm{J}_n &= q\mu_n n\nabla \phi + qD_n\nabla n,
+\label{eq:jn_dd}\\
+\bm{J}_p &= q\mu_p p\nabla \phi - qD_p\nabla p,
+\label{eq:jp_dd}
+\end{align}
+连续性方程写为
+\begin{align}
+\nabla\cdot\bm{J}_n &= q(R-G),
+\label{eq:cont_n}\\
+\nabla\cdot\bm{J}_p &= -q(R-G),
+\label{eq:cont_p}
+\end{align}
+其中 $R$ 表示总复合率，$G$ 表示产生项。对电注入 PCSEL 来说，$G$ 主要体现在边界与接触的注入通量中。\cref{eq:jn_dd,eq:jp_dd,eq:cont_n,eq:cont_p} 都属于\textbf{电学模型}。
+
+对第一次接触器件方程的读者，更稳妥的读法是把这三组方程分工记清。Poisson 方程决定电势和电场如何由空间电荷重新分布；漂移--扩散式决定给定电场和浓度梯度后，电子与空穴怎样流动；连续性方程决定这些流动是否真的在某一区域积累或耗尽载流子。只有三者联立，$n(\rvec)$、$p(\rvec)$ 才不只是“看起来合理的分布图”，而是一个与边界条件和复合过程自洽的器件工作点。
+
+边界条件就是这组方程真正进入器件几何的地方。最常见的最低层写法是：欧姆接触近似固定电势或准费米能级；绝缘边界满足
+\[
+\bm J_n\cdot\hat{\bm n}=0,\qquad \bm J_p\cdot\hat{\bm n}=0;
+\]
+而肖特基或有限复合速度边界则通过表面通量关系进入。也正因此，接触不是“求解完成后再加的工程细节”，而是漂移--扩散问题定义的一部分。
+
+若载流子仍可近似看作处于局域热平衡，则扩散系数和迁移率之间满足 Einstein 关系
+\begin{equation}
+D_n = \mu_n\frac{k_BT}{q},
+\qquad
+D_p = \mu_p\frac{k_BT}{q}.
+\label{eq:einstein_relation}
+\end{equation}
+\cref{eq:einstein_relation} 的物理含义是：热涨落导致的扩散和电场驱动的漂移，并不是两套互不相干的机制，而是同一热平衡统计的两种表现。对 PCSEL 器件建模来说，它给出了一个最基本的量纲与数量级一致性检查。
+
+这组方程本身并不新鲜，但在 PCSEL 中它们的求解目标与普通小面积二极管不同：我们并不只关心总电流和总压降，而更关心 $n(\rvec)$、$p(\rvec)$ 在有源区的空间分布，因为后续它们会通过 \cref{ch:qw-gain} 的增益模型进入模式竞争。
+
+\section[复合、漏电与局域注入效率]{复合、漏电与局域注入效率：为什么达到同一阈值载流子需求时，所需电流仍可能完全不同}
+即使器件最终都需要相近的阈值载流子密度，所需的外加电流也可能相差很大，因为注入电流并不会全部转化为量子阱中的有效载流子。最常用的复合代理模型为
+\begin{equation}
+R(N)=AN+BN^2+CN^3,
+\label{eq:abc_model}
+\end{equation}
+其中 $A$、$B$、$C$ 分别对应 SRH、辐射和 Auger 项。\cref{eq:abc_model} 属于\textbf{电学与有源区动力学接口模型}。其真正重要之处不在于三项的形式本身，而在于它强迫我们承认：阈值电流是在与多种损耗通道竞争后得到的结果。
+
+更具体地说，$AN$ 对应 Shockley--Read--Hall 非辐射复合，它通过深能级缺陷把电子和空穴重新吃掉，因此对材料缺陷和界面质量极其敏感；$BN^2$ 对应辐射复合，因为需要一个电子和一个空穴同时参与，故在近似单载流子密度表述下呈二次项；$CN^3$ 对应 Auger 复合，能量被传给第三个载流子而不是以光子形式放出，因此在高载流子密度和某些长波材料平台中尤其致命。把这三项分别看清，读者才不会把 \cref{eq:abc_model} 误当成只是“拟合方便的三项式”。
+
+对 PCSEL 来说，还要在 \cref{eq:abc_model} 之外额外警惕漏电与旁路电流。若电子越过量子阱泄漏到上层，或空穴未能真正进入所有目标阱层，则从外部看来“流进器件”的电流，并不都对目标模式有效。于是，更准确的器件语言不是“注入电流”，而是“进入并有效填充有源区的局域注入效率”。这也正是 \cref{ch:qw-gain} 里阻挡层设计必须与本章联读的原因。
+
+这件事可以用一条最小阈值电流估计式写得更硬。若某一近似模型已经给出量子阱中的阈值载流子需求 $N_{\mathrm{th}}(\rvec)$，则对应的外加阈值电流至少要满足
+\begin{equation}
+I_{\mathrm{th}}
+\approx
+\frac{q}{\eta_{\mathrm{inj}}}
+\int_{V_{\mathrm{QW}}}
+\bigl[A N_{\mathrm{th}} + B N_{\mathrm{th}}^2 + C N_{\mathrm{th}}^3\bigr]\dd V
++
+I_{\mathrm{leak}},
+\label{eq:ith_from_nth}
+\end{equation}
+其中 $\eta_{\mathrm{inj}}$ 是有效注入效率，$I_{\mathrm{leak}}$ 汇总漏电和旁路电流。对典型 PCSEL 结构，$\eta_{\mathrm{inj}}$ 常可先按 $0.6$--$0.9$ 的量级做敏感度分析，再由更具体的结深、阻挡层和 spreading layer 设计收紧。\cref{eq:ith_from_nth} 的核心意义不是给出高保真数值，而是把“同一个 $N_{\mathrm{th}}$ 为何会对应完全不同的 $I_{\mathrm{th}}$”写成公式：只要复合通道更强、注入效率更低或漏电更大，阈值电流就会明显抬升。
+
+\section{把局域载流子分布重新接回模增益：模式竞争在这里被重写}
+当前面所有电学求解完成后，本章真正要输出给光学的不是一个总电流值，而是量子阱中的局域载流子分布 $N(x,y,z)$。对于候选模式 $m$，更一般的有效模增益应写成
+\begin{equation}
+ g_{m,\mathrm{eff}}
+ =
+ \frac{\int_{V_{\mathrm{QW}}} g_{\mathrm{mat}}\!\bigl(\omega_m,N(\rvec),T(\rvec)\bigr)
+ \varepsilon(\rvec)|\E_m(\rvec)|^2\,\dd V}
+ {\int_V \varepsilon(\rvec)|\E_m(\rvec)|^2\,\dd V}
+ - \alpha_{m,\mathrm{int}}.
+\label{eq:gmod_with_injection}
+\end{equation}
+\cref{eq:gmod_with_injection} 属于\textbf{电学-光学耦合模型}。它说明了为什么注入分布会直接反馈到模式竞争：不同模式采样的是不同的空间权重，因而对同一组 $N(\rvec)$ 的“感受”不同。
+
+这条式子也清楚地解释了为什么大面积 PCSEL 绝不可能把均匀增益当作默认现实。只要接触有限、片电阻有限、孔径有限或热效应存在，$N(\rvec)$ 就必然不是常数，模式竞争排序也就不会等同于冷腔排序。
+
+\begin{ExampleBox}
+设两个候选模式在冷腔中损耗非常接近。模式 A 的横向场更集中在器件中心，模式 B 更偏向边缘。如果接触与 spreading layer 设计导致中心注入远强于边缘，那么\cref{eq:gmod_with_injection} 会使模式 A 获得更大有效模增益，即便模式 B 在被动结构里原本拥有略高的 $Q$。这正是“高 $Q$ 不自动等于最低阈值”的器件版解释。
+\end{ExampleBox}
+
+\section{阈值电流的真正链条}
+到这里，可以把器件级阈值链条写得足够清楚：
+\begin{equation}
+I
+\rightarrow
+\bigl(V_s,\phi,n,p,\bm{J}\bigr)
+\rightarrow
+N(\rvec)
+\rightarrow
+g_{\mathrm{mat}}(\rvec)
+\rightarrow
+g_{m,\mathrm{eff}}
+\rightarrow
+g_{\mathrm{th},m}.
+\label{eq:ith_chain}
+\end{equation}
+阈值电流 $I_{\mathrm{th}}$ 的定义，是使某一目标模式第一次满足
+\begin{equation}
+ g_{m,\mathrm{eff}} = g_{\mathrm{th},m}
+\label{eq:ith_condition}
+\end{equation}
+的最小外加电流。\cref{eq:ith_chain,eq:ith_condition} 的意义在于，它们把“冷腔结论不能直接变成器件结论”这句话精确化了：冷腔分析只能给出链条最右端的 $g_{\mathrm{th},m}$；而 $I$ 如何经过接触、扩展、复合、漏电和空间分布变成 $g_{m,\mathrm{eff}}$，是器件求解的主体。
+
+\section{为什么本章天然要求下一章的热反馈进入}
+严格地说，只要器件是电注入的，本章的等温结果就只是一阶近似。因为接触电阻、spreading layer 片电阻和局域复合都会发热，而温升会反过来改写迁移率、接触特性、复合系数和增益谱。也就是说，\cref{ch:eto-coupling} 不是在本章后“再补一点热修正”，而是在完成本章尚未闭合的器件回路。
+
+因此，最稳妥的理解方式是：本章建立的是电注入与空间载流子分布的骨架，\cref{ch:eto-coupling} 会把这个骨架放到自洽工作点里。只要读者意识到这一点，就不会再把本章的等温阈值电流估计误当作最终器件结论。
+
+\begin{PitfallBox}
+把“理想欧姆接触 + 均匀注入 + 固定温度”下得到的阈值电流，当作真实 PCSEL 的器件阈值，是一种系统性的过度乐观。对大面积器件尤其如此，因为接触几何、spreading layer 和注入孔径本身就会把增益分布空间化。
+\end{PitfallBox}
+
+\section*{本章小结}
+电注入 PCSEL 的阈值电流问题，本质上是在问：有限接触和有限横向导电能力下，外部电流怎样通过接触边界、current spreading layer、异质结、复合与漏电，真正转化为与目标模式匹配的局域载流子分布。欧姆/肖特基接触通过边界条件进入模型，接触电阻和接触几何重塑横向掉压，电流孔径与 spreading length 决定注入是否接近均匀；Poisson+漂移-扩散+连续性方程给出了器件电学骨架，而有效模增益必须通过局域载流子分布重新加权。到本章结束时，读者应当已经完全清楚：阈值电流不是阈值增益的换单位版本，而是一个真正的空间分辨器件工作点问题。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 解释为什么电流扩展长度 $L_s$ 与器件横向尺寸的比较，可以作为判断“均匀注入是否可信”的第一道工程标准。
+
+  \item \basicq 比较欧姆接触和肖特基接触在模型中如何进入，并说明为什么把非理想接触理想化为欧姆边界会导致阈值电流偏低。
+
+  \item \midq 结合 \cref{eq:gmod_with_injection}，说明电流孔径如何通过局域增益分布改变模式竞争，而不仅仅改变总阈值电流。
+
+  \item \hardq 讨论为什么在大面积 PCSEL 中，current spreading layer 的设计不能被视为“只影响电阻，不影响光学”的附属问题。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章将把本章的电流分布、Joule 热和非辐射复合热接成热-电-光闭环，并进一步比较不同材料平台如何改写这条链。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想补充漂移-扩散、接触模型和电流扩展的经典背景，可参考 \cite{coldren2012} 中相应章节，但阅读时应始终把关注点放回 PCSEL 的大面积模式与非均匀注入问题。 这条阅读的重点是补足本章关于电注入、载流子输运与阈值电流 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想对照真实电注入 PCSEL 的器件案例，可参考 \cite{hirose2014,wang2024,zhoupan2023}。 这条阅读的重点是补足本章关于电注入、载流子输运与阈值电流 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

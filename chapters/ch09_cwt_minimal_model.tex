@@ -1,0 +1,839 @@
+\chapter{PCSEL 的耦合波理论（CWT）}
+\label{ch:cwt-min}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 理解为什么在能带图之后必须引入耦合波理论（Coupled-Wave Theory, CWT），以及它在 PCSEL 研究链条中的准确位置。
+  \item 从 Maxwell 方程与场展开出发，建立最小 CWT 模型，明确每一步近似究竟丢掉了什么物理。
+  \item 学会把四波 CWT 基底改写成 $\Gamma$ 点 little-group 的 irrep 基底，从而把“耦合矩阵”直接连到“模标注、偏振与 BIC 判断”。
+  \item 学会把耦合系数、辐射损耗、材料增益和模竞争放进同一组低维方程中阅读，而不是把它们拆成互不相干的名词。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:maxwell,ch:gamma,ch:feedback,ch:threshold} 中关于开放 Maxwell 问题、Gamma 点候选模、面内耦合与阈值条件的内容。
+
+\section*{本章路线图}
+上一章我们已经知道：PCSEL 的面发射来自周期散射把面内导模耦合到垂直辐射通道；阈值问题则要求把增益和损耗写进同一个动力学框架。到这里，一个自然的问题出现了：有没有一种比全波仿真更容易读懂、又比纯口头图像更能计算的中间模型？CWT 就是为此存在的。本章先说明为什么单靠能带图还不够，再从场展开和投影出发建立最小模型，随后解释矩阵里每一类项各自代表什么物理，并把四波基底正式改写成 $\Gamma$ 点 irrep 基底，让模式标签、偏振选择和辐射选择规则进入同一套矩阵语言。最后给出它在设计流程中的正确用法与边界。
+
+\begin{RigorousBox}
+除非另作声明，本章的时间因子约定与全书一致，均采用 $\ee^{-\ii\omega t}$。因此后文所有等效损耗、增益和复频率符号，均应与 \cref{ch:maxwell,ch:math-appendix} 的频域约定联读，而不能另行切换正负号解释。
+\end{RigorousBox}
+
+\section{为什么在能带图之后还需要 CWT}
+对初学者来说，能带图往往已经很有吸引力。它告诉我们哪些 Gamma 点模值得关注，也告诉我们模之间可能存在简并、分裂与光锥耦合。但是，能带图主要回答的是“有哪些候选模”，而不是“这些候选模为什么会互相竞争、又为什么某种几何扰动会特别有效”。后一类问题需要把注意力从“单个本征模的频率”转移到“若干主导平面波分量之间如何相互耦合”。
+
+这正是 CWT 的切入点。它并不打算替代 Maxwell 方程，也不打算否认全波仿真的必要性。它做的是一件更具体的事：在已经知道目标模主要由哪些面内波分量组成之后，把这些分量提取出来，写成一个低维耦合系统。这样一来，几何参数的作用就不再是“软件跑出来之后再看结果”，而是可以在耦合系数、损耗项和增益项中被逐项解释。
+
+\begin{IntuitionBox}
+PWE 和能带图更像是在给我们列“候选模目录”；RCWA、FDTD、FEM 更像是在做“高保真判决”。CWT 的位置夹在两者之间，它回答的是：目录里这些模为什么会因为某几个散射通道而发生重组，以及这些通道一旦被增强或削弱，阈值、偏振和远场会沿哪个方向变化。
+\end{IntuitionBox}
+
+\section{最小 CWT 要解决的物理问题是什么}
+在方格晶格 PCSEL 的最典型工作区间里，Gamma 点附近的目标模常常主要由四个等价的面内导模分量组成：沿 $+x$、$-x$、$+y$、$-y$ 方向传播的基本波。上一章已经解释过，周期折射率调制通过倒格矢把这些分量连接起来，并进一步把其中的某些组合折叠进光锥，形成垂直辐射。因而，若只关心 Gamma 点附近最核心的反馈网络，一个自然的最小基底就是这四个波分量。
+
+于是我们想做的事就变得很明确：
+
+第一，把三维矢量 Maxwell 场写成“纵向模剖面”乘以“少数几个面内平面波”的组合；
+
+第二，把周期结构导致的相互散射压缩为若干耦合系数；
+
+第三，把辐射损耗、内部损耗和增益作为等效非厄米项写进同一套方程；
+
+第四，通过求这个低维系统的本征值和本征向量，判断哪一类线性组合更可能成为实际候选激射模。
+
+如果这四步成立，我们得到的就不是一个抽象的“经验矩阵”，而是一种有来路的物理压缩模型。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+    \begin{scope}
+      \draw[fill=blue!8,rounded corners] (-1.6,-1.2) rectangle (1.6,1.2);
+      \draw[->,thick] (0,0)--(1.15,0) node[right] {$R_x$};
+      \draw[->,thick] (0,0)--(-1.15,0) node[left] {$S_x$};
+      \draw[->,thick] (0,0)--(0,0.95) node[above] {$R_y$};
+      \draw[->,thick] (0,0)--(0,-0.95) node[below] {$S_y$};
+      \node at (0,-1.7){实空间/面内传播图像};
+    \end{scope}
+    \begin{scope}[xshift=7.2cm]
+      \draw[->] (-1.8,0)--(1.8,0) node[right] {$k_x$};
+      \draw[->] (0,-1.8)--(0,1.8) node[above] {$k_y$};
+      \fill[blue!70] (1.2,0) circle (0.07) node[below] {$+\beta\hat{\bm x}$};
+      \fill[blue!70] (-1.2,0) circle (0.07) node[below] {$-\beta\hat{\bm x}$};
+      \fill[blue!70] (0,1.2) circle (0.07) node[right] {$+\beta\hat{\bm y}$};
+      \fill[blue!70] (0,-1.2) circle (0.07) node[right] {$-\beta\hat{\bm y}$};
+      \draw[<->,red!75,thick] (1.2,0)--(-1.2,0);
+      \draw[<->,red!75,thick] (0,1.2)--(0,-1.2);
+      \draw[<->,orange!80!black,thick] (1.2,0)--(0,1.2);
+      \draw[<->,orange!80!black,thick] (1.2,0)--(0,-1.2);
+      \draw[<->,orange!80!black,thick] (-1.2,0)--(0,1.2);
+      \draw[<->,orange!80!black,thick] (-1.2,0)--(0,-1.2);
+      \node[red!75] at (0,0.23) {$\bm G_x$};
+      \node[orange!80!black] at (0.78,0.78) {$\bm G_x\!\pm\!\bm G_y$};
+      \node at (0,-2.0){倒空间中的四波与主导散射路径};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{最小四波 CWT 图像。左图强调四支基本波在面内传播；右图强调它们在倒空间中如何通过主导倒格矢散射彼此连接。对 PCSEL 而言，后续的偏振、BIC 与阈值排序都建立在这类最小闭合散射网络之上。}
+  \label{fig:cwt_four_wave_map}
+\end{figure}
+
+\section{从 Maxwell 方程到场展开：四波近似从哪里来}
+为了不让推导显得像突然写下一个猜测矩阵，我们从背景波导出发。设器件在没有横向周期调制时，已经支持一个主要的纵向导模剖面 $\bm{e}_0(z)$。当加入二维周期折射率扰动后，我们在 Gamma 点附近只保留四个最主要的面内波分量，写成
+\begin{equation}
+\E(\rho,z,t)
+\approx
+\ee^{-\ii\omega t}
+\bm{e}_0(z)
+\sum_{m=1}^{4} a_m(\rho)
+\ee^{\ii\bm{\beta}_m\cdot \rho},
+\label{eq:cwt_ansatz}
+\end{equation}
+其中 $\rho=(x,y)$，四个传播向量取为
+\[
+\bm{\beta}_1=(\beta,0),\quad
+\bm{\beta}_2=(-\beta,0),\quad
+\bm{\beta}_3=(0,\beta),\quad
+\bm{\beta}_4=(0,-\beta).
+\]
+这里的 $a_m(\rho)$ 是缓慢变化的包络，表示每个基本波分量在大尺度上的权重；$\bm{e}_0(z)$ 则把纵向层栈的信息压缩进一个主要导模剖面。之所以允许这种写法，是因为我们关注的是 Gamma 点附近、频率接近且相互强耦合的一小族波，而不是整个倒格空间中无穷多个分量。
+
+接下来，把介电常数写成背景项与周期扰动之和：
+\begin{equation}
+\varepsilon(\rho,z)=\varepsilon_0(z)+\Delta\varepsilon(\rho,z),
+\qquad
+\Delta\varepsilon(\rho+\bm{R},z)=\Delta\varepsilon(\rho,z).
+\label{eq:cwt_eps_split}
+\end{equation}
+再将 $\Delta\varepsilon$ 作二维傅里叶展开，
+\begin{equation}
+\Delta\varepsilon(\rho,z)
+=
+\sum_{\gvec}
+\Delta\varepsilon_{\gvec}(z)\ee^{\ii\gvec\cdot\rho},
+\label{eq:cwt_delta_eps_fourier}
+\end{equation}
+便得到不同 $\bm{\beta}_m$ 之间的散射通道。把 \cref{eq:cwt_ansatz,eq:cwt_delta_eps_fourier} 相乘时，每一个基本波 $a_n\ee^{\ii\bm\beta_n\cdot\rho}$ 都会生成一组
+\[
+\Delta\varepsilon_{\gvec}(z)\,a_n(\rho)\,
+\ee^{\ii(\bm\beta_n+\gvec)\cdot\rho}
+\]
+项。于是，投影到第 $m$ 个基底后，真正留下来的耦合必须满足
+\begin{equation}
+\bm\beta_m \approx \bm\beta_n+\gvec
+\qquad\Longleftrightarrow\qquad
+\gvec \approx \bm\beta_m-\bm\beta_n.
+\label{eq:cwt_selection_rule}
+\end{equation}
+这就是 CWT 里“耦合矩阵元来自哪一个 Fourier 分量”的最小选择定则。只保留“近共振”的倒格矢耦合后，四个包络之间便不再独立，而是由少数几个主导傅里叶分量彼此连接。
+
+\section{投影步骤到底在做什么}
+形式上，我们把 \cref{eq:cwt_ansatz} 代回频域 Maxwell 方程，再用背景导模剖面 $\bm{e}_0(z)$ 和四个平面波基函数作为测试函数做加权投影。这个步骤的本质不是数学技巧，而是在回答一个很具体的问题：如果我只允许系统在这四个主导波分量所张成的子空间里运动，那么 Maxwell 算符在这个子空间中的“投影版本”长什么样？
+
+进行投影时，通常还要用到两个额外近似。
+
+第一是慢变包络近似（slowly varying envelope approximation）。它要求 $a_m(\rho)$ 相对载波相位因子变化得慢，从而二阶横向导数和远离共振的高频混频项可以忽略。这一步使方程从“完整波动问题”降到“包络动力学问题”。
+若想把“变化得慢”说得更定量一些，可把包络变化长度记为 $L_{\mathrm{env}}$，则最小要求是
+\[
+L_{\mathrm{env}}\gg a,
+\qquad
+\big|\nabla_\rho^2 a_m\big|\ll \beta^2 |a_m|.
+\]
+它的物理含义是：一个晶格常数尺度上，主要由快速 Bloch 相位承载振荡；包络只在更大的器件尺度上记录边缘、增益和热斑导致的慢变化。对典型 PCSEL 而言，若晶格常数 $a\approx\SI{280}{\nano\meter}$、有限阵列直径 $D\approx\SIrange{100}{300}{\micro\meter}$，则 $D/a\approx 360$--$1100$，这正是最小 CWT 在器件中央区通常仍有教学价值的原因。也正因如此，一旦进入边缘急剧截断、局部热斑或强非均匀注入区，最小 CWT 的慢变包络假设就会先变得可疑。
+
+第二是主导耦合截断。周期结构的傅里叶分量原则上可以把一个波分量耦合到许多其他分量，但真正主导 Gamma 点物理的往往是少数几个满足近布拉格条件的通道。最小 CWT 正是主动舍弃那些次要通道，以换取可解释性。
+
+把这个“截断”说得更公式化一点：若本征频率附近存在许多可能的平面波分量，则只有同时满足下列两类条件的通道才值得进入最小模型：
+\begin{enumerate}
+  \item \textbf{动量近匹配}：满足 \cref{eq:cwt_selection_rule}；
+  \item \textbf{失谐足够小}：对应未耦合导模频率差 $|\omega_m^{(0)}-\omega_n^{(0)}|$ 不大于主导耦合系数数量级。
+\end{enumerate}
+对方格晶格、Gamma 点附近、二阶 Bragg 工作的最小教材模型来说，$\pm x$ 与 $\pm y$ 这四支波恰好同时满足这两类要求，因此构成自然的四波闭合子空间；更远的倒格矢通道则因频率失谐或纵向重叠太弱而被先行舍弃。这一截断的定量充分条件可粗略写成：主导傅里叶分量幅度满足 $|\Delta\varepsilon_{\mathbf{G}}|/\bar{\varepsilon}\ll 1$（折射率对比度足够小），同时次近邻布拉格通道的失谐远大于主导耦合系数 $|\kappa|$。若这两个条件不满足，则应升级到更多波分量的展开或直接转入 RCWA/FDTD 全波方法。
+
+完成这些步骤后，就得到线性耦合方程
+\begin{equation}
+\frac{\dd}{\dd t}\bm{a}
+=
+\left(\ii\bm{\Omega}-\bm{\Gamma}+\bm{G}\right)\bm{a},
+\qquad
+\bm{a}=
+\begin{bmatrix}
+R_x & S_x & R_y & S_y
+\end{bmatrix}^{\mathsf T},
+\label{eq:cwt_matrix}
+\end{equation}
+其中 $R_x,S_x,R_y,S_y$ 分别表示四个基本波分量的包络振幅。\cref{eq:cwt_matrix} 看起来像一个普通矩阵方程，但每个矩阵块背后都有清楚的来源和职责，下面要逐项解释。
+
+若把投影步骤写得再直白一点，它其实就是以下三步。
+\begin{enumerate}
+  \item 先选定低维基底 $\{\bm e_0(z)\ee^{\ii\bm\beta_m\cdot\rho}\}$；
+  \item 再把完整 Maxwell 算符夹在这组基底左右，形成矩阵元
+  \[
+  M_{mn}\sim
+  \left\langle
+  \bm e_0\ee^{\ii\bm\beta_m\cdot\rho},
+  \hat{\mathcal L}
+  \bm e_0\ee^{\ii\bm\beta_n\cdot\rho}
+  \right\rangle;
+  \]
+  \item 最后只保留满足 \cref{eq:cwt_selection_rule} 的主导矩阵元，把其余远离共振的通道当作高阶修正。
+\end{enumerate}
+因此，CWT 的本质不是“猜一个 $4\times4$ 矩阵”，而是“把完整 Maxwell 问题投影到一个人为选定、但物理上最重要的有限维共振子空间”。
+
+\begin{RigorousBox}
+严格地说，\cref{eq:cwt_matrix} 不是从完整 Maxwell 方程“精确等价变形”而来，而是从完整问题向低维共振子空间做投影之后的近似闭合系统。它的可信度取决于两件事：一是被丢弃的基底是否真的次要，二是工作点是否确实靠近所选共振子空间。脱离这两个条件，CWT 只能作为启发图像，而不能作为定量工具。
+\end{RigorousBox}
+
+\section{三类矩阵项各自代表什么}
+先看 $\bm{\Omega}$。它负责相位演化和相互散射，也就是通常所说的“保守耦合”部分。若只讨论被动、无损、完全封闭的近似系统，$\bm{\Omega}$ 的本征值主要决定模的频率位置和简并如何被打破。几何参数如孔半径、填充比和晶格常数，首先往往就是通过改变 $\bm{\Omega}$ 中的耦合系数来改写模的排列。
+
+再看 $\bm{\Gamma}$。它并不只是一项“把数值减掉”的阻尼常数，而是所有损耗通道在该低维基底中的压缩表示。对 PCSEL 来说，其中至少要区分两类来源：一类是垂直辐射损耗，它来自模与自由空间通道的耦合；另一类是内部损耗，包括自由载流子吸收、掺杂层吸收、金属邻近损耗和粗糙散射等。也就是说，$\bm{\Gamma}$ 本身就已经把“开放系统”信息带进了模型。
+
+最后是 $\bm{G}$。如果只讨论冷腔，这一项可以先不写；但一旦要谈阈值，$\bm{G}$ 就不可回避。它描述的不是抽象的“有源”二字，而是有源区增益在这组波分量基底中的投影。最简单的教学写法是
+\[
+\bm{G}=g_{\mathrm{mod}}\bm{I},
+\]
+即先假设四个主波共享同一个均匀模增益。若增益分布近似均匀，这确实是一个自然起点；但若注入明显非均匀，或不同波分量对应的场在横向上有不同重叠，那么 $\bm{G}$ 的对角元就会分裂，进一步表现出模式选择性。
+
+于是，\cref{eq:cwt_matrix} 的本质就很清楚了：
+\begin{itemize}
+  \item $\bm{\Omega}$ 决定“哪些组合容易形成共振”；
+  \item $\bm{\Gamma}$ 决定“这些组合会以多快的速度泄露或耗散”；
+  \item $\bm{G}$ 决定“有源区是否优先把增益送给其中某些组合”。
+\end{itemize}
+真正的激射候选模，是这三者共同作用下的本征态，而不是只由其中某一项决定。
+
+\section{耦合系数为什么是几何和场重叠的压缩表达}
+最关键的非对角元来自周期扰动 $\Delta\varepsilon$ 对不同平面波分量的散射。把投影过程写开，典型的耦合系数具有如下结构：
+\begin{equation}
+\kappa_{mn}
+\propto
+\int_V
+\Delta\varepsilon(\rho,z)
+\big[\bm{e}_0^{\ast}(z)\cdot\bm{e}_0(z)\big]
+\ee^{-\ii(\bm{\beta}_m-\bm{\beta}_n)\cdot\rho}
+\dd V.
+\label{eq:cwt_kappa}
+\end{equation}
+\cref{eq:cwt_kappa} 比“耦合系数是拟合参数”这句话强得多，因为它直接告诉我们三件事。
+
+第一，耦合并不是由几何尺寸单独决定的，而是由“几何的傅里叶分量”和“纵向模场重叠”共同决定。因此，改变外延层厚度或波导层折射率，也会通过 $\bm{e}_0(z)$ 改写面内耦合强度。
+
+第二，不同的几何扰动并不会平均地影响所有耦合通道。某种孔形改变可能主要放大 $x$ 向和 $y$ 向之间的耦合，另一种扰动则可能主要增强进入光锥的散射。也正因为如此，PCSEL 设计不能只说“增加扰动”或“减小扰动”，而必须问清楚“增强的是哪一类傅里叶分量”。
+
+第三，如果某个耦合系数同时参与面内反馈和垂直辐射，那么它天然就对应设计中的权衡。因为增强它，可能一边在提升反馈，另一边也在提升辐射损耗。
+
+把 \cref{eq:cwt_kappa} 和前面的选择定则结合起来，还能直接读出 $\kappa_1,\kappa_2$ 为什么恰好由少数 Fourier 分量给定。对最小四波模型而言，沿 $\pm x$ 的前后向耦合主要由
+\[
+\bm\beta_1-\bm\beta_2\approx \left(\frac{2\pi}{a},0\right)
+\]
+对应的一族 Fourier 分量控制；沿 $x/y$ 两组波之间的交叉耦合则主要由
+\[
+\bm\beta_1-\bm\beta_3,\quad
+\bm\beta_1-\bm\beta_4
+\]
+所对应的 Fourier 分量控制。于是，$\kappa_1$、$\kappa_2$ 并不是两个凭经验命名的常数，而是“沿不同倒格矢方向的几何 Fourier 分量，经过同一纵向模场剖面重加权后得到的压缩参数”。
+
+为了避免“从 Maxwell 方程突然跳到一个耦合矩阵”显得过快，这里至少把一个矩阵元显式写出来。设方格晶格最主要的倒格矢为
+\[
+\bm G_x=\left(\frac{2\pi}{a},0\right),
+\]
+并关注沿 $\pm x$ 传播的两支基本波之间的耦合，即 $\bm\beta_1=(\beta,0)$ 与 $\bm\beta_2=(-\beta,0)$。把周期扰动展开为
+\[
+\Delta\varepsilon(\rho,z)=\sum_{\gvec}\Delta\varepsilon_{\gvec}(z)\ee^{\ii\gvec\cdot\rho},
+\]
+则由 \cref{eq:cwt_kappa} 得
+\begin{align}
+\kappa_{12}
+&\propto
+\int_V
+\sum_{\gvec}\Delta\varepsilon_{\gvec}(z)\ee^{\ii\gvec\cdot\rho}
+\big[\bm e_0^\ast(z)\cdot \bm e_0(z)\big]
+\ee^{-\ii(\bm\beta_1-\bm\beta_2)\cdot\rho}\,\dd V
+\notag\\
+&=
+\sum_{\gvec}
+\int \Delta\varepsilon_{\gvec}(z)\big|\bm e_0(z)\big|^2\,\dd z
+\int_{A_c}
+\ee^{\ii[\gvec-(2\beta,0)]\cdot\rho}\,\dd^2\rho.
+\label{eq:cwt_matrix_element_example}
+\end{align}
+在近布拉格条件 $2\beta\approx 2\pi/a$ 下，面积积分只保留 $\gvec=\bm G_x$ 这一项，于是
+\begin{equation}
+\kappa_{12}\equiv \kappa_1
+\propto
+A_c
+\int \Delta\varepsilon_{\bm G_x}(z)\big|\bm e_0(z)\big|^2\,\dd z.
+\label{eq:cwt_kappa1_example}
+\end{equation}
+\cref{eq:cwt_kappa1_example} 就把”矩阵元来自哪里”写清楚了：它不是一个抽象常数，而是\textbf{特定倒格矢 Fourier 分量}与\textbf{纵向模场重叠}的乘积。其他矩阵元完全类似，只是对应不同的 $\bm\beta_m-\bm\beta_n$ 与不同的主导倒格矢。
+
+\begin{ExampleBox}
+对方格晶格圆形空气孔（半径 $r$、晶格常数 $a$、背景折射率 $n_b\approx3.4$），主导倒格矢 $\bm G_x=(2\pi/a,0)$ 对应的截面 Fourier 分量可解析估算为
+\[
+\Delta\varepsilon_{\bm G_x}\approx \frac{2\pi(r/a)}{\pi r^2/a^2} J_1\!\left(\frac{2\pi r}{a}\right) \cdot(n_{\rm air}^2-n_b^2)
+\approx -2\left(\frac{r}{a}\right)J_1\!\left(\frac{2\pi r}{a}\right)\cdot n_b^2,
+\]
+其中 $J_1$ 是一阶 Bessel 函数。对典型占空比 $r/a\approx0.3$，$J_1(2\pi\times0.3)\approx0.40$，因此
+\[
+|\Delta\varepsilon_{\bm G_x}|\approx 2\times0.3\times0.40\times11.6\approx2.8.
+\]
+再乘以纵向重叠积分（光子晶体层通常贡献约 10--20\% 的纵向模能量），有效耦合系数 $\kappa_1$ 的典型量级约为 $\kappa_1/(\omega/c) \sim 10^{-2}$--$10^{-1}$，对应波矢修正 $\delta k \sim |\kappa_1|/v_g\sim1$--$10\,\mathrm{cm}^{-1}$。这个量级与实验测量的 PCSEL 带隙宽度吻合，可作为初步设计的数量级参考。
+\end{ExampleBox}
+
+\section{四个基本波如何重新组合成实际候选模}
+四波基底真正有价值的地方，不在于记住 $R_x,S_x,R_y,S_y$ 四个名字，而在于理解它们会重新组合成更适合讨论对称性的超模。以方格晶格为例，常见的线性组合包括“全同相”的亮模、“沿某方向相消”的暗模，以及在 $x$、$y$ 两个方向上具有不同奇偶性的组合。不同线性组合与辐射通道的重叠不同，因而辐射损耗也不同。
+
+这一步正好把前面几章连起来：\cref{ch:gamma} 告诉我们 Gamma 点为什么容易产生简并和模式分裂，\cref{ch:feedback} 解释了哪些散射通道打开了垂直辐射，而在 CWT 里，这些叙述第一次统一成了一个低维本征问题。求解 \cref{eq:cwt_matrix} 的本征向量，我们得到的就是“由四个基本波相干叠加形成的候选超模”；求其本征值，则能读出频率位置和净增长或净衰减趋势。
+
+如果把 \cref{eq:cwt_matrix} 写成本征值形式
+\begin{equation}
+\left(\ii\bm{\Omega}-\bm{\Gamma}+\bm{G}\right)\bm{u}_j
+=
+\lambda_j\bm{u}_j,
+\label{eq:cwt_eig}
+\end{equation}
+那么 $\bm{u}_j$ 就给出第 $j$ 个候选超模在四个基本波基底上的权重，而 $\lambda_j$ 的实部则表征该超模在小信号近似下是净增长还是净衰减。
+
+\section{把四波基底改写成 \texorpdfstring{$C_{4v}$}{C4v} 的 irrep 基底}
+若想让 CWT 真正成为“可教”的工具，就不能只停留在“有四个基本波，所以会有几种组合”这一步，而应把这些组合正式写成 \cref{ch:polarization} little-group 框架中的不可约表示。对方格晶格，$\Gamma$ 点 little group 为 $C_{4v}$。在最小四波子空间
+\[
+\bm{a}=
+\begin{bmatrix}
+R_x & S_x & R_y & S_y
+\end{bmatrix}^{\mathsf T}
+\]
+中，一个特别有用的 irrep 基底可取为
+\begin{align}
+\bm{u}_{A_1}
+&=
+\frac{1}{2}
+\begin{bmatrix}
+1\\1\\1\\1
+\end{bmatrix},
+\label{eq:cwt_A1_basis}
+\\
+\bm{u}_{B_1}
+&=
+\frac{1}{2}
+\begin{bmatrix}
+1\\1\\-1\\-1
+\end{bmatrix},
+\label{eq:cwt_B1_basis}
+\\
+\bm{u}_{E,x}
+&=
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1\\-1\\0\\0
+\end{bmatrix},
+\qquad
+\bm{u}_{E,y}
+=
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+0\\0\\1\\-1
+\end{bmatrix}.
+\label{eq:cwt_E_basis}
+\end{align}
+其中 $\bm{u}_{A_1}$ 是全同相 singlet，$\bm{u}_{B_1}$ 描述 $x$ 向与 $y$ 向波对之间的相对反相，而 $\bm{u}_{E,x},\bm{u}_{E,y}$ 则张成二维 $E$ 双重态，对应最直接的 $x$-like 与 $y$-like 偏振支路。
+
+把这四个列向量拼成变换矩阵
+\begin{equation}
+U = \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & 1 & 0 \\
+\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} & -1 & 0 \\
+\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} & 0 & 1 \\
+\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} & 0 & -1
+\end{bmatrix},
+\label{eq:cwt_U_matrix}
+\end{equation}
+则对理想方格晶格（$\kappa_1,\kappa_2$ 均为实数），CWT 矩阵 $\tilde H$ 在 irrep 基底 $\bm{b}=U^\dagger\bm{a}$ 下化为块对角形式：$A_1$ 与 $B_1$ 各对应一个 $1\times1$ 块，$E$ 双重态对应一个 $2\times2$ 块（在 $E$ 子空间中仍可能存在内部耦合，但与 $A_1,B_1$ 块解耦）。
+
+这一写法的意义非常大。它说明四波 CWT 里真正该关注的，不是单个 $R_x$ 或 $S_y$ 分量，而是这些分量在 little-group 意义下如何重新组织成 $A_1$、$B_1$ 和 $E$ family。于是：
+\begin{itemize}
+  \item 模式标注不再依赖“看图感觉像哪种场型”，而可以直接由 irrep 给出；
+  \item $E$ 双重态天然与 \cref{ch:polarization} 中的双偏振/法向辐射通道对应；
+  \item $A_1$ 和 $B_1$ 则天然提示“这是 symmetry-distinct singlet”，其辐射与混合规则必须和 $E$ 分开看。
+\end{itemize}
+
+\begin{RigorousBox}
+\cref{eq:cwt_A1_basis,eq:cwt_B1_basis,eq:cwt_E_basis} 是\textbf{最小四波子空间中的 irrep 分类}，而不是整个 Maxwell 问题所有 irrep 的完整列表。在这个最小子空间里，$A_2$ 和 $B_2$ 没有显式出现；若加入更多 Fourier 分量、更多纵向模或更完整矢量分量，它们可以在更高维投影中出现。
+\end{RigorousBox}
+
+\section{这套 irrep 基底怎样直接连接偏振、辐射与 BIC 判断}
+现在可以把 \cref{ch:polarization} 和上一章的分类工具直接落到 CWT 矩阵里。对方格晶格，法向自由空间辐射通道在最小 in-plane 分类下属于 $E$。因此，在保持 $C_{4v}$ 对称的前提下：
+\begin{itemize}
+  \item $E$ 双重态最直接地与法向辐射通道匹配，因此往往承担“可法向辐射偏振支路”的角色；
+  \item $A_1$ 与 $B_1$ 这类 singlet 即使存在，也不会与 $E$ 通道发生对称性允许的直接混合；
+  \item 若某一 singlet family 在 exact $\Gamma$ 点呈现 direct normal-radiation suppression，就应优先把它放进 symmetry-protected dark family / BIC 候选的语境中理解。
+\end{itemize}
+
+于是，CWT 的矩阵语言第一次真正和“irrep 标注”“偏振选择”“BIC 初筛”闭合起来：求 \cref{eq:cwt_eig} 的本征向量之后，读者不仅能说“哪个模本征值最大”，还能说“这个本征模在 irrep 意义下属于哪一类，它在对称性上是否允许法向辐射，它与哪一支偏振通道最直接相关”。
+
+\section{对称性破缺怎样在 CWT 矩阵里体现为 irrep 分裂}
+当结构保持理想方格对称时，CWT 矩阵在 irrep 基底中往往接近分块形式：$A_1$、$B_1$ 和 $E$ family 彼此分离。引入小对称性破缺后，例如圆孔变椭圆、双晶格位移或外延/电极造成的有效各向异性，这种分块结构会被重新组织。
+
+对最常见的偏振工程问题，最关键的一步是：原先二维的 $E$ 双重态会在降群后分裂成两支非简并 singlet，于是 $x$-like 与 $y$-like 偏振不再等价。与此同时，某些原本 direct radiation 受限的 family 还可能因为降群后允许混合而获得有限辐射损耗。也就是说，在 CWT 里，“偏振钉扎”“模式分裂”“quasi-BIC 打开”这三件事从来不是三类公式，而是\textbf{同一个耦合矩阵在不同对称性下的不同投影结果}。
+
+\begin{ExampleBox}
+若方格晶格圆孔的 $C_{4v}$ 对称被轻微椭圆孔降到只保留两条镜面对称的子群，则原先的 $E$ 双重态会沿椭圆主轴分裂成两支非简并偏振模。在 CWT 矩阵里，这表现为 $\bm{u}_{E,x}$ 与 $\bm{u}_{E,y}$ 所在子块不再共享同一本征值。若其中一支同时更强地接近法向辐射通道，另一支则更接近 dark family，就会同时观察到偏振选择、损耗分裂与远场主瓣定向。
+\end{ExampleBox}
+
+\section{从二维到三维：Liang--Noda 3D CWT 的推导框架}
+\label{sec:3d-cwt-derivation}
+
+前面几节建立的最小四波 CWT 是一个二维模型：它假设结构沿 $z$ 方向均匀，因此无法描述法向辐射（面发射）这一 PCSEL 最核心的特征。Liang 等人 \cite{liang2012square} 发展了三维 CWT，克服了这一根本限制。本节按照该文献的推导路线，给出从三维矢量 Maxwell 方程到耦合波本征方程的完整物理链条。
+
+\subsection{为什么必须从矢量波动方程出发}
+
+二维 CWT 以 $H_z$ 标量方程为起点。但法向辐射波的电场分量为 $(E_x,E_y)$，不含 $H_z$，因此 $H_z$ 标量方程从根本上无法描述面发射。三维 CWT 的第一步改进，就是回到矢量波动方程
+\begin{equation}
+\nabla\times\nabla\times \E(\rvec) = k_0^2\tilde{n}^2(\rvec)\E(\rvec),
+\label{eq:3d_cwt_vector_wave}
+\end{equation}
+其中 $k_0=\omega/c$，$\tilde{n}^2(\rvec)=n^2(\rvec)+2\ii k_0 n(\rvec)\tilde{\alpha}(\rvec)$ 包含折射率实部和增益/损耗虚部。TE 极化场 $\E=(E_x,E_y,0)$ 按 Bloch 定理展开为
+\begin{equation}
+E_i(\rvec) = \sum_{m,n} E_{i,mn}(z)\,\ee^{-\ii(m\beta_0 x + n\beta_0 y)},
+\qquad i=x,y,
+\label{eq:3d_cwt_bloch_expand}
+\end{equation}
+折射率平方展开为
+\begin{equation}
+n^2(\rvec) = n_0^2(z) + \sum_{(m,n)\neq(0,0)} \xi_{m,n}(z)\,\ee^{-\ii(m\beta_0 x + n\beta_0 y)},
+\label{eq:3d_cwt_n2_expand}
+\end{equation}
+其中 $\beta_0=2\pi/a$，$n_0^2(z)$ 是各层平均介电常数，$\xi_{m,n}(z)$ 是光子晶体层内的 Fourier 系数（光子晶体层外为零）。
+
+将 \cref{eq:3d_cwt_bloch_expand,eq:3d_cwt_n2_expand} 代入 \cref{eq:3d_cwt_vector_wave}，收集所有乘以 $\ee^{-\ii(m\beta_0 x+n\beta_0 y)}$ 的项，得到关于每个 $(m,n)$ 分量的纵向方程组 \cite{liang2012square}：
+\begin{align}
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2+2\ii\tilde{\alpha}k_0 n_0-n^2\beta_0^2\right]E_{x,mn}+mn\beta_0^2 E_{y,mn}
+&= -k_0^2\!\!\sum_{\substack{m',n'\\(m',n')\neq(m,n)}}\xi_{m-m',n-n'}E_{x,m'n'},
+\label{eq:3d_cwt_component_x}\\
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2+2\ii\tilde{\alpha}k_0 n_0-m^2\beta_0^2\right]E_{y,mn}+mn\beta_0^2 E_{x,mn}
+&= -k_0^2\!\!\sum_{\substack{m',n'\\(m',n')\neq(m,n)}}\xi_{m-m',n-n'}E_{y,m'n'},
+\label{eq:3d_cwt_component_y}\\
+\frac{\dd}{\dd z}\left[m\beta_0 E_{x,mn}+n\beta_0 E_{y,mn}\right] &= 0.
+\label{eq:3d_cwt_transversality}
+\end{align}
+\cref{eq:3d_cwt_transversality} 是横向性约束（transversality constraint），来自 $\nabla\cdot(\varepsilon\E)=0$。这三个方程是三维 CWT 的完整出发点，后续所有推导都是对它们做分类求解。
+
+\subsection{基本波的场型假设（separation of variables）}
+
+三维 CWT 的关键技术步骤是变量分离：假设每个波分量的场可以写成面内振幅与纵向剖面的乘积。对二阶 $\Gamma$ 点共振，四个基本波的 TE 极化场分量为 \cite{liang2012square}
+\begin{align}
+(m,n)=(1,0)&:\quad E_{x,1,0}=0,\quad E_{y,1,0}=R_x\,\phi_0(z),
+\label{eq:3d_cwt_basic_Rx}\\
+(m,n)=(-1,0)&:\quad E_{x,-1,0}=0,\quad E_{y,-1,0}=S_x\,\phi_0(z),
+\label{eq:3d_cwt_basic_Sx}\\
+(m,n)=(0,1)&:\quad E_{x,0,1}=R_y\,\phi_0(z),\quad E_{y,0,1}=0,
+\label{eq:3d_cwt_basic_Ry}\\
+(m,n)=(0,-1)&:\quad E_{x,0,-1}=S_y\,\phi_0(z),\quad E_{y,0,-1}=0.
+\label{eq:3d_cwt_basic_Sy}
+\end{align}
+这里有两个要点。第一，沿 $\pm x$ 传播的基本波只有 $E_y$ 分量，沿 $\pm y$ 传播的只有 $E_x$ 分量——这是 TE 极化的直接要求（电场垂直于传播方向）。第二，四个基本波共享同一个纵向剖面 $\phi_0(z)$，即无周期调制时的基模场，满足
+\begin{equation}
+\frac{\dd^2\phi_0}{\dd z^2} + [k_0^2 n_0^2(z)-\beta^2]\phi_0 = 0,
+\qquad
+\int_{-\infty}^{\infty}|\phi_0(z)|^2\,\dd z = 1.
+\label{eq:3d_cwt_fundamental_mode}
+\end{equation}
+$\beta$ 和 $\phi_0(z)$ 可由传递矩阵法（TMM）对无周期调制的平板波导求解得到。
+
+\subsection{从分量方程到耦合方程的推导}
+
+以 $(m,n)=(1,0)$ 为例，将 \cref{eq:3d_cwt_basic_Rx} 代入 \cref{eq:3d_cwt_component_y}，左侧变为
+\[
+\left[\frac{\dd^2\phi_0}{\dd z^2}+(k_0^2 n_0^2+2\ii\tilde\alpha k_0 n_0-\beta_0^2)\phi_0\right]R_x.
+\]
+利用 \cref{eq:3d_cwt_fundamental_mode} 消去 $\dd^2\phi_0/\dd z^2$，得到
+\begin{equation}
+(\beta^2-\beta_0^2)R_x\,\phi_0 + 2\ii\tilde\alpha k_0 n_0 R_x\,\phi_0
+= -k_0^2\sum_{\substack{m',n'\\(m',n')\neq(1,0)}}\xi_{1-m',{-n'}}E_{y,m'n'}.
+\label{eq:3d_cwt_Rx_intermediate}
+\end{equation}
+在 $\beta\approx\beta_0$ 的近 Bragg 条件下，$\beta^2-\beta_0^2\approx 2\beta_0\delta$，其中 $\delta=\beta-\beta_0$。再对 \cref{eq:3d_cwt_Rx_intermediate} 两侧乘以 $\phi_0(z)$ 并沿 $z$ 积分（利用归一化条件），右侧的求和按波矢类型分成三组：
+\begin{enumerate}
+  \item 另一个基本波 $(m',n')=(-1,0)$：贡献 $\xi_{2,0}$ 的重叠积分 $\to$ 一维反馈耦合；
+  \item 辐射波 $(m',n')=(0,0)$：贡献 $\xi_{1,0}$ 与辐射波场的重叠 $\to$ 辐射耦合；
+  \item 高阶波 $m'^2+n'^2>1$：贡献各阶 $\xi$ 与高阶波场的重叠 $\to$ 二维耦合。
+\end{enumerate}
+对其余三个基本波做完全类似的推导，最终得到四波耦合方程组
+\begin{equation}
+(\delta+\ii\alpha)\bm{V} = \bm{C}\,\bm{V},
+\qquad
+\bm{V} = \begin{bmatrix} R_x & S_x & R_y & S_y \end{bmatrix}^{\mathsf T},
+\label{eq:3d_cwt_eigenvalue}
+\end{equation}
+其中 $\delta=\beta-\beta_0$ 是偏离 Bragg 条件的频率偏移，$\alpha$ 是模增益/损耗。关键在于耦合矩阵 $\bm{C}$ 自然分解为三个物理来源明确的子矩阵：
+\begin{equation}
+\bm{C} = \bm{C}_{\mathrm{1D}} + \bm{C}_{\mathrm{rad}} + \bm{C}_{\mathrm{2D}}.
+\label{eq:3d_cwt_C_decomposition}
+\end{equation}
+
+\subsection{辐射波的解析求解}
+
+在得到四波耦合方程 \cref{eq:3d_cwt_Rx_intermediate} 之后，右侧仍然包含未知的辐射波场和高阶波场。要把耦合方程变成闭合的本征问题，必须先把这些未知场用基本波振幅表示出来。本小节和下一小节分别处理辐射波和高阶波。
+
+辐射波对应 $(m,n)=(0,0)$，即零面内波矢分量。将 $(m,n)=(0,0)$ 代入 \cref{eq:3d_cwt_component_x,eq:3d_cwt_component_y}，并只保留基本波作为源项（这是三维 CWT 的核心近似之一），得到
+\begin{align}
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2(z)\right]E_x(z)
+&= -k_0^2\bigl(\xi_{0,-1}R_y + \xi_{0,1}S_y\bigr)\phi_0(z),
+\label{eq:3d_cwt_rad_eq_x}\\
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2(z)\right]E_y(z)
+&= -k_0^2\bigl(\xi_{-1,0}R_x + \xi_{1,0}S_x\bigr)\phi_0(z),
+\label{eq:3d_cwt_rad_eq_y}
+\end{align}
+其中 $E_x(z)\equiv E_{x,0,0}(z)$，$E_y(z)\equiv E_{y,0,0}(z)$ 是辐射波的两个电场分量。注意左侧算符 $[\partial_z^2+k_0^2 n_0^2(z)]$ 恰好是纵向 Helmholtz 方程，其 Green 函数满足
+\begin{equation}
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2(z)\right]G(z,z') = -\delta(z-z'),
+\label{eq:3d_cwt_green_def}
+\end{equation}
+解为
+\begin{equation}
+G(z,z') = -\frac{\ii}{2k_z}\ee^{-\ii k_z|z-z'|},
+\qquad k_z = k_0 n_0(z),
+\label{eq:3d_cwt_green}
+\end{equation}
+其中 $k_z$ 是辐射波在纵向的波数。这里使用了忽略低折射率对比波导层界面反射的近似形式；更精确的表达式可通过传递矩阵法构造 \cite{liang2012square}。
+
+利用 Green 函数，辐射波场可直接用基本波振幅表示：
+\begin{align}
+E_x(z) &= k_0^2\bigl(\xi_{0,-1}R_y + \xi_{0,1}S_y\bigr)\int_{\mathrm{PC}} G(z,z')\phi_0(z')\,\dd z',
+\label{eq:3d_cwt_rad_field_x}\\
+E_y(z) &= k_0^2\bigl(\xi_{-1,0}R_x + \xi_{1,0}S_x\bigr)\int_{\mathrm{PC}} G(z,z')\phi_0(z')\,\dd z'.
+\label{eq:3d_cwt_rad_field_y}
+\end{align}
+\cref{eq:3d_cwt_rad_field_x,eq:3d_cwt_rad_field_y} 的物理含义非常清楚：辐射波的 $E_x$ 分量由沿 $\pm y$ 传播的基本波 $R_y,S_y$ 通过一阶衍射产生，$E_y$ 分量由沿 $\pm x$ 传播的基本波 $R_x,S_x$ 产生。Green 函数积分则把光子晶体层内的源分布转化为整个纵向空间中的辐射场。
+
+将 \cref{eq:3d_cwt_rad_field_y} 代回 $R_x$ 的耦合方程 \cref{eq:3d_cwt_Rx_intermediate} 中的辐射波项，再乘以 $\phi_0(z)$ 并沿 $z$ 积分，辐射耦合矩阵元为
+\begin{equation}
+\mu^{(r,s)} = -\frac{k_0^4}{2\beta}\,\xi_{p,q}\,\xi_{-r,-s}\int_{\mathrm{PC}}\!\!\int_{\mathrm{PC}} G(z,z')\phi_0(z')\phi_0(z)\,\dd z'\,\dd z,
+\label{eq:3d_cwt_Crad_element_derivation}
+\end{equation}
+其中 $(p,q)$ 和 $(r,s)$ 分别对应源波和目标波的 Fourier 分量指标。
+
+\subsection{高阶波的解析求解：线性组合技巧}
+
+高阶波对应 $m^2+n^2>1$ 的所有分量。直接求解 \cref{eq:3d_cwt_component_x,eq:3d_cwt_component_y} 比较困难，因为 $E_{x,mn}$ 和 $E_{y,mn}$ 通过 $mn\beta_0^2$ 项耦合在一起。Liang 等人 \cite{liang2012square} 引入了一个关键的线性组合技巧：定义
+\begin{equation}
+E_+^{(m,n)}(z) \equiv m E_{x,mn}(z) + n E_{y,mn}(z),
+\qquad
+E_-^{(m,n)}(z) \equiv n E_{x,mn}(z) - m E_{y,mn}(z).
+\label{eq:3d_cwt_linear_combo}
+\end{equation}
+这一变换把原来的耦合方程组解耦为两个独立方程：
+\begin{align}
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2\right]E_+^{(m,n)}
+&= -k_0^2\!\!\sum_{\substack{m',n'\\(m',n')\neq(m,n)}}\xi_{m-m',n-n'}\,E_+^{(m',n')},
+\label{eq:3d_cwt_Eplus}\\
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2-(m^2+n^2)\beta_0^2\right]E_-^{(m,n)}
+&= -k_0^2\!\!\sum_{\substack{m',n'\\(m',n')\neq(m,n)}}\xi_{m-m',n-n'}\,E_-^{(m',n')}.
+\label{eq:3d_cwt_Eminus}
+\end{align}
+同时，横向性约束 \cref{eq:3d_cwt_transversality} 变为
+\begin{equation}
+\frac{\dd}{\dd z}E_+^{(m,n)} = 0,
+\label{eq:3d_cwt_transversality_Eplus}
+\end{equation}
+这意味着 $E_+^{(m,n)}$ 在 $z$ 方向上是常数。将 \cref{eq:3d_cwt_transversality_Eplus} 代入 \cref{eq:3d_cwt_Eplus}，可得到一个纯代数关系
+\begin{equation}
+n_0^2(z)\,E_+^{(m,n)} = -\sum_{\substack{m',n'\\(m',n')\neq(m,n)}}\xi_{m-m',n-n'}\,E_+^{(m',n')},
+\label{eq:3d_cwt_Eplus_algebraic}
+\end{equation}
+这等价于横向性约束 $\nabla\cdot(\varepsilon\E)=0$ 的 Fourier 空间表达。
+
+真正需要用 Green 函数求解的只有 $E_-^{(m,n)}$。由于 $m^2+n^2>1$，\cref{eq:3d_cwt_Eminus} 左侧的有效纵向波数为
+\begin{equation}
+k_{z,mn} = \ii\sqrt{(m^2+n^2)\beta_0^2 - k_0^2 n_0^2} \equiv \ii\kappa_{z,mn},
+\label{eq:3d_cwt_kz_ho}
+\end{equation}
+其中 $\kappa_{z,mn}>0$，因此高阶波在纵向为倏逝波。对应的 Green 函数满足
+\begin{equation}
+\left[\frac{\dd^2}{\dd z^2}+k_0^2 n_0^2-(m^2+n^2)\beta_0^2\right]G_{m,n}(z,z') = -\delta(z-z'),
+\label{eq:3d_cwt_green_ho_def}
+\end{equation}
+解为
+\begin{equation}
+G_{m,n}(z,z') = \frac{1}{2\kappa_{z,mn}}\ee^{-\kappa_{z,mn}|z-z'|}.
+\label{eq:3d_cwt_green_ho}
+\end{equation}
+与辐射波 Green 函数 \cref{eq:3d_cwt_green} 的振荡行为不同，$G_{m,n}$ 是实数且指数衰减的，这直接反映了高阶波被束缚在光子晶体层附近的物理事实。
+
+在只保留基本波作为源的近似下，$E_-^{(m,n)}$ 可用 Green 函数表示为
+\begin{equation}
+E_-^{(m,n)}(z) = k_0^2\bigl(-m\xi_{m-1,n}R_x - m\xi_{m+1,n}S_x + n\xi_{m,n-1}R_y + n\xi_{m,n+1}S_y\bigr)\int_{\mathrm{PC}} G_{m,n}(z,z')\phi_0(z')\,\dd z'.
+\label{eq:3d_cwt_Eminus_solution}
+\end{equation}
+结合 \cref{eq:3d_cwt_Eplus_algebraic} 给出的 $E_+^{(m,n)}$，可通过逆变换恢复原始分量：
+\begin{equation}
+\begin{bmatrix}
+E_{x,mn}(z)\\
+E_{y,mn}(z)
+\end{bmatrix}
+=
+\frac{1}{m^2+n^2}
+\begin{bmatrix}
+m & n\\
+n & -m
+\end{bmatrix}
+\begin{bmatrix}
+E_+^{(m,n)}(z)\\
+E_-^{(m,n)}(z)
+\end{bmatrix}.
+\label{eq:3d_cwt_inverse_transform}
+\end{equation}
+至此，所有高阶波场都已用基本波振幅 $R_x,S_x,R_y,S_y$ 解析表示。
+
+\subsection{三个子矩阵的显式矩阵形式}
+
+将辐射波和高阶波的解析解代回耦合方程 \cref{eq:3d_cwt_Rx_intermediate}，并对其余三个基本波做完全类似的处理，最终得到闭合的 $4\times4$ 本征问题。三个子矩阵的显式形式为 \cite{liang2012square}：
+
+\paragraph{$\bm{C}_{\mathrm{1D}}$：一维反馈耦合矩阵。}
+\begin{equation}
+\bm{C}_{\mathrm{1D}} =
+\begin{bmatrix}
+0 & \kappa_{2,0} & 0 & 0\\
+\kappa_{-2,0} & 0 & 0 & 0\\
+0 & 0 & 0 & \kappa_{0,2}\\
+0 & 0 & \kappa_{0,-2} & 0
+\end{bmatrix},
+\label{eq:3d_cwt_C1D_matrix}
+\end{equation}
+其中一维耦合系数为
+\begin{equation}
+\kappa_{\pm2,0} = -\frac{k_0^2}{2\beta}\int_{\mathrm{PC}} \xi_{\pm2,0}(z)\,|\phi_0(z)|^2\,\dd z,
+\qquad
+\kappa_{0,\pm2} = -\frac{k_0^2}{2\beta}\int_{\mathrm{PC}} \xi_{0,\pm2}(z)\,|\phi_0(z)|^2\,\dd z.
+\label{eq:3d_cwt_kappa1D}
+\end{equation}
+$\bm{C}_{\mathrm{1D}}$ 的结构非常直观：它只连接沿同一坐标轴的前后向波对（$R_x\leftrightarrow S_x$，$R_y\leftrightarrow S_y$），不涉及 $x$-$y$ 之间的交叉耦合。这与一维 DFB 激光器的反馈耦合完全类比，只是 Fourier 分量取的是二阶倒格矢 $\xi_{\pm2,0}$ 和 $\xi_{0,\pm2}$。对方格晶格，$\kappa_{2,0}=\kappa_{0,2}$。$\bm{C}_{\mathrm{1D}}$ 是厄米矩阵。
+
+\paragraph{$\bm{C}_{\mathrm{rad}}$：辐射耦合矩阵。}
+\begin{equation}
+\bm{C}_{\mathrm{rad}} =
+\begin{bmatrix}
+\mu^{(1,0)} & \mu^{(-1,0)} & 0 & 0\\
+-\mu^{(1,0)} & -\mu^{(-1,0)} & 0 & 0\\
+0 & 0 & \mu^{(0,1)} & \mu^{(0,-1)}\\
+0 & 0 & -\mu^{(0,1)} & -\mu^{(0,-1)}
+\end{bmatrix},
+\label{eq:3d_cwt_Crad_matrix}
+\end{equation}
+其中辐射耦合系数为
+\begin{equation}
+\mu^{(r,s)} = -\frac{k_0^4}{2\beta}\,\xi_{p,q}\,\xi_{-r,-s}\int_{\mathrm{PC}}\!\!\int_{\mathrm{PC}} G(z,z')\phi_0(z')\phi_0(z)\,\dd z'\,\dd z.
+\label{eq:3d_cwt_Crad_element}
+\end{equation}
+$\bm{C}_{\mathrm{rad}}$ 有两个关键特征。第一，它是\textbf{非厄米矩阵}——这正是辐射损耗的数学来源。Green 函数 $G(z,z')$ 的虚部编码了能量向自由空间的不可逆流出，使得 $\mu^{(r,s)}$ 为复数，其虚部直接给出辐射常数 $\alpha_{\mathrm{rad}}$。第二，$\bm{C}_{\mathrm{rad}}$ 具有特殊的反对称结构：同一列的上下两个元素符号相反。这意味着沿同一轴的前后向波对（如 $R_x$ 和 $S_x$）从辐射通道获得的耦合恰好反号，这正是后面讨论干涉抵消和 BIC 的矩阵语言基础。
+
+\paragraph{$\bm{C}_{\mathrm{2D}}$：二维高阶耦合矩阵。}
+\begin{equation}
+\bm{C}_{\mathrm{2D}} =
+\begin{bmatrix}
+\chi_y^{(1,0)} & \chi_y^{(-1,0)} & \chi_y^{(0,1)} & \chi_y^{(0,-1)}\\
+\chi_y^{(1,0)} & \chi_y^{(-1,0)} & \chi_y^{(0,1)} & \chi_y^{(0,-1)}\\
+\chi_x^{(1,0)} & \chi_x^{(-1,0)} & \chi_x^{(0,1)} & \chi_x^{(0,-1)}\\
+\chi_x^{(1,0)} & \chi_x^{(-1,0)} & \chi_x^{(0,1)} & \chi_x^{(0,-1)}
+\end{bmatrix},
+\label{eq:3d_cwt_C2D_matrix}
+\end{equation}
+其中
+\begin{align}
+\chi_i^{(r,s)} &= -\frac{k_0^2}{2\beta}\sum_{m^2+n^2>1}\left[\zeta_i^{(m,n;r,s)} + \eta_i^{(m,n;r,s)}\right],
+\label{eq:3d_cwt_C2D_element}\\
+\zeta_i^{(m,n;r,s)} &= \xi_{p-m,q-n}\,\xi_{m-r,n-s}\int_{\mathrm{PC}}\!\!\int_{\mathrm{PC}} G_{m,n}(z,z')\phi_0(z')\phi_0(z)\,\dd z'\,\dd z,
+\label{eq:3d_cwt_zeta}\\
+\eta_i^{(m,n;r,s)} &= -\frac{1}{n_0^2(z)}\,\xi_{p-m,q-n}\,\xi_{m-r,n-s}\int_{\mathrm{PC}} |\phi_0(z)|^2\,\dd z.
+\label{eq:3d_cwt_eta}
+\end{align}
+这里 $\zeta$ 项来自 $E_-^{(m,n)}$（通过 Green 函数 $G_{m,n}$ 求解），$\eta$ 项来自 $E_+^{(m,n)}$（通过横向性约束的代数关系求解）。$\bm{C}_{\mathrm{2D}}$ 是\textbf{厄米矩阵}，因为高阶波的 Green 函数 $G_{m,n}$ 是实数（倏逝波不携带能量流出）。它主要影响模式频率和分裂，而不直接贡献辐射损耗。
+
+对圆孔等高对称孔形，低阶截断（$|m|,|n|\leq 3$）通常已足够使频率收敛；但对非对称孔形（如直角等腰三角形），高阶 Fourier 分量不可忽略，需截断到 $|m|,|n|\leq 10$ 才能使辐射常数收敛 \cite{liang2012square}。
+
+\begin{IntuitionBox}
+三个子矩阵的厄米性质直接对应物理：$\bm{C}_{\mathrm{1D}}$ 和 $\bm{C}_{\mathrm{2D}}$ 是厄米的，因为面内反馈和倏逝波耦合都不携带能量离开系统；$\bm{C}_{\mathrm{rad}}$ 是非厄米的，因为辐射波把能量带到了自由空间。这一区分正是三维 CWT 能同时给出频率排序和辐射损耗的根本原因。
+\end{IntuitionBox}
+
+\subsection{从四波耦合方程到完整本征问题}
+
+将上述三个子矩阵合并，耦合方程 \cref{eq:3d_cwt_Rx_intermediate} 及其类似方程最终化为闭合的 $4\times4$ 本征问题
+\begin{equation}
+(\delta+\ii\alpha)\bm{V} = \bm{C}\,\bm{V},
+\qquad
+\bm{C} = \bm{C}_{\mathrm{1D}} + \bm{C}_{\mathrm{rad}} + \bm{C}_{\mathrm{2D}},
+\label{eq:3d_cwt_eigenvalue_full}
+\end{equation}
+其中所有矩阵元都已由光子晶体几何（通过 $\xi_{m,n}$）和多层波导结构（通过 $\phi_0(z)$、$G(z,z')$、$G_{m,n}(z,z')$）解析确定。这意味着，一旦给定孔形、填充比、晶格常数和外延层结构，$\bm{C}$ 的每一个元素都可以通过数值积分计算，而不需要任何拟合参数。
+
+求解 \cref{eq:3d_cwt_eigenvalue_full} 的计算代价极低：它只是一个 $4\times4$ 复矩阵的本征值分解，在普通计算机上约需 $1$ 秒即可完成一组参数的全部四个模式。作为对比，同等精度的 3D FDTD 仿真通常需要约 $4$ 小时 \cite{liang2012square}。这一量级差异正是 CWT 在参数扫描和设计优化中不可替代的原因。
+
+\subsection{三维 CWT 的核心输出与二维模型的本质差异}
+
+求解 \cref{eq:3d_cwt_eigenvalue_full} 的本征值 $(\delta+\ii\alpha)$ 和本征向量 $\bm{V}$，可同时得到：
+\begin{enumerate}
+  \item \textbf{模式频率}：由 $\mathrm{Re}(\delta)$ 给出，对应 A/B/C/D 四模的频率排序；
+  \item \textbf{辐射常数}：由 $\mathrm{Im}(\delta)$ 给出，即 $\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\tilde{\omega})$，直接量化面发射损耗；
+  \item \textbf{面内场型与偏振}：由本征向量 $\bm{V}$ 给出，可判断模式的 irrep 归属和远场偏振；
+  \item \textbf{纵向场剖面}：基本波、辐射波和高阶波各自的 $z$ 方向场分布。
+\end{enumerate}
+
+与二维 CWT 相比，三维 CWT 的本质进步在于三点 \cite{liang2012square}：
+\begin{itemize}
+  \item 辐射耦合系数 $\bm{C}_{\mathrm{rad}}$ 从经验拟合参数变为解析可算量；
+  \item 不同波矢分量的纵向场剖面被分别处理，而非统一近似为 $\phi_0(z)$；
+  \item 高阶 Fourier 分量被系统纳入，使非对称孔形的建模成为可能。
+\end{itemize}
+
+\begin{RigorousBox}
+\cref{eq:3d_cwt_eigenvalue_full} 仍然是无限周期近似下的结果。有限孔阵的边缘效应需要进一步把 $R_x,S_x,R_y,S_y$ 从常数升级为空间缓变包络 $R_x(\rho),S_x(\rho),\ldots$，并加入边界条件，这就是有限尺寸 CWT（finite-size CWT）的内容，见 \cref{ch:cwt-3d}。
+\end{RigorousBox}
+
+\subsection{圆孔与非对称孔形：干涉抵消与辐射打开}
+
+三维 CWT 的一个最重要物理预测，涉及孔形对辐射常数的影响。对圆形孔（$C_{4v}$ 高对称孔），模式 A 和 B 在精确 $\Gamma$ 点的辐射常数为零 $\alpha_{\mathrm{rad}}=0$；而对非对称孔形（如等边三角形、直角等腰三角形），辐射常数随填充比增大而增大 \cite{liang2012square}。
+
+物理机制可用纵向干涉图像来理解：圆孔情形下，沿 $+x$ 与 $-x$ 传播的两支反向基本波本征上处于相位差为 $\pi$ 的状态，它们向法向衍射的分量在纵向方向相消干涉，净辐射振幅为零——这正是 \cref{ch:bic} 所述 symmetry-protected BIC 的具体物理来源。当孔形变为非对称时，反向基本波之间不再严格保持 $\pi$ 相位差，干涉相消被部分破坏，辐射通道被打开，模式从 BIC 转变为 quasi-BIC \cite{liang2012square}。
+
+用公式语言来表达：辐射耦合矩阵 $\bm{C}_{\mathrm{rad}}$ 的虚部正比于辐射振幅的平方，
+\begin{equation}
+\alpha_{\mathrm{rad}} = 2\,\mathrm{Im}\bigl[\lambda(\bm{C}_{\mathrm{rad}})\bigr] \propto \left|\int_{\mathrm{PC}} \xi_{1,0}(z)\,G(z,z')\,\xi_{-1,0}(z')\,\phi_0(z)\phi_0(z')\,\dd z\,\dd z'\right|^2.
+\label{eq:alpha_rad_circle_vs_triangle}
+\end{equation}
+对圆孔，实空间积分因为高对称性导致两项相消，$\alpha_{\mathrm{rad}}=0$；对三角孔，对称性破缺使积分非零。这一预测与 3D FDTD 定量吻合，验证了三维 CWT 能正确描述面发射的物理机制。
+
+\begin{ExampleBox}
+以方格晶格圆孔（$n_b=3.57$，$n_{\rm air}=1$，$f=12\%$，$a=295\,\mathrm{nm}$）为例，三维 CWT 给出模式 A 和 B 在精确 $\Gamma$ 点的辐射常数 $\alpha_{\mathrm{rad}}\approx0$，对应 $Q\to\infty$，与 3D FDTD 结果吻合；而对同等参数的直角等腰三角形孔，辐射常数约为 $50$--$200\,\mathrm{cm}^{-1}$，$Q$ 有限可设计 \cite{liang2012square}。波截断阶数需取 $D\geq10$（即保留 $(2D+1)^2=441$ 个平面波分量）才能使辐射常数收敛，频率收敛则 $D\geq5$ 已足够。
+\end{ExampleBox}
+
+\subsection{品质因子与辐射常数的提取}
+
+从 \cref{eq:3d_cwt_eigenvalue_full} 的本征值可直接提取器件最关心的两个量。设第 $j$ 个本征值为 $\delta_j+\ii\alpha_j$，则对应的复频率为
+\begin{equation}
+\tilde{\omega}_j = \frac{(\beta_0+\delta_j)c}{n_{\mathrm{eff}}},
+\label{eq:3d_cwt_complex_freq}
+\end{equation}
+其中 $n_{\mathrm{eff}}$ 是等效折射率。品质因子由复频率的实部与虚部之比给出：
+\begin{equation}
+Q_j = \frac{\mathrm{Re}(\tilde{\omega}_j)}{2|\mathrm{Im}(\tilde{\omega}_j)|}.
+\label{eq:3d_cwt_Q}
+\end{equation}
+辐射常数（radiation constant）则定义为单位传播长度上因垂直辐射而损失的功率比例：
+\begin{equation}
+\alpha_{\mathrm{rad},j} = 2\,\mathrm{Im}(\delta_j).
+\label{eq:3d_cwt_alpha_rad}
+\end{equation}
+这个定义的优势在于它不依赖等效折射率的模糊定义——$\delta_j$ 直接来自本征值，可与 3D FDTD 的衰减率提取结果做无歧义比较 \cite{liang2012square}。
+
+\subsection{非 \texorpdfstring{$\Gamma$}{Gamma} 点扩展：能带结构计算}
+\label{sec:3d-cwt-non-gamma}
+
+前面的推导都限于精确 $\Gamma$ 点（$\kvec=\bm{0}$）。但要计算完整的能带结构，必须把模型扩展到 $\Gamma$ 点附近的有限波矢 $\delta\kvec$。Liang 等人 \cite{liang2012square} 给出了这一扩展的框架。
+
+基本思路是：当工作点偏离 $\Gamma$ 点一个小波矢 $\delta\kvec=(\delta k_x,\delta k_y)$ 时，四个基本波的传播方向不再严格沿 $\pm x$ 和 $\pm y$，而是各自偏转一个小角度。具体地，四个基本波的波矢变为
+\begin{align}
+\bm{\beta}_1 &= (\beta_0+\delta k_x,\;\delta k_y),\notag\\
+\bm{\beta}_2 &= (-\beta_0+\delta k_x,\;\delta k_y),\notag\\
+\bm{\beta}_3 &= (\delta k_x,\;\beta_0+\delta k_y),\notag\\
+\bm{\beta}_4 &= (\delta k_x,\;-\beta_0+\delta k_y).
+\label{eq:3d_cwt_non_gamma_kvec}
+\end{align}
+由于波矢偏转，每个基本波的 TE 极化方向也随之旋转。设 $(m_x,n_y)$ 为第 $(m,n)$ 个基本波的实际面内波矢分量，则电场不再严格只有一个分量，而是同时具有 $E_x$ 和 $E_y$，其比例由偏振方向决定：
+\begin{equation}
+\frac{E_{x,mn}}{E_{y,mn}} = -\frac{n_y}{m_x}.
+\label{eq:3d_cwt_polarization_tilt}
+\end{equation}
+这一修正使得原本在 $\Gamma$ 点严格解耦的 $x$-like 和 $y$-like 偏振在偏离 $\Gamma$ 点后发生混合。
+
+将修正后的波矢和偏振代入耦合方程，本征问题的形式不变，但耦合矩阵 $\bm{C}$ 的每个元素都变成 $\delta\kvec$ 的函数。沿布里渊区高对称路径 $\Gamma\to X\to M\to\Gamma$ 扫描 $\delta\kvec$，即可得到完整的能带结构 $\omega(\kvec)$，包括每条带的辐射常数随波矢的变化。
+
+\begin{ExampleBox}
+对方格晶格圆孔（$f=12\%$，$\varepsilon_b=12.7449$，$a=295\,\mathrm{nm}$），三维 CWT 计算的能带结构与 3D FDTD 结果在频率上吻合到 $<1\%$。在精确 $\Gamma$ 点，模式 A 和 B 的辐射常数为零（BIC），而偏离 $\Gamma$ 点后辐射常数迅速增大——这正是 BIC 在动量空间中的特征行为。模式 C 和 D 在 $\Gamma$ 点即有较大辐射常数，偏离后变化相对平缓。整条能带的计算（约 100 个 $\kvec$ 点）在三维 CWT 中仅需约 $2$ 分钟，而等效的 3D FDTD 需要数百小时 \cite{liang2012square}。
+\end{ExampleBox}
+
+\section{CWT 怎样表达阈值条件}
+现在把 \cref{ch:threshold} 的阈值条件接进来。如果仅讨论光学阈值而不求阈值电流，那么在 CWT 里最直接的说法是：当某个本征值的实部恰好穿过零时，该超模达到线性阈值。也就是说，阈值条件可写成
+\begin{equation}
+\max_j \operatorname{Re}(\lambda_j)=0.
+\label{eq:cwt_threshold}
+\end{equation}
+这个表达比“$g_{\mathrm{th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$”更接近 PCSEL 的模竞争现实，因为它允许不同超模具有不同的辐射损耗、不同的内部损耗投影，甚至不同的增益重叠。换句话说，CWT 并不是推翻 \cref{ch:threshold} 的阈值公式，而是把原本对单个模写的阈值条件，推广到了多模耦合后的超模本征值问题上。
+
+但也必须保持严格：\cref{eq:cwt_threshold} 给出的仍然只是光学线性阈值。若要把它变成阈值电流，仍然必须知道 $\bm{G}$ 如何随注入电流、载流子分布和温度变化。这一部分必须由 \cref{ch:qw-gain,ch:electrical,ch:eto-coupling} 提供。
+
+\section{一个最典型的设计问题：几何扰动到底在帮你什么}
+很多设计讨论会说“加一个小扰动以获得单模”或者“调孔形以改善偏振”，但这类说法只有落到 CWT 的语言里才真正可检验。设某个小扰动主要改变了 $x$ 向与 $y$ 向基本波之间的耦合，而几乎不改变与光锥的直接耦合，那么它更可能首先体现在模式分裂和偏振选择上，而未必显著降低阈值。相反，如果某个扰动主要增强了与辐射通道相关的矩阵元，那么它可能更直接改变辐射损耗和提取效率。
+
+\begin{ExampleBox}
+考虑两种孔形修改方案。方案 A 主要改变晶格的二阶傅里叶分量，使 $x$ 向与 $y$ 向波分量的交叉耦合显著增强；方案 B 主要增强与零面内动量辐射通道相关的傅里叶分量。用 CWT 语言看，方案 A 更容易引起模式分裂和偏振选择，方案 B 更容易改写辐射损耗与输出耦合。若目标是降低阈值并维持单峰远场，两者的优先级可能完全不同。
+\end{ExampleBox}
+
+这个例子说明，CWT 的真正价值不在于“给出一个更快的数值”，而在于把模糊的设计动作分解成可以逐项检查的物理效果。
+
+\section{CWT 到底能算什么，不能算什么}
+如果用得恰当，最小 CWT 至少能做五件非常有价值的事。
+
+第一，它能给出候选超模的构成，告诉我们目标模主要由哪些基本波叠加而成。
+
+第二，它能预测某些几何参数变化会沿哪条物理通道起作用，是更多地改频率、改损耗，还是改模式分裂。
+
+第三，它能用很低的计算代价做灵敏度扫描，为 RCWA、FDTD、FEM 缩小参数搜索空间。
+
+第四，它能在冷腔或简化增益模型下，快速比较几个候选模的相对阈值趋势。
+
+第五，它能把“偏振工程”“远场工程”“模式抑制”放进同一种耦合语言下理解，而不是把这些主题拆成彼此独立的经验技巧。
+
+但它同样有明确的不能之处。
+
+它不能严格替代全波方法去计算开放三维结构的精确辐射损耗；不能在没有外延、电学和热学模型的前提下直接给出阈值电流；不能可靠处理远离所选共振子空间的大尺度模重组；也不能自动处理有限尺寸边缘、注入不均匀和强热漂移引起的复杂模式变形。
+
+\begin{PitfallBox}
+把 CWT 输出的“目标模本征值最大”直接当成“器件一定单模工作”的证据，是非常常见的误判。CWT 最多告诉你在所选基底、所选近似和所选增益模型下，某个超模线性起振更有优势。真实器件还要接受有限尺寸、热漂移、注入不均匀和非线性增益压缩的再筛选。
+\end{PitfallBox}
+
+\section{CWT 在整本书工作流中的准确位置}
+把本书的建模链条回顾一遍，就能看清 CWT 的职责边界。
+
+在 \cref{ch:bloch,ch:gamma,ch:feedback} 中，我们建立的是模式分类和面发射的物理图像；在 \cref{ch:threshold,ch:polarization,ch:bic} 中，我们把阈值、偏振和远场放进开放系统视角；从本章开始，则进入“半解析模型”层。这里的目标不是追求一次性得出最终器件结论，而是建立一套足够清楚的中间语言，使后续 RCWA、FDTD、FEM 以及器件级电热模型之间能互相对话。
+
+因此，最合理的研究流程通常不是“CWT 或全波二选一”，而是：
+\begin{enumerate}
+  \item 用 PWE 或经验直觉找到 Gamma 点附近的候选模族；
+  \item 用 CWT 理解主导耦合通道和参数灵敏度；
+  \item 用 RCWA 精修开放周期单胞的辐射与谱线行为；
+  \item 用 FEM/FDTD 验证有限尺寸器件模式；
+  \item 再把这些结果送入外延、电注入和热耦合模型，判断器件级阈值与稳定工作区。
+\end{enumerate}
+
+这也是为什么 CWT 在 PCSEL 研究中长期有生命力。它不是因为”最精确”而重要，而是因为它最适合作为跨模型的中介语言。
+
+\begin{RigorousBox}
+本章 \cref{sec:3d-cwt-derivation} 的三维 CWT 推导基于 Liang 等人 \cite{liang2012square,liang2013triangular} 针对方格和三角晶格的工作。该框架已被应用于三晶格 PCSEL 设计 \cite{wang2024}，其中耦合系数 $\kappa_{\mathrm{1D}}$ 的计算直接指导了三个子晶格间距的优化，将 $180^{\circ}$ 反馈耦合强度相比单晶格提升约三倍，从而显著降低阈值电流。这说明三维 CWT 不是纯理论工具，而是能直接服务于孔形、子晶格位移等工程参数优化的半解析设计方法。
+\end{RigorousBox}
+
+\section*{本章小结}
+最小 CWT 的核心思想是：在 Gamma 点附近选取少数主导平面波分量，把完整 Maxwell 问题投影到一个低维耦合子空间中，再把保守耦合、开放损耗和增益同时写进同一组矩阵方程。这样做的收益是把几何、外延和有源效应压缩成可解释的耦合参数；代价则是模型只在所选子空间和近似条件内可信。本章进一步说明，这个低维子空间不应只按“哪四个波分量”来读，还应按 little-group 的 irrep 来读。对方格晶格最小四波模型，$A_1$、$B_1$ 与 $E$ family 的分解，正是把模式标注、偏振选择和 BIC 初筛接到同一个矩阵语言上的关键一步。对 PCSEL 来说，CWT 既不是能带图的重复，也不是全波求解器的廉价替身，而是连接物理图像、对称性分类与定量设计的关键中间层。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从 \cref{eq:cwt_ansatz} 出发，说明为什么 Gamma 点附近最自然的最小基底是四个基本波，而不是任意选取四个平面波。
+
+  \item \basicq 验证 \cref{eq:cwt_A1_basis,eq:cwt_B1_basis,eq:cwt_E_basis} 给出的四个向量在最小四波子空间中构成一组正交基，并说明为什么它们适合作为 $C_{4v}$ 的最小 irrep 基底。
+
+  \item \midq 结合 \cref{eq:cwt_kappa}，讨论改变孔半径、改变刻蚀深度和改变纵向层栈厚度三种动作分别会怎样影响耦合系数。
+
+  \item \midq 说明为什么在保持 $C_{4v}$ 的前提下，$E$ family 与 $A_1/B_1$ family 不能直接混合；再说明一旦降群，这种结论为什么可能被改写。
+
+  \item \midq 解释为什么 \cref{eq:cwt_threshold} 给出的是光学线性阈值，而不是器件级阈值电流。
+
+  \item \hardq 设计一个你认为“最小 CWT 会失效”的场景，并指出失效是因为缺少哪些基底或物理通道。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 读完下一章后再回头看本章，会更容易理解为什么二维有效模型在某些 PCSEL 结构上会系统性失效。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 如需与标准光子晶体教材对照，可参考 \cite{joannopoulos2008,sakoda2005} 中关于平面波耦合、对称性和模式投影的相关章节。 这条阅读的重点是补足本章关于最小 CWT、四波基底与阈值代理 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想直接对照 PCSEL 专用 CWT 的代表性建立过程，可参考 \cite{liang2012square,liang2013triangular}。 这条阅读的重点是补足本章关于最小 CWT、四波基底与阈值代理 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+

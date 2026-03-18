@@ -1,0 +1,256 @@
+﻿\chapter{阈值、增益、损耗与约束因子}
+\label{ch:threshold}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 严格区分阈值增益、阈值电流、被动 $Q$ 和净模增益这几个常被混淆的量；
+  \item 从冷腔损耗和有源区重叠出发推导 PCSEL 的光学阈值条件；
+  \item 理解为什么高 $Q$ 不自动等于最低阈值，也不自动等于最低阈值电流；
+  \item 明确本章结论如何接入后续的 BIC、器件电学和动态学模块。
+\end{itemize}
+
+\section*{先修知识}
+\cref{ch:feedback,ch:polarization} 中关于面内耦合、辐射通道、偏振与远场的基本概念。
+
+\section*{本章路线图}
+本章先问“阈值”这个词在 PCSEL 里到底指什么，再把材料增益、模增益、损耗和约束因子串成一条严格的符号链。随后我们说明被动 $Q$ 与阈值之间的关系、为什么本章只能给出阈值增益而不能直接给出阈值电流，以及为什么阈值之上还必须继续进入动态学、注入和热反馈。
+
+\section{阈值首先是净衰减被补偿的条件}
+若只看某一候选模式的线性小信号演化，它的复振幅可抽象写成
+\[
+\frac{\dd a}{\dd t}=\left(\ii\omega_0-\gamma_{\mathrm{rad}}-\gamma_{\mathrm{int}}+\gamma_{\mathrm{opt}}\right)a,
+\]
+其中 $\gamma_{\mathrm{rad}}$ 表示辐射损耗，$\gamma_{\mathrm{int}}$ 表示内部损耗，$\gamma_{\mathrm{opt}}$ 表示有源区提供的光学增益率。于是模式的净衰减率可写为
+\begin{equation}
+\gamma_{\mathrm{net}} = \gamma_{\mathrm{rad}} + \gamma_{\mathrm{int}} - \gamma_{\mathrm{opt}}.
+\label{eq:gamma_net}
+\end{equation}
+阈值的最本质定义就是：净衰减率恰好为零。
+
+\begin{equation}
+\gamma_{\mathrm{opt,th}} = \gamma_{\mathrm{rad}} + \gamma_{\mathrm{int}}.
+\label{eq:threshold_gamma}
+\end{equation}
+
+这不是一个定义式，而是一个平衡条件。若把复振幅解成
+\[
+a(t)=a(0)\exp\!\left[\left(\ii\omega_0-\gamma_{\mathrm{net}}\right)t\right],
+\]
+则模强度或光子数满足
+\begin{equation}
+S(t)=|a(t)|^2
+=
+S(0)\exp\!\left[-2\gamma_{\mathrm{net}}t\right].
+\label{eq:s_from_a}
+\end{equation}
+于是只有当 $\gamma_{\mathrm{net}}>0$ 时，模式才会衰减；当 $\gamma_{\mathrm{net}}<0$ 时，线性模型会预言指数增长；而阈值点恰好是这两类行为的分界面。换句话说，\cref{eq:threshold_gamma} 的地位不是“把一个符号定义成零”，而是“把增长和衰减的边界精确写出来”。
+
+\begin{IntuitionBox}
+把阈值理解成“激光刚好能自己维持住”的那一点，比把它理解成某个神秘的电流数更稳妥。因为对光场来说，最先被问到的问题始终是：每个光学周期里损失掉了多少，又补回来了多少。
+\end{IntuitionBox}
+
+\section{从材料增益到模增益：约束因子为什么必须出现}
+材料增益并不是直接作用在模式上的。模式只在有源区的一部分体积里真正“看到”增益，因此必须通过光学约束因子（optical confinement factor）把材料增益投影成模增益。最常用的近似写法是
+\begin{equation}
+g_{\mathrm{mod}} = \Gamma_{\mathrm{opt}}\, g_{\mathrm{mat}},
+\label{eq:gmod_gamma}
+\end{equation}
+其中 $g_{\mathrm{mat}}$ 是材料增益，$\Gamma_{\mathrm{opt}}$ 是模式与有源区的重叠因子，$g_{\mathrm{mod}}$ 是模增益。在能量归一化约定下，$\Gamma_{\mathrm{opt}}$ 的标准积分定义为
+\begin{equation}
+\Gamma_{\mathrm{opt}}=
+\frac{\int_{V_{\mathrm{act}}}\varepsilon_r(\rvec)|\E(\rvec)|^2\,\mathrm{d}V}
+{\int_{V_{\mathrm{total}}}\varepsilon_r(\rvec)|\E(\rvec)|^2\,\mathrm{d}V},
+\label{eq:gamma_opt_def}
+\end{equation}
+其中 $V_{\mathrm{act}}$ 为有源区体积，$V_{\mathrm{total}}$ 为模式能量主要分布的全结构体积。对单量子阱（厚度约 8 nm）嵌入数百纳米波导层的典型 PCSEL 外延结构，$\Gamma_{\mathrm{opt}}\sim1\%$；三至五量子阱时约为 3--5%。这个数量级提醒读者：材料增益需要达到 $10^2$--$10^3\ \mathrm{cm}^{-1}$ 量级，折算到模增益后才能满足阈值需求。
+这里的写法刻意保持在“最小接口层”。但它不是无条件成立的定义，而依赖几条近似：材料增益在有源区内可先看作局域标量；目标模式剖面在小信号增益下不发生显著重构；极化选择和增益色散已被压缩成该模式实际看到的一条有效增益曲线。真正把 $g_{\mathrm{mat}}$ 写成透明载流子密度、微分增益、量子阱数目与温度失谐的函数，要等到 \cref{ch:qw-gain} 才系统展开；本章先把它当作一个尚未完全展开、但已经明确属于有源区模型的输入量。
+
+若进一步用群速度 $v_g$ 把空间增益换成时间增益率，则
+\begin{equation}
+\gamma_{\mathrm{opt}} = v_g g_{\mathrm{mod}} = v_g\Gamma_{\mathrm{opt}} g_{\mathrm{mat}}.
+\label{eq:gamma_opt}
+\end{equation}
+同理，若把辐射损耗和内部损耗写成沿传播方向的等效损耗系数，则
+\begin{equation}
+\gamma_{\mathrm{rad}}=v_g\alpha_{\mathrm{rad}},
+\qquad
+\gamma_{\mathrm{int}}=v_g\alpha_{\mathrm{int}}.
+\label{eq:gamma_alpha_map}
+\end{equation}
+把 \cref{eq:gamma_alpha_map} 和 \cref{eq:gamma_opt} 代回 \cref{eq:threshold_gamma}，才得到下面常用的阈值增益公式。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{本章阈值链中最容易混淆的量纲桥。若不先把这一层单位统一，$v_g g$ 与 $\alpha/\Gamma$ 的映射最容易被读错。}
+  \label{tab:threshold_units_bridge}
+  \begin{tabular}{lll}
+    \toprule
+    量 & 典型单位 & 在阈值链中的角色 \\
+    \midrule
+    $\gamma_{\mathrm{rad}},\gamma_{\mathrm{int}},\gamma_{\mathrm{opt}}$ & $\mathrm{s}^{-1}$ & 时间增长/衰减率 \\
+    $\tau_p$ & $\mathrm{s}$ & 光子寿命 \\
+    $\alpha_{\mathrm{rad}},\alpha_{\mathrm{int}}$ & $\mathrm{cm}^{-1}$ 或 $\mathrm{m}^{-1}$ & 空间损耗系数 \\
+    $g_{\mathrm{mat}},g_{\mathrm{mod}},g_{\mathrm{th}}$ & $\mathrm{cm}^{-1}$ 或 $\mathrm{m}^{-1}$ & 空间增益系数 \\
+    $\Gamma_{\mathrm{opt}}$ & 1 & 重叠因子，无量纲 \\
+    $v_g$ & $\mathrm{cm/s}$ 或 $\mathrm{m/s}$ & 把空间增益/损耗映射成时间率的等效参数 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{RigorousBox}
+这里的 $v_g$ 必须读成\textbf{把空间增益/损耗映射成时间增长率的等效参数}，而不能机械地理解成”PWEM 带图在 exact $\Gamma$ 点处的 Bloch 群速度”。对 PCSEL 的 standing-wave / 区中心模式来说，带图斜率趋零与速率方程里仍保留一个有限的等效增益转换参数，并不矛盾，因为两者服务的是不同降阶层级：前者描述 Bloch 包络的传播速度（宏观驻波），后者描述局域光场与增益介质的耦合速率（微观增益-场相互作用）。实际建模时，常把 $v_g$ 估算为 $c/n_{\mathrm{eff}}$，其中 $n_{\mathrm{eff}}$ 为纵向等效折射率；对 GaAs 基 PCSEL 而言，$n_{\mathrm{eff}}\approx3.3$--$3.5$，因此 $v_g\approx0.9\times10^{10}\,\mathrm{cm/s}$ 可作为数量级参考，但最终应与速率方程拟合或传播矩阵法对齐。
+\end{RigorousBox}
+
+把 \cref{eq:threshold_gamma,eq:gamma_opt} 联立，就得到常见的阈值增益形式
+\begin{equation}
+ g_{\mathrm{th}} = \frac{\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}}{\Gamma_{\mathrm{opt}}},
+\label{eq:gth}
+\end{equation}
+其中 $\alpha_{\mathrm{rad}}$ 和 $\alpha_{\mathrm{int}}$ 分别表示与辐射损耗和内部损耗对应的等效损耗系数。
+
+这条式子很重要，但必须读对：它给出的首先是\textbf{光学线性阈值}，不是器件级阈值电流。
+
+\begin{RigorousBox}
+在本书的语境里，$g_{\mathrm{th}}$ 表示“要让某模式净衰减归零所需的模增益阈值”。它依赖该模式的辐射损耗、内部损耗和与有源区的重叠。若把这个量直接改写成 $I_{\mathrm{th}}$，等于默认注入均匀、材料增益模型已知且热漂移可忽略，而这些默认对真实 PCSEL 往往都不成立。
+\end{RigorousBox}
+
+\section{内部损耗并不是一个黑箱常数}
+很多初学者把内部损耗写成一个符号后就不再追问。但对 PCSEL 而言，这往往正是器件结论出错的地方。更稳妥的写法是把内部损耗继续拆开：
+\begin{equation}
+\alpha_{\mathrm{int}} = \alpha_{\mathrm{FCA}} + \alpha_{\mathrm{abs}} + \alpha_{\mathrm{metal}} + \alpha_{\mathrm{scatt}}.
+\label{eq:alpha_int_detail}
+\end{equation}
+这里 $\alpha_{\mathrm{FCA}}$ 表示自由载流子吸收，$\alpha_{\mathrm{abs}}$ 表示材料吸收或掺杂层吸收，$\alpha_{\mathrm{metal}}$ 表示金属邻近引入的损耗，$\alpha_{\mathrm{scatt}}$ 表示与粗糙度、侧壁和工艺缺陷相关的散射损耗。对典型 GaAs 基 PCSEL 外延结构，各项量级大致为：$\alpha_{\mathrm{FCA}}\sim1$--$10\ \mathrm{cm}^{-1}$（随掺杂浓度线性增大），$\alpha_{\mathrm{abs}}\sim1$--$5\ \mathrm{cm}^{-1}$，$\alpha_{\mathrm{metal}}$ 若模式尾场触及欧姆接触层可达 $10$--$100\ \mathrm{cm}^{-1}$，$\alpha_{\mathrm{scatt}}$ 通常 $<5\ \mathrm{cm}^{-1}$。辐射损耗 $\alpha_{\mathrm{rad}}$ 对高-$Q$ BIC 候选模可低至 $0.1\ \mathrm{cm}^{-1}$，对亮模可达 $10\ \mathrm{cm}^{-1}$ 以上（仅供数量级参考）。
+
+PCSEL 之所以不能只看冷腔模场分布，原因就在这里：只要模式在纵向上被拉向重掺杂层、金属邻近区或粗糙界面，原本“看起来很漂亮”的冷腔候选模，阈值排序就可能被内部损耗完全改写。
+
+\section[为什么高 Q 有利，但不等于最低阈值]{为什么高 $Q$ 有利，但不等于最低阈值}
+从被动角度看，品质因子越高，说明能量衰减越慢。若只考虑辐射损耗，这当然通常有利于降低阈值。但对 PCSEL 来说，这个判断绝不能单独使用。高 $Q$ 模并不必然具备以下优点：
+\begin{itemize}
+  \item 与量子阱有最好的重叠；
+  \item 对掺杂层、金属层和吸收层有最小重叠；
+  \item 在电流注入和温升回写之后仍保持最优排序；
+  \item 在高功率工作时仍保持合适的提取效率和远场形状。
+\end{itemize}
+
+因此，正确的说法是：高 $Q$ 往往是低阈值的有利因素，但阈值由净模增益条件决定，而不是由 $Q$ 单独决定。
+
+\begin{PitfallBox}
+“这个模式的被动 $Q$ 比另一个高一倍，所以它的阈值电流一定更低”这类说法是不严谨的。它至少忽略了模式重叠、内部损耗、电流分布和热漂移四件事。
+\end{PitfallBox}
+
+\section{从速率方程再看一遍阈值}
+若采用单模近似，光子数 $S$ 的最简速率方程可写为
+\begin{equation}
+\frac{\dd S}{\dd t} = v_g\bigl[\Gamma_{\mathrm{opt}} g_{\mathrm{mat}}(N,T)-\alpha_{\mathrm{rad}}-\alpha_{\mathrm{int}}\bigr]S + \beta_{\mathrm{sp}}R_{\mathrm{sp}}.
+\label{eq:photon_rate}
+\end{equation}
+其中 $N$ 为等效载流子浓度，$T$ 为温度，$\beta_{\mathrm{sp}}R_{\mathrm{sp}}$ 表示耦入该模式的自发辐射项。
+
+在单模、小信号、给定模式剖面的近似下，阈值条件就是光子数不再指数衰减：
+\begin{equation}
+\Gamma_{\mathrm{opt}} g_{\mathrm{mat}}(N_{\mathrm{th}},T_{\mathrm{th}})=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}.
+\label{eq:threshold_rate}
+\end{equation}
+
+于是 \cref{eq:threshold_gamma} 与 \cref{eq:threshold_rate} 只是同一件事的两种写法：前者强调时间衰减率，后者强调模增益与损耗的平衡。
+
+若希望再从开放模语言看一遍，可把候选模的复频率写成
+\begin{equation}
+\tilde{\omega}
+=
+\omega_r-\ii\bigl(\gamma_{\mathrm{rad}}+\gamma_{\mathrm{int}}-\gamma_{\mathrm{opt}}\bigr).
+\label{eq:complex_omega_threshold}
+\end{equation}
+在本书采用的时间因子约定下，$\Im\,\tilde{\omega}<0$ 对应振幅随时间衰减，$\Im\,\tilde{\omega}>0$ 对应线性增长，而阈值则对应
+\begin{equation}
+\Im\,\tilde{\omega}_{\mathrm{th}}=0.
+\label{eq:complex_threshold_condition}
+\end{equation}
+因此，从复频率角度看，阈值条件并不是另一条新物理，而只是把“净衰减归零”重写成“复频率虚部穿过零”的开放系统表达。它和 \cref{eq:threshold_gamma,eq:threshold_rate} 必须给出同一个阈值。
+
+\begin{RigorousBox}
+\cref{eq:threshold_gamma,eq:threshold_rate,eq:complex_threshold_condition} 给出的都只是\textbf{线性光学阈值}：它们回答“哪一个候选模最先补偿净损耗”。它们不是阈上稳态激光解，因为尚未引入饱和和有源自洽场；也不是阈值电流，因为尚未求解注入分布、复合损耗与热回写。
+\end{RigorousBox}
+
+\section{非均匀增益为什么会改写模式排序}
+真实器件里，增益往往不是均匀分布的。电流扩展、电流拥挤、热斑和载流子泄漏都会让局域增益依赖空间位置。此时更合适的模增益表达式是
+\begin{equation}
+g_{\mathrm{mod}} = \frac{\int_{V_{\mathrm{active}}} g_{\mathrm{mat}}(\rvec)\,\varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}{\int_{V_\mathrm{all}} \varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}.
+\label{eq:gmod_nonuniform}
+\end{equation}
+这里分母中的 $V_\mathrm{all}$ 应按”模式实际占据的全部空间”理解，而不是只积到波导芯层或有源层附近一个小盒子为止。对开放 slab 共振模，它至少要覆盖主要场能量所在区域，包括向上下包层延伸的倏逝尾场；否则约束因子和模增益都会被系统性高估。实际截断时，建议与能量归一化所用积分域保持一致：取一个使分母积分值与无穷域积分值之差小于 $1\%$ 的有限截断面，并在收敛检查中验证该截断不影响最终约束因子结果。
+
+\cref{eq:gmod_nonuniform} 的意义非常深刻。它说明：即便两个模式拥有相同的冷腔损耗，若它们在横向上的场分布不同，而注入分布又不均匀，那么它们得到的有效模增益也会不同。这正是后面电注入和热效应能够改写模式排序的根本原因。
+
+\section{为什么本章只能给出阈值增益，不能给出阈值电流}
+到这里，读者可能会问：既然阈值条件都写得这么明确了，为什么还不能直接算 $I_{\mathrm{th}}$？
+
+原因并不复杂。要从 $g_{\mathrm{th}}$ 走到 $I_{\mathrm{th}}$，至少还需要解决三件事：
+\begin{enumerate}
+  \item 材料增益 $g_{\mathrm{mat}}$ 如何依赖载流子浓度和温度；
+  \item 外加电流如何通过漂移--扩散和复合过程产生该载流子分布；
+  \item 温升如何反过来改写折射率、损耗和增益谱。
+\end{enumerate}
+这三步分别对应后面的有源区、电学和热耦合章节。换句话说，本章完成的是从冷腔模式到光学阈值的桥接，而不是从模式直接跳到器件电流。
+
+\section{为什么本章故意停在静态阈值，而不在这里直接讨论动态学}
+从教学顺序上看，这里有必要再把边界说清楚。阈值条件回答的是“哪一个模式最先有资格起振”，而不是“起振以后它会怎样演化”。只要器件进入阈值以上区域，载流子抽空、增益压缩、模式竞争和热回写就会一起出现；这已经超出了本章的静态线性阈值范围。
+
+因此，本章故意把问题停在 $g_{\mathrm{th}}$ 与阈值电流来源的分界线上。这样做不是回避动态学，而是为了确保读者先把静态层级分清，再进入后面的 \cref{ch:dynamics} 去讨论弛豫振荡、调制响应和线宽来源。若在这里就把阈值、稳定性和线宽混写在一起，最容易造成的错误恰恰是重新把“能起振”误当成“能稳定单模工作”。
+
+\section{从冷腔候选模到主动激光模：本书采用的理论层级}
+到这里还应再补一块总说明。否则读者虽然已经知道“被动候选模、线性阈值模、阈上工作模不是一回事”，却仍可能不知道它们在更高层理论里究竟怎样排位。对本书而言，最有用的分层是：
+\begin{enumerate}
+  \item \textbf{冷腔候选模}：这是前面能带、BIC、CWT、RCWA、FDTD/FEM 反复追踪的对象。它们是在无饱和、无反转动态、或只含给定损耗的开放 Maxwell 问题里得到的候选共振模或候选模族。
+  \item \textbf{小信号阈值模}：这是在既定冷腔候选模基础上，引入未饱和增益之后得到的线性起振判据。此时我们问的是“哪一支模最先把净损耗补偿到零”，而不是“阈上稳态场到底长什么样”。
+  \item \textbf{主动激光模}：这是更高层的有源自洽对象。它不再把光场视为在固定复介电常数中的被动或线性响应解，而是要求 Maxwell 方程、介质极化、反转分布和饱和非线性共同满足自洽条件。若进一步讨论阈上稳态或随机噪声，还会进入 Maxwell--Bloch 或 steady-state \emph{ab initio} laser theory（SALT）一类形式化\cite{tureci2007salt,tureci2009salt}。
+\end{enumerate}
+
+这三层之间的关系，不是“前两层错误、第三层才正确”，而是“前两层是被设计流程反复证明有用的工作近似，第三层则给出更完整的顶层坐标系”。本书把冷腔模与小信号阈值模作为主线，并不是否认主动激光模理论的重要性，而是基于三点考虑。
+
+第一，\textbf{对 PCSEL 入门与器件设计最先起决定作用的，通常不是完整阈上自洽解，而是模式候选、损耗排序、注入分布和热反馈的主导关系。} 这些问题若没先理清，即使直接写出更高层形式化，也很难得到可操作的设计判断。
+
+第二，\textbf{主动激光模理论要求更完整的材料极化与反转模型。} 这会把教学重点迅速推向 Maxwell--Bloch 或更复杂的有源场自洽求解，而偏离本书“从 Maxwell/Bloch/CWT/数值方法走到器件建模链”的主线。
+
+第三，\textbf{真实 PCSEL 的器件不确定性常常先于顶层主动模理论成为瓶颈。} 外延层、注入非均匀、热回写和有限尺寸边界若尚未被清楚建模，那么把全部精力投入阈上自洽场理论，未必比先把冷腔候选模和小信号阈值链条做扎实更有效。
+
+\begin{RigorousBox}
+因此，本书采用的立场是：冷腔模理论给出候选模目录，小信号阈值理论给出起振排序，而主动激光模理论提供更高层的理论封顶。前两者构成本书的工作主线，第三者则作为读者应当知道其存在、知道其位置、但本书不把它展开成主教学骨架的上层框架。只要把这三层关系说清楚，就不会再把“冷腔共振频率”“线性阈值模”与“真实阈上激光模”混成同一个概念。
+\end{RigorousBox}
+
+\section{本章应输出哪些真正有用的结果}
+如果把本章用在研究工作流中，最有价值的输出不应只是一个单独的 $g_{\mathrm{th}}$ 数字，而应至少包括：
+\begin{itemize}
+  \item 各损耗分量占比：到底是辐射损耗主导，还是内部损耗主导；
+  \item 目标模与主要竞争模的阈值增益差；
+  \item $\Gamma_{\mathrm{opt}}$ 与损耗重叠因子随几何、温度或外延方案的变化；
+  \item 哪些参数一改动，就会显著改变净增益排序。
+\end{itemize}
+这些结果比“某模式阈值增益为某数值”更能指导后续设计。
+
+\section*{本章小结}
+本章把阈值问题严格放回了它应在的层级：阈值首先是净模增益补偿总损耗的光学条件。材料增益必须通过约束因子与模式重叠转化为模增益；总损耗则必须拆成辐射与内部各项来源。只有把这些关系讲清楚，后面讨论阈值电流、电注入和热效应才不会偷换概念。与此同时，辐射损耗这一项并不是孤立参数：在 \cref{ch:bic} 中，读者会看到同一类 $\Gamma$ 点辐射通道如何被 BIC / quasi-BIC 语言重新组织；而在 \cref{ch:dynamics} 中，读者会看到“谁先达到阈值”还必须继续延伸为“阈上谁更稳定、谁的调制更快、谁的线宽更窄”。这正是 PCSEL 中静态阈值、辐射工程与动态学不可拆开的原因。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从复频率定义出发，推导被动 $Q$ 与等效损耗系数之间的关系。
+
+  \item \basicq 解释为什么同样的材料增益谱，对两个场分布不同的模式会给出不同的模增益。
+
+  \item \midq 给出一个 $\Gamma_{\mathrm{opt}}$ 增大但阈值电流不降反升的物理场景。
+
+  \item \hardq 将 \cref{eq:gmod_nonuniform} 与电注入非均匀联系起来，说明它为什么是后续器件建模的关键接口式。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item \cite{coldren2012,siegman1986,henry1982} 中关于阈值条件、速率方程与线宽来源的经典章节和论文。 这条阅读的重点是补足本章关于阈值、损耗与器件级阈值边界 的标准背景、经典语言和代表性文献接口。
+
+  \item 读完 \cref{ch:qw-gain,ch:electrical} 后回看本章，会更清楚“阈值增益”与“阈值电流”之间到底隔了哪些物理。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若你想继续追问“辐射损耗本身是怎样被结构对称性重排的”，可接着读 \cref{ch:bic}；若你想追问“达到阈值以后会怎样演化”，则应直接进入 \cref{ch:dynamics}。若你还想知道这条链在更高层有源自洽理论中的位置，可把 \cite{tureci2007salt,tureci2009salt} 作为背景参考，而不必把它当成本书主线的前置条件。 这条阅读的重点是补足本章关于阈值、损耗与器件级阈值边界 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

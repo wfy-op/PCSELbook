@@ -1,0 +1,249 @@
+\chapter{热效应、非均匀性与热-电-光耦合}
+\label{ch:eto-coupling}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 理解为什么热效应在 PCSEL 中不是对冷腔分析的末端修正，而是会主动重写载流子分布、增益谱、损耗和模式排序的主导因素。
+  \item 掌握 Joule 热、复合热、温度依赖材料参数和多物理场迭代之间的关系，并能判断什么时候简化热模型已经不够。
+  \item 对 GaAs、InP、GaN 等主要材料平台在折射率、增益谱、热导、掺杂损耗和工艺难点上的差异形成器件级认识。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:threshold,ch:qw-gain,ch:electrical} 中关于阈值条件、局域增益分布和电注入输运的内容。
+
+\section*{本章路线图}
+到上一章为止，我们已经知道阈值电流为什么是一个空间分辨的器件问题，但那仍是在等温框架下建立的。真实 PCSEL 一旦开始导通，接触、电流扩展层、阻挡层和有源区就会发热，而温度又会反过来改写迁移率、复合、折射率、材料增益和吸收。于是，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 中看似分别处理的外延层、有源区和输运，会在本章重新闭合成一个热-电-光回路。本章先从热源开始，再讨论温升如何同时回写到光学和电学；随后解释热斑、空间烧孔和模式竞争的关系，最后用一个平台差异小节说明：同一套 PCSEL 理论框架在 GaAs、InP、GaN 上会怎样“变形”。
+
+\section{为什么热效应在 PCSEL 中比在许多小面积激光器里更具结构性}
+并不是所有半导体激光器都对热效应同样敏感。PCSEL 的特殊性在于：它一方面追求较大的发光面积和面内相干反馈，另一方面又要求单模、窄远场和稳定偏振。前者让横向热扩散尺度变长、局部热斑更容易出现；后者则意味着任何小范围的折射率、增益或损耗扰动，都可能被模式选择机制放大成宏观输出差异。
+
+因此，热效应在 PCSEL 中最危险的地方不是“平均温升多了几度”，而是它会把前面章节建立的排序关系重新改写。某个在冷腔中看起来损耗最低的模式，到了真实工作点下可能因为热斑位置、局域折射率抬升或注入退化而不再最优。换句话说，热效应不是在冷腔结果之后附加一个偏移，而是在重写“谁才是那个真正工作的器件模式”。
+
+\begin{IntuitionBox}
+冷腔分析更像是宣布比赛开始前的排位；热-电-光耦合分析讨论的是比赛进行时赛道本身会不会形变。对 PCSEL 这类对空间分布高度敏感的器件来说，真正决定冠军的往往是后者。
+\end{IntuitionBox}
+
+\section{热源不只是一项总功率，而是一张三维分布图}
+热学建模的第一步不是写热方程，而是先承认热源的空间结构。对电注入 PCSEL 来说，最常见的热源至少包括三类。
+
+第一类是 Joule 热：
+\begin{equation}
+Q_{\mathrm{Joule}} = \bm{J}\cdot\bm{E}_{\mathrm{elec}},
+\label{eq:q_joule}
+\end{equation}
+它主要沿高电阻接触区、spreading layer 和局部电流拥挤通道集中。\cref{eq:q_joule} 属于\textbf{耦合模型中的热源项}，因为它依赖 \cref{ch:electrical} 的电学求解结果。
+
+第二类是非辐射复合热。若以局域非辐射复合率 $R_{\mathrm{nr}}$ 表示，则可写成
+\begin{equation}
+Q_{\mathrm{nr}} \propto R_{\mathrm{nr}}\,\Delta E,
+\label{eq:q_nr}
+\end{equation}
+其中 $\Delta E$ 表示相关能量释放尺度。它同样属于\textbf{耦合模型中的热源项}。
+
+第三类常被低估的热源，是光吸收相关发热，包括自由载流子吸收、金属邻近吸收和向非目标辐射通道泄漏后再被材料吸收的能量。工程上可以把它们合并写成一个有效光学热源 $Q_{\mathrm{opt,abs}}$，并在多物理场求解中由光学模块回写给热学模块。
+
+于是总热源最小可写成
+\begin{equation}
+Q_{\mathrm{tot}}
+=
+Q_{\mathrm{Joule}}+Q_{\mathrm{nr}}+Q_{\mathrm{opt,abs}}.
+\label{eq:q_total}
+\end{equation}
+\cref{eq:q_total} 的作用是把“哪些功率最终变成热”这件事从口头描述变成热方程右端真正的输入。
+
+这三类热源的分布通常并不重合。Joule 热可能集中在接触附近，复合热主要集中在量子阱附近，光吸收热又可能靠近金属或表面工艺层。于是，PCSEL 的温升不是一个数，而是一张三维热源卷积后的温度分布图。
+
+\section{热方程真正给出的不是平均温升，而是温度场}
+最基础的稳态热学模型最好写成保守形式
+\begin{equation}
+-\nabla\cdot\!\big[\kappa_T(\rvec)\nabla T(\rvec)\big]
+=
+Q_{\mathrm{tot}}(\rvec),
+\label{eq:heat_eq}
+\end{equation}
+其中 $\kappa_T$ 为热导率，$T(\rvec)$ 为温度场，而 $Q_{\mathrm{tot}}$ 正是 \cref{eq:q_total} 中定义的总热源。\cref{eq:heat_eq} 属于\textbf{热学模型}。这一方程最重要的教学意义，不是提醒你会有“温度升高”，而是提醒你温度升高几乎一定具有空间结构。
+
+这时边界条件就不再是实现细节，而是热模型本身的一部分。最常见的两类写法是
+\begin{equation}
+T|_{\partial\Omega_D}=T_0,
+\label{eq:thermal_bc_dirichlet}
+\end{equation}
+表示某一边界与理想热沉紧耦合，温度被固定；以及
+\begin{equation}
+-\kappa_T\,\partial_n T
+=
+h\,(T-T_{\mathrm{amb}}),
+\label{eq:thermal_bc_robin}
+\end{equation}
+表示边界通过有限换热系数 $h$ 与环境交换热量。前者更像强制热沉，后者更像封装、空气侧或有限导热胶层的等效模型。
+
+若只想先建立热学量纲感，还可以把空间分布压缩成一个集总模型：
+\begin{equation}
+C_{\mathrm{th}}\frac{\dd \Delta T}{\dd t}
+\;+\;
+\frac{\Delta T}{R_{\mathrm{th}}}
+=
+P_{\mathrm{heat}}(t),
+\label{eq:lumped_thermal}
+\end{equation}
+其中 $R_{\mathrm{th}}$ 是热阻，$C_{\mathrm{th}}$ 是等效热容，$P_{\mathrm{heat}}$ 是总发热功率。稳态下
+\begin{equation}
+\Delta T_{\mathrm{ss}} = R_{\mathrm{th}} P_{\mathrm{heat}},
+\qquad
+\tau_{\mathrm{th}} = R_{\mathrm{th}}C_{\mathrm{th}}.
+\label{eq:thermal_time_constant}
+\end{equation}
+\cref{eq:lumped_thermal,eq:thermal_time_constant} 当然不能取代三维热场，但它们给了读者一把最基本的尺子：到底是“平均热负载已经过大”，还是“平均温升还行，但空间热斑已经毁掉模式稳定性”。对直径约 $\SIrange{200}{300}{\micro\meter}$、衬底厚度约 $\SI{200}{\micro\meter}$ 的 GaAs 基 PCSEL，$R_{\mathrm{th}}$ 常落在 \SIrange{10}{100}{K/W} 的量级；只要结构、封装或散热路径明显变化，这个范围就会大幅移动，因此它更适合作为设计初筛尺子，而不是默认常数。
+
+对 PCSEL 而言，平均温升只适合回答非常粗的问题，例如“某个方案是否在总体热负载上明显更差”。但只要你关心阈值附近模式排序、高功率单模稳定性、远场主瓣是否漂移、偏振是否翻转，平均温升就不够了。因为这些现象敏感的是 $T(x,y,z)$ 的梯度和局域峰值，而不是整体平均值。一个局部热斑就足以把模式中心拉偏、把局部增益峰推离目标波长，进而改变模式竞争。
+
+\section{温升如何回写到光学：折射率、增益谱、吸收和冷腔频率全都会动}
+热反馈对光学的第一条路径，是折射率变化。最常见的局部近似写法是
+\begin{equation}
+ n(T) \approx n(T_0) + \frac{\partial n}{\partial T}(T-T_0),
+\label{eq:dn_dT}
+\end{equation}
+\cref{eq:dn_dT} 属于\textbf{光学模型的热修正项}。一旦 $T$ 在横向上不均匀，器件内部就会出现热透镜；一旦 $T$ 在纵向上不均匀，模场也会被拖向不同层。于是，\cref{ch:epitaxial-optics} 建立的纵向重叠与上下辐射不对称，到了工作点就不再保持冷腔值。
+
+第二条路径是材料增益谱漂移。\cref{ch:qw-gain} 已经把材料增益写成
+\begin{equation}
+g_{\mathrm{mat}}(\omega,N,T),
+\end{equation}
+这意味着温度一升高，透明载流子密度、增益峰位置和微分增益都可能变化。于是，同一个外加电流在不同温度下未必对应同样的阈值裕量。
+
+第三条路径是内部损耗的热增强。自由载流子吸收、接触邻近损耗和某些材料吸收过程都可能随温度增强。于是，温升往往不是简单地把工作波长平移，而是同时提高损耗并降低增益匹配。对 PCSEL 来说，这三条路径一旦叠加，就足以把冷腔中的高 $Q$ 候选模淘汰掉。
+
+把这些热回写写成一组最小线性化关系，就是
+\begin{align}
+\Delta n &\approx \frac{\partial n}{\partial T}\Delta T,
+\label{eq:thermal_feedback_n}
+\\
+\Delta g_{\mathrm{mat}}
+&\approx
+\frac{\partial g_{\mathrm{mat}}}{\partial T}\Delta T,
+\label{eq:thermal_feedback_g}
+\\
+\Delta \alpha
+&\approx
+\frac{\partial \alpha}{\partial T}\Delta T,
+\label{eq:thermal_feedback_alpha}
+\\
+\Delta \mu
+&\approx
+\frac{\partial \mu}{\partial T}\Delta T.
+\label{eq:thermal_feedback_mu}
+\end{align}
+\cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把“热会改写光和电”这句口头话，变成真正可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。若只需教材级量纲感，可先记住：GaAs 体系常用 $\partial n/\partial T \sim 2\times10^{-4}\,\mathrm{K}^{-1}$ 作为一阶估算；模增益对温度的等效斜率常表现为负值，量级可粗看成 $-0.1$ 到 $-0.2\,\mathrm{cm}^{-1}\,\mathrm{K}^{-1}$，表示升温会压低净增益裕量。
+
+\section[温升如何回写到电学]{温升如何回写到电学：热又在重写注入分布}
+热反馈的危险不只在光学侧。温度上升通常会降低迁移率、改变接触电阻、改写复合系数，甚至加重局部电流拥挤。于是，\cref{ch:electrical} 里的 $n(\rvec)$、$p(\rvec)$ 与 $\bm{J}(\rvec)$ 其实是温度相关的。用更直白的话说，热场不是求出之后“交给光学后处理”的终点，它会反过来改变电流路径本身。
+
+这会形成一个典型的正反馈：电流拥挤区更热，温度升高后该区域的增益可能下降，但接触电阻和局域导电路径又可能进一步不均匀，最终导致载流子与模式分布一起重排。很多高功率 PCSEL 中观测到的模式切换、主瓣拉宽和输出滚降，都可以沿着这条热-电-光正反馈去理解。
+
+\section{热斑、空间烧孔和模式竞争：为什么高功率问题不能只看平均参数}
+当前面三章合并起来时，最值得警惕的工作点现象有三个：热斑、空间烧孔和局域损耗增强。热斑意味着局部折射率更高、材料增益峰更红移；空间烧孔意味着不同区域的载流子被模式消耗得不一样；局域损耗增强则意味着某些区域虽然有模式场，却因温度和掺杂共同作用而变成净负贡献。它们叠加后的结果是：模式竞争不再由单一冷腔损耗或单一模增益决定，而由一个同时随空间和工作点变化的分布系统决定。
+
+这正是为什么本书一再强调：PCSEL 的大面积单模问题，不可能只通过带结构和冷腔 Q 来完成。只要进入真实电注入和高功率工作区，模式稳定性本质上就是一个热-电-光分布稳定性问题。
+
+\begin{ExampleBox}
+设某 PCSEL 在低电流下显示为法向单峰远场，但随驱动升高出现主瓣分裂。最直接的排查思路不应只盯着 \cref{ch:feedback,ch:threshold,ch:polarization,ch:bic} 的平面内耦合系数，而应优先检查：是否中心区域热斑抬高了折射率并拉偏模式，是否边缘区域因注入不足而形成局域负增益，以及这种空间重排是否使原本次优的高阶模式开始获得更大局域模增益。
+\end{ExampleBox}
+
+\section[把前面三章闭成真正的热-电-光回路]{把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 闭成真正的热-电-光回路}
+现在可以把完整的器件回路写成
+\begin{equation}
+\begin{aligned}
+I
+&\rightarrow
+\bigl(\phi,n,p,\bm{J}\bigr)
+\rightarrow
+\bigl(Q_{\mathrm{Joule}},Q_{\mathrm{nr}},Q_{\mathrm{opt,abs}}\bigr)
+\rightarrow
+T(\rvec)
+\\
+&\rightarrow
+\bigl(n(\rvec),g_{\mathrm{mat}}(\rvec),\alpha(\rvec),\mu(\rvec)\bigr)
+\rightarrow
+\text{mode, threshold, far field, polarization}.
+\end{aligned}
+\label{eq:eto_chain}
+\end{equation}
+\cref{eq:eto_chain} 不是单个方程，而是本章最核心的\textbf{器件逻辑链}。它告诉读者：\cref{ch:epitaxial-optics} 的纵向模、\cref{ch:qw-gain} 的有源区工程和 \cref{ch:electrical} 的注入分布，从这里开始不再是顺次单向传递，而是构成一个迭代闭环。
+
+因此，真正可信的器件工作点往往需要分步迭代：先在初始温度下求电学和载流子分布，再由电学和非辐射复合产生热源求热场，再更新折射率、增益、损耗和迁移率，重新解电学和光学，直到阈值、温度峰值和模式分布都收敛。只做一次“冷腔 + 固定均匀增益 + 平均温升修正”的计算，严格地说还不能叫自洽器件求解。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[node distance=1.45cm,>=Stealth]
+    \node[draw,rounded corners,fill=blue!10,minimum width=2.8cm] (e) {Electrical solve};
+    \node[draw,rounded corners,fill=red!10,right=of e,minimum width=2.8cm] (h) {Thermal solve};
+    \node[draw,rounded corners,fill=green!10,right=of h,minimum width=2.8cm] (o) {Optical solve};
+    \draw[->] (e)--node[above]{\small $\bm{J},R,Q$}(h);
+    \draw[->] (h)--node[above]{\small $T(\rvec)$}(o);
+    \draw[->,dashed,bend left=18] (o) to node[below]{\small $\alpha,g,n$ feedback}(e);
+  \end{tikzpicture}
+  \caption{热-电-光耦合流程图。真正的器件工作点通常需要通过这种闭环迭代获得，而不是单次串行后处理。}
+  \label{fig:eto-flow}
+\end{figure}
+
+\section{哪些问题还可以用简化热模型，哪些已经必须做多物理场闭环}
+务实的器件建模不意味着一开始就做最复杂的全三维耦合，而是要根据问题目标选择模型层级。如果你的目标只是比较几个几何方案在低功率、阈值附近的相对热敏感性，那么集中热阻或一维稳态热模型往往足以筛掉明显不合理的方案。如果目标是估算阈值附近温升对材料增益峰和折射率的影响，则二维或简化三维热模型配合 \cref{ch:electrical} 的注入分布，已经是合理的中间层。
+
+但如果研究目标变成下列任一种，就不应该再停留在简化热模型上：高功率单模稳定性、模式切换边界、远场随驱动的系统漂移、偏振翻转、上下出光比变化、明显不对称接触布局、非均匀孔径或大尺寸器件中心/边缘性能分裂。因为这些问题敏感的是温度和注入的空间重排，而不是平均热阻本身。
+
+\section{不同材料平台如何让同一个 PCSEL 框架发生变形}
+到这里，读者已经具备理解平台差异的正确角度了：GaAs、InP、GaN 的差别，不是“换一套材料参数再套同样模型”这么简单，而是它们会同时改写 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这整条器件链中的几乎每一个接口量。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{tabularx}{\textwidth}{@{}lYYY@{}}
+    \toprule
+    平台 & GaAs 系 & InP 系 & GaN 系 \\
+    \midrule
+    典型波段与增益谱 & 近红外，围绕 $\SIrange{850}{980}{nm}$ 等窗口较成熟；量子阱与 AlGaAs/InGaAs 体系结合紧密 & 通信波段，围绕 $\SIrange{1.3}{1.55}{\micro m}$；长波长增益与温度漂移更敏感 & 可见到近紫外；InGaN/GaN 量子阱中极化场和应变效应更突出 \\
+    折射率与纵向光学 & 折射率较高，纵向波导与表面耦合工程空间较大 & 折射率也高，但长波长下层栈厚度与吸收窗口管理更敏感 & 折射率相对较低，模式尺寸、表面耦合和空气孔设计尺度都会变化 \\
+    热学与散热 & 热导中等，工艺成熟，但大面积高功率下仍要警惕热斑 & 热导通常较弱，长波器件对温升更敏感，热滚降问题往往更早出现 & 材料本征热导潜力较好，但实际器件受 p 侧导电与接触、基底和工艺路径强烈制约 \\
+    掺杂损耗与注入难点 & p 侧自由载流子吸收和接触层损耗需要平衡；总体工艺路线较成熟 & p 侧接触和长波吸收层管理往往更苛刻，内部损耗更容易抬高阈值 & p-GaN 导电与低阻接触长期是难点，spreading layer 与透明接触设计常成为核心问题 \\
+    工艺与结构难点 & 高质量外延、刻蚀与再生长经验丰富，适合系统优化 & 长波材料组合、热管理与低损接触需要更谨慎协同 & 干法刻蚀、表面损伤、极化场、应变和接触工程往往同时限制设计窗口 \\
+    \bottomrule
+  \end{tabularx}
+  \caption{GaAs、InP、GaN 三类 PCSEL 材料平台的器件级差异。表中不给出工艺手册式数字，而强调它们如何改写 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 建立的同一套器件框架。}
+  \label{tab:platform_compare}
+\end{table}
+
+这张表的关键不是帮助读者背材料结论，而是让读者形成一个更成熟的认知：同一套 PCSEL 理论框架在不同平台上的“困难点”并不相同。GaAs 平台往往更适合系统化优化，因为外延、刻蚀和接触路线成熟；InP 平台会更早暴露长波热敏感和内部损耗问题；GaN 平台则常把 spreading layer、p 侧接触和极化场一起推到设计前台。因此，平台选择不是单看目标波长，而是选择你准备在哪一段器件链上支付最大复杂度。
+
+\section{为什么平台差异再次证明冷腔结论不能直接变成器件结论}
+到这里，本章终于可以把这四章的主旨再说一遍：冷腔模分析给出的候选模、辐射损耗和耦合关系当然重要，但一旦进入真实材料平台，它们就必须通过外延层、有源区、注入与热反馈重新检验。GaAs、InP、GaN 的差异恰恰证明了这一点。相同的平面内晶格参数、相似的冷腔带结构，放在不同平台上时，可能因为折射率背景不同、热导不同、p 侧导电不同、掺杂损耗不同，而对应完全不同的真实器件工作点。
+
+因此，一个真正成熟的 PCSEL 设计判断不应说“这个单胞的冷腔 Q 很高，所以平台随便换”。更准确的说法应是：“这个平面内方案在某一平台上是否还能通过 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这条器件链，维持所需的模式重叠、注入均匀性和热稳定性？”这才是器件级设计的提问方式。
+
+\begin{PitfallBox}
+把“冷腔 + 固定均匀增益 + 平均温升修正”称为完整器件热-电-光分析，是不严格的。这样的模型最多只能给出带温度修正的光学代理结论，不能代替自洽的器件工作点求解，更无法覆盖不同材料平台的真实差异。
+\end{PitfallBox}
+
+\section*{本章小结}
+热效应在 PCSEL 中不是补充项，而是把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 重新耦合成器件工作点的主导机制。Joule 热、复合热和吸收热共同生成三维热源，热方程给出空间温度场，而温度场又通过折射率、增益谱、吸收、迁移率和接触特性回写到模式与注入分布中。对大面积、单模、高功率 PCSEL 来说，真正需要分析的是热斑、空间烧孔和模式竞争的耦合，而不是单一平均温升。GaAs、InP、GaN 等材料平台则进一步表明：同一套 PCSEL 光学框架在不同器件材料上会因折射率、热导、掺杂损耗和工艺路径不同而表现出完全不同的工作约束。到本章结束时，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 终于构成了一套完整的半导体器件教材模块：外延层定义纵向舞台，有源区定义可用增益，注入工程定义局域载流子分布，热反馈决定这个分布和模式是否能在真实工作点下稳定存在。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 解释为什么在大面积 PCSEL 中，平均温升通常不足以判断单模稳定性，回答中必须同时讨论热斑和模式重排。
+
+  \item \basicq 结合 \cref{eq:eto_chain} 说明温升如何同时通过折射率和迁移率两条路径改写模式竞争。
+
+  \item \midq 对比 GaAs 与 GaN 平台，说明为什么 current spreading layer 和接触工程在两者中的设计压力不同。
+
+  \item \hardq 给出一个你认为必须采用空间分辨多物理场求解的 PCSEL 问题，并说明简化热模型为什么在该问题上不够。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章将把这四章建立的器件链与前面的开放电磁和数值方法重新汇总，进入大面积单模 PCSEL 的综合设计原则。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想补充半导体激光器热阻、热滚降与工作点漂移的经典背景，可对照 \cite{coldren2012} 相关章节阅读；但在 PCSEL 中，应始终额外关注热场如何通过空间分布重写模式选择。 这条阅读的重点是补足本章关于热效应、非均匀性与热-电-光闭环 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想对照高功率与连续波 PCSEL 中热-电-光约束怎样真正显形，可参考 \cite{hirose2014,yoshida2019,yoshida2023,wang2024}。 这条阅读的重点是补足本章关于热效应、非均匀性与热-电-光闭环 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

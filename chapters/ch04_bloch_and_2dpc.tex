@@ -1,0 +1,370 @@
+\chapter{Bloch 定理与二维光子晶体基础}
+\label{ch:bloch}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 理解平移对称性为什么会导致 Bloch 定理，而不只是记住 Bloch 形式。
+  \item 掌握二维晶格、倒晶格、布里渊区和高对称点的基本几何意义。
+  \item 认识 slab 结构中 TE/TM 分类的适用条件与局限。
+\end{itemize}
+
+\section*{先修知识}
+\cref{ch:maxwell,ch:roadmap} 中的频域 Maxwell 方程、坐标约定和倒格矢记号。
+
+\section*{本章路线图}
+本章先从“周期性如何约束解”讲起，再给出 Bloch 定理的证明思路，随后介绍二维光子晶体几何和布里渊区，最后把这些理想周期概念放回具有有限厚度的 PCSEL slab 结构中，解释 TE/TM 为什么经常只是近似语言。
+
+\section{为什么周期性如此重要}
+上一章已经说明，PCSEL 的被动光学问题来自开放系统中的 Maxwell 方程。现在我们加入新的结构信息：介电函数在平面内是周期的。设存在一组晶格平移 $\bm{R}$，使得
+\begin{equation}
+\varepsilon(\rho+\bm{R},z)=\varepsilon(\rho,z).
+\label{eq:lattice_periodicity}
+\end{equation}
+这条看似普通的式子，带来的影响极大。它意味着：虽然结构在平面上无限延展，但解并不需要在整个无限空间里“毫无组织地”寻找。周期性会把解空间分解成一族由波矢 $\kvec$ 标记的子空间。Bloch 定理正是这种分解的数学表达。
+
+对初学者来说，Bloch 定理最容易被误记成一句形式化定义
+\[
+\E_{\kvec}(\rvec)=\ee^{\ii\kvec\cdot\rho}\bm{u}_{\kvec}(\rvec),
+\]
+然后就往下继续算。这样当然可以做题，但很难真正理解为什么这一形式自然、为什么它和倒格矢、高对称点、能带图联系如此紧密。要把后面的 PCSEL 模分析学扎实，最好先从“对称算符”角度理解这件事。
+
+\section{Bloch 定理的来源：平移算符与共同本征态}
+考虑晶格平移算符 $\hat T_{\bm{R}}$，定义为
+\[
+\hat T_{\bm{R}}\E(\rho,z)=\E(\rho+\bm{R},z).
+\]
+若介质满足 \cref{eq:lattice_periodicity}，则 Maxwell 算符在平面内与所有 $\hat T_{\bm{R}}$ 对易。这一点最好显式写一次。设频域算子记为
+\[
+\hat{\mathcal L}
+=
+\nabla\times \mu_r^{-1}(\rho,z)\nabla\times
+-\frac{\omega^2}{c^2}\varepsilon_r(\rho,z),
+\]
+则对任意场 $\E$ 有
+\[
+\hat T_{\bm R}\hat{\mathcal L}\E(\rho,z)
+=
+\hat{\mathcal L}(\rho+\bm R,z)\E(\rho+\bm R,z).
+\]
+一旦结构满足
+\[
+\varepsilon_r(\rho+\bm R,z)=\varepsilon_r(\rho,z),
+\qquad
+\mu_r(\rho+\bm R,z)=\mu_r(\rho,z),
+\]
+就有 $\hat{\mathcal L}(\rho+\bm R,z)=\hat{\mathcal L}(\rho,z)$，从而
+\[
+\hat T_{\bm R}\hat{\mathcal L}\E
+=
+\hat{\mathcal L}\hat T_{\bm R}\E,
+\qquad\Longrightarrow\qquad
+[\hat T_{\bm R},\hat{\mathcal L}]=0.
+\]
+对易意味着可以寻找同时是 Maxwell 算符和平移算符本征态的场。于是存在一组复数 $\lambda(\bm{R})$ 使得
+\[
+\hat T_{\bm{R}}\E(\rho,z)=\lambda(\bm{R})\E(\rho,z).
+\]
+
+现在利用群性质：
+\[
+\hat T_{\bm{R}_1}\hat T_{\bm{R}_2}=\hat T_{\bm{R}_1+\bm{R}_2}.
+\]
+对同一本征态作用后得到
+\[
+\lambda(\bm{R}_1)\lambda(\bm{R}_2)=\lambda(\bm{R}_1+\bm{R}_2).
+\]
+满足这种可乘性质的连续表示只能写成
+\[
+\lambda(\bm{R})=\ee^{\ii\kvec\cdot\bm{R}},
+\]
+其中 $\kvec$ 是某个二维向量。一个简要论证如下：若 $\lambda(\bm{R})$ 连续且满足 $\lambda(\bm{R}_1)\lambda(\bm{R}_2)=\lambda(\bm{R}_1+\bm{R}_2)$，则可写 $\ln\lambda(\bm{R})=\bm{c}\cdot\bm{R}$，其中 $\bm{c}$ 为常向量。无损周期系统要求 $|\lambda|=1$，因此 $\bm{c}$ 必为纯虚数，记作 $\ii\kvec$，于是得到指数形式。若允许有损或倏逝 Bloch 解，则 $\kvec$ 可取复数（“复 Bloch 波矢”），对应沿晶格方向的衰减或放大。
+
+于是便有
+\begin{equation}
+\E_{\kvec}(\rho+\bm{R},z)=\ee^{\ii\kvec\cdot\bm{R}}\E_{\kvec}(\rho,z),
+\label{eq:bloch_condition}
+\end{equation}
+再把快速相位因子提出，就得到 Bloch 形式
+\begin{equation}
+\E_{\kvec}(\rho,z)=\ee^{\ii\kvec\cdot\rho}\bm{u}_{\kvec}(\rho,z),
+\qquad
+\bm{u}_{\kvec}(\rho+\bm{R},z)=\bm{u}_{\kvec}(\rho,z).
+\label{eq:bloch_form}
+\end{equation}
+
+这就是 Bloch 定理的本质：不是“凭经验假设一个平面波乘周期函数”，而是“利用平移对称性把无限系统的解空间按表示理论方式分块”。
+
+这里还隐含了一个对初学者很重要的前提：本章讨论的是无损、无限、严格周期的理想背景，因此我们把 $\kvec$ 视为实向量，并要求
+\[
+|\lambda(\bm{R})|=1.
+\]
+这句话的物理意思是：把模式平移一个晶格周期后，只允许它获得相位，而不允许幅值沿晶格方向系统性增长或衰减。若问题改成有限周期链、有损介质或倏逝 Bloch 解，则复 Bloch 波矢同样可能出现；但那已经超出了本章“无限周期模式分类”的任务边界。
+
+\begin{RigorousBox}
+Bloch 定理讨论的是无限周期结构中的模式分类。它告诉我们如何组织候选模，但并不自动告诉我们有限器件中哪个模会激射，也不直接给出阈值电流。
+\end{RigorousBox}
+
+\section{为什么波矢只需取第一布里渊区}
+Bloch 波矢并不是任意二维向量都互不相同。若 $\gvec$ 是倒格矢，则
+\[
+\ee^{\ii(\kvec+\gvec)\cdot\bm{R}}
+\;=\;
+\ee^{\ii\kvec\cdot\bm{R}}\ee^{\ii\gvec\cdot\bm{R}}
+\;=\;
+\ee^{\ii\kvec\cdot\bm{R}},
+\]
+因为 $\gvec\cdot\bm{R}$ 总是 $2\pi$ 的整数倍。于是 $\kvec$ 与 $\kvec+\gvec$ 对应同一组 Bloch 相位条件。因此，我们只需要在倒空间中选取一个基本区域来代表所有不等价的 $\kvec$，这个区域就是第一布里渊区（first Brillouin zone）。
+
+这一步的物理意义非常重要。它说明在周期结构中，真正不同的不是“绝对波矢”，而是“波矢模掉倒格矢后的等价类”。后面我们画能带、讨论 $\Gamma$ 点和高对称路径时，都是在这个意义下工作的。
+
+\subsection{约化区方案与扩展区方案}
+初学者在读图时还会遇到另一个常见困惑：为什么有时文献把所有波矢都折回第一布里渊区，有时又把色散画成跨越多个布里渊区的连续曲线？
+
+这对应两种完全等价的记账方式。
+\begin{itemize}
+  \item 约化区方案（reduced-zone scheme）：把所有不等价的 $\kvec$ 都压回第一布里渊区，优点是最适合讨论对称性和能带编号；
+  \item 扩展区方案（extended-zone scheme）：允许 $\kvec$ 继续延伸到多个倒空间区域，优点是更直观地显示“原来哪一支平面波被周期势折叠回来”。
+\end{itemize}
+
+对 PCSEL 新手来说，最稳妥的阅读顺序是：先用约化区方案理解高对称点和模式分类，再用扩展区方案建立“散射把哪几个平面波连到一起”的直觉。后者对耦合波理论尤其重要。
+
+\section{二维晶格、倒晶格与布里渊区}
+\cref{fig:lattice-reciprocal} 展示了二维实空间晶格和倒空间晶格的概念示意。实空间基矢告诉我们孔阵在物理空间如何重复，倒空间基矢则告诉我们哪些傅里叶分量最先参与散射与耦合。
+
+更正式地，二维倒格基矢由
+\begin{equation}
+\bm a_i\cdot \bm b_j = 2\pi\delta_{ij}
+\label{eq:reciprocal_duality}
+\end{equation}
+定义。对任意二维基矢 $\bm a_1,\bm a_2$，可写成
+\begin{equation}
+\bm b_1 =
+2\pi\frac{\hat{\bm z}\times \bm a_2}{|\bm a_1\times\bm a_2|},
+\qquad
+\bm b_2 =
+2\pi\frac{\bm a_1\times \hat{\bm z}}{|\bm a_1\times\bm a_2|}.
+\label{eq:2d_reciprocal_general}
+\end{equation}
+\cref{eq:2d_reciprocal_general} 是后面处理三角晶格时真正应反复调用的工具，而不是只对正方晶格记一个“旋转九十度再乘 $2\pi/a$”的特殊结果。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=0.95]
+    \foreach \i in {0,...,4}{
+      \foreach \j in {0,...,4}{
+        \fill[blue!50] (\i,\j) circle (0.07);
+      }
+    }
+    \draw[->,thick,red] (0,0)--(1.2,0) node[below]{$\bm{a}_1$};
+    \draw[->,thick,red] (0,0)--(0,1.2) node[left]{$\bm{a}_2$};
+    \node at (2,4.5){实空间晶格};
+
+    \begin{scope}[xshift=7.2cm]
+      \foreach \i in {-2,...,2}{
+        \foreach \j in {-2,...,2}{
+          \fill[green!50!black] (\i,\j) circle (0.07);
+        }
+      }
+      \draw[->,thick,orange] (0,0)--(1.2,0) node[below]{$\bm{b}_1$};
+      \draw[->,thick,orange] (0,0)--(0,1.2) node[left]{$\bm{b}_2$};
+      \node at (0,4.5){倒空间晶格};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{二维实空间晶格与倒空间晶格示意。}
+  \label{fig:lattice-reciprocal}
+\end{figure}
+
+第一布里渊区的构造最好也不要只记最终图形。它的定义是：在倒空间中取所有比其他倒格点更接近原点 $\Gamma$ 的点所组成的区域，也就是倒空间里的 Wigner--Seitz 原胞。实际作图时，最稳妥的步骤是先画出离原点最近的一圈倒格点，再对连接原点与这些倒格点的线段作垂直平分线，最后取围住原点的最小闭区域。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=0.95]
+    \foreach \x/\y in {0/0,2/0,-2/0,0/2,0/-2}{
+      \fill[green!50!black] (\x,\y) circle (0.07);
+    }
+    \draw[dashed,gray!70] (0,0)--(2,0);
+    \draw[dashed,gray!70] (0,0)--(-2,0);
+    \draw[dashed,gray!70] (0,0)--(0,2);
+    \draw[dashed,gray!70] (0,0)--(0,-2);
+    \draw[thick,orange!85] (1,-1.55)--(1,1.55);
+    \draw[thick,orange!85] (-1,-1.55)--(-1,1.55);
+    \draw[thick,orange!85] (-1.55,1)--(1.55,1);
+    \draw[thick,orange!85] (-1.55,-1)--(1.55,-1);
+    \draw[very thick,blue!60] (-1,-1)--(1,-1)--(1,1)--(-1,1)--cycle;
+    \node[below left] at (0,0) {$\Gamma$};
+    \node at (0,-2.0) {最近邻倒格点的垂直平分线围出第一布里渊区};
+  \end{tikzpicture}
+  \caption{方格晶格第一布里渊区的构造示意。蓝色区域是围住原点的 Wigner--Seitz 原胞。}
+  \label{fig:bz_construction_square}
+\end{figure}
+
+\cref{fig:bz-gamma} 则给出了标准方格晶格高对称点标注。中心点 $\Gamma$ 对应 $\kvec=\bm{0}$，而边中心 $X$ 与角点 $M$ 分别代表两类不同的特殊相位条件。后面讨论 PCSEL 时，$\Gamma$ 点之所以格外重要，是因为它对应法向辐射、区中心模以及多组等价平面波分量之间的特殊耦合结构。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    \draw[thick] (-1.8,-1.8) rectangle (1.8,1.8);
+    \fill[red] (0,0) circle (0.08) node[above right]{$\Gamma$};
+    \fill (1.8,0) circle (0.04) node[right]{$X$};
+    \fill (0,1.8) circle (0.04) node[above]{$Y$};
+    \fill (1.8,1.8) circle (0.04) node[above right]{$M$};
+    \draw[very thick,blue!60] (0,0)--(1.8,0)--(1.8,1.8)--cycle;
+  \end{tikzpicture}
+  \caption{方格晶格第一布里渊区与标准高对称点标注。常用路径为 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$。}
+  \label{fig:bz-gamma}
+\end{figure}
+
+\section{从平面波展开理解能带为什么会出现}
+如果把上一章的 Maxwell 方程和本章的 Bloch 形式合并起来，可以把周期介质中的模式进一步写成
+\[
+\E_{\kvec}(\rho,z)
+=
+\sum_{\gvec}\bm{c}_{\kvec+\gvec}(z)\,
+\ee^{\ii(\kvec+\gvec)\cdot\rho}.
+\]
+这个展开式说明：在周期结构中，一个 Bloch 模并不是单一平面波，而是许多相差倒格矢的平面波分量的相干叠加。若没有周期调制，这些平面波彼此互不耦合；一旦周期调制存在，它们就通过介电函数的傅里叶分量彼此混合，于是原本简单的自由色散被“切开”和“重排”，这就是能带结构出现的根本原因。
+
+对新手来说，这一步尤其关键。因为很多人第一次见到能带图时，会误以为它只是某种“把频率对波矢作图”的漂亮结果。实际上，能带是平面波在周期势中相互耦合后的本征值图谱。这个理解一旦建立，后面读到“带隙”“带折叠”“带边”“Gamma 点简并”时，就不再只是死记术语，而能回到“哪些平面波被耦合在一起”这个更基本的问题上。
+
+\begin{ExampleBox}
+对一维周期结构，最基本的带隙可以看成两个满足布拉格条件的反向平面波发生耦合后形成的分裂。二维 PCSEL 虽然复杂得多，但逻辑是一致的：只是参与耦合的波分量不再只有一对，而可能是一组等价方向的波。
+\end{ExampleBox}
+
+\section{二维光子晶体的常见晶格：方格与三角晶格}
+PCSEL 文献中最常见的二维晶格是方格晶格和三角晶格。选择哪一种，不是审美问题，而会直接影响：
+\begin{itemize}
+  \item 高对称点的类型与简并结构；
+  \item 等价散射方向的数量；
+  \item 允许的偏振选择规则与远场工程路径。
+\end{itemize}
+
+方格晶格的优势是几何和对称性直观，很多最小耦合波图像都容易从这里建立；三角晶格则往往在六重对称条件下展现不同的模式简并与辐射特征。对初学者而言，先在方格晶格上建立直觉，再迁移到三角晶格，是比较稳妥的学习路径。
+
+\subsection{三角晶格速览：后面为什么会频繁出现 \texorpdfstring{$K$}{K} 点与 \texorpdfstring{$C_{6v}$}{C6v}}
+三角晶格的一个常用基矢选择是
+\begin{equation}
+\bm a_1 = a\hat{\bm x},
+\qquad
+\bm a_2 = a\left(\frac{1}{2}\hat{\bm x}+\frac{\sqrt{3}}{2}\hat{\bm y}\right).
+\label{eq:triangular_real_basis}
+\end{equation}
+将它代入 \cref{eq:2d_reciprocal_general}，得到
+\begin{equation}
+\bm b_1 = \frac{2\pi}{a}\left(1,-\frac{1}{\sqrt{3}}\right),
+\qquad
+\bm b_2 = \frac{2\pi}{a}\left(0,\frac{2}{\sqrt{3}}\right).
+\label{eq:triangular_reciprocal_basis}
+\end{equation}
+此时第一布里渊区是正六边形，最常见的高对称点是区中心 $\Gamma$、边中心 $M$ 和顶点 $K$。这一节的任务不是立刻把三角晶格全部算透，而是给后文一个最小几何坐标系：当 \cref{ch:polarization,ch:bic} 讨论 $C_{6v}$ 小群、双重简并和六重对称散射时，读者至少知道这些标签对应的倒空间位置是什么。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    \coordinate (G) at (0,0);
+    \coordinate (K1) at (1.8,0);
+    \coordinate (K2) at (0.9,1.5588);
+    \coordinate (K3) at (-0.9,1.5588);
+    \coordinate (K4) at (-1.8,0);
+    \coordinate (K5) at (-0.9,-1.5588);
+    \coordinate (K6) at (0.9,-1.5588);
+    \draw[thick] (K1)--(K2)--(K3)--(K4)--(K5)--(K6)--cycle;
+    \fill[red] (G) circle (0.05) node[below left]{$\Gamma$};
+    \fill (1.8,0) circle (0.04) node[right]{$K$};
+    \fill (1.35,0.7794) circle (0.04) node[right]{$M$};
+    \draw[very thick,blue!60] (G)--(1.35,0.7794)--(1.8,0)--cycle;
+  \end{tikzpicture}
+  \caption{三角晶格第一布里渊区示意。最常用的高对称路径是 $\Gamma\rightarrow M\rightarrow K\rightarrow\Gamma$。}
+  \label{fig:bz-triangular}
+\end{figure}
+
+\subsection{新手第一次看高对称路径时应看什么}
+很多书或软件会直接给出一条高对称路径，比如方格晶格中的 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$。新手最容易犯的错误，是把注意力全部放在“哪条曲线高、哪条曲线低”，却忽略了真正更重要的问题：
+\begin{enumerate}
+  \item 哪些点是高对称点，为什么只看这些点；
+  \item 某条带在这些点附近是否变平，意味着哪些耦合增强；
+  \item 哪些带在高对称点重合，意味着可能存在简并与后续可控分裂。
+\end{enumerate}
+因此，第一次看高对称路径，不要急着评价“哪条带更好”，而要先学会读出“哪里在发生模式重组”。
+
+\begin{ExampleBox}
+若在方格晶格中只保留最主要的四个平面波分量，许多 $\Gamma$ 点耦合现象就能得到很清楚的图像。这也是为什么很多教材和早期解析模型喜欢从方格晶格开始，而不是一上来就讨论所有可能晶格。
+\end{ExampleBox}
+
+\section{把二维理想图像放回真实 PCSEL：slab 结构会带来什么变化}
+到目前为止，我们讨论的 Bloch 理论主要是“平面内无限周期”的语言。但真实 PCSEL 不是严格二维材料，而是具有有限厚度的 slab 结构。也就是说，场不仅在平面内受周期调制，还在 $z$ 方向受外延层栈约束。这一事实会带来两个关键后果。
+
+第一，真正的模式是全矢量三维模式。即使在某些参数区间内人们习惯说“TE-like”或“TM-like”，那也通常意味着“主要电场分量或主要磁场分量具有某种偏向”，而不是二维教科书中严格分离的纯 TE/TM 解。
+
+第二，slab 的存在允许导模、泄露模和辐射模共存。某个在二维理想模型中看似被很好分类的 Bloch 模，放到有限厚度 slab 中以后，可能会通过垂直辐射通道与自由空间耦合，从而成为对 PCSEL 真正重要的候选模。
+
+\begin{IntuitionBox}
+二维 Bloch 理论的作用是告诉我们“平面内有哪些组织良好的模式家族”；slab 结构则提醒我们“这些家族在真实三维器件里会怎样与纵向约束和辐射通道重新混合”。PCSEL 正是在这两层之间工作。
+\end{IntuitionBox}
+
+\section{TE/TM 分类为什么常常只是近似}
+在严格二维、无厚度、标量化处理的模型中，TE 与 TM 可以作为清晰的极化分类。但在真实 PCSEL slab 中，下列因素都会破坏这一理想图像：
+\begin{itemize}
+  \item 高折射率对比导致边界处矢量分量强烈耦合；
+  \item 周期孔形和垂直不对称使场分量不再简单分离；
+  \item 辐射通道要求场同时满足面内周期和垂直出射条件。
+\end{itemize}
+
+因此，后文若使用“TE-like”或“TM-like”这样的词，应理解为工程上的近似标签，而不是严格数学分类。本书采用一个可操作的判别标准：若模式电场能量中 $E_z$ 分量占比 $<5\%$，称为 \textbf{TE-like}；反之若 $H_z$ 分量占比 $<5\%$，称为 \textbf{TM-like}。这里的“like”提醒读者：只要 slab 上下不对称，$E_z$ 和 $H_z$ 都不可能严格为零，真实模式是混合极化的。这个提醒很重要，因为许多关于偏振和远场的误判，都源自把近似 TE/TM 标签当成了真实矢量模的完整描述。
+
+\subsection{一个对初学者更安全的学习顺序}
+如果读者刚接触 PCSEL，不必一上来就放弃所有 TE/TM 直觉。更安全的做法是分三步：
+\begin{enumerate}
+  \item 先用二维标量或 TE-like 图像理解带结构、带隙和高对称点；
+  \item 再用全矢量 slab 模型检查哪些结论仍然成立，哪些开始偏移；
+  \item 最后在有限尺寸和开放边界模型中验证偏振与远场。
+\end{enumerate}
+这种“先建立直觉，再主动拆掉过强近似”的路径，比一开始就把所有三维矢量细节压到新手身上更有效。
+
+\begin{PitfallBox}
+把二维平面波展开中的 TE/TM 标签直接搬到真实有限厚度电注入器件上，是 PCSEL 建模里非常常见的错误。尤其当外延不对称、金属邻近损耗或偏振工程很重要时，这种错误会直接影响模式判定。
+\end{PitfallBox}
+
+\section{Bloch 理论能告诉我们什么，又不能告诉我们什么}
+到这一章结尾，必须把 Bloch 理论的能力边界说清楚。
+
+它能告诉我们：
+\begin{itemize}
+  \item 周期结构中模式如何按 $\kvec$ 和对称性分类；
+  \item 第一布里渊区内哪些高对称点值得重点关注；
+  \item 某些简并与选择规则为何出现。
+\end{itemize}
+
+它不能单独告诉我们：
+\begin{itemize}
+  \item 有限器件边缘效应会不会改变模式排序；
+  \item 有源区增益分布是否偏向目标模；
+  \item 电注入和温升下哪一个模最终先起振并保持稳定。
+\end{itemize}
+
+因此，Bloch 理论是模式分类的起点，而不是 PCSEL 器件结论的终点。
+
+\section{通向下一章：为什么 Gamma 点会成为中心舞台}
+本章已经说明：二维周期结构中的模式可以用 Bloch 波矢分类，而 $\Gamma$ 点是布里渊区中心的特殊位置。下一章将进一步回答：为什么在 PCSEL 中，$\Gamma$ 点附近的模式经常成为重点关注对象？简并、对称性、辐射耦合和有限尺寸修正又会怎样共同决定真正的候选激射模？
+
+\section*{本章小结}
+Bloch 定理把无限周期结构的求解组织成了按波矢分类的问题，并由此引出倒格矢、布里渊区和高对称点等核心概念。对 PCSEL 而言，这一步的意义在于建立候选模的“目录系统”。但这还只是目录，目录之后还要讨论哪些模式真正与辐射、增益和器件工作条件相匹配。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从平移算符的角度，重述一次 Bloch 定理的证明思路。
+
+  \item \basicq 证明 $\kvec$ 与 $\kvec+\gvec$ 对应相同的 Bloch 相位条件。
+
+  \item \midq 解释为什么 $\Gamma$ 点的重要性不仅仅来自“群速度小”，还来自模式对称性和辐射通道。
+
+  \item \hardq 给出一个 slab 结构中 TE/TM 近似可能失效的具体场景。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item \cite{joannopoulos2008,sakoda2005} 中关于 Bloch 定理与二维光子晶体的基础章节。 这条阅读的重点是补足本章关于Bloch 定理、布里渊区与模式分类 的标准背景、经典语言和代表性文献接口。
+
+  \item 读完下一章后再回看本章，通常会更容易理解 $\Gamma$ 点为何成为 PCSEL 模选择的核心位置。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+\end{itemize}
+
+

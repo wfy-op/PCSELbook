@@ -1,0 +1,26 @@
+{
+  "model": "2D scalar Hz PWEM teaching model",
+  "parameters": {
+    "r_over_a": 0.3,
+    "eps_background": 11.559999999999999,
+    "eps_hole": 1.0,
+    "cutoff": 2,
+    "bands": 6,
+    "points_per_segment": 16
+  },
+  "labels": [
+    "G",
+    "X",
+    "M",
+    "G"
+  ],
+  "label_positions": [
+    0.0,
+    0.5,
+    1.0,
+    1.7071067812
+  ],
+  "g_vectors": 25,
+  "runtime_seconds": 0.297,
+  "output_csv": "pwem_square_hole_hz_bands.csv"
+}

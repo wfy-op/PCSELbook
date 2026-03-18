@@ -1,0 +1,441 @@
+\chapter{数学附录}
+\label{ch:math-appendix}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 把全书反复使用的时间因子、傅里叶展开、归一化、复频率和微扰公式整理成一套统一数学语法。
+  \item 理解这些公式各自依赖的物理前提，避免把本来只对封闭或弱开放系统成立的表达式机械外推到所有 PCSEL 问题。
+  \item 建立开放 Maxwell 问题中 QNM、伴随模、双正交和广义归一化的最小数学框架。
+  \item 学会把这些数学工具用于检查仿真结果、统一跨章节符号，以及快速估计参数变化对模态的影响。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:maxwell,ch:bloch,ch:threshold,ch:cmt} 中关于 Maxwell 方程、Bloch 展开、阈值条件和微扰观点的内容。
+
+\section*{本章路线图}
+本附录不是把若干常见恒等式堆在一起的公式仓库，而是把正文反复调用、却不宜每次都从头展开的数学骨架集中讲清楚。我们先统一时间因子和频域约定，因为一切损耗、增益和复频率的符号都依赖它；随后建立周期介质中的傅里叶与 Bloch 展开，解释卷积结构为什么在 \cref{ch:gamma} 的能带概念、\cref{ch:pwe} 的 PWEM、以及后续 RCWA 和 CWT 中一再出现；再讨论内积、归一化和开放系统中的复频率与 $Q$；最后给出互易性与一阶微扰公式，并明确说明它们在哪些条件下可靠、在哪些条件下只能作为工程近似。
+
+\section{为什么数学附录不是装饰，而是主结论的一部分}
+PCSEL 的建模链横跨电磁场、半导体输运和热传导。只要这些模块之间的时间因子、损耗符号、傅里叶约定或归一化不一致，最终就会出现一种很危险的情况：看起来像是“物理结论不同”，实际却只是数学约定变了。最典型的例子就是时间因子的选择。一旦一个章节使用 $\ee^{-\ii\omega t}$，另一个局部推导却默默改成 $\ee^{+\ii\omega t}$，那么介质虚部、损耗符号、复频率虚部和 $Q$ 的定义就会全部翻转。若读者没有意识到这一点，很容易把纯符号问题误读成腔损耗差异或增益符号差异。
+
+因此，本附录的目标不是补充“额外数学”，而是把正文各章默认共享的数学地基显式写出来。只要地基统一，后面的开放系统、耦合波理论、RCWA、FDTD/FEM 提取和器件级回写才可能真正接成一条链。
+
+\begin{IntuitionBox}
+如果把整本书看成一套多物理场模型，那么数学附录的作用就像接口协议。接口协议一旦不统一，上层所有“漂亮结果”都可能只是碰巧连上，而不是严格可复用。
+\end{IntuitionBox}
+
+\section{时间因子与频域约定：先把增益和损耗的符号说清楚}
+全书统一采用时间因子
+\begin{equation}
+\E(\rvec,t) = \Re\!\left\{\E(\rvec)\ee^{-\ii\omega t}\right\},
+\qquad
+\Hf(\rvec,t) = \Re\!\left\{\Hf(\rvec)\ee^{-\ii\omega t}\right\}.
+\label{eq:time_convention_appendix}
+\end{equation}
+在这一约定下，频域 Maxwell 方程写成
+\begin{align}
+\nabla\times \E &= +\ii\omega\B,\label{eq:maxwell_freq_faraday_appendix}\\
+\nabla\times \Hf &= \J - \ii\omega\D.\label{eq:maxwell_freq_ampere_appendix}
+\end{align}
+若采用线性各向同性本构关系
+\begin{equation}
+\D = \varepsilon_0\varepsilon\E,
+\qquad
+\B = \mu_0\mu\Hf,
+\end{equation}
+则在无外加电流时可得到熟悉的波动方程。重要的不是方程形式本身，而是它对损耗和增益符号的约束。
+
+在约定 \cref{eq:time_convention_appendix} 下，若介质为被动介质，则通常要求
+\begin{equation}
+\Im\,\varepsilon(\omega) > 0,
+\label{eq:passive_epsilon_sign}
+\end{equation}
+因为这对应正的平均耗散功率。这个结论可以从时均功率密度看出来。对无外加源的谐波场，时均耗散功率密度满足
+\begin{equation}
+P_{\mathrm{abs}} = \frac{\omega\varepsilon_0}{2}\Im\,\varepsilon\,|\E|^2,
+\label{eq:absorption_density_appendix}
+\end{equation}
+其中假设磁损耗可以忽略或已单独处理。于是，在本书采用的符号体系里，正的虚部表示吸收，若要以等效介电常数虚部的方式表示增益，则会对应负的有效虚部。这一点看似基础，却是所有“阈值增益符号到底该写成正还是负”的根源。
+
+\begin{RigorousBox}
+\cref{eq:passive_epsilon_sign,eq:absorption_density_appendix} 都依赖于本书统一采用的时间因子 \(\ee^{-\ii\omega t}\)。若改用 \(\ee^{+\ii\omega t}\)，则介质虚部和复频率虚部的物理判据会整体翻转。任何引用外部文献中的损耗或增益公式时，都必须先检查其时间因子约定。
+\end{RigorousBox}
+
+为了避免正文不同章节在符号上“看起来一样、其实约定不同”，这里把本附录与主文完全一致的傅里叶变换约定写清楚。时间傅里叶变换采用
+\begin{equation}
+\hat f(\omega)
+=
+\int_{-\infty}^{+\infty} f(t)\,\ee^{+\ii\omega t}\,\dd t,
+\qquad
+f(t)
+=
+\frac{1}{2\pi}\int_{-\infty}^{+\infty}\hat f(\omega)\,\ee^{-\ii\omega t}\,\dd\omega,
+\label{eq:temporal_ft_convention}
+\end{equation}
+它与时间因子 \cref{eq:time_convention_appendix} 保持同一符号体系。平面上的空间傅里叶变换采用
+\begin{equation}
+\tilde f(k_x,k_y)
+=
+\iint f(x,y)\,\ee^{-\ii(k_x x+k_y y)}\,\dd x\,\dd y,
+\label{eq:spatial_ft_forward}
+\end{equation}
+\begin{equation}
+f(x,y)
+=
+\frac{1}{(2\pi)^2}
+\iint \tilde f(k_x,k_y)\,\ee^{+\ii(k_x x+k_y y)}\,\dd k_x\,\dd k_y.
+\label{eq:spatial_ft_inverse}
+\end{equation}
+把这一步写明的价值在于：后面近远场变换、角谱传播、频率噪声谱以及 RCWA/FDTD/FEM 的谱量定义，都能回到同一组符号，而不会在章节切换时悄悄换掉正负号。
+
+\section{周期介质中的傅里叶展开：为什么卷积会反复出现}
+正文的 PWEM、RCWA 和 CWT 之所以看起来形式不同，却总会出现相似的矩阵耦合项，根源在于周期介质中的傅里叶卷积。设平面内周期单胞为 $A_c$，倒格矢为 $\gvec$。任意满足该周期的标量场 $f(\rvec_\parallel)$ 都可展开为
+\begin{equation}
+f(\rvec_\parallel)=\sum_{\gvec} f_{\gvec}\,\ee^{\ii\gvec\cdot\rvec_\parallel},
+\qquad
+f_{\gvec}=\frac{1}{A_c}\int_{A_c} f(\rvec_\parallel)\ee^{-\ii\gvec\cdot\rvec_\parallel}\,\dd^2r.
+\label{eq:fourier_periodic_appendix}
+\end{equation}
+若场满足 Bloch 形式，则还应再乘上相位因子 $\ee^{\ii\kvec\cdot\rvec_\parallel}$。于是任意 Bloch 场都可写为
+\begin{equation}
+\E_{\kvec}(\rvec_\parallel,z)
+=
+\ee^{\ii\kvec\cdot\rvec_\parallel}
+\sum_{\gvec}
+\E_{\kvec+\gvec}(z)
+\ee^{\ii\gvec\cdot\rvec_\parallel}.
+\label{eq:bloch_fourier_appendix}
+\end{equation}
+
+真正关键的是乘积项的展开。若介电函数也按同样方式展开，
+\begin{equation}
+\varepsilon(\rvec_\parallel)
+=
+\sum_{\gvec}
+\varepsilon_{\gvec}
+\ee^{\ii\gvec\cdot\rvec_\parallel},
+\end{equation}
+那么 $\varepsilon\E$ 的傅里叶系数不再是简单乘法，而是卷积：
+\begin{equation}
+(\varepsilon E)_{\gvec}
+=
+\sum_{\gvec'} \varepsilon_{\gvec-\gvec'} E_{\gvec'}.
+\label{eq:convolution_appendix}
+\end{equation}
+这就是为什么周期结构中的本征问题总会变成“一个分量与许多倒格矢分量耦合”的矩阵问题。PWEM 把这个卷积直接写成平面波矩阵；RCWA 把它写进层内本征模矩阵；CWT 则主动只保留少数最重要的耦合项。
+
+\begin{ExampleBox}
+若单胞几何只保留最强的四个一级傅里叶分量，那么 CWT 中保留的四波耦合，本质上就是把\cref{eq:convolution_appendix} 从无限维卷积截断成最小闭合子空间。它的物理解释更强，但严格性当然不如 RCWA 或大基底 PWEM。
+\end{ExampleBox}
+
+\section{开放 Maxwell 问题的函数空间直觉：为什么普通 Hilbert 空间不够}
+在封闭、无损、厄米问题中，我们习惯把本征模视为某个 Hilbert 空间里的正交基。这个直觉极其重要，但它并不能原封不动地搬到 PCSEL 的开放模问题上。根源在于开放系统的共振模满足的是\textbf{纯出射边界条件}，而不是封闭边界条件。对一个复频率模
+\begin{equation}
+\tilde{\omega}_n=\omega_n-\ii\gamma_n,
+\qquad \gamma_n>0,
+\label{eq:complex_frequency_qnm_appendix}
+\end{equation}
+其远场渐近形式可写成
+\begin{equation}
+\E_n(\rvec)\sim \frac{\ee^{\ii \tilde{k}_n r}}{r}\bm{f}_n(\hat{\rvec}),
+\qquad
+\tilde{k}_n=\frac{\tilde{\omega}_n}{c}.
+\label{eq:qnm_asymptotic_appendix}
+\end{equation}
+由于
+\begin{equation}
+\ee^{\ii \tilde{k}_n r}
+=
+\ee^{\ii \omega_n r/c}\ee^{+\gamma_n r/c},
+\label{eq:qnm_spatial_growth_appendix}
+\end{equation}
+模场若按纯出射条件延拓到无穷远，空间上通常不是衰减而是增长。这并不是说模式“物理发散”，而是说它不再属于普通平方可积的束缚态函数空间。开放模更自然的数学身份，是 Green 张量或散射矩阵在复频率平面上的极点态 \cite{leung1994complete,alpeggiani2017qnm}。
+
+这条函数空间直觉非常关键，因为它直接解释了后面三个常见困惑：
+\begin{itemize}
+  \item 为什么开放共振模的归一化不是唯一的；
+  \item 为什么非厄米微扰不能直接照搬 $\int \delta\varepsilon |\E|^2$ 形式；
+  \item 为什么在 PML 中求得的“模”虽然数值上有限，却仍对应同一开放系统共振。
+\end{itemize}
+
+\begin{IntuitionBox}
+封闭腔本征模更像“盒子里的驻波”；开放共振模更像“散射振幅在复频率平面上的极点”。只要把这一步想通，QNM、伴随模和广义归一化就不再是后贴的数学技巧，而是开放问题自然逼出来的语言。
+\end{IntuitionBox}
+
+\section{QNM / resonant states 的最小定义}
+本书中所说的准正规模（quasinormal mode, QNM）或共振态（resonant state），最小可以定义为满足无源 Maxwell 方程且只允许出射波的非平凡解：
+\begin{equation}
+\hat{\mathcal L}(\tilde{\omega}_n)\E_n^{\mathrm{R}}=0,
+\qquad
+\text{outgoing boundary condition only}.
+\label{eq:qnm_definition_appendix}
+\end{equation}
+这里上标 $\mathrm{R}$ 表示右模（right mode），是为了和稍后出现的左模区分。对开放系统，这个定义与“$\tilde{\omega}_n$ 是 Green 张量或散射矩阵极点”是等价的 \cite{sauvan2013qnm,alpeggiani2017qnm}。两种说法分别对应两种直觉：
+\begin{itemize}
+  \item 方程视角强调它是无源 Maxwell 问题的本征解；
+  \item 散射视角强调它是实际可测散射响应的极点结构。
+\end{itemize}
+
+这也是为什么 PCSEL 中的开放模分析天然应使用复频率语言。只要目标问题涉及法向辐射、上下出光不对称、quasi-BIC、远场整形或辐射损耗排序，把模式写成 QNM / resonant states 就比把它硬塞回封闭腔本征模更贴近真实物理。
+
+\begin{ExampleBox}
+最小的一维开放腔例子，是长度为 $L$ 的均匀 Fabry--Perot 腔，两端反射系数分别为 $r_1,r_2$，并要求边界外只有出射波。此时共振条件写成
+\begin{equation}
+r_1r_2\,\ee^{2\ii\tilde{k}L}=1.
+\label{eq:qnm_fp_condition}
+\end{equation}
+只要 $|r_1r_2|<1$，其解 $\tilde{k}$ 必为复数，等价地 $\tilde{\omega}=c\tilde{k}$ 也必为复数。这个最小例子非常值得记住，因为它说明：\textbf{复频率不是后来为了描述损耗而“补上去”的修正，而是开放边界条件本身逼出来的本征值。}
+\end{ExampleBox}
+
+\section{伴随模、双正交与广义归一化}
+一旦算子不再自伴，右模本身通常不足以完成投影与微扰分析。对第一次接触这套语言的读者，最稳妥的直觉是：\textbf{先把左模看成做投影时的测试函数，而不要先把它想成“另一支也要单独观察到的物理场”。} 更一般的做法是同时引入右模与伴随左模：
+\begin{equation}
+\hat{\mathcal L}(\tilde{\omega}_n)\E_n^{\mathrm{R}}=0,
+\qquad
+\hat{\mathcal L}^{\mathrm{A}}(\tilde{\omega}_n)\E_n^{\mathrm{L}}=0.
+\label{eq:left_right_modes_appendix}
+\end{equation}
+其中 $\hat{\mathcal L}^{\mathrm{A}}$ 是伴随算子，$\E_n^{\mathrm{L}}$ 是左模。对一般非厄米问题，真正起作用的是左模和右模形成的双正交结构，而不是右模与自身的厄米内积。也就是说，开放系统中的“正交”更接近
+\begin{equation}
+\left\langle \E_m^{\mathrm{L}},\E_n^{\mathrm{R}}\right\rangle
+\propto
+\delta_{mn},
+\label{eq:biorthogonality_appendix}
+\end{equation}
+而不是封闭腔里熟悉的 $\langle \E_m,\E_n\rangle_\varepsilon=\delta_{mn}$。
+
+对 Maxwell 开放问题，进一步的细节取决于介质是否互易、是否色散，以及数值上是否通过 PML 处理开放边界。对许多互易系统，一个常用的广义 QNM 归一化形式是
+\begin{equation}
+\left\langle\!\left\langle \Psi_m,\Psi_n\right\rangle\!\right\rangle
+=
+\int_{\Omega+\mathrm{PML}}
+\left[
+\E_m\cdot\frac{\partial (\omega\varepsilon)}{\partial\omega}\E_n
+-
+\Hf_m\cdot\frac{\partial (\omega\mu)}{\partial\omega}\Hf_n
+\right]\dd V,
+\label{eq:qnm_normalization_appendix}
+\end{equation}
+其中 $\Psi_n=(\E_n,\Hf_n)$，且积分区域包含物理区与 PML \cite{sauvan2013qnm,kristensen2015qnm}。这个表达式的意义不在于要求读者把它背下来，而在于明确三件事：
+\begin{enumerate}
+  \item 广义归一化里经常不出现普通的复共轭；
+  \item 材料色散会直接进入归一化，而不是只出现在“材料模型”章节；
+  \item PML 并不只是吸收边界的数值技巧，在 QNM 归一化里它还承担把开放问题转成可积配对的数学角色。
+\end{enumerate}
+
+在封闭、无损、无色散极限下，\cref{eq:qnm_normalization_appendix} 会退回更熟悉的能量型归一化；但对真实 PCSEL 的开放模，若继续坚持只用
+\begin{equation}
+\langle \E_m,\E_n\rangle_{\varepsilon}
+=
+\int_V \varepsilon(\rvec)\E_m^*(\rvec)\cdot\E_n(\rvec)\,\dd V
+=
+\delta_{mn}.
+\label{eq:hermitian_inner_product_appendix}
+\end{equation}
+往往就会在归一化、模耦合和微扰分母上埋下系统错误。也正因此，本书正文只有在明确处于封闭或弱开放近似下，才会继续使用\cref{eq:hermitian_inner_product_appendix} 这类厄米归一化。
+
+这里有两条最容易被忽略、却又最关键的原因。第一，对纯出射 QNM 取复共轭后，会把出射边界条件翻成入射边界条件，因此 $\E^\ast$ 本身通常不是同一个开放本征问题的合法测试函数。第二，开放模在无穷远处的空间延拓并不平方可积，若仍执意把它塞进普通厄米内积，分子、分母和归一化常数都可能一起失真。正因为这两点，开放系统一阶微扰不能机械照搬封闭腔公式。
+
+这意味着一个非常重要的实务结论：若两个不同求解器采用了不同归一化方式，不能直接比较它们输出的“场强大小”，必须比较与归一化无关的不变量，或者先把它们转换到同一内积和归一化框架下。正文中大量出现的重叠因子之所以用分式定义，也是为了让归一化常数在分子分母中相消。
+
+例如，量子阱重叠因子常写成
+\begin{equation}
+\Gamma_{\mathrm{QW}}
+=
+\frac{\int_{V_{\mathrm{QW}}} \varepsilon |\E|^2\,\dd V}
+{\int_V \varepsilon |\E|^2\,\dd V},
+\label{eq:overlap_ratio_appendix}
+\end{equation}
+它之所以稳健，就在于不依赖模整体振幅的选取。
+
+\section{复频率、衰减率与 \texorpdfstring{$Q$}{Q}：不要混淆振幅寿命和能量寿命}
+开放腔模常写成复频率形式
+\begin{equation}
+\tilde{\omega}=\omega_r-\ii\gamma,
+\qquad \gamma>0.
+\label{eq:complex_frequency_appendix}
+\end{equation}
+代回时间因子后，场的时间依赖为
+\begin{equation}
+\ee^{-\ii\tilde{\omega} t}
+=
+\ee^{-\ii\omega_r t}\ee^{-\gamma t}.
+\end{equation}
+因此场振幅的衰减时间常数是 $1/\gamma$。但能量与场振幅平方成正比，所以腔内能量按
+\begin{equation}
+U(t) \propto \ee^{-2\gamma t}
+\end{equation}
+衰减，对应的能量寿命为
+\begin{equation}
+\tau_p=\frac{1}{2\gamma}.
+\label{eq:photon_lifetime_appendix}
+\end{equation}
+这时品质因子定义为每个周期储能与损耗的比值，可写成
+\begin{equation}
+Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
+\label{eq:q_complexfreq_appendix}
+\end{equation}
+
+这个推导之所以需要在附录里明确写出，是因为很多实际文稿会把 $1/\gamma$ 直接称为“光子寿命”，或者把振幅衰减率和能量衰减率混用。对被动光学问题，这种混淆可能只差一个因子 2；但一旦进入阈值条件、线宽估计和速率方程接口，这个因子 2 就会在不同模块之间制造系统偏差。
+
+\section{互易性：为什么许多耦合公式其实来自同一个定理}
+正文中的耦合模理论、微扰公式和灵敏度分析，背后都有一个共同工具，即 Lorentz 互易性。设两组场 $(\E_1,\Hf_1)$ 和 $(\E_2,\Hf_2)$ 在同一线性、时不变、局域介质中分别满足
+\begin{equation}
+\varepsilon=\varepsilon^{\mathsf T},
+\qquad
+\mu=\mu^{\mathsf T},
+\label{eq:reciprocity_tensor_condition}
+\end{equation}
+所对应的 Maxwell 方程。\cref{eq:reciprocity_tensor_condition} 是这一节最关键的适用范围前提：它排除了磁光、旋光、显式时变调制和其他非互易介质。只有在这一前提下，下面的 Lorentz 互易性推导才按最熟悉的对称形式成立。
+
+\begin{RigorousBox}
+本节默认介质张量满足 \cref{eq:reciprocity_tensor_condition}。若器件包含磁光偏置、时空调制或其他非互易机制，则互易关系必须改写，不能直接把本节公式平移过去。
+\end{RigorousBox}
+
+\begin{align}
+\nabla\times\E_1 &= +\ii\omega\mu\Hf_1,
+&
+\nabla\times\Hf_1 &= \J_1-\ii\omega\varepsilon\E_1,
+\\
+\nabla\times\E_2 &= +\ii\omega\mu\Hf_2,
+&
+\nabla\times\Hf_2 &= \J_2-\ii\omega\varepsilon\E_2.
+\end{align}
+对第一式与第二组场做混合乘积，再用向量恒等式
+\begin{equation}
+\begin{aligned}
+\nabla\cdot(\E_1\times\Hf_2-\E_2\times\Hf_1)
+&=
+\Hf_2\cdot(\nabla\times\E_1)
+-
+\E_1\cdot(\nabla\times\Hf_2)
+\\
+&\quad
+-
+\Hf_1\cdot(\nabla\times\E_2)
++
+\E_2\cdot(\nabla\times\Hf_1),
+\end{aligned}
+\label{eq:vector_identity_appendix}
+\end{equation}
+可得到
+\begin{equation}
+\nabla\cdot(\E_1\times\Hf_2-\E_2\times\Hf_1)
+=
+\E_2\cdot\J_1-\E_1\cdot\J_2.
+\end{equation}
+对体积积分并使用散度定理，就得到互易性形式
+\begin{equation}
+\int_{\partial V}(\E_1\times\Hf_2-\E_2\times\Hf_1)\cdot\hat{\bm n}\,\dd S
+=
+\int_V (\E_2\cdot\J_1-\E_1\cdot\J_2)\,\dd V.
+\label{eq:lorentz_reciprocity_appendix}
+\end{equation}
+
+\cref{eq:lorentz_reciprocity_appendix} 的价值在于，它为“某个局域扰动为什么会以某种重叠积分方式耦合到目标模”提供了统一解释。很多看起来不同的耦合系数公式，本质上都能追溯到互易性与边界条件。
+
+\begin{RigorousBox}
+互易性并不是无条件成立。若介质存在显著非互易效应、时变调制、磁光非对称张量或非局域响应，则\cref{eq:lorentz_reciprocity_appendix} 需要修改，甚至可能失效。将其直接套用到所有有源介质问题上是不严谨的。
+\end{RigorousBox}
+
+\section{一阶微扰公式：什么时候它是定理，什么时候它只是工程近似}
+现在可以回到正文中最关键的开放系统数学缺口：非厄米一阶扰动到底应怎样写。若先从最一般的角度出发，把本征问题写成
+\begin{equation}
+\hat{\mathcal L}(\tilde{\omega},p)\E^{\mathrm{R}}=0,
+\label{eq:nonhermitian_eigenproblem_appendix}
+\end{equation}
+其中 $p$ 是几何、材料或工作点参数，那么对小扰动 $p\to p+\delta p$ 做一阶展开，可得
+\begin{equation}
+\left[
+\left.\frac{\partial \hat{\mathcal L}}{\partial\omega}\right|_n \delta\tilde{\omega}
++\delta\hat{\mathcal L}
+\right]\E_n^{\mathrm{R}}
++
+\hat{\mathcal L}_n\,\delta \E_n^{\mathrm{R}}
+=0.
+\label{eq:nonhermitian_expand_appendix}
+\end{equation}
+再引入左模投影，就得到开放系统的一阶扰动骨架
+\begin{equation}
+\delta\tilde{\omega}_n
+=
+-
+\frac{
+\left\langle \E_n^{\mathrm{L}},\,\delta\hat{\mathcal L}\,\E_n^{\mathrm{R}}\right\rangle
+}
+{
+\left\langle \E_n^{\mathrm{L}},\,\left.\dfrac{\partial\hat{\mathcal L}}{\partial\omega}\right|_n \E_n^{\mathrm{R}}\right\rangle
+}.
+\label{eq:nonhermitian_first_order_appendix}
+\end{equation}
+这就是开放系统里真正普适的一阶公式。它比封闭腔公式更“硬”，原因不在于形式更复杂，而在于它保留了两件开放系统中不能被省略的信息：\textbf{左/右模的双正交结构}，以及\textbf{算子对频率的显式依赖}。
+
+若系统退回封闭、无损、弱开放极限，且左模与右模在厄米内积下重合，同时忽略显式色散，那么\cref{eq:nonhermitian_first_order_appendix} 就会退化为熟悉的频移公式
+\begin{equation}
+\frac{\delta\omega}{\omega}
+\approx
+-
+\frac{1}{2}
+\frac{\int_V \delta\varepsilon(\rvec) |\E(\rvec)|^2\,\dd V}
+{\int_V \varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}.
+\label{eq:first_order_perturbation_appendix}
+\end{equation}
+它的物理意义仍然非常直观：若正的电场能量主要落在折射率增大的区域，则共振频率通常下降。正文中关于热漂移、材料修正和几何微扰的许多定性判断，都可用这一公式快速给出方向感。
+
+但这里必须准确区分三种层级。
+
+第一层，\textbf{严格定理层级}：\cref{eq:nonhermitian_first_order_appendix}。只要左模、右模、伴随算子和归一化框架是自洽的，它就是开放系统一阶扰动的正确起点。  
+
+第二层，\textbf{弱开放工程层级}：\cref{eq:first_order_perturbation_appendix}。当泄露较弱、模式局域较强、色散不主导，且扰动主要发生在腔内高场区域时，它通常是非常有用的趋势公式。  
+
+第三层，\textbf{超出微扰适用层级}：近简并模强混合、模式身份交换、扰动直接重构辐射边界、材料色散和吸收显著、或电热回写已经把问题从“局部小改动”推成“空间分布重构”。此时无论厄米还是非厄米一阶公式都不应继续扛主问题，必须回到完整本征问题或全耦合重算。
+
+若扰动不是实部折射率，而是附加小吸收 $\delta\varepsilon''>0$，则同样的骨架会给出复频率虚部修正，也就是额外损耗。于是，从数学上看，“热漂移改频率”和“掺杂吸收改线宽”其实是同一套开放系统微扰公式的不同投影：前者更看重 $\Re\,\delta\tilde{\omega}$，后者更看重 $\Im\,\delta\tilde{\omega}$。
+
+\begin{ExampleBox}
+若某个 PCSEL 候选模已经处于 quasi-BIC 附近，那么轻微孔形扰动往往首先重排的是辐射通道相消条件，而不是腔内平均折射率。此时若只用\cref{eq:first_order_perturbation_appendix} 看实部频移，可能会得到“改动很小”的错觉；而真正决定阈值排序的，恰恰是虚部损耗的放大变化。这里就必须至少回到\cref{eq:nonhermitian_first_order_appendix} 的层级，甚至直接做全波重算。
+\end{ExampleBox}
+
+\begin{PitfallBox}
+用一阶微扰公式解释已经明显发生模排序翻转、模形重构或辐射通道重组的现象，通常会导致错误结论。只要扰动大到足以改变近简并模之间的耦合关系，或者大到使左/右模自身的身份发生变化，就应回到完整本征问题，而不是继续依赖一阶近似。
+\end{PitfallBox}
+
+\section{这些数学工具在 PCSEL 仿真中怎么实际使用}
+附录的价值，最终还是要回到建模实践。对本书关心的 PCSEL 问题，这些工具至少有四类直接用途。
+
+第一，用时间因子和复频率关系检查损耗与增益符号是否在不同模块间保持一致。若 RCWA、FDTD 和器件增益模型对介质虚部的正负含义不一致，必须立即停下来修正。
+
+第二，用 Fourier-Bloch 展开理解数值方法之间的联系。这样在比较 PWEM、RCWA 和 CWT 时，读者就知道它们差别主要在截断和投影，而不是在“互相矛盾的物理定律”。
+
+第三，用归一化无关的重叠积分比较不同求解器结果，避免把场强数值本身的差异误判为物理差异；若必须比较开放模的绝对模幅或灵敏度，则应先确认所用的是同一种左/右模与广义归一化框架。
+
+第四，用复频率与一阶微扰公式快速做 sanity check。例如，温度升高若使波导折射率整体增加，那么目标共振一般应向长波漂移；若仿真却给出相反趋势，就要优先检查材料模型和符号约定。
+
+第五，对强开放候选模，不要只记录 $\omega_r$ 或 $Q$，而应同时记录使用的归一化、是否采用 QNM / PML 框架、以及微扰判断使用的是厄米代理还是非厄米左/右模公式。否则后续章节即便复用了同一个符号，也未必在说同一层数学对象。
+
+\section*{本章小结}
+数学附录的作用不是堆公式，而是统一全书的语法。时间因子决定损耗与增益的符号，傅里叶卷积解释了周期介质中的耦合矩阵，QNM / resonant states 说明开放模为何不是普通束缚态，左/右模与广义归一化说明为什么开放系统不能直接照搬厄米内积，复频率给出 $Q$ 与光子寿命的精确定义，互易性与一阶微扰则为耦合和灵敏度分析提供了共同骨架。只要这些约定统一，正文中的光学、器件和仿真章节就能共享同一套数学接口；若这些约定混乱，后面的一切“高级模型”都可能只是表面连贯。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从\cref{eq:time_convention_appendix} 出发，推导在本书时间因子约定下被动介质为何对应正的 $\Im\,\varepsilon$。
+
+  \item \basicq 从能量衰减定义出发，重新推导\cref{eq:q_complexfreq_appendix}，并说明为什么振幅寿命和能量寿命差一个因子 2。
+
+  \item \midq 利用\cref{eq:convolution_appendix}，解释为什么保留有限个倒格矢后，本征问题会变成矩阵本征值问题。
+
+  \item \midq 从\cref{eq:nonhermitian_first_order_appendix} 出发，解释为什么开放系统一阶微扰需要左模，而不能只用右模与自身的复共轭关闭投影。
+
+  \item \hardq 给出一个一阶微扰公式明显失效的 PCSEL 场景，并说明失效来自哪一条前提被破坏。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章将把这些数学语法压缩成器件级建模的符号链，特别是从材料增益到阈值电流的映射。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想进一步打牢开放系统与扰动理论，可对照 \cite{joannopoulos2008,sakoda2005} 中关于周期介质与模式扰动的附录阅读。 这条阅读的重点是补足本章关于开放系统数学、归一化与非厄米微扰 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想系统补强开放系统归一化、QNM 与非厄米微扰，可继续阅读 \cite{leung1994complete,leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm}。 这条阅读的重点是补足本章关于开放系统数学、归一化与非厄米微扰 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

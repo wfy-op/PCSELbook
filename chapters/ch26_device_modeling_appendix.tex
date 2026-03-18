@@ -1,0 +1,349 @@
+\chapter{半导体激光器与器件建模附录}
+\label{ch:device-appendix}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 把正文中分散出现的“材料增益、模增益、阈值条件、阈值电流、热回写”整理成一条可审计的器件符号链。
+  \item 掌握 Poisson、漂移-扩散、连续性方程和热方程在 PCSEL 器件建模中的角色分工，以及它们与光学模型的接口变量。
+  \item 学会区分可直接测得参数、文献参数和拟合参数，并据此建立校准顺序和不确定性传播框架。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 中关于外延层光学、量子阱增益、电注入和热-电-光耦合的内容。
+
+\section*{本章路线图}
+正文 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 已经把器件物理分开讲过，但真正开始做器件模型时，读者仍然很容易卡在一个地方：每一章单独看都懂，一旦想把它们连起来，就不知道变量应该怎样流动。本附录就是为了解决这个问题。我们先建立从材料增益到阈值电流的符号链，说明每个箭头背后对应的是哪一类模型；随后给出最小器件方程组，并明确区分哪些式子属于光学模型，哪些属于电学模型，哪些属于热-电-光耦合模型；再整理常见边界条件、参数来源和校准顺序；然后把“测量 $\rightarrow$ 参数提取 $\rightarrow$ 分层校准 $\rightarrow$ 预测 $\rightarrow$ 回验”写成一条可执行的实验闭环；最后给出不确定性传播与结果报告方式，帮助读者把“能跑通”提升为“能解释、能复核”。
+
+\section{为什么器件建模最容易在“接口”上出错}
+许多 PCSEL 项目在单个模块内看起来都没有大问题。光学模型给出了目标模和阈值增益，电学模型给出了注入分布，热学模型给出了温升。但一旦这些模块连在一起，结果却变得难以解释。最常见的原因不是某个模块方程错，而是模块之间的接口没有定义清楚。比如，光学模块输出的是阈值增益 $g_{\mathrm{th}}$，而电学模块求的是载流子分布 $N(\rvec)$；若没有说明用什么权重把 $N(\rvec)$ 映射到模增益，就无法判断器件是否达到阈值。又比如，热学模块输出的是温度场 $T(\rvec)$；若没有指定它如何进入折射率、增益峰位和吸收，那么温升就无法真正影响模式排序。
+
+因此，本附录关注的重点不是再写更多方程，而是把接口变量和变量流向写死。只有这样，器件模型才不会退化成“几个求解器串起来，但谁也说不清谁在驱动谁”。
+
+\begin{IntuitionBox}
+器件建模不是把所有物理都堆进一个大模型里就自动完成了。真正困难的地方，是把每个模块的输入、输出和适用边界明确定义出来，让整条链既能前向计算，也能反向审计。
+\end{IntuitionBox}
+
+\section{从材料增益到阈值电流：先把符号链写全}
+对 PCSEL 器件而言，最核心的一条链可以写成
+\begin{equation}
+g_{\mathrm{mat}}(N,T,\omega)
+\longrightarrow
+g_{\mathrm{mod},i}
+\longrightarrow
+g_{\mathrm{net},i}
+\longrightarrow
+\text{threshold for mode } i
+\longrightarrow
+I_{\mathrm{th}}.
+\label{eq:device_chain_appendix}
+\end{equation}
+这里每一个箭头都代表一个独立的建模步骤，而不是单一公式的直接代换。
+
+第一步是从材料增益到模增益。这一步需要 \cref{ch:epitaxial-optics} 给出的纵向与空间重叠信息，因此它已经不是纯材料问题，而是\textbf{光学-有源区耦合问题}。
+
+第二步是从模增益到净模增益。这里要减去的不仅是辐射损耗，还包括自由载流子吸收、重掺杂层吸收、金属邻近损耗等内部损耗，因此它同时依赖光学模式和器件层栈。
+
+第三步是阈值判据。对每个候选模 $i$，只有当净模增益刚好补偿总损耗时，才谈得上其达到光学阈值。
+
+第四步才是从阈值所要求的载流子条件反推阈值电流。这一步不能只靠冷腔和增益模型，必须进入 Poisson 与漂移-扩散方程，因为真实器件注入下的载流子分布往往不是均匀的。
+
+这样写的好处是，任何时候只要结果出错，都能定位到底是哪一个箭头出了问题，而不是把所有误差都模糊地归咎于“器件模型不准”。
+
+\section{第一步：材料增益怎样变成模增益}
+若先采用最简单的均匀载流子近似，把量子阱区域中的材料增益写成 $g_{\mathrm{mat}}(N,T,\omega)$，则第 $i$ 个模的模增益可近似写成
+\begin{equation}
+g_{\mathrm{mod},i}(N,T,\omega)
+\approx
+\Gamma_{\mathrm{QW},i}\,g_{\mathrm{mat}}(N,T,\omega),
+\label{eq:modal_gain_uniform_appendix}
+\end{equation}
+其中 $\Gamma_{\mathrm{QW},i}$ 是量子阱重叠因子。\cref{eq:modal_gain_uniform_appendix} 属于\textbf{光学-有源区耦合模型}，不是纯电学也不是纯材料公式。
+
+但只要注入开始明显不均匀，\cref{eq:modal_gain_uniform_appendix} 就只能作为一致性核查。更合理的写法应采用空间加权平均，例如
+\begin{equation}
+g_{\mathrm{mod},i}
+=
+\frac{\int_{V_{\mathrm{act}}} g_{\mathrm{mat}}\bigl(N(\rvec),T(\rvec),\omega_i\bigr)
+W_i(\rvec)\,\dd V}
+{\int_{V_{\mathrm{act}}} W_i(\rvec)\,\dd V},
+\label{eq:modal_gain_spatial_appendix}
+\end{equation}
+其中 $W_i(\rvec)$ 是与模场有关的非负权函数，工程上常取与局域电场能量密度成正比的形式。\cref{eq:modal_gain_spatial_appendix} 的意义非常重要：一旦采用真实器件分布，阈值所需的就不再是单一数字 $N_{\mathrm{th}}$，而是一整个满足加权阈值判据的空间分布。
+
+\section{第二步：从模增益到净模增益，再到阈值}
+对目标模 $i$，净模增益写成
+\begin{equation}
+g_{\mathrm{net},i}
+=
+ g_{\mathrm{mod},i}
+-
+\alpha_{\mathrm{int},i}
+-
+\alpha_{\mathrm{rad},i},
+\label{eq:net_modal_gain_appendix}
+\end{equation}
+其中 $\alpha_{\mathrm{int},i}$ 表示内部损耗，$\alpha_{\mathrm{rad},i}$ 表示辐射损耗。若采用复频率语言，也可以把这些损耗等价写入模衰减率或光子寿命。阈值条件就是
+\begin{equation}
+g_{\mathrm{net},i}=0.
+\label{eq:threshold_condition_appendix}
+\end{equation}
+这一步看似简单，真正容易被误用的地方在于：\cref{eq:threshold_condition_appendix} 给出的仍然只是\textbf{光学阈值条件}，并没有自动给出阈值电流。因为要把它变成 $I_{\mathrm{th}}$，还必须回答“怎样的注入分布才能实现这个净模增益”。
+
+在均匀近似下，人们常把\cref{eq:threshold_condition_appendix} 先解成一个等效阈值载流子密度 $N_{\mathrm{th}}$。这可以作为设备级仿真的初值或一致性核查，但绝不能忘记：一旦器件中存在显著电流拥挤、热非均匀或泄漏通道，这个 $N_{\mathrm{th}}$ 就不再是器件级的完整答案，而只是后续输运模型应当达到的目标条件之一。
+
+\begin{RigorousBox}
+“阈值增益”与“阈值电流”的区别，不是单位不同这么简单。前者属于模态能量平衡问题，后者属于输运和复合驱动下的器件工作点问题。只要输运和温升没有显式进入模型，就只能宣称前者，不能宣称后者。
+\end{RigorousBox}
+
+\section{第三步：速率方程的一致性核查}
+虽然完整器件结论需要漂移-扩散模型，但速率方程近似仍然有价值，因为它给出了一条快速、透明的量纲链。
+
+若暂时把有源区看成一个等效体积 $V_{\mathrm{act}}$，并用注入效率 $\eta_{\mathrm{inj}}$ 表示进入有效有源区的电流比例，则稳态下常见的 ABC 近似写成
+\begin{equation}
+\frac{\eta_{\mathrm{inj}} I}{q V_{\mathrm{act}}}
+=
+A N + B N^2 + C N^3 + R_{\mathrm{st}},
+\label{eq:abc_current_appendix}
+\end{equation}
+其中 $A,B,C$ 分别代表 SRH、辐射和 Auger 复合系数，$R_{\mathrm{st}}$ 表示受激辐射等效项。阈值附近由于受激辐射刚开始出现，常把阈值电流近似写成
+\begin{equation}
+I_{\mathrm{th}}
+\approx
+\frac{qV_{\mathrm{act}}}{\eta_{\mathrm{inj}}}
+\bigl(A N_{\mathrm{th}} + B N_{\mathrm{th}}^2 + C N_{\mathrm{th}}^3\bigr).
+\label{eq:ith_sanity_appendix}
+\end{equation}
+
+\cref{eq:ith_sanity_appendix} 不是完整器件模型，它只是\textbf{器件级一致性核查}。它的作用在于：当漂移-扩散模型给出某个 $I_{\mathrm{th}}$ 区间时，读者可以迅速判断这个结果是否与等效有源区体积、注入效率和复合量级大体相容。若二者相差几个数量级，优先应怀疑参数、边界或单位，而不是急着解释“这是某种新物理”。
+
+\begin{ExampleBox}
+若光学阶段估计目标模所需 $N_{\mathrm{th}}$ 并不高，但完整器件模拟却给出异常高的 $I_{\mathrm{th}}$，最先应检查的是注入效率、漏电路径和电流拥挤，而不是先去怀疑增益模型本身。因为\cref{eq:ith_sanity_appendix} 告诉我们，高阈值电流并不一定意味着高阈值增益，它也可能只是电流没有有效送进目标有源区。
+\end{ExampleBox}
+
+\section{第四步：完整器件方程组是什么，各自属于哪类模型}
+当需要超越速率方程近似时，就必须进入器件偏微分方程模型。最常见的一组方程由 Poisson 方程、电子和空穴连续性方程、漂移-扩散电流关系以及热方程组成。它们可以写成
+\begin{align}
+\nabla\cdot\bigl(\varepsilon_s\nabla\phi\bigr)
+&=
+-q\bigl(p-n+N_D^+-N_A^-\bigr),
+\label{eq:poisson_device_appendix}
+\\
+\frac{\partial n}{\partial t}
+&=
+\frac{1}{q}\nabla\cdot\J_n
++ G_n - R_n,
+\label{eq:electron_continuity_appendix}
+\\
+\frac{\partial p}{\partial t}
+&=
+-\frac{1}{q}\nabla\cdot\J_p
++ G_p - R_p,
+\label{eq:hole_continuity_appendix}
+\\
+\J_n &=
+q\mu_n n\bigl(-\nabla\phi\bigr)
++ qD_n\nabla n,
+\label{eq:jn_device_appendix}
+\\
+\J_p &=
+q\mu_p p\bigl(-\nabla\phi\bigr)
+- qD_p\nabla p,
+\label{eq:jp_device_appendix}
+\\
+\rho C_{\mathrm{th}}\frac{\partial T}{\partial t}
+&=
+\nabla\cdot\bigl(k_{\mathrm{th}}\nabla T\bigr)
++ Q_{\mathrm{Joule}}
++ Q_{\mathrm{nr}}
++ Q_{\mathrm{opt}}.
+\label{eq:heat_device_appendix}
+\end{align}
+
+为了避免概念混乱，必须立刻说明这些方程的类别。
+
+\cref{eq:poisson_device_appendix,eq:electron_continuity_appendix,eq:hole_continuity_appendix,eq:jn_device_appendix,eq:jp_device_appendix} 属于\textbf{电学输运模型}。它们回答的是电势、载流子和电流怎样在器件中分布。
+
+\cref{eq:heat_device_appendix} 属于\textbf{热模型}。它回答的是温度场怎样由 Joule 热、非辐射复合热和光吸收热驱动出来。
+
+而把这些结果写回折射率、材料增益与吸收，即
+\begin{equation}
+\Delta n = \Delta n\bigl(N,T\bigr),
+\qquad
+\Delta g = \Delta g\bigl(N,T,\omega\bigr),
+\qquad
+\Delta\alpha = \Delta\alpha\bigl(N,T\bigr),
+\label{eq:coupling_variables_appendix}
+\end{equation}
+则属于\textbf{热-电-光耦合模型}，因为它把电学和热学结果重新送回光学模块。
+
+\section{边界条件不是实现细节，而是器件物理的一部分}
+对器件方程来说，边界条件几乎和控制方程一样重要。一个非常实用的写法，是在建模笔记中把每一条边界都写成“边界类型 + 数学式 + 物理含义”的三元组。例如：
+
+对电学模型，欧姆接触通常意味着电势或准费米能级在接触处被固定，或者总电流被指定；绝缘边界则对应法向电流为零。对热模型，理想热沉可用固定温度近似，对流边界可写成
+\begin{equation}
+-k_{\mathrm{th}}\nabla T\cdot\hat{\bm n}
+=
+h\,(T-T_\infty),
+\label{eq:convective_bc_appendix}
+\end{equation}
+其中 $h$ 是等效换热系数。若界面热阻不可忽略，还需要写成温度跳变与热流之间的关系。对光学模型，开放边界不能用理想反射边界替代，而应使用 PML、辐射边界或端口条件。
+
+教材上最容易被忽略的一点是：边界条件并不是“软件设置页最后再填的选项”，而是物理模型本身的一部分。没有边界条件，就没有完整模型。更重要的是，边界条件往往对应整个器件设计中最不确定的一部分，例如接触质量、封装散热和外界反射环境。因此，它们同时也是不确定性预算的重要来源。
+
+\section{参数来源要分层管理：测量值、文献值和拟合值不是同一种可信度}
+器件模型参数很多，但它们的可信度并不相同。最稳妥的做法，是把参数分成三层。
+
+第一层是\textbf{直接测量参数}，例如层厚、几何尺寸、某些 I--V 或热阻数据。这类参数优先级最高，因为它们与当前器件最接近。
+
+第二层是\textbf{文献参数}，例如某一材料体系在相近掺杂和温度区间下的迁移率模型、SRH 寿命经验范围或折射率色散参数。这些参数可用于起始建模，但必须附带文献环境信息，因为材料体系和工艺差异可能很大。
+
+第三层是\textbf{反演拟合参数}，例如接触电阻率、界面热阻或某些难以直接测得的增益压缩系数。它们不是不能用，而是必须明确标记，并做鲁棒性扫描，防止把“为了拟合当前曲线引入的自由度”误当成可外推的材料常数。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{器件模型中常见参数家族及其主要来源。表中给出的是参数类型与建模角色，而不是可直接引用的数据库数值。}
+  \label{tab:device_params_appendix}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{5.2cm}}
+    \toprule
+    参数家族 & 常见来源 & 在模型中的主要作用 \\
+    \midrule
+    层厚、孔径、电极尺寸 & 工艺测量、截面表征 & 决定纵向模、单胞辐射、注入路径与热扩散路径 \\
+    折射率、色散、吸收 & 文献 + 光谱拟合 & 决定模式频率、重叠、辐射与内部损耗 \\
+    增益参数、透明密度、微分增益 & 文献 + 增益模型拟合 & 决定从载流子到模增益的映射 \\
+    迁移率、复合系数、接触参数 & 文献 + I--V / L--I 校准 & 决定电流扩展、串联电阻与阈值电流来源 \\
+    热导率、界面热阻、换热系数 & 文献 + 热阻或温升校准 & 决定稳态温升和热漂移反馈 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+这张表之后最需要补的一句，是参数出处的优先级说明：几何真值优先于名义设计表，直接测量参数优先于文献平均值，文献平均值优先于反演拟合值。若某个参数只能来自反演拟合，就应在正文或附表中明确写出它依赖哪些观测量被校准出来，以及它是否只在当前器件结构与温度区间内有效。否则，读者很容易把“为解释一组曲线而引入的自由度”误当成普适材料常数。
+
+\section{校准顺序为什么通常是先电学，再热学，最后光学回写}
+当模型参数不完备时，校准顺序会极大影响结论可解释性。一个经验上非常稳健的顺序是：先校准电学，再校准热学，最后做光学回写。原因是，如果一开始就试图用光学参数去吸收电学和热学的误差，很容易出现“拟合上去了，但变量物理意义全乱了”的情况。
+
+更具体地说，首先应利用 I--V 数据、接触结构和几何信息，把串联电阻、注入效率和漏电路径调到合理范围。接着再用热阻、光谱热漂移或热像信息去约束热边界和热源强度。只有在电和热都大致站稳后，才适合利用阈值漂移、共振波长漂移和输出特性去微调增益或折射率温度系数。
+
+这个顺序的逻辑非常清楚：电学决定热源分布，热学决定折射率和增益回写，而光学是被前两者共同驱动的最终响应。若把顺序倒过来，就等于要求光学参数代替电热参数背锅。
+
+\section{测量 \texorpdfstring{$\rightarrow$}{->} 参数提取：先区分直接观测量与反演量}
+实验闭环的第一步，不是立刻拟合，而是把手头数据按“直接观测量”和“需要模型反演的量”分开。直接观测量包括截面层厚、孔径、刻蚀深度、电极尺寸、I--V 曲线、某些热阻数据、远场角宽、偏振纯度和谱峰位置。它们应优先直接进入参数账本，因为这些量几乎不依赖模型假设。反过来，接触电阻率、界面热阻、有效注入效率、非辐射复合系数和某些增益压缩参数，则往往不是直接测量量，而是\textbf{通过模型解释实验时才被反演出来的量}。
+
+把这两类量混在一起，是器件建模最常见的失控点。因为一旦把反演量伪装成直接测量量，后续所有不确定性都会被低估。更稳妥的做法是明确写出
+\begin{equation}
+\mathcal{M}_{\mathrm{obs}}
+\longrightarrow
+\mathcal{P}_{\mathrm{direct}}
+\cup
+\mathcal{P}_{\mathrm{infer}},
+\label{eq:measurement_split}
+\end{equation}
+其中 $\mathcal{M}_{\mathrm{obs}}$ 是原始观测集合，$\mathcal{P}_{\mathrm{direct}}$ 是可直接进入模型的参数集合，$\mathcal{P}_{\mathrm{infer}}$ 是必须在校准过程中反演的参数集合。\cref{eq:measurement_split} 的意义并不在于数学新奇，而在于它强迫读者先回答：“我现在到底是在用实验给模型喂确定信息，还是在用模型解释实验来推回未知参数？”
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{器件建模实验闭环中的典型“测量量 $\rightarrow$ 参数提取”映射。重点不在于把每个参数都直接测出来，而在于明确哪些量是观测量、哪些量是反演量。}
+  \label{tab:measurement_to_parameter}
+  \begin{tabularx}{\textwidth}{@{}p{3.1cm}p{3.3cm}Y@{}}
+    \toprule
+    测量量 & 优先约束的参数或子模型 & 说明 \\
+    \midrule
+    截面 SEM / AFM / 工艺记录 & 层厚、孔径、刻蚀深度、电极几何 & 这是几何真值的第一来源，优先级高于名义设计表。 \\
+    I--V 曲线与串联电阻斜率 & 接触边界、漏电路径、spreading layer 电阻 & 主要用于校准电学子模型，而不是拿来“顺便”调光学参数。 \\
+    L--I 曲线与阈值漂移 & 注入效率、复合参数区间、热回写强度 & 只能在电学与热学已基本站稳后进入。 \\
+    谱峰位置及其温漂 & 有效折射率温度系数、增益谱偏移 & 主要约束热回写到光学的接口。 \\
+    远场、偏振和近远场对照 & 候选模身份、偏振选择、辐射通道权重 & 更适合作为回验量，而不是一开始就用于大自由度拟合。 \\
+    热像或热阻测试 & 界面热阻、换热边界、热源分布代理 & 用于锁定热学边界，而不是直接替代器件内部温度场。 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+若这类表在具体项目中进一步扩展成材料参数表，还应在表后附一段“数据来源与适用条件”。最稳妥的写法不是只报一个数字，而是明确注明：折射率数据来自哪类数据库或文献、适用于哪一温度和掺杂范围；增益参数基于哪类量子阱结构；热导率是室温低掺杂参考值还是已包含重掺杂退化。换言之，任何材料参数表都应至少同时带“来源、温度、掺杂、平台”四个标签。只有把这些前提写出来，后面的校准和回验才不会把参考值误读成跨平台、跨温区的普适常数。
+
+\begin{PitfallBox}
+重要提示：表中数值若只是室温、低掺杂、名义结构下的参考量级，就必须直说。尤其是折射率温度系数、热导率和增益参数，通常都随温度、掺杂和应变明显变化。把它们当成无条件常数，是器件附录里最容易埋下的后续失真源。
+\end{PitfallBox}
+
+\begin{ExampleBox}
+若某个设计的阈值电流明显高于冷腔和增益链条的预期，正确做法不是立刻去改增益模型，而是先检查 I--V 与接触结构是否说明了额外串联电阻或漏电路径；若这些都合理，再看热阻与谱漂移是否提示温升过高；最后才轮到怀疑增益模型本身。这就是“先测量分层，再决定谁该被校准”的含义。
+\end{ExampleBox}
+
+\section{预测 \texorpdfstring{$\rightarrow$}{->} 回验：如何判断模型真的具备外推能力}
+一个器件模型是否可靠，不能只看它能否重现实验中已经参与拟合的曲线。真正关键的是：在校准阶段\textbf{没有直接使用过}的观测量，模型是否仍能解释。于是，实验闭环至少应分成两批量：
+\begin{enumerate}
+  \item 校准量：用于锁定几何、电学、热学和部分光学接口；
+  \item 回验量：保留出来，不参与拟合，只用于检查模型是否具备预测能力。
+\end{enumerate}
+对 PCSEL 来说，一个很自然的分层闭环是：
+\begin{equation}
+\begin{aligned}
+\text{测量}
+&\rightarrow
+\text{参数提取}
+\rightarrow
+\text{电学校准}
+\rightarrow
+\text{热学校准}
+\\
+&\rightarrow
+\text{光学回写}
+\rightarrow
+\text{回验未参与拟合的远场、偏振、阈值漂移或工作窗口}.
+\end{aligned}
+\label{eq:validation_loop}
+\end{equation}
+
+\cref{eq:validation_loop} 的实践意义很直接。若模型只会重现已经用于拟合的 I--V 与某一条 L--I 曲线，却无法解释同一器件的谱漂移、远场主瓣变化或偏振窗口，那么它就还不具备“器件预测模型”的资格。相反，若模型在未参与拟合的观测量上仍能给出正确趋势和合理量级，即便数值上还有误差，也说明它抓住了主导物理。
+
+因此，在报告器件建模结果时，最值得坚持的一条写法是：明确声明哪些实验量被用于校准，哪些实验量被保留为回验。只要这一步没有写清楚，“模型与实验一致”这句话就没有足够的信息量。
+
+\section{不确定性传播：不要只给单值，要给证据范围}
+一旦模型里存在文献参数和拟合参数，就不应只给出单一预测值，而应报告一个带条件的区间。最常见的一阶传播写法是
+\begin{equation}
+\delta y^2
+\approx
+\nabla_{\bm p} y^{\mathsf T}
+\mathbf{\Sigma}_p
+\nabla_{\bm p} y,
+\label{eq:uncertainty_appendix}
+\end{equation}
+其中 $\bm p$ 是参数向量，$\mathbf{\Sigma}_p$ 是其协方差矩阵，$y$ 可以是阈值电流、波长漂移、光束偏角或温升等输出量。若缺乏完整协方差，也应至少进行区间扫描和灵敏度排序，明确指出哪些参数真正主导了结论。
+
+从报告角度看，这意味着结论最好写成“在给定参数区间与边界条件假设下，某输出落在什么范围”，而不是只报一个最优单值。对器件设计而言，这种写法更诚实，也更有工程意义，因为它直接体现设计对工艺和参数漂移的鲁棒性。
+
+\begin{PitfallBox}
+将一个在狭窄拟合条件下获得的参数值直接外推到不同温度、不同几何或不同注入区间，是器件模型最常见的失真来源之一。尤其当某参数本来只是“补偿误差的拟合旋钮”时，它更不应被当作材料常数传播到其他工作点。
+\end{PitfallBox}
+
+\section{把这一切落回 PCSEL：真正可交付的器件结论长什么样}
+到这里，可以把器件建模的真正交付物说清楚。一个合格的 PCSEL 器件模型，最终应当交付的不是“某个神秘脚本跑出的阈值电流数字”，而是一条可审计的证据链：
+
+它应当明确给出外延层与目标模式之间的重叠信息；明确材料增益如何映射成模增益；明确哪一类损耗主导了阈值；明确电流如何分布到有源区；明确热源与热点在哪里；明确温升如何回写到折射率、增益和吸收；最后明确在这些回写后，目标模是否仍在工作窗口内保持优势。
+
+只要这条证据链缺少其中一环，结论就应主动降级。反过来说，若这条链完整，即便最终结果只是“某设计方案在当前参数不确定度下不够鲁棒”，它仍然是高质量器件建模，因为它解释了失败发生在哪里。
+
+\section*{本章小结}
+器件建模的核心，不是把更多方程堆在一起，而是把“材料增益 -> 模增益 -> 净模增益 -> 阈值条件 -> 阈值电流 -> 热回写”组织成一条变量流向清晰的证据链。速率方程近似适合做一致性核查，完整器件结论则必须依赖 Poisson、漂移-扩散和热方程。边界条件是模型本身的一部分，参数来源必须分层管理，校准顺序应优先稳住电学和热学，再做光学回写；而一套真正可交付的器件模型，还必须把“测量 -> 参数提取 -> 分层校准 -> 预测 -> 回验”写成显式闭环。真正有用的器件模型，不只给一个数值，还要告诉读者这个数值是怎样来的、由哪些参数主导、在什么条件下会失效。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 结合\cref{eq:device_chain_appendix}，写出你当前研究对象中每一个箭头对应的输入、输出和近似条件。
+
+  \item \basicq 说明为什么\cref{eq:ith_sanity_appendix} 只能作为器件级一致性核查，而不能替代完整漂移-扩散模型。
+
+  \item \midq 为一个电注入 PCSEL 设计一套参数分层表，区分直接测量、文献引用和拟合反演三类参数。
+
+  \item \midq 假设热回写后目标模排序翻转，写出你会优先检查的三个接口变量，并说明它们分别属于光学、电学还是耦合模型。
+
+  \item \hardq 为一个你熟悉的器件案例写出一条“测量 -> 参数提取 -> 分层校准 -> 预测 -> 回验”的最小实验闭环，并指出哪一项观测量最适合保留为回验量。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章将把本附录中的变量链变成数值验证和发布门槛，也就是从“能建模”走向“能证明模型可信”。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想进一步对照半导体激光器器件建模的一般框架，可结合 \cite{coldren2012,zhoupan2023,hirose2014,yoshida2023} 中关于增益、器件设计与实验对接的内容一起阅读。 这条阅读的重点是补足本章关于器件参数链、校准闭环与模型交付 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

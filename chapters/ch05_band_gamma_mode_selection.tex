@@ -1,0 +1,414 @@
+\chapter{光子能带基础、Gamma 点物理与模选择}
+\label{ch:gamma}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 从零理解什么是光子晶体能带，明确它为什么是周期 Maxwell 本征问题的结果，而不是一张“频率随波矢变化”的普通曲线图。
+  \item 学会阅读能带图，知道应该看哪些信息，哪些信息不能从能带图中直接读出。
+  \item 弄清楚 $\Gamma$ 点、带边、简并、辐射耦合、被动共振模和真实激射模之间的关系。
+  \item 为 \cref{ch:pwe} 的平面波展开法（PWEM）与后续 RCWA/FDTD/FEM 建模建立清晰的概念入口。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:maxwell,ch:bloch} 中关于开放 Maxwell 问题、Bloch 定理、布里渊区和 slab 近似的内容。
+
+\section*{本章路线图}
+上一章已经说明，二维周期结构中的场不是随意分布的，而是按照 Bloch 波矢和对称性组织起来。现在自然要追问：既然每一个 Bloch 波矢都对应一组允许模式，那么把这些模式的本征频率沿倒空间路径排出来之后，我们到底得到了什么？这就是光子能带。为避免新手把能带图误读成器件工作图，本章先从能带的最基础概念讲起，解释它和电子能带在数学上相似、在物理上又有哪些关键区别；随后用一个正方晶格圆孔二维光子晶体的最小例子建立直觉，说明高对称路径、归一化频率和带隙是什么意思；再专门讲“怎么看能带图”，把群速度、简并、带边、光锥与 PCSEL 候选模筛选联系起来；最后明确指出：能带图只能给出候选模目录，不能直接给出阈值电流、热稳定性和真实激射模。\cref{ch:pwe} 将把这里的概念完全落实到 PWEM 计算流程中。
+
+\section{为什么在 Bloch 之后必须讲能带}
+Bloch 定理告诉我们，若介质在平面内满足周期性，那么模式可按波矢 $\kvec$ 分类。到这里为止，我们已经知道怎样给无限周期结构中的候选模“命名”。但命名还不够。接下来必须知道，在每一个 $\kvec$ 处，到底允许哪些本征频率出现；随着 $\kvec$ 变化，这些频率怎样连续演化；在哪些高对称点会出现简并、分裂和平带。把这些问题合在一起，得到的就是光子能带结构。
+
+因此，能带图并不神秘。它本质上只是“参数化本征值问题的可视化”。参数是 Bloch 波矢，输出是本征频率。难点不在于这个定义本身，而在于它在 PCSEL 里意味着什么。很多初学者一看到能带图，就会下意识地问“哪条带最好”“哪条带最低阈值”。这个问题问得太快了。因为能带图首先回答的不是谁能激射，而是谁有资格进入候选模名单。
+
+\begin{IntuitionBox}
+把能带图看成“候选模地图”是最安全的入门方式。地图告诉你地形、山谷和通道的位置，但它不替你决定最终哪条路会通向器件级单模工作。后者还要看辐射损耗、增益重叠、电流路径和热反馈。
+\end{IntuitionBox}
+
+\section{什么是光子晶体能带}
+设周期 Maxwell 本征问题写成
+\begin{equation}
+\hat{\mathcal M}(\kvec)\,\Psi_{n\kvec}
+=
+\omega_n(\kvec)\,\Psi_{n\kvec},
+\label{eq:band_eigenproblem_generic}
+\end{equation}
+其中 $\hat{\mathcal M}(\kvec)$ 表示在给定 Bloch 波矢 $\kvec$ 下的本征算符，$\Psi_{n\kvec}$ 代表第 $n$ 条本征模，$\omega_n(\kvec)$ 是对应本征频率。对于每一个固定的 $\kvec$，通常存在一串离散本征值；把这些本征值在倒空间中连续追踪，就得到一组函数 $\omega_n(\kvec)$。每一个这样的函数分支就称为一条光子能带（photonic band）。
+
+从数学上看，这与固体物理中的电子能带问题非常相似：都是周期算符的本征谱问题，都是利用 Bloch 定理把无限体系分解为参数化子问题。但从物理上看，二者有三个重要差别。
+
+第一，光子没有费米面和泡利不相容原理，所以这里的“带”不是占据统计问题，而是传播与共振允许条件问题。
+
+第二，光子能带讨论的是 Maxwell 模式，因此带结构不仅受几何周期调制影响，还受极化、矢量性和开放辐射边界影响。特别是对 PCSEL 的 slab 结构而言，光锥和垂直辐射通道会让某些带与自由空间耦合。
+
+第三，光子晶体能带常采用归一化频率表示，而不是用绝对能量。最常见的写法是
+\begin{equation}
+\Omega = \frac{\omega a}{2\pi c} = \frac{a}{\lambda},
+\label{eq:normalized_frequency}
+\end{equation}
+其中 $a$ 是晶格常数，$\lambda$ 是真空波长。\cref{eq:normalized_frequency} 的根源是 Maxwell 方程的几何相似性：若将结构所有尺寸按比例缩放 $\rvec\to s\rvec$，而材料分布不变，则频率必须按 $\omega\to\omega/s$ 缩放，从而无量纲量 $\omega a/c$ 保持不变。这意味着同一张 $\Omega$-$\kvec$ 能带图可直接用于任意尺度的几何相似结构，只需把 $\Omega$ 换算回实际 $a/\lambda$ 即可。
+
+这个定义真正会用，才算学会。比如若某一候选模对应
+\[
+\Omega = 0.29,
+\]
+而目标真空波长是 \SI{966}{nm}，则需要的晶格常数约为
+\[
+a = \Omega \lambda \approx 0.29\times \SI{966}{nm}\approx \SI{280}{nm}.
+\]
+反过来，若先给定 $a=\SI{280}{nm}$，则这条归一化频率对应的目标波长就是
+\[
+\lambda = \frac{a}{\Omega}\approx \frac{\SI{280}{nm}}{0.29}\approx \SI{966}{nm}.
+\]
+这就是为什么能带图虽然看上去无量纲，却能直接服务于器件几何尺寸的前期反推。
+
+\section{一个一维玩具模型：带隙为什么会打开}
+若只用文字说“周期结构会让平面波耦合并打开带隙”，初学者通常还是会觉得抽象。最小的定量图像来自一维 nearly-free-photon 模型。设介电函数只含一个主导傅里叶分量
+\[
+\varepsilon(x)=\bar{\varepsilon}+\Delta\varepsilon_G \ee^{\ii Gx}+\Delta\varepsilon_{-G}\ee^{-\ii Gx},
+\]
+并考虑接近布里渊区边界 $k\approx G/2$ 的两支平面波
+\[
+\ee^{\ii kx},\qquad \ee^{\ii(k-G)x}.
+\]
+在这一最小两波基底里，周期调制把原本简并的两支平面波耦合成一个 $2\times 2$ 本征问题：
+\begin{equation}
+\begin{bmatrix}
+\bar{\omega}(k) & \kappa \\
+\kappa^\ast & \bar{\omega}(k-G)
+\end{bmatrix}
+\begin{bmatrix}
+a_1\\ a_2
+\end{bmatrix}
+=
+\omega
+\begin{bmatrix}
+a_1\\ a_2
+\end{bmatrix}.
+\label{eq:1d_nearly_free_photon}
+\end{equation}
+这里的 $\kappa$ 不是凭空命名的常数，而是周期介电调制在这两支反向波之间产生的矩阵元；在这个最小玩具模型里，它正比于主导 Fourier 分量 $\Delta\varepsilon_G$ 与两支基波的重叠。
+
+在精确 Bragg 条件 $k=G/2$ 处，两条未耦合频率相等，记为 $\bar{\omega}_B$。此时耦合系数可以用介电函数的主导 Fourier 分量显式估计：对 $\varepsilon(x)=\bar\varepsilon+2\Delta\varepsilon\cos(Gx)$，两波基底 $\{e^{\ii kx},e^{\ii(k-G)x}\}$ 之间的矩阵元为
+\[
+\kappa = \frac{\omega_B^2}{2\bar k^2 c^2}\,\Delta\varepsilon \approx \frac{\Delta\varepsilon}{2\bar\varepsilon},
+\qquad \bar k^2=\frac{\omega_B^2\bar\varepsilon}{c^2}.
+\]
+因此带隙宽度
+\[
+\Delta\omega_{\mathrm{gap}} = 2|\kappa| \approx \frac{\omega_B\Delta\varepsilon}{\bar\varepsilon} = \omega_B\frac{\Delta n}{\bar n},
+\]
+这里最后一步使用 $\Delta\varepsilon\approx 2\bar n\Delta n$。这说明带隙与折射率对比度成正比，也解释了为何高折射率对比结构的带隙更宽。
+
+此时本征值来自特征行列式
+\begin{equation}
+\det
+\begin{bmatrix}
+\bar{\omega}_B-\omega & \kappa \\
+\kappa^\ast & \bar{\omega}_B-\omega
+\end{bmatrix}
+=
+(\bar{\omega}_B-\omega)^2-|\kappa|^2
+=0.
+\label{eq:1d_bandgap_det}
+\end{equation}
+于是本征值直接分裂为
+\begin{equation}
+\omega_{\pm}=\bar{\omega}_B \pm |\kappa|.
+\label{eq:1d_bandgap_split}
+\end{equation}
+这就是带隙最朴素的来源：原先在区边界相遇的两支反向波，不再直接穿过，而是因周期耦合而分裂成上下两支。更进一步，耦合强度 $|\kappa|$ 与介电函数的主导傅里叶分量成正比，因此带隙宽度满足
+\begin{equation}
+\Delta\omega_{\mathrm{gap}} \propto |\Delta\varepsilon_G|.
+\label{eq:gap_vs_fourier}
+\end{equation}
+后面二维 PCSEL 的带隙、Gamma 点分裂和耦合波矩阵当然都更复杂，但物理骨架没有变：本质上仍然是\"本来会相遇的几个平面波，被周期结构的傅里叶分量重新组织并分裂\"。
+
+\section{$\Gamma$ 点四带：从 PWEM 矩阵本征问题到 ABCD 模式分类}
+
+对 PCSEL 来说，最核心的能带特征出现在布里渊区中心 $\Gamma$ 点。本节基于 Liang 等人的推导框架 \cite{liang2012square}，给出从二维 TE Maxwell 方程到 PWEM 矩阵特征值问题的完整路径，并解释 $\Gamma$ 点处四条带边模（A、B、C、D）的起源与物理含义。
+
+\subsection{TE 极化下的 PWEM 矩阵方程}
+
+在二维周期结构中，TE 极化满足标量方程
+\begin{equation}
+\nabla_{\parallel}\cdot\left[\eta(\rho)\nabla_{\parallel}H_z\right]
++ \left(\frac{\omega}{c}\right)^2 H_z = 0,
+\label{eq:pwem_hz_ch5}
+\end{equation}
+其中 $\eta(\rho)=1/\varepsilon_r(\rho)$。展开为 Bloch 形式
+\[
+H_z(\rho) = \sum_{\mathbf{G}} H_{\mathbf{G}}\,e^{i(\mathbf{k}+\mathbf{G})\cdot\rho},
+\]
+并将
+\[
+\eta(\rho)=\sum_{\mathbf{G}}\eta_{\mathbf{G}}e^{i\mathbf{G}\cdot\rho}
+\]
+代入，整理后得到标准矩阵本征方程
+\begin{equation}
+\sum_{\mathbf{G}'} \eta_{\mathbf{G}-\mathbf{G}'}\,(\mathbf{k}+\mathbf{G})\cdot(\mathbf{k}+\mathbf{G}')\,H_{\mathbf{G}'}
+= \left(\frac{\omega}{c}\right)^2 H_{\mathbf{G}}.
+\label{eq:pwem_matrix_ch5}
+\end{equation}
+矩阵是厄米的，矩阵元由 $\eta$ 的 Fourier 系数决定。对圆形空气孔，$\eta_{\mathbf{G}}$ 的解析表达式为
+\begin{equation}
+\eta_{\mathbf{G}} =
+\begin{cases}
+f\,\eta_a + (1-f)\,\eta_b, & \mathbf{G}=\mathbf{0}, \\
+(\eta_a-\eta_b)\,\dfrac{2f}{|\mathbf{G}|r_0}\,J_1(|\mathbf{G}|r_0), & \mathbf{G}\neq\mathbf{0},
+\end{cases}
+\label{eq:eta_G_circle}
+\end{equation}
+其中 $\eta_a=1/\varepsilon_a$、$\eta_b=1/\varepsilon_b$，$f=\pi r_0^2/a^2$ 为填充比，$J_1$ 为一阶 Bessel 函数。
+
+\subsection{真实 slab 结构的修正等效介电常数}
+
+二维 PWEM 假设结构沿 $z$ 方向均匀，不能直接用于有限厚度 slab。为近似三维效应，可先用传递矩阵法计算纵向基模场剖面 $\phi_0(z)$ 及等效折射率 $n_{\rm eff}$，再定义光子晶体层约束因子
+\begin{equation}
+\Gamma_{\rm PC} = \int_{\rm PC\,layer} |\phi_0(z)|^2\,dz,
+\label{eq:gamma_pc}
+\end{equation}
+然后通过联立
+\begin{equation}
+n_{\rm eff}^2 = f\tilde{\varepsilon}_a + (1-f)\tilde{\varepsilon}_b,
+\qquad
+\tilde{\varepsilon}_b - \tilde{\varepsilon}_a = \Gamma_{\rm PC}(\varepsilon_b - \varepsilon_a)
+\label{eq:modified_eps}
+\end{equation}
+确定修正介电常数 $\tilde{\varepsilon}_a,\tilde{\varepsilon}_b$。这样构造的等效二维介电对比度通过 $\Gamma_{\rm PC}$ 把有限深度刻蚀的效果折算进来，使二维 PWEM 计算给出合理的带结构趋势 \cite{liang2012square}。
+
+\subsection{$\Gamma$ 点四带的起源与 ABCD 分类}
+
+在正方晶格二阶 Bragg 条件附近，$\Gamma$ 点处存在四支带边模，按频率从低到高通常标记为 A、B、C、D \cite{liang2012square}。这四支模来自四个主导波分量 $(\pm\beta,0)$ 和 $(0,\pm\beta)$ 之间的相干耦合重组。在 $C_{4v}$ 对称群框架下，它们对应不同的不可约表示，辐射特性也截然不同：
+
+\begin{itemize}
+  \item \textbf{模式 A、B}（频率较低的两支非简并模）：近场关于孔中心具有反对称特征，与法向自由空间平面波的直接辐射耦合受对称性抑制，辐射损耗 $\alpha_{\rm rad}$ 相对较小，对应 1D-DFB 激光器中的反对称（非辐射）模类比；这两支模更容易先达到阈值，是 PCSEL 最常利用的候选激射模。
+  \item \textbf{模式 C、D}（频率较高的简并对）：属于 $E$ 表示，对称性允许直接法向辐射，辐射损耗较大，对应 1D-DFB 中的对称（辐射）模类比。
+\end{itemize}
+
+需要强调的是，这里的辐射损耗大小排序是二维无限周期的结论。进入真实三维有限尺寸器件后，上下辐射不对称、有限孔阵边缘散射和注入分布都会进一步改变模式排序，因此不能把“A 模辐射最低”直接等同于“A 模阈值电流最低”。
+
+\begin{ExampleBox}
+以方格晶格圆孔（填充比 $f=12\%$，$n_b=3.5$）为例，修正等效介电常数通常将二维 PWEM 的带隙位置压缩到与三维 FDTD 相差约 $1$--$3\%$ 以内；A/B/C/D 四模的相对频率排序与三维 FDTD 结果符合良好。但辐射常数（radiation constant）$r$ 的绝对值需要完整的三维 CWT（见 \cref{ch:cwt-min,ch:cwt-3d}）才能精确给出，二维 PWEM 本身不直接提供此信息。
+\end{ExampleBox}
+
+\begin{RigorousBox}
+\cref{eq:pwem_matrix_ch5} 是厄米本征问题，本征值为实数，这对应无损、封闭、无限周期情形。真实 PCSEL slab 的开放辐射使本征频率变为复数，辐射常数 $r = 2\,\mathrm{Im}(\tilde{\omega})$ 只能通过包含辐射通道的开放系统模型（3D CWT、RCWA 或 FDTD）给出。\cref{eq:pwem_matrix_ch5} 的贡献是给出频率排序与场型分类，不是给出损耗排序。
+\end{RigorousBox}
+“本来会相遇的几个平面波，被周期结构的傅里叶分量重新组织并分裂”。
+
+\section{一个最小例子：正方晶格圆孔二维光子晶体}
+为了让概念尽快落地，先考虑一个教学上最常用的理想二维模型：背景介质折射率为 $n_b$，其中刻蚀出半径为 $r$ 的空气圆孔，圆孔按正方晶格排列，晶格常数为 $a$。这是一个比真实 PCSEL slab 更理想化的模型，但它的教学价值很高，因为它已经包含了周期性、倒格空间、高对称点和带图读取的大多数关键元素。
+
+对正方晶格，实空间基矢可取为
+\begin{equation}
+\bm a_1 = a\,\hat{\bm x},
+\qquad
+\bm a_2 = a\,\hat{\bm y},
+\end{equation}
+对应的倒格矢基底为
+\begin{equation}
+\bm b_1 = \frac{2\pi}{a}\,\hat{\bm x},
+\qquad
+\bm b_2 = \frac{2\pi}{a}\,\hat{\bm y}.
+\end{equation}
+在这种约定下，第一布里渊区中的三个高对称点通常记为
+\begin{equation}
+\Gamma=(0,0),
+\qquad
+X=\left(\frac{\pi}{a},0\right),
+\qquad
+M=\left(\frac{\pi}{a},\frac{\pi}{a}\right).
+\label{eq:square_lattice_points}
+\end{equation}
+
+若只想快速建立直觉，最常画的高对称路径就是
+\begin{equation}
+\Gamma\rightarrow X\rightarrow M\rightarrow \Gamma.
+\label{eq:high_symmetry_path_square}
+\end{equation}
+这条路径并不是说系统只在这些方向上有物理，而是因为它能以最紧凑的方式展示主要对称性变化和带的代表性重组过程。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=0.95]
+    \begin{scope}
+      \draw[step=1.3cm,gray!35] (0,0) grid (3.9,3.9);
+      \foreach \x in {0.65,1.95,3.25}{
+        \foreach \y in {0.65,1.95,3.25}{
+          \draw[fill=white] (\x,\y) circle (0.28);
+          \fill[blue!50] (\x,\y) circle (0.03);
+        }
+      }
+      \draw[->,thick,red] (0.2,0.2)--(1.0,0.2) node[below]{$\bm a_1$};
+      \draw[->,thick,red] (0.2,0.2)--(0.2,1.0) node[left]{$\bm a_2$};
+      \node at (1.95,4.3){正方晶格圆孔单胞示意};
+    \end{scope}
+    \begin{scope}[xshift=6.6cm]
+      \draw[thick] (-1.6,0)--(0,1.6)--(1.6,0)--(0,-1.6)--cycle;
+      \fill[red] (0,0) circle (0.06) node[above right]{$\Gamma$};
+      \fill (0,1.6) circle (0.04) node[above]{$X$};
+      \fill (1.6,0) circle (0.04) node[right]{$M$};
+      \draw[very thick,blue!60] (0,0)--(0,1.6)--(1.6,0)--cycle;
+      \node at (0,2.15){布里渊区与高对称路径};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{正方晶格圆孔二维光子晶体的教学型几何示意，以及对应的高对称路径 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$。}
+  \label{fig:square_hole_teaching_setup}
+\end{figure}
+
+\section{怎么看一张能带图}
+真正会看能带图，不是只会说“这里有几条曲线”，而是知道每一个图形特征对应什么物理信息。对初学者来说，最值得按下面五个问题来读图。
+
+\subsection*{第一问：横轴和纵轴到底是什么}
+横轴通常不是“实空间距离”，而是沿高对称路径的倒空间路径坐标；纵轴通常不是绝对频率，而是像\cref{eq:normalized_frequency} 那样的归一化频率。因此，同一张图可以同时服务于“几何缩放设计”和“模式对称性阅读”。如果这一步没弄清，就很容易把不同尺寸器件的结果错拿来直接比较。
+
+\subsection*{第二问：有没有真正的带隙}
+若在某一个频率区间内，沿整条高对称路径都没有本征带穿过，那么这个区间可能对应某一极化下的带隙。注意这里的关键词是“沿整条相关路径都没有本征值”。只在某一段路径上没看到曲线，并不等价于全局带隙；它可能只是局域频带稀疏或路径选择导致的视觉空白。
+
+\subsection*{第三问：哪些点出现简并或近简并}
+高对称点附近的简并尤其重要，因为它们往往意味着模式可被微扰重新组织。对 PCSEL 来说，简并本身不是目标，如何利用对称性破缺让目标模和竞争模在损耗、偏振或远场上分开，才是关键。也正因此，真正做器件设计时，读带图不应只记频率，还应记“哪几条带在 $\Gamma$ 点附近缠在一起”。
+
+\subsection*{第四问：哪些带在目标频率附近变平}
+带变平意味着群速度减小。更正式地，一维路径上的群速度定义为
+\begin{equation}
+v_g = \frac{\partial \omega}{\partial k},
+\qquad
+\text{更一般地}\qquad
+\bm v_g = \nabla_{\kvec}\omega(\kvec).
+\label{eq:group_velocity_definition}
+\end{equation}
+因此，带图上某一段曲线越平，表示该方向上的群速度投影越小，局域态密度往往越高。对很多光子晶体问题，这会让人立刻联想到带边效应、场增强和长驻留时间。但这里必须谨慎：平带不等于最终低阈值。它只说明色散特征上可能存在有趣的候选模。若该模同时与自由空间过强耦合、与有源区重叠差、或在器件工作中受热漂移严重，那么它仍然可能不是最终激射模。
+
+\subsection*{第五问：这张图是否已经告诉了我辐射信息}
+对理想二维无限周期问题，能带图主要告诉你 Bloch 模存在性和色散。若要判断该模在真实 slab PCSEL 中是否容易向法向辐射，还要进一步考虑光锥、纵向模、上下非对称层栈和开放边界。也就是说，能带图本身还不等于辐射图、远场图或阈值图。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \draw[->] (0,0)--(8.4,0) node[right]{高对称路径};
+    \draw[->] (0,0)--(0,4.5) node[above]{归一化频率 $\Omega$};
+    \draw (0,0) node[below]{$\Gamma$};
+    \draw (2.4,0) node[below]{$X$};
+    \draw (4.9,0) node[below]{$M$};
+    \draw (8,0) node[below]{$\Gamma$};
+    \fill[orange!18] (0,2.15) rectangle (8,2.85);
+    \draw[thick,blue!70] plot[smooth] coordinates {(0,0.8) (2.4,1.2) (4.9,0.95) (8,1.35)};
+    \draw[thick,blue!70] plot[smooth] coordinates {(0,1.45) (2.4,1.9) (4.9,1.75) (8,2.05)};
+    \draw[thick,blue!70] plot[smooth] coordinates {(0,2.95) (2.4,3.2) (4.9,3.0) (8,3.35)};
+    \draw[thick,blue!70] plot[smooth] coordinates {(0,3.55) (2.4,3.9) (4.9,3.55) (8,4.1)};
+    \draw[dashed] (2.4,0)--(2.4,4.2);
+    \draw[dashed] (4.9,0)--(4.9,4.2);
+    \node[anchor=west] at (8.1,2.5){示意性带隙};
+    \node[anchor=west] at (5.3,3.72){带较平};
+  \end{tikzpicture}
+  \caption{能带图读图示意。橙色区域表示某一极化下可能的带隙，曲线局部变平提示群速度减小，但这些都只是候选模筛选信息，不直接等于激射结论。}
+  \label{fig:band_reading_schematic}
+\end{figure}
+
+\section{从能带图中我们究竟能得到什么}
+若把能带图的用途说得更系统一些，它至少提供五类高价值信息。
+
+第一，\textbf{候选模频率窗口}。这决定目标工作波段附近是否存在值得继续分析的 $\Gamma$ 点模或带边模。
+
+第二，\textbf{高对称点简并结构}。这决定后续微扰、对称性破缺和偏振工程可能怎样起作用。
+
+第三，\textbf{色散平坦程度与群速度趋势}。这能帮助判断哪些模式可能具有较长驻留时间或较强局域化倾向。
+
+第四，\textbf{带隙与频带重排}。这能帮助理解周期结构如何阻止或允许某些传播通道。
+
+第五，\textbf{给后续数值与半解析模型提供候选对象}。\cref{ch:cwt-min,ch:pwe,ch:rcwa,ch:fdtd-fem} 都需要先知道“应该盯住哪几条带”。
+
+但同样重要的是知道它\textbf{不能}直接给什么。能带图不能直接给出：
+\begin{itemize}
+  \item 有限孔阵边界下的真实腔模排序；
+  \item 模与光锥耦合后的定量辐射损耗；
+  \item 与量子阱重叠和内部吸收共同决定的净模增益；
+  \item 电注入、热漂移和模式竞争下的阈值电流与工作窗口。
+\end{itemize}
+
+这条边界必须在本章就说死。否则，后面所有关于 RCWA、FDTD/FEM、外延层、电学和热学的章节都会被误读成“只是锦上添花”，而不是完成器件级结论所必需的部分。
+
+若要把这句话压缩成一句最适合记忆的教材结论，那就是：\textbf{band diagram 最多给出候选资格，不给器件胜负。} 真正决定胜负的，是后面还要加入的辐射、有限尺寸、增益、注入和热反馈。
+
+\section{为什么 \texorpdfstring{$\Gamma$}{Gamma} 点会成为 PCSEL 的中心舞台}
+现在可以把注意力集中到 PCSEL 最核心的倒空间位置：$\Gamma$ 点。它重要，不是因为它在图上位于中间，而是因为它对 PCSEL 的三个关键目标同时敏感。
+
+第一，PCSEL 追求近法向面发射。对倒空间而言，法向出射对应零面内波矢，因此 $\Gamma$ 点天然与近法向辐射联系最紧密。
+
+第二，$\Gamma$ 点往往汇聚多个等价基本波分量。以正方晶格为例，最小耦合图像常涉及沿 $\pm x$ 和 $\pm y$ 方向传播的四个基本波。它们在 $\Gamma$ 点附近发生强耦合，这正是 PCSEL 耦合波理论的起点。
+
+第三，$\Gamma$ 点通常是对称性标签最清晰的地方。模式的奇偶性、旋转对称性和简并结构在这里最容易被分类，而后续偏振选择和远场工程恰恰依赖这些标签。
+
+因此，PCSEL 之所以一再回到 $\Gamma$ 点，不是出于习惯，而是因为“法向辐射、基本波耦合、对称性工程”这三件事都在这里交汇。新手如果抓住这一点，后面再看面内反馈、面发射机制和偏振整形就不会断裂。
+
+\section{带边模、\texorpdfstring{$\Gamma$}{Gamma} 点模、被动共振模和真实激射模的区别}
+这一节必须写得非常硬，因为它关系到整本书能否避免概念偷换。
+
+\subsection*{带边模（band-edge mode）}
+带边模强调的是色散性质，即模式位于色散曲线的极值附近，群速度趋近于零。它是一个\textbf{被动色散概念}。
+
+\subsection*{\texorpdfstring{$\Gamma$}{Gamma} 点模（Gamma-point mode）}
+$\Gamma$ 点模强调的是倒空间位置，即模式位于布里渊区中心附近。它是一个\textbf{波矢位置概念}。
+
+\subsection*{被动共振模（passive resonance）}
+被动共振模强调的是在无增益条件下、带有开放边界和损耗时的共振特征。它是一个\textbf{开放系统光学概念}，已经比理想能带更接近真实器件，但仍然没有引入增益和输运。
+
+\subsection*{真实激射模（lasing mode）}
+真实激射模强调的是在给定注入和热反馈下，哪个模先达到阈值并在工作窗口内维持主导输出。它是一个\textbf{器件工作状态概念}。
+
+这四者可能重合，但绝不能默认重合。某个模式可以同时是 $\Gamma$ 点模和带边模，但仍不是最终激射模；某个被动共振模可以拥有较高 $Q$，但若与有源区重叠差或在热回写后排序翻转，它仍可能输给别的模。
+
+\begin{RigorousBox}
+“某模式在 $\Gamma$ 点”“某模式位于带边”“某模式被动 $Q$ 较高”都只是候选资格，不是最终器件判决。真正的器件判决必须等到净模增益、有限尺寸、注入分布和热回写都进入模型之后才成立。
+\end{RigorousBox}
+
+\section{为什么能带图好看不等于器件就会好用}
+这句话必须反复说，因为它对应的误判太常见。假设某条带在 $\Gamma$ 点附近很平、频率也落在目标波段上，看起来非常“像一个好模式”。这当然值得兴奋，但还必须立刻追问至少四个问题。
+
+第一，它在真实 slab 结构中是否落在有意义的光锥与导模区间里。
+
+第二，它与量子阱和损耗层的重叠是否有利。
+
+第三，它在有限孔阵中是否仍维持正确排序，而不会被边缘泄漏或横向包络效应推翻。
+
+第四，它在电流注入和温升写回之后是否仍保持净模增益优势。
+
+只要其中任一项答案不清楚，就不能把“能带上很好看”上升为“器件设计已成功”。这也是为什么本章后面必须接 \cref{ch:feedback,ch:pwe,ch:rcwa,ch:fdtd-fem,ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling}。
+
+\begin{ExampleBox}
+若某个 $\Gamma$ 点候选模在能带图上位置很理想，但 RCWA 显示它主要耦合到不希望的辐射通道，或者有限阵列 FDTD 显示它对边缘极其敏感，那么这个模式仍然只适合作为“理论上有趣的候选模”，而不是器件设计中的首选目标。
+\end{ExampleBox}
+
+\section{从本章到 PWEM：为什么还需要平面波展开法}
+到这里，读者应该已经明白“为什么要看能带图”以及“能带图能告诉我们什么”。但还没有回答另一个很实际的问题：这些图到底是怎么来的？最常用的数值入口之一，就是平面波展开法，也就是 PWEM。\cref{ch:pwe} 将把本章的概念完全落实到数值过程：从周期 Maxwell 本征问题出发，如何展开到平面波基底，如何构造正方晶格圆孔二维光子晶体的矩阵本征问题，如何沿 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$ 计算带图，以及如何把计算结果读成候选模筛选信息。
+
+若你希望把本章的正方晶格圆孔例子立刻落到真实可运行的计算，而不是停留在概念层面，那么可以直接跳转到 \hyperref[ch:pwe]{\Cref{ch:pwe}“平面波展开法（PWEM）与光子能带计算”}。在那里，本书项目附带的 Python 脚本会实际计算一张教学型带图，并把结果直接插回书稿。
+
+但在进入数值之前，本书仍然按物理逻辑先走 \crefrange{ch:feedback}{ch:cmt}。原因很简单：在 PCSEL 里，模式为什么面发射、为什么会竞争、为什么阈值不是单看带图就能决定，这些物理问题必须先讲透。否则 \cref{ch:pwe} 里的 PWEM 很容易再次被误读成“算图软件教程”。
+
+\begin{PitfallBox}
+把能带图当成“只要会算就会设计”的核心工具，是典型的软件化误读。真正的教材顺序应当是先懂图像与边界，再学算法与求解。否则读者只会记住哪几个按钮能出图，却不知道图上的每一条曲线到底在说什么。
+\end{PitfallBox}
+
+\section*{本章小结}
+光子晶体能带是周期 Maxwell 本征问题的参数化本征谱。它的数学根基来自 Bloch 定理，最常用的展示方式是沿高对称路径绘制归一化频率随波矢变化的曲线。对 PCSEL 而言，能带图的真正价值在于给出候选模目录：它告诉我们目标波段附近有哪些 $\Gamma$ 点模、带边模和简并结构值得继续追踪。进一步的亮模/暗模（bright/dark）区分来自模式对称性与辐射通道的匹配：若近场对称性允许与自由空间平面波耦合，则为亮模；若所有辐射通道因对称性相消，则为暗模（BIC）。定量判据将在 \cref{ch:polarization} 用群论语言给出。但它不能直接替代开放结构分析、阈值分析和器件级热电建模。$\Gamma$ 点之所以成为中心舞台，是因为法向辐射、基本波耦合和对称性工程都在这里交汇；后面 \cref{ch:bic} 会进一步把这条线翻译成 BIC / quasi-BIC 的辐射语言，而 \cref{ch:threshold,ch:dynamics} 则会把同一批候选模继续写成阈值排序、动态稳定性和线宽来源的问题。把这条线抓住，后面的 CWT、PWEM、RCWA 和器件模型才不会断裂。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 用你自己的话解释“光子能带是参数化本征谱”这句话，并说明这里的参数是什么、输出是什么。
+
+  \item \basicq 解释为什么高对称路径上的视觉空白并不自动等于真正的带隙。
+
+  \item \midq 说明带边模、$\Gamma$ 点模和真实激射模之间为什么不能直接画等号。
+
+  \item \hardq 假设某个候选模在 $\Gamma$ 点附近很平且频率理想，写出至少三个仍然必须继续验证的后续问题。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章将从能带目录继续向前推进，讨论面内基本波如何耦合、垂直辐射如何产生，也就是为什么这些候选模会成为面发射候选模。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若你已经意识到“$\Gamma$ 点候选模”的命运并不只由带图决定，那么可以带着本章的候选模清单继续阅读 \cref{ch:bic,ch:dynamics}：前者回答它如何通过辐射通道进入 BIC / quasi-BIC 语言，后者回答它跨过阈值之后如何进入调制、稳定性和噪声问题。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item \hyperref[ch:pwe]{\Cref{ch:pwe}} 将把本章的几何和能带概念变成实际可计算的 PWEM 流程，特别是正方晶格圆孔二维光子晶体这一教学型例子，并给出本书项目中附带的 Python 计算脚本与实际带图。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+\end{itemize}

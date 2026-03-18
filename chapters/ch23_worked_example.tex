@@ -1,0 +1,514 @@
+﻿\chapter[教材式例题]{教材式例题：从玩具模型到完整建模框架}
+\label{ch:worked-example}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 通过一个双层例题，真正学会把 PCSEL 问题从“物理图像”推进到“可执行建模步骤”，而不只是记住工作流名词。
+  \item 在纸上完成一个最小四波 CWT 玩具模型的模式分裂、损耗排序与阈值判断，从而理解为什么有些模虽然亮，却不一定先激射。
+  \item 在数值层面走完整条链：纵向模、单胞候选模筛选、有限阵列检查、简化电学/热学回写，并学会判断每一步到底能说什么、还不能说什么。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:cwt-min,ch:pwe,ch:workflow,ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling,ch:robustness} 中关于最小 CWT、PWEM、完整工作流、外延层、电注入、热回写与鲁棒性分析的内容。
+
+\section*{本章路线图}
+前面的例题更像一份研究任务单：它告诉读者应该先做什么、后做什么，但还没有把“为什么这样做”和“手上到底应该算出什么”讲到足够像教科书例题。本章因此重写成双层结构。第一层是纸上可走完的玩具模型，我们真的写出一个四波耦合矩阵，算出模式分裂、损耗排序与一个最小阈值判断。第二层是数值全流程例题，我们固定一组简化但合理的参数，逐步完成纵向模检查、单胞候选模筛选、有限阵列验证以及简化电热回写，并在最后汇总每一步的中间结果、可下的可靠结论与仍然悬而未决的问题。读者若能顺着这一章走完，就不应再把“工作流”理解成抽象流程图，而应把它看成一套真正能操作的解题方法。
+
+\section{先把本章放回工作流与失败模式框架中}
+\cref{ch:workflow} 给出的是正向推进的项目骨架，告诉读者应该先确认什么、后确认什么；\cref{ch:failure-modes} 给出的是反向审计的诊断骨架，告诉读者当结论失真时，最可能是哪一段证据链断了。本章则位于两者之间：它把前向工作流真正执行一遍，再把每一步可能落入的误判类型一起标出来。读者若是第一次上手，建议按照“先读 \cref{ch:workflow}，再做本章例题，最后用 \cref{ch:failure-modes} 反查”的顺序阅读。若已经在做自己的器件项目，则更建议把 \cref{tab:workflow-example-failure} 与本章的 \cref{tab:worked-map,tab:worked-summary} 同时打开，把自己的中间结果逐项对照进去。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{本章双层例题在工作流与失败模式框架中的对应关系。}
+  \label{tab:worked-map}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{3.0cm}p{2.0cm}Y Y@{}}
+    \toprule
+    本章步骤 & 对应工作流阶段 & 本章要产出的核心证据 & 若走错，最容易落入的失败模式 \\
+    \midrule
+    玩具模型：四波 CWT 纸上分析 & A/B 之前的概念压缩 & 模式分裂、辐射排序与最小阈值判断的物理图像 & 把亮模直接等同于最低阈值模；把最小模型结论过度外推到真实器件 \\
+    数值第一步：纵向模检查 & A & $n_{\mathrm{eff}}$、$\Gamma_{\mathrm{QW}}$、$\Gamma_{\mathrm{loss}}$ 与层栈敏感性 & 把不合理层栈带入后续所有光学步骤；误用 effective index \\
+    数值第二步：单胞候选模筛选 & B/C & Gamma 点候选模、被动辐射排序、偏振趋势、上下辐射不对称 & 把被动单胞排序直接读成器件排序；把被动共振当有源阈值 \\
+    数值第三步：有限阵列检查 & D & 有限尺寸下的主模排序、近场、远场与边缘敏感性 & 把无限周期结论直接外推到有限器件；阵列尺度未收敛 \\
+    数值第四步：简化电热回写 & E/F & $J(\rvec)$、$N(\rvec)$、$T(\rvec)$ 与目标模净裕量变化 & 把均匀增益当真实注入；忽略热点导致的模式翻转 \\
+    最终汇总与结论分层 & G & 哪些判断已可靠、哪些仍需实验闭环 & 越级报告阈值电流、线宽或长期稳定性 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{例题题目：我们到底要解什么问题}
+本章例题研究一个教学型方格晶格 air-hole slab PCSEL。题目并不是“设计世界上最优的器件”，而是更适合作为教材的问题：
+\begin{quote}
+给定一套简化但合理的层栈与平面晶格参数，判断这个结构是否存在值得继续设计的面发射候选模；若存在，说明这一判断依赖哪些中间输出，又还缺少哪些步骤才能升级为器件级结论。
+\end{quote}
+
+这个题目看似保守，其实很适合作为入门例题。因为它同时要求读者回答四类问题：第一，Gamma 点附近是否有合理候选模；第二，有限阵列边界会不会推翻无限周期下的排序；第三，电流注入和温升会不会改写模竞争；第四，最后能汇报的到底是“光学候选性”，还是“器件级可行性”。只要这四类问题都能有条理地回答，读者就已经真正进入了 PCSEL 的研究语境。
+
+\begin{IntuitionBox}
+本章的目标不是带你“跑完一遍软件”，而是带你学会一种解题习惯：每往前走一步，都知道自己手里多了什么证据；每做一个判断，都知道它还缺哪一块物理才能升级。
+\end{IntuitionBox}
+
+\section[第一层玩具模型]{第一层例题：纸上可完成的四波 CWT 玩具模型}
+\subsection{例题 A 的设定}
+先暂时不碰真实层栈和复杂几何，只抓住 Gamma 点附近最核心的四个面内基本波：
+\[
+\bm{a}
+=
+\begin{bmatrix}
+R_x & S_x & R_y & S_y
+\end{bmatrix}^{\mathsf T},
+\]
+其中 $R_x,S_x$ 表示沿 $\pm x$ 方向传播的基本波，$R_y,S_y$ 表示沿 $\pm y$ 方向传播的基本波。我们考虑一个理想方格晶格，假设：
+\begin{enumerate}
+  \item 沿同一坐标轴的前后向散射强度相同，记为 $\kappa_1$；
+  \item $x$ 向与 $y$ 向波之间的交叉耦合相同，记为 $\kappa_2$；
+  \item 四个基本波共享同一个背景频率 $\omega_0$；
+  \item 所有模式都具有相同的内部损耗 $\gamma_i$；
+  \item 只有完全对称的亮模额外耦合到垂直辐射通道，这一辐射损耗记为 $\gamma_r$。
+\end{enumerate}
+
+在这些假设下，最小非厄米有效矩阵可以写成
+\begin{equation}
+\tilde{H}
+=
+\left(\omega_0-\ii\gamma_i\right)\bm{I}
++
+\begin{bmatrix}
+0 & \kappa_1 & \kappa_2 & \kappa_2 \\
+\kappa_1 & 0 & \kappa_2 & \kappa_2 \\
+\kappa_2 & \kappa_2 & 0 & \kappa_1 \\
+\kappa_2 & \kappa_2 & \kappa_1 & 0
+\end{bmatrix}
+-\ii\frac{\gamma_r}{4}
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+1 & 1 & 1 & 1 \\
+1 & 1 & 1 & 1 \\
+1 & 1 & 1 & 1
+\end{bmatrix}.
+\label{eq:worked-toy-h}
+\end{equation}
+
+这里的第一项给出共同背景频率和内部损耗，第二项表示面内布拉格散射，第三项则表示只有“所有基本波同相叠加”的那一个组合会显著向垂直方向辐射。这个模型是故意简化的，但它已经足以回答两个教材里最关键的问题：模式为什么会分裂，以及“亮”为什么不自动等于“先激射”。
+
+\subsection{第一步：把矩阵换到对称性基底}
+在原始基底下直接解 \cref{eq:worked-toy-h} 并不困难，但教学上更好的做法是先引入四个更贴近物理图像的线性组合：
+\begin{equation}
+\bm{u}_{\mathrm{B}}
+=
+\frac{1}{2}
+\begin{bmatrix}
+1\\1\\1\\1
+\end{bmatrix},
+\quad
+\bm{u}_{\mathrm{X}}
+=
+\frac{1}{2}
+\begin{bmatrix}
+1\\1\\-1\\-1
+\end{bmatrix},
+\quad
+\bm{u}_{\mathrm{Y}}
+=
+\frac{1}{2}
+\begin{bmatrix}
+1\\-1\\1\\-1
+\end{bmatrix},
+\quad
+\bm{u}_{\mathrm{D}}
+=
+\frac{1}{2}
+\begin{bmatrix}
+1\\-1\\-1\\1
+\end{bmatrix}.
+\label{eq:worked-sym-basis}
+\end{equation}
+其中下标 `B` 可理解为最亮的全同相组合，`X` 表示 $x$ 与 $y$ 两组波之间的相对反相，`Y,D` 则属于在完美方格对称下仍简并的一对暗模组合。
+
+把 \cref{eq:worked-toy-h} 作用到这四个向量上，可逐个得到本征值。先看亮模：
+\begin{align}
+\tilde{H}\bm{u}_{\mathrm{B}}
+&=
+\left(\omega_0-\ii\gamma_i\right)\bm{u}_{\mathrm{B}}
++
+\left(\kappa_1+2\kappa_2\right)\bm{u}_{\mathrm{B}}
+-\ii\gamma_r \bm{u}_{\mathrm{B}} \notag\\
+&=
+\left(\omega_0+\kappa_1+2\kappa_2-\ii(\gamma_i+\gamma_r)\right)\bm{u}_{\mathrm{B}}.
+\end{align}
+因此
+\begin{equation}
+\tilde{\omega}_{\mathrm{B}}
+=
+\omega_0+\kappa_1+2\kappa_2-\ii(\gamma_i+\gamma_r).
+\label{eq:worked-bright}
+\end{equation}
+
+对第二个组合 $\bm{u}_{\mathrm{X}}$，因为各分量求和为零，辐射矩阵对它不起作用，于是
+\begin{equation}
+\tilde{\omega}_{\mathrm{X}}
+=
+\omega_0+\kappa_1-2\kappa_2-\ii\gamma_i.
+\label{eq:worked-x}
+\end{equation}
+
+再对 $\bm{u}_{\mathrm{Y}}$ 与 $\bm{u}_{\mathrm{D}}$ 计算，可得到同样的本征值
+\begin{equation}
+\tilde{\omega}_{\mathrm{Y}}
+=
+\tilde{\omega}_{\mathrm{D}}
+=
+\omega_0-\kappa_1-\ii\gamma_i.
+\label{eq:worked-darkpair}
+\end{equation}
+
+到这里，第一层例题最核心的模式分裂已经在纸上完成了。四个原始基本波在周期散射下重组为四个超模，其中一个最亮，一个与 $x/y$ 组反相有关，另外两个在完美方格晶格下保持简并。
+
+\subsection{第二步：读出模式分裂和损耗排序}
+现在不要急着代数字，而是先解释 \cref{eq:worked-bright,eq:worked-x,eq:worked-darkpair} 的物理意义。
+
+第一，$\kappa_1$ 控制的是同一轴前后向波之间的耦合，因此它会同时抬高亮模和 $X$ 模、压低 $Y/D$ 这对模的频率。第二，$\kappa_2$ 控制的是 $x$ 轴与 $y$ 轴两组波之间的耦合，因此它主要负责把亮模和 $X$ 模再拉开一个 $4\kappa_2$ 的频率间隔。第三，辐射损耗 $\gamma_r$ 只落在亮模上，这意味着“最强法向辐射”与“最小损耗”不是同一件事。
+
+若把小信号净增长率写成
+\begin{equation}
+\lambda_j = g_{\mathrm{mod},j}-\gamma_j,
+\label{eq:worked-lambda}
+\end{equation}
+其中 $\gamma_j=-\operatorname{Im}(\tilde{\omega}_j)$，则亮模与其它模的光学线性阈值分别为
+\begin{equation}
+g_{\mathrm{th,B}}=\gamma_i+\gamma_r,
+\qquad
+g_{\mathrm{th,X}}=g_{\mathrm{th,Y}}=g_{\mathrm{th,D}}=\gamma_i.
+\label{eq:worked-thresholds}
+\end{equation}
+这一步就是本例题最值得读者记住的第一结论：\textbf{面发射最亮的模，不一定是最先跨过线性阈值的模}。若垂直辐射耦合太强，亮模反而会因为额外辐射损耗而比暗模需要更高的阈值增益。
+
+\subsection{第三步：在简并子空间中加入一个最小对称性破缺}
+完美方格晶格下，$\bm{u}_{\mathrm{Y}}$ 与 $\bm{u}_{\mathrm{D}}$ 保持简并。但真实器件里，轻微矩形畸变、双晶格位移或工艺各向异性都可能把这对简并打破。教材里最干净的写法，是直接在 $\{\bm{u}_{\mathrm{Y}},\bm{u}_{\mathrm{D}}\}$ 这个二维子空间内写一个微扰矩阵：
+\begin{equation}
+\tilde{H}_{\mathrm{deg}}
+=
+\left(\omega_0-\kappa_1-\ii\gamma_i\right)\bm{I}
++
+\begin{bmatrix}
+\delta & \eta \\
+\eta & -\delta
+\end{bmatrix},
+\label{eq:worked-deg-pert}
+\end{equation}
+其中 $\delta$ 描述两个暗模对某种几何各向异性的不同响应，$\eta$ 描述它们之间被该微扰重新混合的强度。于是新的本征值立刻写成
+\begin{equation}
+\tilde{\omega}_{\pm}
+=
+\omega_0-\kappa_1-\ii\gamma_i
+\pm
+\sqrt{\delta^2+\eta^2}.
+\label{eq:worked-deg-split}
+\end{equation}
+
+这个结果虽然简单，却非常重要。因为它告诉我们：对称性破缺的第一作用，往往不是立刻“创造一个新模”，而是在原来已经存在的简并子空间里把模式重新旋转并拉开。若这两个新模对辐射或增益的重叠不再相同，那么它们的损耗排序和偏振稳定性也会随之改变。这正是 \cref{ch:polarization,ch:cmt} 中“偏振选择”和“模式分裂”在教材例题里的最小落地版本。
+
+\begin{ExampleBox}
+取一组纯教学型无量纲数值：$\kappa_1=2$，$\kappa_2=1$，$\gamma_i=0.5$，$\gamma_r=1.5$。则
+\[
+\tilde{\omega}_{\mathrm{B}}=\omega_0+4-\ii 2.0,\quad
+\tilde{\omega}_{\mathrm{X}}=\omega_0-\ii 0.5,\quad
+\tilde{\omega}_{\mathrm{Y}}=\tilde{\omega}_{\mathrm{D}}=\omega_0-2-\ii 0.5.
+\]
+这说明亮模频率最高、法向辐射最强，但其线性阈值也最高。若材料增益峰更接近 $\omega_0-2$ 一侧，或者目标是最先起振而非最亮输出，那么最先获利的模很可能不是亮模。这个结论完全不依赖具体软件，是纸上就能读出的结构性事实。
+\end{ExampleBox}
+
+\subsection{第四步：这一层玩具模型到底回答了什么}
+到这里，例题 A 已经完成。它回答了四件实用的事。
+
+第一，它告诉我们完美方格晶格里四个基本波如何重组为亮模和暗模。
+
+第二，它告诉我们模式分裂受哪两类耦合主导：同轴前后向耦合 $\kappa_1$ 和轴间交叉耦合 $\kappa_2$。
+
+第三，它告诉我们“亮”不等于“低阈值”，因为亮模通常要支付额外辐射损耗。
+
+第四，它告诉我们对称性破缺首先在简并子空间里起作用，因此偏振选择和模式分裂可以被看成同一个二维微扰问题。
+
+但这一层仍然有明确边界。它没有真实层栈，没有真实三维辐射，没有有限阵列边缘，也没有电流注入和温升。因此它是一个非常有力的\textbf{纸上判断器}，却还不是器件结论。
+
+\begin{PitfallBox}
+若读者在玩具模型这一步就宣布“某个亮模一定是器件工作模”，那就相当于把一个低维线性模型越级使用到了有限尺寸、有源、热反馈器件。这正是本书一直反对的跳步。
+\end{PitfallBox}
+
+\paragraph{给玩具模型补一点数量级感}
+为了不让 $\kappa_1,\kappa_2,\gamma_i,\gamma_r$ 永远停留在抽象符号层，可以给它们配一个最小数量级直觉。若参考波长取 $\lambda_0\sim\SI{1}{\micro\meter}$，则参考角频率约为 $\omega_0=2\pi c/\lambda_0\sim 1.9\times10^{15}\ \mathrm{rad/s}$。若某组参数对应相对模分裂
+\[
+\frac{\Delta\omega}{\omega_0}\sim 10^{-4},
+\]
+则大致对应 $0.1\ \mathrm{nm}$ 量级的波长分裂；若某模满足
+\[
+\frac{\gamma}{\omega_0}\sim 10^{-5},
+\]
+则对应的被动品质因子约为 $Q\sim \omega_0/(2\gamma)\sim 5\times10^4$。这种换算的作用，是让读者知道玩具模型里的“一个小参数”落回实验量级后大概代表多大的频移和多大的被动损耗。
+
+\section{第二层例题：数值全流程全解}
+\subsection{例题 B 的设定与已知量}
+现在进入真正的软件建模例题。我们仍然使用方格晶格 air-hole slab PCSEL，但不再停留在抽象四波基底，而是固定一组简化但合理的名义参数：
+\begin{equation}
+a=\SI{280}{nm},
+\qquad
+r=0.22a,
+\qquad
+t_{\mathrm{pc}}=\SI{160}{nm},
+\qquad
+t_{\mathrm{wg}}=\SI{260}{nm},
+\label{eq:worked-geom}
+\end{equation}
+\begin{equation}
+t_u=\SI{1.2}{\micro\meter},
+\qquad
+t_d=\SI{1.5}{\micro\meter},
+\qquad
+N_x=N_y=31,
+\qquad
+z_{\mathrm{QW}}\approx 0.
+\label{eq:worked-stack}
+\end{equation}
+它们不是校准后的器件参数，而是一个教学用名义设计点。我们的任务不是“报出最终性能”，而是回答：
+\begin{quote}
+在这组名义参数下，是否存在值得继续推进的面发射候选模；如果要把这个候选模升级为器件级结论，还必须补哪些证据？
+\end{quote}
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{例题 B 的名义参数。所有数值仅用于教材推演，不应被视为某一已校准器件的真实数据库。}
+  \label{tab:worked-params}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{2.2cm}p{2.5cm}Y@{}}
+    \toprule
+    参数 & 名义值 & 在例题中的作用 \\
+    \midrule
+    晶格常数 $a$ & \SI{280}{nm} & 设定平面周期和归一化频率标尺 \\
+    孔半径 $r$ & $0.22a$ & 控制单胞傅里叶分量、耦合和辐射趋势 \\
+    PC 层厚度 $t_{\mathrm{pc}}$ & \SI{160}{nm} & 影响面内散射和纵向剖面 \\
+    波导总厚度 $t_{\mathrm{wg}}$ & \SI{260}{nm} & 决定纵向模与量子阱重叠 \\
+    上/下包层厚度 $t_u,t_d$ & \SI{1.2}{\micro\meter}, \SI{1.5}{\micro\meter} & 决定上下辐射不对称与导模背景 \\
+    阵列尺寸 $N_x\times N_y$ & $31\times31$ & 给出有限阵列验证的起点尺寸 \\
+    量子阱位置 $z_{\mathrm{QW}}$ & 波导中心附近 & 使目标纵向模与有源区尽量重合 \\
+    电极/掺杂设置 & 上 p、下 n、接触层重掺杂 & 为后续电流扩展与热源建模提供最小器件背景 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{解题前先写定性预期}
+教材式例题不应从“开软件”开始，而应从“先写预期”开始。对本例，我们先明确四条定性预期。
+
+第一，纵向层栈应支持一个与量子阱区有较好重叠的主要导模，否则平面晶格再漂亮也没有意义。
+
+第二，单胞层面应出现 Gamma 点附近的面发射候选模，而且目标模与竞争模在辐射排序上至少要有可解释差异。
+
+第三，有限阵列边界可能改变单胞下看到的排序，因此需要重新审查主模、边缘泄漏和远场。
+
+第四，哪怕纯光学阶段一切良好，电流扩展和热回写仍可能改变目标模的净模裕量。
+
+这四条预期的作用是给后面的每一步都设立“要验证的命题”。这样一来，仿真就不是盲扫，而是逐题作答。
+
+\subsection{第一步：纵向模检查}
+\paragraph{题目} 在给定层栈下，判断是否存在一个可作为后续 PCSEL 平面建模背景的主要纵向导模。
+
+\paragraph{应建的最小模型}
+在 Lumerical 路径中，用 MODE/FDE 建立二维横截面层栈；在 COMSOL 路径中，用二维横截面的 Wave Optics 模态模型。无论哪条路线，都要把问题简化成同一个物理任务：求纵向导模、有效折射率和与有源区/损耗层的重叠。
+
+\paragraph{应得到的输出}
+\begin{enumerate}
+  \item 有效折射率 $n_{\mathrm{eff}}$；
+  \item 纵向场分布 $E(z)$ 或等效模场剖面；
+  \item 量子阱重叠 $\Gamma_{\mathrm{QW}}$；
+  \item 重掺杂层与金属邻近损耗重叠 $\Gamma_{\mathrm{loss}}$；
+  \item 对 $t_{\mathrm{wg}}$、$t_{\mathrm{pc}}$ 和 $z_{\mathrm{QW}}$ 的局部灵敏度。
+\end{enumerate}
+
+\paragraph{教材式判断}
+若 $\Gamma_{\mathrm{QW}}$ 本来就很小，说明纵向模舞台搭错了，此时不应继续扫孔半径。若 $n_{\mathrm{eff}}$ 对层厚极端敏感，说明后续平面设计会非常依赖工艺厚度控制。若 $\Gamma_{\mathrm{loss}}$ 很大，说明电学低电阻与光学低损耗之间的冲突已经很强，后面必须在 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 的器件主线上重做权衡。
+
+\paragraph{这一阶段能说什么}
+可以说“存在一个合理的纵向候选导模”或“不存在”。不能说“器件阈值已经低”。
+
+\subsection{第二步：单胞候选模筛选}
+\paragraph{题目} 在名义单胞参数下，判断 Gamma 点附近是否有值得继续投入有限阵列验证的面发射候选模。
+
+\paragraph{应建的最小模型}
+这一阶段建议分成两个子步骤。
+\begin{enumerate}
+  \item 先用 \cref{ch:pwe} 的 PWEM 框架做被动无限周期候选模筛选，必要时可直接调用本项目脚本 \path{code/pwem_square_hole/run_pwem_square_hole.py} 作为正方晶格圆孔的第一轮筛选工具；但教学上不应只停在“把脚本跑通”，而应把输出与 \cref{fig:pwem_python_band_result,tab:pwem_python_highsym} 对照，确认本书示例中的 Gamma 点候选频带大致落在 $\Omega\approx 0.34$ 到 $0.46$，其中典型高对称点值包括 $0.3402,0.4074,0.4074,0.4611$；
+  \item 再用 RCWA 或 COMSOL 的三维周期频域单胞模型，检查开放辐射、上下出光比例和偏振趋势。
+\end{enumerate}
+
+\paragraph{应得到的输出}
+\begin{enumerate}
+  \item Gamma 点附近候选频带所在频段；
+  \item 候选模的主要对称性和主导傅里叶分量；
+  \item 上/下辐射比例；
+  \item 目标模与竞争模的被动损耗排序；
+  \item 对孔半径和刻蚀深度的局部灵敏度。
+\end{enumerate}
+
+\paragraph{教材式判断}
+若 PWEM 只显示相关频段里没有合适候选模，则无需进入开放单胞。若 PWEM 给出候选模，而 RCWA 显示目标模在开放结构中辐射排序并不占优，则应回到几何与层栈参数重新调整。若单胞结果显示目标模确实有合理的辐射和偏振趋势，那么它才获得进入有限阵列审判的资格。
+
+\paragraph{最小定量筛选门槛}
+为了把“教材式判断”落实成第一次真正能执行的筛选动作，至少还应加三条定量门槛。第一，候选模频率应落在目标材料增益峰附近的可接受失谐窗口内，而不是只凭“在同一个大频段里”；第二，目标模相对于最危险竞争模的被动损耗排序，应在小幅孔径、刻蚀深度或层厚扰动下保持不翻转；第三，上下辐射比例和偏振标签应能用前文的对称性与辐射通道语言解释，否则即便数值结果好看，也要先怀疑模式身份是否认对了。
+
+\paragraph{这一阶段能说什么}
+可以说“该结构在无限周期开放单胞下存在合理候选模”。不能说“有限器件一定单模”。
+
+\subsection{第三步：有限阵列检查}
+\paragraph{题目} 把单胞里通过初筛的候选模放进有限器件里，检查边缘是否改写模式排序和远场。
+
+\paragraph{应建的最小模型}
+Lumerical 路径中最自然的是三维 FDTD；COMSOL 路径中最自然的是三维 Wave Optics 频域或本征频率研究，并辅以 PML。教学起点可取 $31\times31$ 阵列，但必须至少对邻近尺寸做一次收敛与边缘敏感性检查。
+
+\paragraph{应得到的输出}
+\begin{enumerate}
+  \item 有限阵列主模与竞争模的排序；
+  \item 近场分布与边缘泄漏位置；
+  \item 远场主瓣、旁瓣和偏振趋势；
+  \item 阵列尺寸、PML 和网格变化后的稳定性。
+\end{enumerate}
+
+\paragraph{教材式判断}
+如果目标模在单胞中很好，但在有限阵列中出现强边缘泄漏或排序反转，那么单胞结论已经失效。此时最合理的动作不是急着引入增益，而是先承认“无限周期不等于有限器件”这一关还没过。若有限阵列中目标模仍占优，而且远场和偏振保持合理，则纯光学证据链进一步加强。
+
+\paragraph{这一阶段能说什么}
+可以说“在给定名义阵列尺寸下，纯光学有限器件支持某个优势候选模”。不能说“器件阈值电流已知”。
+
+\subsection{第四步：简化电学与热学回写}
+\paragraph{题目} 判断在真实电极、注入与温升参与后，纯光学候选模是否仍保持净优势。
+
+\paragraph{应建的最小模型}
+Lumerical 路径中，用 CHARGE 解简化漂移-扩散与泊松问题、用 HEAT 解温度场；COMSOL 路径中，用 Semiconductor 与 Heat Transfer 完成同样任务。这里不追求一上来就做全耦合，而是先做一个\textbf{简化回写代理}：
+\begin{enumerate}
+  \item 用简化截面或对称几何得到 $J(\rvec)$、$N(\rvec)$；
+  \item 由 Joule 热和非辐射复合得到 $T(\rvec)$；
+  \item 把 $N$ 与 $T$ 映射成 $\Delta g(\rvec)$、$\Delta n(\rvec)$ 和 $\Delta \alpha(\rvec)$；
+  \item 再用这些空间分布回写光学模型，比较目标模和竞争模的净模裕量。
+\end{enumerate}
+
+\paragraph{应得到的输出}
+\begin{enumerate}
+  \item 电流密度分布 $J(\rvec)$；
+  \item 载流子分布 $N(\rvec)$；
+  \item 温度分布 $T(\rvec)$ 与热点位置；
+  \item 回写后的目标模净裕量变化趋势；
+  \item 目标模与竞争模是否发生排序翻转。
+\end{enumerate}
+
+\paragraph{教材式判断}
+若 $J(\rvec)$ 与目标模主场区域明显错位，说明“光学模场合理”不等于“器件注入合理”。若 $T(\rvec)$ 在边缘或金属邻近区形成热点，而回写后竞争模获益更多，则说明纯光学阶段的优势还不能升级为器件结论。只有当简化回写后目标模仍保持足够净裕量，才可以开始谈器件级可行性的初步证据。
+
+\paragraph{这一阶段能说什么}
+可以说“在该简化电热代理模型下，目标模在工作窗口内仍保持/不保持优势”。仍然不能说“绝对阈值电流、线宽和功率已经被完全预测”。
+
+\subsection{给例题 B 补一页真正可核对的“实算结果页”}
+前面各步已经说明了“应该产出什么”。为了让本章不只像执行模板，而更像可跟做的教材例题，这里把\textbf{本题已经固定下来的教学值、脚本实算值和验收窗口}集中成一张结果页。需要强调，下面的数字分三类：一类来自本项目已附带的 PWEM 脚本实算；一类来自本章名义层栈下的教学代理值；还有一类是有限阵列与电热回写阶段的验收窗口，而不是高保真器件终值。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{例题 B 的“实算结果页”。这里把脚本实算、教学代理值和验收窗口并排列出，目的是给第一次独立做题的读者提供数量级与判错锚点，而不是伪造完整器件终值。}
+  \label{tab:worked-result-page}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{2.6cm}p{2.7cm}p{2.4cm}Y@{}}
+    \toprule
+    中间量 & 本题采用/得到的数值 & 身份 & 读者应如何使用 \\
+    \midrule
+    $n_{\mathrm{eff}}$ & $\approx 3.15$--$3.25$ & 纵向模教学代理窗口 & 若远低于 3 或高到接近衬底折射率，应先怀疑层栈或边界定义 \\
+    $\Gamma_{\mathrm{QW}}$ & $\approx 0.03$--$0.05$ & 名义 MQW 层栈的教学代理窗口 & 若小于 0.01，通常说明有源区放置或纵向舞台明显不合理 \\
+    $\Gamma_{\mathrm{loss}}$ & $\approx 0.005$--$0.02$ & 名义损耗层重叠的教学代理窗口 & 若与 $\Gamma_{\mathrm{QW}}$ 同量级甚至更大，后续器件阈值通常会明显吃亏 \\
+    $\Omega_{\Gamma}^{(2,3,4,5)}$ & \shortstack[c]{$0.3402,\ 0.4074,$\\$0.4074,\ 0.4611$} & PWEM 脚本实算值 & 用于锁定单胞筛选频窗，并核对高对称点简并是否正确 \\
+    单胞候选频窗 & $\Omega\approx 0.34$--$0.46$ & 由 PWEM 实算反推的 RCWA 频窗 & 不再盲扫全频段，而是围绕候选模族做开放单胞精修 \\
+    有限阵列起始尺寸 & $31\times31$ & 本题显式给定 & 至少再与相邻尺寸做一次主模排序与远场收敛比较 \\
+    有限阵列验收 & 目标模近场主峰居中、边缘泄漏不主导；远场主瓣保持中心集中特征 & 教学验收窗口 & 若一换尺寸/PML/网格就翻转，说明当前还不能进入电热回写 \\
+    电热回写验收 & $J(\rvec)$ 与目标模高场区不严重错位；$T(\rvec)$ 热点不把竞争模推成净裕量更大 & 教学验收窗口 & 这里建立的是“初步器件可行性”，不是绝对 $I_{\mathrm{th}}$ 与线宽 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+若把 \cref{tab:worked-result-page} 与前文四个阶段对照起来，可以看到本章现在至少已经给出了两类对新手最关键的信息。第一类是\textbf{真的可核对的数字}，例如 PWEM 脚本在高对称点输出的归一化频率；第二类是\textbf{一旦偏离就应该立刻停下排查的窗口}，例如 $\Gamma_{\mathrm{QW}}$ 太小、$\Gamma_{\mathrm{loss}}$ 过大、有限阵列结果对尺寸/PML 过敏等。对第一次独立上手的读者来说，这比只知道“要算哪些量”更有用，因为它把“算对了大概长什么样”也写出来了。
+
+\begin{RigorousBox}
+\cref{tab:worked-result-page} 故意没有给出绝对阈值电流、绝对线宽或高功率热滚降数字。原因不是本章回避结果，而是因为这些量若没有完整增益标定、接触参数、热边界与实验回验，就不应被伪装成“本题已经算完的终值”。本章给出的，是一张\textbf{足够教材化的中间结果页}，而不是一份冒充器件定量预测的表。
+\end{RigorousBox}
+
+\subsection{第五步：把中间结果收束成一张教材式汇总表}
+到了这里，最重要的教学动作不是继续堆更多输出，而是学会把中间结果整理成一张读者可以复用的判断表。\cref{tab:worked-summary} 就是这道题真正的“答案格式”。如果把本章当成对 \cref{ch:workflow} 的一次完整执行，那么这张表就是工作流阶段 A--G 在一个具体算例中的投影；若再与 \cref{tab:workflow-example-failure,tab:worked-map} 对照阅读，就能立刻看出每一条中间量在失败诊断里对应哪一类风险。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{例题 B 的中间结果汇总表。表中不是伪造终值，而是规定每一步必须产出的输出类型、可做的判断和结论边界。}
+  \label{tab:worked-summary}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{1.5cm}p{3.1cm}Y Y@{}}
+    \toprule
+    步骤 & 必须产出的中间量 & 现在可以做的判断 & 现在还不能做的判断 \\
+    \midrule
+    纵向模 & $n_{\mathrm{eff}}$、$\Gamma_{\mathrm{QW}}$、$\Gamma_{\mathrm{loss}}$、层厚灵敏度 & 外延层是否提供了合理光学舞台 & 阈值电流、器件功率 \\
+    单胞筛选 & Gamma 点候选模、被动辐射排序、上下出光比例、偏振趋势 & 是否存在值得继续推进的候选模 & 有限器件一定单模 \\
+    有限阵列 & 主模排序、近场、远场、边缘敏感性、尺寸收敛 & 无限周期结论是否在有限器件中仍成立 & 电注入后的真实工作模 \\
+    电热回写 & $J(\rvec)$、$N(\rvec)$、$T(\rvec)$、$\Delta g$、$\Delta n$、净裕量变化 & 纯光学候选模在简化器件代理下是否仍占优 & 绝对阈值电流、线宽、老化寿命 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{这一章到底给出了哪些“可靠结论”}
+教材式例题的最后一步，不是再出一张图，而是把结论分层说清。
+
+\subsection*{在本章范围内可以可靠建立的判断}
+\begin{itemize}
+  \item 通过玩具模型，可以可靠理解四个基本波如何分裂成亮模与暗模，以及为什么亮模不一定最先跨过线性阈值。
+  \item 通过纵向模与单胞筛选，可以可靠判断名义层栈是否提供了合理的导模背景，以及 Gamma 点附近是否存在值得继续投入的候选模。
+  \item 通过有限阵列检查，可以可靠判断单胞下的排序是否在给定尺寸范围内仍成立，远场与边缘泄漏是否已经出现明显问题。
+  \item 通过简化电热回写，可以可靠判断“纯光学优势是否在最小器件代理下仍然保留”。
+\end{itemize}
+
+\subsection*{还不能被本章完全关闭的判断}
+\begin{itemize}
+  \item 绝对阈值电流仍需要经过材料增益、接触电阻、真实电流扩展和热阻校准。
+  \item 连续波高功率工作时的热滚降、模式跳变和封装相关效应仍需要更高保真度模型。
+  \item 线宽和相干性仍需要噪声模型，而不是仅靠确定性全波或多物理场解。
+  \item 大批量工艺可制造性仍需要 \cref{ch:robustness} 的 tolerance analysis 和 robustness window 报告。
+\end{itemize}
+
+\subsection*{哪些问题最终必须交给实验闭环}
+\begin{itemize}
+  \item 材料增益模型是否与真实外延片一致；
+  \item 金属接触、电流扩展层和热边界条件的真实参数；
+  \item 表面粗糙、孔径偏差和阵列边缘截断的统计分布；
+  \item 实际工作偏振、远场和阈值电流是否与模型趋势相符。
+\end{itemize}
+这并不意味着仿真不重要。恰恰相反，仿真的价值在于把实验闭环的问题压缩成少数清楚、可检验的命题，而不是让实验在一团没有层次的参数空间里摸索。
+
+\begin{RigorousBox}
+本章最应该保留下来的纪律是：纯光学结果只能建立“候选性”，简化电热回写只能建立“初步器件可行性”，真正的器件级定量结论仍需要更高保真度模型和实验闭环。这不是保守，而是对证据层级的严格区分。
+\end{RigorousBox}
+
+\section*{本章小结}
+这一章把例题从“任务清单”升级成了“双层例题”。第一层玩具模型在纸上完成了四波 CWT 的模式分裂、损耗排序和简并破缺，因此读者能够真正理解 Gamma 点候选模为什么会亮、为什么会分裂、为什么亮模不一定最先激射。第二层数值全流程例题则把同一个问题依次推进到纵向模、单胞筛选、有限阵列验证和简化电热回写，并在每一步明确输出类型、判断边界和未决问题。真正学会这一章的标志，不是记住某一组数字，而是学会：每做一步计算，都知道它增加了哪一层证据；每下一个结论，都知道它还缺哪一层证据。若把 \cref{ch:workflow} 视为正向项目骨架，那么本章就是一次完整执行；若再把 \cref{ch:failure-modes} 视为反向审计骨架，那么本章的每一步都应能够被逐项回查。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 在玩具模型中，若把辐射损耗矩阵改成同时作用于 $\bm{u}_{\mathrm{B}}$ 和 $\bm{u}_{\mathrm{X}}$，请重新写出本征值，并解释这对应了怎样的辐射物理图像。
+
+  \item \basicq 设 $\kappa_2$ 从正变负，讨论亮模与 $X$ 模的频率排序如何改变，并说明这意味着哪一类几何傅里叶分量可能发生了主导变化。
+
+  \item \midq 按本章的格式，为你自己的器件写一张“中间结果汇总表”，并明确指出每一步不能越级宣称什么。
+
+  \item \hardq 说明为什么本章即便完成了简化电热回写，也仍不能在没有实验校准的情况下报告绝对阈值电流和线宽。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 先回到 \cref{ch:workflow}，把 \cref{tab:workflow-example-failure,tab:worked-map} 对照阅读，可把本章例题逐步映射回完整项目工作流，理解玩具模型、全波仿真和器件模型各自在流程中的职责。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 再结合 \cref{ch:robustness,ch:failure-modes} 阅读，可把本章例题继续扩展成“名义设计 + tolerance analysis + 失败模式诊断”的完整项目模板，并用失败模式章对本章每一阶段做反向自检。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+\end{itemize}
+
+

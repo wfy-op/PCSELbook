@@ -1,0 +1,116 @@
+\begin{titlepage}
+\thispagestyle{empty}
+
+\definecolor{coverbg}{RGB}{45,10,52}
+\definecolor{coverbgdeep}{RGB}{24,6,34}
+\definecolor{covergold}{RGB}{211,171,84}
+\definecolor{covergoldsoft}{RGB}{186,150,78}
+\definecolor{covercyan}{RGB}{111,218,255}
+\definecolor{covercyansoft}{RGB}{169,233,255}
+\definecolor{coverteal}{RGB}{18,95,110}
+\definecolor{coverglow}{RGB}{109,178,210}
+\definecolor{coverline}{RGB}{132,110,172}
+
+\begin{tikzpicture}[remember picture,overlay]
+  % Background
+  \fill[coverbg] (current page.south west) rectangle (current page.north east);
+  \shade[left color=coverbgdeep,right color=coverbg] 
+    (current page.south west) rectangle ($(current page.south west)+(1.65,29.7)$);
+  \draw[covergoldsoft,line width=0.4pt]
+    ($(current page.south west)+(0.22,0)$) -- ($(current page.north west)+(0.22,0)$);
+  \draw[covergoldsoft,line width=0.4pt]
+    ($(current page.south west)+(0.34,0)$) -- ($(current page.north west)+(0.34,0)$);
+  \foreach \yy in {5.6,11.9,18.2,24.5} {
+    \draw[covergoldsoft,line width=0.5pt]
+      ($(current page.south west)+(0,\yy)$) -- ($(current page.south west)+(1.18,\yy)$);
+  }
+
+  % Frame
+  \draw[covergold,line width=0.9pt]
+    ($(current page.south west)+(1.95,1.35)$) rectangle ($(current page.north east)+(-0.75,-0.95)$);
+  \draw[covergoldsoft,line width=0.45pt]
+    ($(current page.south west)+(2.15,1.55)$) rectangle ($(current page.north east)+(-0.95,-1.15)$);
+
+  % Corner accents
+  \draw[covergold,line width=0.85pt]
+    ($(current page.north west)+(2.2,-1.2)$) -- ++(1.1,0) -- ++(0,-0.95);
+  \draw[covergold,line width=0.85pt]
+    ($(current page.north east)+(-1.0,-1.2)$) -- ++(-1.1,0) -- ++(0,-0.95);
+  \draw[covergold,line width=0.85pt]
+    ($(current page.south west)+(2.2,1.6)$) -- ++(1.1,0) -- ++(0,0.95);
+  \draw[covergold,line width=0.85pt]
+    ($(current page.south east)+(-1.0,1.6)$) -- ++(-1.1,0) -- ++(0,0.95);
+  \fill[covergold] ($(current page.north west)+(2.2,-1.2)$) circle (0.06);
+  \fill[covergold] ($(current page.north east)+(-1.0,-1.2)$) circle (0.06);
+  \fill[covergold] ($(current page.south west)+(2.2,1.6)$) circle (0.06);
+  \fill[covergold] ($(current page.south east)+(-1.0,1.6)$) circle (0.06);
+
+  % Small heading
+  \node[align=center,text=covergold,font=\fontsize{12}{14}\selectfont\scshape]
+    at ($(current page.north)+(0,-5.2)$)
+    {Photonic Devices Monograph Series};
+  \draw[covergoldsoft,line width=0.5pt]
+    ($(current page.north)+( -2.4,-5.95)$) -- ($(current page.north)+(2.4,-5.95)$);
+
+  % Main title
+  \node[align=center,text=covergold,text width=0.72\paperwidth]
+    at ($(current page.center)+(0,4.3)$)
+    {{\fontsize{31}{36}\selectfont\bfseries PCSEL 理论、仿真\\[0.32cm]与器件物理导论}};
+
+  % Separator
+  \draw[covergoldsoft,line width=0.6pt]
+    ($(current page.center)+(-4.0,1.95)$) -- ($(current page.center)+(-0.9,1.95)$);
+  \fill[covergoldsoft] ($(current page.center)+(0,1.95)$) circle (0.055);
+  \draw[covergoldsoft,line width=0.6pt]
+    ($(current page.center)+(0.9,1.95)$) -- ($(current page.center)+(4.0,1.95)$);
+
+  % Subtitle
+  \node[align=center,text=covergoldsoft,text width=0.68\paperwidth]
+    at ($(current page.center)+(0,0.7)$)
+    {{\fontsize{15}{22}\selectfont
+    从 Maxwell 方程、Bloch 模与能带分析，\\
+    到耦合波、全波数值方法、半导体外延层、\\
+    电注入与热--电--光耦合的系统导论}};
+
+  % Central emblem glow
+  \shade[inner color=coverglow!28,outer color=coverbg]
+    ($(current page.center)+(0,-5.0)$) circle (3.15);
+  \draw[white,line width=0.75pt]
+    ($(current page.center)+(0,-5.0)$) circle (3.05);
+  \draw[covergoldsoft,dash pattern=on 3pt off 3pt,line width=0.55pt]
+    ($(current page.center)+(0,-5.0)$) circle (2.63);
+
+  % Emblem physics motif
+  \draw[covergoldsoft,line width=0.8pt]
+    ($(current page.center)+(-2.15,-6.15)$) -- ($(current page.center)+(2.15,-6.15)$);
+  \fill[coverteal,rounded corners=4pt]
+    ($(current page.center)+(-1.75,-6.55)$) rectangle ($(current page.center)+(1.75,-5.75)$);
+  \fill[coverbg!70!blue,rounded corners=4pt]
+    ($(current page.center)+(-2.05,-6.95)$) rectangle ($(current page.center)+(2.05,-5.35)$);
+  \foreach \x in {-1.55,-1.16,-0.77,-0.38,0.01,0.40,0.79,1.18,1.57} {
+    \fill[white] ($(current page.center)+(\x,-6.15)$) circle (0.11);
+  }
+  \foreach \x in {-1.55,-1.05,-0.55,-0.05,0.45,0.95,1.45} {
+    \draw[-{Latex[length=2.8mm,width=1.5mm]},covercyan,line width=0.7pt]
+      ($(current page.center)+(\x,-5.1)$) -- ++(0,1.55);
+  }
+  \foreach \x in {-1.3,-0.65,0,0.65,1.3} {
+    \draw[covercyansoft!55,line width=0.35pt]
+      ($(current page.center)+(\x,-5.75)$) -- ++(0,0.85);
+  }
+
+  % Bottom descriptor
+  \node[align=center,text=covergoldsoft]
+    at ($(current page.south)+(0,4.0)$)
+    {{\fontsize{12}{15}\selectfont Rigorous $\cdot$ Multiscale $\cdot$ Device-Oriented}\\[0.18cm]
+     {\fontsize{11}{14}\selectfont 严谨 $\cdot$ 多尺度 $\cdot$ 器件导向}};
+
+  % Author
+  \node[align=center,text=covergold]
+    at ($(current page.south)+(0,2.3)$)
+    {{\fontsize{16}{18}\selectfont Feiyang Wu}\\[0.18cm]
+     {\fontsize{11}{13}\selectfont 2026 年 3 月}};
+\end{tikzpicture}
+
+\null
+\end{titlepage}

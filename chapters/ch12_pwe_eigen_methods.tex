@@ -1,0 +1,614 @@
+\chapter{平面波展开法（PWEM）与光子能带计算}
+\label{ch:pwe}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 从头理解平面波展开法（Plane-Wave Expansion Method, PWEM）为什么能用来计算光子晶体能带，以及它和 \cref{ch:gamma} 中能带概念之间的关系。
+  \item 从二维理想光子晶体的标量 Maxwell 本征问题出发，推导 PWEM 的矩阵本征方程，明确每个矩阵元来自哪里、代表什么耦合。
+  \item 学会为一个正方晶格圆形孔洞光子晶体搭建最小 PWEM 计算：定义单胞、倒格矢、高对称路径、傅里叶系数与截断规则。
+  \item 学会读 PWEM 算出的能带图，知道它能提供哪些候选模信息，又不能替代哪些开放系统与器件级结论。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:maxwell,ch:bloch,ch:gamma} 中关于周期 Maxwell 方程、Bloch 定理、倒格矢与能带图的概念。若对 Gamma 点、带边与候选模目录仍不熟悉，应先回看 \cref{ch:gamma}。
+
+\section*{本章路线图}
+\cref{ch:gamma} 已经把“什么是光子能带”“为什么 PCSEL 关心 Gamma 点候选模”“能带图能告诉我们什么、不能告诉我们什么”讲清楚了。但概念本身还不等于计算。真正做研究时，读者必须进一步回答：一张能带图究竟是怎样从 Maxwell 方程一步一步算出来的？在最简单的二维教学模型中，矩阵本征问题长什么样？对一个正方晶格圆孔光子晶体，倒格矢、高对称路径和圆孔的傅里叶系数该怎样写？本章就回答这些问题。我们的顺序仍然坚持教材逻辑：先从二维理想光子晶体的物理模型出发，再导出 PWEM 的代数形式，然后给出一个“能直接照着搭建”的最小计算例子，最后解释如何读图，以及这些结果应当怎样交给 \cref{ch:rcwa,ch:fdtd-fem}。
+
+\section{为什么在能带概念之后必须把它真正算出来}
+\cref{ch:gamma} 已经强调，能带图不是漂亮曲线，而是周期 Maxwell 本征谱的可视化。既然如此，研究工作就不能停留在“知道应该看能带图”这一步，还必须知道能带图是怎样从方程里长出来的。否则，读者很容易落入两种相反的误区。
+
+第一种误区是“软件主义”。即把 PWEM 当成出图工具，只关心如何让程序画出几条曲线，却不知道这些曲线代表的本征问题是什么。这样一来，一旦几何稍有变化、极化定义稍有不同，结论就会迅速失去可解释性。
+
+第二种误区是“纯概念主义”。即能把 Gamma 点、带边、简并这些词说得很熟，却从未亲手把几何、倒格矢、傅里叶系数和矩阵截断联系起来。这样做的直接后果是：看到一张能带图时，知道它重要，却不知道它为什么可信、哪些地方可能不收敛、也不知道该怎样把结果交给后续模型。
+
+PWEM 正是避免这两种误区的第一步。它把 \cref{ch:gamma} 的能带概念落实成一个可以逐项检查的矩阵本征问题。它不负责回答全部 PCSEL 问题，但它非常适合做一件事：在无限周期、被动、线性的框架里，把候选模目录算清楚，把高对称点附近的模式组织方式算清楚，把后续 CWT 和 RCWA 应该盯住哪些模族这件事先算清楚。
+
+\begin{IntuitionBox}
+如果说 \cref{ch:gamma} 是在教你“怎么看地图”，那么本章就是在教你“地图是怎么测绘出来的”。只有既会读图、又知道图从哪里来，后面看到 RCWA、FDTD/FEM 和器件模型时，才不会把不同层级的结果混在一起。
+\end{IntuitionBox}
+
+\section{从二维理想光子晶体到可计算本征问题}
+为了把思路讲得最清楚，本章先回到一个教学型理想模型：介电常数只随平面坐标 $(x,y)$ 周期变化，而与 $z$ 无关。这样的二维光子晶体当然不是完整的 PCSEL slab，但它已经保留了周期性、Bloch 分类和能带形成的核心数学骨架，因此非常适合作为 PWEM 入门模型。
+
+\subsection{二维模型中的极化分离为什么是教学上有价值的}
+在严格二维、各向同性、无磁并且介电常数只依赖 $(x,y)$ 的情况下，Maxwell 方程可以分成两类标量问题。一类以 $E_z$ 为唯一非零电场分量，另一类以 $H_z$ 为唯一非零磁场分量。不同文献对这两类问题采用的 TE/TM 命名并不完全一致，因此本章尽量直接使用“$E_z$ 标量问题”和“$H_z$ 标量问题”这样的表述，避免符号标签先把读者绕晕。
+
+之所以要先用这种理想二维模型，并不是因为真实 PCSEL 就是二维标量问题，而是因为它可以最透明地展示能带如何由平面波耦合而来。等读者把这一层吃透后，再回到 slab 的矢量问题，就更容易看出哪些是保留下来的主骨架，哪些是由垂直约束、开放边界和外延层引入的新物理。
+
+\begin{RigorousBox}
+二维标量 PWEM 是“真实 PCSEL 光学问题的教学代理模型”，不是完整器件模型。它严格成立的前提是：结构在 $z$ 方向均匀、材料线性无磁、问题可按二维极化分离。真实 PCSEL slab 中常说的 TE-like/TM-like，只能看成这一理想图像的延伸标签，而不能当作完全严格的矢量分类。
+\end{RigorousBox}
+
+\subsection{选取 \texorpdfstring{$H_z$}{Hz} 标量问题作为教学主线}
+对具有空气孔和高折射率背景的二维光子晶体，常见做法是先写 $H_z$ 标量问题。令场具有谐波时间因子 $\ee^{-\ii\omega t}$，并设
+\begin{equation}
+\Hf(\rvec)=\hat{\bm z}H_z(x,y),
+\qquad
+\E(\rvec)=E_x(x,y)\hat{\bm x}+E_y(x,y)\hat{\bm y}.
+\end{equation}
+在无源条件下，频域 Maxwell 方程可化为
+\begin{align}
+-\frac{\partial H_z}{\partial y} &= -\ii\omega\varepsilon_0\varepsilon_r E_x,
+\\
+\frac{\partial H_z}{\partial x} &= -\ii\omega\varepsilon_0\varepsilon_r E_y,
+\\
+\frac{\partial E_y}{\partial x}-\frac{\partial E_x}{\partial y} &= \ii\omega\mu_0 H_z.
+\end{align}
+用前两式消去 $E_x,E_y$，可得到仅关于 $H_z$ 的标量本征方程
+\begin{equation}
+\nabla_{\parallel}\cdot\left[\eta(\rvec_{\parallel})\nabla_{\parallel} H_z(\rvec_{\parallel})\right]
++
+\left(\frac{\omega}{c}\right)^2 H_z(\rvec_{\parallel})=0,
+\label{eq:pwem_hz_scalar}
+\end{equation}
+其中 $\rvec_{\parallel}=(x,y)$，$\nabla_{\parallel}=\hat{\bm x}\partial_x+\hat{\bm y}\partial_y$，并定义
+\begin{equation}
+\eta(\rvec_{\parallel})=\frac{1}{\varepsilon_r(\rvec_{\parallel})}.
+\end{equation}
+\cref{eq:pwem_hz_scalar} 就是我们后续做平面波展开的起点。
+
+这一步的物理意义非常重要。它说明周期结构并不是直接“修改了光速”，而是通过位置相关的 $\eta=1/\varepsilon_r$ 改变了场梯度之间的耦合方式。也正因为如此，后面的矩阵元里才会自然出现几何傅里叶系数与波矢点积的组合。
+
+\subsection{同一个二维模型里还有另一类标量问题}
+若选择 $E_z$ 为标量主变量，则会得到另一种形式的本征方程
+\begin{equation}
+\nabla_{\parallel}^2 E_z(\rvec_{\parallel})
++
+\left(\frac{\omega}{c}\right)^2\varepsilon_r(\rvec_{\parallel})E_z(\rvec_{\parallel})=0.
+\label{eq:pwem_ez_scalar}
+\end{equation}
+\cref{eq:pwem_ez_scalar} 与 \cref{eq:pwem_hz_scalar} 的结构并不相同，因此两类极化的能带通常也不同。很多教材在讨论带隙时会分别画出两套带图，就是这个原因。对 PCSEL 初学者来说，关键不是一开始就记住哪一个一定叫 TE、哪一个一定叫 TM，而是理解：二维能带本来就带有极化依赖，且这种依赖在真实 slab 中会进一步变成更复杂的矢量模式问题。
+
+从数值收敛角度，$H_z$ 标量问题（\cref{eq:pwem_hz_scalar}）通常比 $E_z$ 问题（\cref{eq:pwem_ez_scalar}）收敛更快。原因在于 $H_z$ 方程对介电常数的逆 $\eta=1/\varepsilon_r$ 做展开，而在高折射率对比界面处 $1/\varepsilon_r$ 的不连续性比 $\varepsilon_r$ 本身更温和，使傅里叶级数截断引入的吉布斯效应更小。因此教学上常以 $H_z$ 问题为主线；而在折射率对比度很高（如空气孔深刻蚀、$\Delta n/\bar n > 0.3$）时，对收敛性的检查尤为重要。
+
+若把 $E_z$ 同样写成平面波展开，则会得到另一类矩阵本征问题：
+\begin{equation}
+\sum_{\gvec'}
+\eta_{\gvec-\gvec'}
+\bigl|\kvec+\gvec\bigr|\,
+\bigl|\kvec+\gvec'\bigr|\,
+e(\kvec+\gvec')
+=
+\left(\frac{\omega}{c}\right)^2 e(\kvec+\gvec).
+\label{eq:pwem_matrix_ez}
+\end{equation}
+其中 $e(\kvec+\gvec)$ 表示 $E_z$ 分量在平面波基底 $\ee^{\ii(\kvec+\gvec)\cdot \rvec_\parallel}$ 上的傅里叶展开系数。对读者来说，\cref{eq:pwem_matrix_ez} 最值得记住的不是每个下标，而是一个结构事实：$H_z$ 与 $E_z$ 两类标量问题并不共享同一套矩阵，因此高折射率对比结构里“展开 $\varepsilon$ 还是展开 $\varepsilon^{-1}$”会直接影响收敛与带图位置。这也是为什么后面的 RCWA 章节还要专门讨论 Fourier factorization 规则。
+
+\section{Bloch 形式与平面波展开：PWEM 的数学骨架}
+既然介质是周期性的，那么根据第 4 章的 Bloch 定理，任意本征解都可以写成 Bloch 形式。对\cref{eq:pwem_hz_scalar} 而言，最自然的写法是
+\begin{equation}
+H_{z,n\kvec}(\rvec_{\parallel})
+=
+\ee^{\ii\kvec\cdot\rvec_{\parallel}}
+\,u_{n\kvec}(\rvec_{\parallel}),
+\qquad
+u_{n\kvec}(\rvec_{\parallel}+\bm R)=u_{n\kvec}(\rvec_{\parallel}),
+\label{eq:hz_bloch_form}
+\end{equation}
+其中 $\bm R$ 是任意晶格平移矢量，$u_{n\kvec}$ 是具有晶格周期的周期函数。由于周期函数可以再作傅里叶展开，于是可写成
+\begin{equation}
+H_{z,n\kvec}(\rvec_{\parallel})
+=
+\sum_{\gvec}
+ h_n(\kvec+\gvec)
+ \ee^{\ii(\kvec+\gvec)\cdot\rvec_{\parallel}},
+\label{eq:hz_plane_wave_expand}
+\end{equation}
+而介质函数的倒数展开为
+\begin{equation}
+\eta(\rvec_{\parallel})
+=
+\sum_{\gvec}
+\eta_{\gvec}
+\ee^{\ii\gvec\cdot\rvec_{\parallel}}.
+\label{eq:eta_fourier_expand}
+\end{equation}
+这里每一个 $\gvec$ 都是倒格矢，$h_n(\kvec+\gvec)$ 是待求的平面波系数，$\eta_{\gvec}$ 则完全由单胞几何和材料参数决定。
+
+把\cref{eq:hz_plane_wave_expand,eq:eta_fourier_expand} 代回 \cref{eq:pwem_hz_scalar}，并逐项比较具有相同指数因子的平面波系数，可得
+\begin{equation}
+\sum_{\gvec'}
+\eta_{\gvec-\gvec'}
+\bigl(\kvec+\gvec\bigr)\cdot\bigl(\kvec+\gvec'\bigr)
+\,h_n(\kvec+\gvec')
+=
+\left(\frac{\omega_n(\kvec)}{c}\right)^2
+h_n(\kvec+\gvec).
+\label{eq:pwem_matrix_hz}
+\end{equation}
+这就是二维 $H_z$ 标量问题的 PWEM 矩阵本征方程。若把所有保留下来的平面波系数排成向量 $\bm h_n$，则它可以简写为
+\begin{equation}
+\bm A(\kvec)\,\bm h_n
+=
+\left(\frac{\omega_n(\kvec)}{c}\right)^2\bm h_n.
+\label{eq:pwem_matrix_compact}
+\end{equation}
+
+\subsection{矩阵元为什么正好长成这个样子}
+初学者最容易跳过的地方，就是\cref{eq:pwem_matrix_hz} 里矩阵元的物理解释。这里至少有三层信息。
+
+第一，$\kvec+\gvec$ 与 $\kvec+\gvec'$ 是两支不同的平面波分量，因此矩阵的行和列索引本质上是在给“参与耦合的平面波通道”编号。
+
+第二，$\eta_{\gvec-\gvec'}$ 是介质函数倒数的傅里叶系数，它只在几何具有相应倒格矢分量时才不为零。因此，几何的周期性不是抽象地“影响了场”，而是非常具体地决定了哪些平面波之间可以通过哪一种倒格矢差值发生耦合。
+
+第三，点积
+\begin{equation}
+\bigl(\kvec+\gvec\bigr)\cdot\bigl(\kvec+\gvec'\bigr)
+\end{equation}
+反映的是梯度算符作用在平面波上之后带来的波矢权重。也就是说，PWEM 不是简单把介质傅里叶系数拼成一个矩阵，而是把“介质周期性”和“场的空间变化率”一起编码进矩阵元。
+
+\begin{IntuitionBox}
+PWEM 的本质不是“用很多平面波去拟合一个模式”，而是“把一个模式理解成许多平面波在周期介质中彼此耦合后的自洽组合”。能带就是这些耦合组合允许出现的本征频率集合。
+\end{IntuitionBox}
+
+\section{正方晶格圆形孔洞：把单胞几何真正写成傅里叶系数}
+现在把抽象公式落到一个最常用、也最适合入门的教学型几何上：正方晶格空气圆孔，背景为高折射率介质。这个几何与 \cref{fig:square_hole_teaching_setup} 的示意一致。
+
+\subsection{几何与倒格空间定义}
+设正方晶格常数为 $a$，单胞面积为
+\begin{equation}
+A_c=a^2.
+\end{equation}
+实空间基矢取为
+\begin{equation}
+\bm a_1=a\hat{\bm x},
+\qquad
+\bm a_2=a\hat{\bm y},
+\end{equation}
+倒格矢基矢则为
+\begin{equation}
+\bm b_1=\frac{2\pi}{a}\hat{\bm x},
+\qquad
+\bm b_2=\frac{2\pi}{a}\hat{\bm y}.
+\end{equation}
+任意倒格矢都可写成
+\begin{equation}
+\gvec_{mn}=m\bm b_1+n\bm b_2,
+\qquad m,n\in\mathbb Z.
+\label{eq:square_reciprocal_index}
+\end{equation}
+若圆孔半径为 $r$，孔内相对介电常数为 $\varepsilon_h$，背景相对介电常数为 $\varepsilon_b$，则填充因子为
+\begin{equation}
+ f=\frac{\pi r^2}{a^2}.
+\label{eq:filling_fraction_disk}
+\end{equation}
+对很多教学例子，常取孔内为空气，即 $\varepsilon_h\approx 1$；背景可以取某个高折射率半导体对应的介电常数 $\varepsilon_b=n_b^2$。这里故意先不把具体数字写死，因为几何推导本身与材料数据库无关。
+
+\subsection{圆孔指标函数的傅里叶系数}
+PWEM 真正落地的关键在于：必须把\cref{eq:eta_fourier_expand} 里的 $\eta_{\gvec}$ 明确写出来。为此，把单胞中的介质函数倒数写成
+\begin{equation}
+\eta(\rvec_{\parallel})=
+\eta_b + (\eta_h-\eta_b)\chi_{\mathrm{hole}}(\rvec_{\parallel}),
+\qquad
+\eta_h=\frac{1}{\varepsilon_h},\quad
+\eta_b=\frac{1}{\varepsilon_b},
+\label{eq:eta_indicator_disk}
+\end{equation}
+其中 $\chi_{\mathrm{hole}}$ 是圆孔指标函数，孔内取 1、孔外取 0。于是
+\begin{equation}
+\eta_{\gvec}
+=
+\eta_b\delta_{\gvec,0}
++
+(\eta_h-\eta_b)
+\chi_{\mathrm{hole},\gvec}.
+\label{eq:eta_g_from_indicator}
+\end{equation}
+对单胞中心处的圆孔，指标函数的傅里叶系数可直接积分得到
+\begin{equation}
+\chi_{\mathrm{hole},0}=f,
+\label{eq:chi_disk_zero}
+\end{equation}
+而对任意非零倒格矢 $\gvec\neq 0$，有
+\begin{equation}
+\begin{aligned}
+\chi_{\mathrm{hole},\gvec}
+&=
+\frac{1}{A_c}\int_{\mathrm{disk}} \ee^{-\ii\gvec\cdot\rvec_{\parallel}}\,\dd^2r \\
+&=
+\frac{1}{A_c}\int_0^r\int_0^{2\pi}
+\ee^{-\ii|\gvec|\rho'\cos\phi}\,
+\rho'\,\dd\phi\,\dd\rho' \\
+&=
+\frac{2\pi}{A_c}\int_0^r J_0(|\gvec|\rho')\,\rho'\,\dd\rho' \\
+&=
+f\,\frac{2J_1(|\gvec|r)}{|\gvec|r}.
+\end{aligned}
+\label{eq:disk_indicator_fourier}
+\end{equation}
+这里用到了
+\[
+\int_0^{2\pi}\ee^{-\ii|\gvec|\rho'\cos\phi}\,\dd\phi
+=
+2\pi J_0(|\gvec|\rho')
+\]
+以及
+\[
+\int_0^r J_0(|\gvec|\rho')\,\rho'\,\dd\rho'
+=
+\frac{rJ_1(|\gvec|r)}{|\gvec|}.
+\]
+也就是说，圆孔 Fourier 系数里之所以自然出现 Bessel 函数，不是额外假设，而只是极坐标积分对圆对称几何的直接结果。于是，$\eta_{\gvec}$ 可写成
+\begin{align}
+\eta_0 &= \eta_b+(\eta_h-\eta_b)f,
+\label{eq:eta_zero_disk}
+\\
+\eta_{\gvec} &= (\eta_h-\eta_b)
+ f\,\frac{2J_1(|\gvec|r)}{|\gvec|r},
+\qquad \gvec\neq 0.
+\label{eq:eta_nonzero_disk}
+\end{align}
+\cref{eq:eta_zero_disk,eq:eta_nonzero_disk} 是正方晶格圆孔二维光子晶体最常用的解析傅里叶系数。它们把几何参数 $r/a$ 和材料参数 $\varepsilon_h,\varepsilon_b$ 直接带入 PWEM 矩阵，因此是“从几何到能带”的第一座真正可计算的桥。
+
+若圆孔不在原点，而是位于单胞中的某个位置 $\rvec_c$，则\cref{eq:eta_nonzero_disk} 还要再乘上相位因子 $\ee^{-\ii\gvec\cdot\rvec_c}$。这一点对多孔单胞、双原子单胞或故意引入对称性破缺的结构尤为重要。
+
+\section{如何真正搭建一个最小 PWEM 计算}
+现在把上面的方程压缩成一个初学者可以直接照着执行的最小流程。为了避免把软件界面和物理步骤混为一谈，本节使用 solver-agnostic 的写法，也就是无论你最终用自写代码、MATLAB、Python 还是某个已有求解器，主流程都应当是相同的。
+
+\subsection{步骤一：定义教学型几何与参数表}
+先固定一个最小例子。最自然的选择是：正方晶格、单个圆形空气孔、背景为高折射率介质。参数表可写成 \cref{tab:pwem_square_disk_setup} 的形式。
+
+\begin{table}[htbp]
+  \centering
+  \caption{正方晶格圆孔二维光子晶体的最小 PWEM 教学参数表。这里给出的是“示例参数集”，目的是说明如何搭建模型，而不是宣称任何最终器件性能。}
+  \label{tab:pwem_square_disk_setup}
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\textwidth}{@{}p{1.4cm}p{1.0cm}p{2.0cm}Y@{}}
+    \toprule
+    参数 & 符号 & 示例写法 & 说明 \\
+    \midrule
+    晶格常数 & $a$ & 设计自由参数 & 决定归一化频率与目标波长映射 \\
+    孔半径 & $r$ & $0.30a$ & 常见教学型填充比起点 \\
+    背景折射率 & $n_b$ & $3.4$ & 可代表高折射率半导体背景 \\
+    孔内折射率 & $n_h$ & $1.0$ & 空气孔近似 \\
+    倒格矢截断 & $N$ & $3,5,7,9$ & 表示保留满足 $\lvert m\rvert,\lvert n\rvert\le N$ 的倒格矢 \\
+    路径 & -- & \shortstack[l]{$\Gamma\rightarrow X$\\$\rightarrow M\rightarrow\Gamma$} & 读取主要高对称点信息 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+这里需要特别强调：$a$ 在归一化带图中并不需要先给定绝对数值。因为纵轴通常使用
+\begin{equation}
+\Omega=\frac{\omega a}{2\pi c}=\frac{a}{\lambda},
+\label{eq:normalized_frequency_pwem}
+\end{equation}
+所以只要先得到 $\Omega$，后面就可以再通过目标工作波长反推出所需的晶格常数 $a$。这也是能带图在概念设计阶段特别高效的原因之一。
+
+\subsection{步骤二：生成倒格矢基底并做截断}
+利用\cref{eq:square_reciprocal_index} 生成所有满足 $|m|,|n|\le N$ 的倒格矢。对标量 $H_z$ 问题，这会产生
+\begin{equation}
+N_G=(2N+1)^2
+\end{equation}
+个平面波基函数。随着 $N$ 增大，矩阵维度迅速增长，因此必须把“能算出来”和“已经收敛”区分开。一个安全的基本操作是：至少对目标频段做两到三组不同 $N$ 的对比，而不是只跑一次就接受结果。
+
+\subsection{步骤三：计算傅里叶系数并组装矩阵}
+对每一个倒格矢差值 $\gvec-\gvec'$，用\cref{eq:eta_zero_disk,eq:eta_nonzero_disk} 计算 $\eta_{\gvec-\gvec'}$，然后按\cref{eq:pwem_matrix_hz} 组装矩阵元
+\begin{equation}
+A_{\gvec,\gvec'}(\kvec)
+=
+\eta_{\gvec-\gvec'}
+\bigl(\kvec+\gvec\bigr)\cdot\bigl(\kvec+\gvec'\bigr).
+\label{eq:pwem_matrix_element_explicit}
+\end{equation}
+对每一个给定的 $\kvec$，这都是一个实对称或厄米型矩阵本征问题。求解其一组最小本征值，就得到该 $\kvec$ 处的本征频率平方。
+
+\subsection{步骤四：沿高对称路径逐点求解}
+对正方晶格，最常用的高对称路径是
+\begin{equation}
+\Gamma=(0,0)
+\rightarrow
+X=\left(\frac{\pi}{a},0\right)
+\rightarrow
+M=\left(\frac{\pi}{a},\frac{\pi}{a}\right)
+\rightarrow
+\Gamma.
+\label{eq:gxmg_path_pwem}
+\end{equation}
+把这条路径离散成若干采样点，对每个采样点都构造矩阵、求本征值，再按频率大小规律排序并连续追踪，就得到带图。这里的“连续追踪”很重要，因为不同 $\kvec$ 点上按数值大小规律排序的第 $n$ 个本征值，不一定总对应同一条物理能带。实际处理时，往往还要结合模的对称性或本征向量重叠来辅助跟踪。
+
+\subsection{步骤五：做收敛检查，而不是直接相信第一张图}
+PWEM 的第一张带图通常只能叫“初稿”。要让它进入后续建模链，至少应完成三项检查。
+\begin{enumerate}
+  \item 基底收敛：提高 $N$ 后，目标频段内的候选带位置是否稳定；
+  \item 路径分辨率收敛：增加路径采样点后，平带和简并附近的细节是否稳定；
+  \item 参数一致性检查：若以不同等价写法生成单胞或改变原点，带图是否只发生应有的标记变化，而不发生物理上不应出现的漂移。
+\end{enumerate}
+如果这三项还没有做，图就只适合作为内部草图，不适合拿来指导 CWT 截断或 RCWA 的频段设置。
+
+\begin{ExampleBox}
+以 \cref{tab:pwem_square_disk_setup} 中的示例参数为起点，可以先取 $N=3$ 跑出一张粗略带图，再逐步提高到 $N=5,7,9$。通常你会观察到：随着截断增加，低阶带先趋于稳定，高阶带稳定得更慢；Gamma 点和其他高对称点附近的简并关系会逐渐变清楚；而是否存在明显带隙、哪一段带在目标频段附近最平，则必须以收敛后的图为准，而不是以粗网格初稿为准。
+\end{ExampleBox}
+
+\section{本书附带的 Python 计算脚本与实际带图}
+前面的五步已经把 PWEM 的数学与建模流程讲清楚。为了避免这一章再次退化成“公式讲完就结束”，本书项目中同时附带了一个可直接运行的 Python 示例：
+\begin{itemize}
+  \item 脚本文件：\path{code/pwem_square_hole/run_pwem_square_hole.py}
+  \item 输出目录：\path{code/pwem_square_hole/output/}
+  \item 频带数据文件：\path{pwem_square_hole_hz_bands.csv}
+  \item 汇总信息文件：\path{pwem_square_hole_summary.json}
+\end{itemize}
+它不是伪代码，而是已经在本项目中实际运行过的脚本。脚本使用 Python 标准库实现二维标量 $H_z$ PWEM。
+
+这一份教学型计算采用的参数与 \cref{tab:pwem_square_disk_setup} 一致，具体为
+\begin{equation}
+\frac{r}{a}=0.30,
+\qquad
+\varepsilon_b = 3.4^2,
+\qquad
+\varepsilon_h = 1,
+\qquad
+|m|,|n|\le 2,
+\label{eq:pwem_python_setup}
+\end{equation}
+并沿 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$ 路径计算前六条能带。这里故意把截断保持在教学型规模，也就是 25 个倒格矢分量。这样做的目的不是追求最终设计精度，而是让读者能够把“式子里的每一项”与“实际算出来的图”直接对上。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.88\textwidth,
+      height=0.50\textwidth,
+      xlabel={高对称路径},
+      ylabel={归一化频率 $\Omega=\omega a/(2\pi c)$},
+      xmin=0,
+      xmax=1.7071067812,
+      ymin=0,
+      ymax=0.70,
+      xtick={0,0.5,1.0,1.7071067812},
+      xticklabels={$\Gamma$,X,M,$\Gamma$},
+      ymajorgrids=true,
+      xmajorgrids=true,
+      grid style={gray!25},
+      tick align=outside,
+      every axis plot/.append style={no marks, semithick}
+    ]
+      \addplot[blue!70!black] table[x=s,y=b1,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+      \addplot[teal!80!black] table[x=s,y=b2,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+      \addplot[orange!85!black] table[x=s,y=b3,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+      \addplot[red!75!black] table[x=s,y=b4,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+      \addplot[violet!75!black] table[x=s,y=b5,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+      \addplot[brown!75!black] table[x=s,y=b6,col sep=comma] {code/pwem_square_hole/output/pwem_square_hole_hz_bands.csv};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{由本书项目附带的 Python 脚本实际计算得到的二维标量 $H_z$ PWEM 能带图。结构为正方晶格圆形空气孔，高折射率背景取 $\varepsilon_b=3.4^2$，孔半径取 $r/a=0.30$，截断为 $|m|,|n|\le 2$。该图是教学型被动无限周期结果，不是 slab PCSEL 的最终器件结论。}
+  \label{fig:pwem_python_band_result}
+\end{figure}
+
+\noindent\textbf{现在不再只说“这图有三点要看”，而是把它真正当作一张教学型带图来逐段阅读。}
+
+\paragraph{先读横轴，再读路径闭合是否自洽}
+横轴不是实空间距离，而是沿 $\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$ 的累计路径长度。图中四个关键位置分别是 $s=0$、$0.5$、$1.0$ 和 $1.7071$。由于最后回到同一个 $\Gamma$ 点，图的左右两端应当给出同一组本征频率。对 \cref{fig:pwem_python_band_result} 来说，这一点是成立的：左端与右端都回到
+\begin{equation}
+\Omega_{\Gamma}\approx
+(0,\;0.3402,\;0.4074,\;0.4074,\;0.4611,\;0.6164).
+\end{equation}
+这一步非常基础，却是读者检查代码和路径设置是否正确的第一道门槛。若路径末端回不到起点对应的同一组频率，通常不是物理新现象，而是路径、排序或数值实现出了问题。
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{本书附带 Python 脚本在三个高对称点给出的前六条带归一化频率。这个表的作用不是代替带图，而是把“图上的大概位置”落实成可以逐项核对的数字。}
+  \label{tab:pwem_python_highsym}
+  \begin{tabular}{cccc}
+    \toprule
+    带序号 & $\Gamma$ & $X$ & $M$ \\
+    \midrule
+    1 & 0.0000 & 0.1657 & 0.2396 \\
+    2 & 0.3402 & 0.2470 & 0.2622 \\
+    3 & 0.4074 & 0.4168 & 0.3674 \\
+    4 & 0.4074 & 0.4596 & 0.3681 \\
+    5 & 0.4611 & 0.4772 & 0.5385 \\
+    6 & 0.6164 & 0.5553 & 0.5741 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{把图和表合起来读：先看排序是否稳定，再看间距在哪里缩小}
+\cref{tab:pwem_python_highsym} 给出的不是另一种“装饰性数据”，而是帮助初学者形成数值直觉。比如，第二条带在 $\Gamma$ 点位于 0.3402，到 $X$ 点降到 0.2470，再到 $M$ 点略回升到 0.2622。只看曲线容易得到“它往下弯了”的印象；把数字放出来以后，就能进一步判断：它在 $\Gamma\rightarrow X$ 段的变化远大于在 $X\rightarrow M$ 段的变化，因此目标频段若放在第二带附近，真正敏感的方向更可能出现在靠近 $X$ 点之前，而不是整个高对称路径平均同样敏感。
+
+\paragraph{再读斜率：带图上的上升和下降到底意味着什么}
+沿高对称路径画出的带图，本质上是在观察 $\omega_n(\kvec)$ 沿某一条一维路径的切片。因此，曲线的局部斜率并不是完整的二维群速度矢量，但它至少告诉我们群速度在当前路径方向上的投影符号。对本图而言，第一条带在 $\Gamma\rightarrow X$ 段持续上升，说明其群速度投影为正；第二条带在同一路段持续下降，说明投影为负。第三、第四条带在离开 $\Gamma$ 后一上一下地分开，则说明原先共享同一高对称点频率的两支候选模，在该方向上获得了不同的色散响应。对 PCSEL 读者来说，这一步很关键，因为后续讨论“哪一支更容易被微扰推到目标窗口里”时，真正被比较的正是这种局部色散响应，而不是一张图上曲线谁更好看。
+
+\paragraph{还要读带间距：哪几支带彼此最危险}
+看带图不能只盯住单条曲线，还要盯住相邻曲线的最小间距。就这张图而言，第三、第四条带在 $\Gamma$ 点严格简并，而在 $M$ 点又几乎重新并拢；第一、第二条带虽然在整个路径上没有真正简并，却在 $X\rightarrow M$ 段显著靠近。前一种“先简并再分裂再并拢”的模式，通常提示后续对称性破缺会显著改写模态组合；后一种“始终分离但局部靠近”的模式，则提醒我们在参数扫描时要留意带排序交换或近邻竞争。带图之所以有设计价值，正是因为它能在这一阶段就把“哪些模式以后可能互相抢位置”提前暴露出来。
+
+\paragraph{再读第一段 $\Gamma\rightarrow X$：谁在上升，谁在下降，谁在分裂}
+从 $\Gamma$ 走向 $X$ 时，第一条带由 0 单调上升到约 0.1657，第二条带则由约 0.3402 下降到约 0.2470。这种一升一降的组织方式告诉我们：即使在最简单的教学型结构中，低阶带也不是彼此平行地整体平移，而是在不同对称方向上重新分配色散斜率。
+
+第三和第四条带在 $\Gamma$ 点处从
+\begin{equation}
+\Omega \approx 0.4074
+\end{equation}
+起始时完全重合，但走向 $X$ 后分裂为约 0.4168 和 0.4596。这是本图最值得初学者盯住的第一处现象：\textbf{高对称点的简并一旦离开高对称位置，就会按照允许的耦合通道重新组织。} \cref{ch:gamma} 讲“简并与近简并”时，如果没有真实图支撑，很容易停留在概念词条；现在这张图把那个概念具体化了。
+
+\paragraph{再读第二段 $X\rightarrow M$：哪些带在靠近，哪些带在重新并拢}
+从 $X$ 走向 $M$ 的过程中，第一和第二条带继续靠近，到 $M$ 点分别达到约 0.2396 和 0.2622。它们没有真正简并，但频率间隔已经显著缩小。这类“靠近但未相交”的行为在真实设计里很重要，因为稍微加入几何微扰、有效折射率变化或有限基底误差，就可能让近邻带的排序和间隔重新调整。
+
+更值得注意的是第三和第四条带。在 $X$ 点它们分得较开，而到 $M$ 点时已经几乎重新并拢为
+\begin{equation}
+\Omega_M^{(3,4)}\approx 0.3674,\;0.3681.
+\end{equation}
+这说明：\textbf{简并不是某一支带永久携带的标签，而是和对称点绑定的结构信息。} 对 PCSEL 读者来说，这正是后续模式分裂、偏振选择和对称性破缺分析的原始素材。若某组候选模在某个高对称点天然接近，那么它们通常就是后续最容易被微扰重排的一组对象。
+
+\paragraph{最后读第三段 $M\rightarrow\Gamma$：哪些带在回归原先的 Gamma 点家族}
+从 $M$ 返回 $\Gamma$ 的路上，第一条带逐步落回 0，第二条带回到约 0.3402，第三和第四条带也重新回到 Gamma 点简并值约 0.4074。这段路径的意义不只是“把图画完整”，而是帮助读者确认某些模族到底是不是围绕同一个 Gamma 点家族在演化。对本图而言，第三和第四条带显然构成了一组非常典型的 Gamma 点近邻候选模族；如果后续要做最小 CWT、对称性破缺或偏振选择分析，这一组模就是自然的重点对象。
+
+\paragraph{把频率数字翻译成几何尺度}
+带图若只停在无量纲频率，就还没有真正进入设计语言。利用\cref{eq:normalized_frequency_pwem}，可以把图上的频率直接换成晶格常数。比如，若我们希望把图中第二条带在 $\Gamma$ 点附近的候选位置
+\begin{equation}
+\Omega \approx 0.3402
+\end{equation}
+映射到真空波长 \SI{940}{nm}，则应取
+\begin{equation}
+a \approx 0.3402\times \SI{940}{nm}\approx \SI{320}{nm}.
+\end{equation}
+这并不是说“取 \SI{320}{nm} 就得到可工作的 PCSEL”，而是说明：\textbf{带图首先提供的是几何缩放起点。} 后续还要问 slab 有效折射率是否一致、辐射通道是否合适、有限尺寸和外延层是否会改写这个候选窗口。
+
+\paragraph{这张图对后续建模最实际的三种用途}
+第一种用途是给 CWT 选候选模。对本图而言，第三、第四条带在 $\Gamma$ 点简并、在离开 $\Gamma$ 后分裂，非常适合进入“哪一组模最容易被对称性破缺重排”的分析。
+
+第二种用途是给 RCWA 设频段窗口。比如，如果后续重点想研究 $\Gamma$ 点附近的第二至第四条带，那么 RCWA 的频率扫描就不应再盲扫整个宽频范围，而应围绕
+\begin{equation}
+\Omega \approx 0.34 \text{ 到 } 0.46
+\end{equation}
+的窗口定向展开。
+
+第三种用途是做收敛与代码一致性核查。由于本图采用的只是 $|m|,|n|\le 2$ 的教学型小基底，所以它特别适合检查“公式是否写对”“路径是否写对”“本征值排序是否写对”。它不适合作为最终设计图，但非常适合作为第一张必须先算对的图。
+
+\paragraph{这张图不能被过度解读的地方}
+虽然 \cref{fig:pwem_python_band_result} 已经是脚本实际算出的结果，但它仍然只是二维标量、被动、无限周期、小基底截断的结果。因此，读者看到它时要主动克制四种过度解读。
+
+第一，不能把第一条带在 $\Gamma$ 点从零开始误读成“零阈值模式”。那只是二维标量本征问题中最低分支的数学起点。
+
+第二，不能把第三、第四条带在 $\Gamma$ 点的简并直接等同于“真实 slab PCSEL 中一定会出现的两支激射模”。真实器件里还要经过纵向层栈、辐射通道和有限尺寸筛选。
+
+第三，不能把图中某一段看起来较平，就直接称为“最低阈值带”。平带只说明色散斜率变小，不自动给出净模增益排序。
+
+第四，不能把这张图上的任何频率直接当作器件工作频率。真实工作状态下，温升、载流子分布、增益峰位和折射率回写都会让实际激射频率偏离冷腔被动结果。
+
+\begin{RigorousBox}
+\cref{fig:pwem_python_band_result} 的严格身份是“二维标量、被动、无限周期、有限基底截断”的 PWEM 结果。它能证明本章的推导确实可以落成可运行代码，也能帮助读者练习读图；但它并不自动给出垂直辐射损耗、有限孔阵边界效应、阈值增益排序或器件级阈值电流。
+\end{RigorousBox}
+
+\section{如何读一张 PWEM 算出来的能带图}
+\cref{ch:gamma} 已经从概念上讲过“怎么看能带图”。现在再往前走一步，专门从计算结果的角度说一遍：一张由 PWEM 算出的带图，应该按照什么顺序去读，才不至于被图形表面牵着走。
+
+\subsection*{第一步：先确认你看的图已经收敛}
+这是最容易被忽略、却最不应该省略的一步。若两次截断阶数不同的计算在目标频段内仍明显偏移，那么后续任何“这里有带隙”“这里是候选 Gamma 点模”的判断都站不住。对真正的研究流程而言，收敛检查不是额外工作，而是读图资格的一部分。
+
+\subsection*{第二步：把归一化频率翻译回设计波长}
+若目标工作波长为 $\lambda_0$，而 PWEM 算得某个候选模位于归一化频率 $\Omega_0$，则两者关系由\cref{eq:normalized_frequency_pwem} 给出：
+\begin{equation}
+ a = \Omega_0\lambda_0.
+\end{equation}
+这一步看似简单，却是从“无量纲色散图”走向“器件几何尺寸”的关键桥梁。很多新手会直接比较两张不同 $a$ 的带图而不做无量纲转换，结果把缩放效应和真实模式重排混在一起。
+
+\subsection*{第三步：重点看 Gamma 点附近哪些带落在目标窗口}
+对 PCSEL 来说，PWEM 图最有价值的区域通常不是整条路径平均对待，而是 Gamma 点附近的目标频段。需要重点记录的不是“全图最高最低的带”，而是：目标工作波段附近在 Gamma 点有几支候选带、它们彼此相隔多远、有没有简并或近简并、以及它们离相邻竞争带有多近。
+
+\subsection*{第四步：不要只看频率，还要看本征向量组成}
+PWEM 的一个常被低估的输出，是本征向量 $\bm h_n$。它告诉你某个模式主要由哪些平面波分量组成。若目标模在 Gamma 点附近主要由少数一级倒格矢分量组成，那么它通常很适合进入最小 CWT 模型；若某个模式严重依赖大量高阶分量才能表达，则简单 CWT 可能就不够了，需要更高阶模型或直接交给 RCWA/FEM 处理。
+
+\subsection*{第五步：把“图上能看见的”和“图外必须继续验证的”分开}
+即使 PWEM 图已经完全收敛，它仍然首先只是被动无限周期的带结构图。因此，你最多可以从中稳健地读出：候选频段、Gamma 点模族、带边位置、可能的带隙、简并结构、以及对几何参数变化的一阶趋势。你不能直接从中读出：辐射损耗、法向远场、有限阵列边缘泄漏、阈值增益排序，更不能读出阈值电流和热稳定工作窗口。
+
+\begin{PitfallBox}
+把 PWEM 图上“Gamma 点附近最平的一条带”直接称为“最终最低阈值模”，是入门阶段最常见、也最危险的偷换。PWEM 只负责给你候选模目录，真正的辐射损耗要交给 RCWA 或开放本征问题，真正的有限器件排序要交给 FDTD/FEM，真正的阈值电流和工作稳定性要交给外延、电学和热学模型。
+\end{PitfallBox}
+
+\section{从 PWEM 结果中我们究竟能得到什么}
+如果把本章结果纳入整本书的工作流，那么 PWEM 至少提供六类高价值输出。
+
+第一，\textbf{目标波段附近的候选模目录}。这决定后续 RCWA 和 CWT 应该重点跟踪哪几支带。
+
+第二，\textbf{Gamma 点附近的简并与分裂结构}。这为后续偏振工程、对称性破缺和模式选择提供最初的分类。
+
+第三，\textbf{带边和平带信息}。这为理解候选模的色散特征、群速度趋势和态密度变化提供线索。
+
+第四，\textbf{几何参数的一阶灵敏度}。通过扫描 $r/a$、介质对比度或单胞微扰，可以快速判断哪类参数最值得继续优化。
+
+第五，\textbf{本征向量的主导平面波组成}。这能直接指导 \cref{ch:cwt-min,ch:cwt-3d} CWT 截断时保留哪些耦合分量。
+
+第六，\textbf{从归一化频率到实际波长的尺度映射}。这使能带设计可以在无量纲层面高效探索，再映射回具体工作波长。
+
+但同样必须把边界说清楚。PWEM 无法单独提供：
+\begin{itemize}
+  \item 真实 slab 开放结构中的辐射损耗和光锥耦合强度；
+  \item 有限孔阵中的边缘模式、横向包络和真实远场；
+  \item 有源区重叠、阈值增益、阈值电流和热漂移后的模式排序；
+  \item 电注入不均匀性、热热点和模式竞争导致的器件级工作状态。
+\end{itemize}
+
+这一边界并不是 PWEM 的缺陷，而是它的职责范围。PWEM 的职责是把候选模目录、几何趋势和模式组织结构提供给后续模型，而不是替后续模型抢结论。
+
+\section{PWEM 结果应该怎样交给后续章节}
+为了让全书真正连起来，本章最后必须明确：PWEM 不是终点，而是后续几章的输入接口。
+
+对 \cref{ch:cwt-min,ch:cwt-3d} 的 CWT 来说，PWEM 最重要的输入是：目标模主要由哪些倒格矢分量组成、哪些简并在 Gamma 点附近最需要保留、以及某种几何微扰会优先影响哪类模族。这些信息决定最小耦合波模型应怎样截断。
+
+对 \cref{ch:rcwa} 来说，PWEM 提供的是频段窗口、候选模标签和参数扫描方向。换句话说，PWEM 告诉 RCWA “去哪里看”，RCWA 再回答“这些模式怎样与开放辐射通道交换能量”。
+
+对 \cref{ch:fdtd-fem} 来说，PWEM 提供的是有限器件仿真的初始候选频段、目标模族和对称性预期。这样全波仿真就不必在过大的参数空间里盲扫。
+
+对 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这些外延与器件模型来说，PWEM 更像一个前端几何筛选器。它只能告诉你某个平面周期方案在色散层面是否值得继续，并不能跳过纵向模、量子阱重叠、电流扩展和热回写这些器件级步骤。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{PWEM 结果向后续方法交付的最小接口量。}
+  \label{tab:pwem_handoff}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{3.0cm}p{4.0cm}Y@{}}
+    \toprule
+    PWEM 输出 & 下一步最直接使用它的方法/章节 & 交付时最该保留的字段 \\
+    \midrule
+    候选频段与归一化频率窗口 & \cref{ch:rcwa,ch:fdtd-fem} & 目标带号、$\Gamma/X/M$ 位置、对应 $\Omega$ 与换算后的目标波长区间 \\
+    $\Gamma$ 点简并结构与 irrep family & \cref{ch:polarization,ch:bic,ch:cwt-min} & singlet/doublet 标记、近简并支路、预期偏振/辐射家族 \\
+    主导倒格矢分量与本征向量权重 & \cref{ch:cwt-min,ch:cwt-3d} & 哪几个 $\gvec$ 分量占主导、是否适合四波或更高阶 CWT 截断 \\
+    对几何参数的一阶趋势 & \cref{ch:rcwa,ch:workflow} & 随 $r/a$、$a$、填充比变化的带移动方向与模族重排趋势 \\
+    被动无限周期筛选结论 & \cref{ch:epitaxial-optics,ch:electrical} & 仅作为“几何值得继续”的前端证据，不越权声明阈值电流或工作窗口 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{ExampleBox}
+若某一组正方晶格圆孔参数在 PWEM 中显示：目标波长附近存在两支接近的 Gamma 点候选带，其中一支主要由四个一级倒格矢分量组成，另一支则混入更多高阶分量，那么前者通常更适合先送入最小 CWT 和 RCWA，后者则提醒研究者该结构可能已经超出简单四波模型的舒适区。这就是“PWEM 输出真正被后续方法消费”的典型例子。
+\end{ExampleBox}
+
+\section{为什么真实 PCSEL 不能停在二维 PWEM}
+本章必须在结束前再把一个界限说清楚：二维 PWEM 是极好的入门工具，也是高效的前端筛选工具，但真实 PCSEL 的关键物理并不止于二维周期色散。
+
+PCSEL 之所以特别，不只是因为它有二维光子晶格，还因为它是 slab 开放系统、有 Gamma 点法向辐射、有真实外延层、有量子阱重叠、有电注入路径和温升反馈。二维 PWEM 把这些东西全部暂时搁置，目的是先让读者把“能带从何而来”学会。只要这个前提记得牢，它就会是非常有力的工具；一旦忘了这个前提，它就会立刻从“好工具”变成“误导源”。
+
+因此，正确的学习顺序不是“用 PWEM 取代后续所有方法”，而是“先用 PWEM 建立被动无限周期候选模地图，再用 RCWA 处理开放单胞，再用 FDTD/FEM 处理有限器件，再用器件模型处理注入与热”。这条链条一旦打通，PWEM 才真正找到了它在整本书中的位置。
+
+\section*{本章小结}
+PWEM 的核心思想，是把周期介质中的 Maxwell 本征问题投影到平面波基底上，从而把“模式存在性与色散关系”变成一个可计算的矩阵本征问题。对正方晶格圆形孔洞二维光子晶体而言，几何通过圆孔指标函数的傅里叶系数进入矩阵元，而能带则通过沿高对称路径逐点求解该矩阵获得。对 PCSEL 研究来说，PWEM 的价值在于高效建立候选模目录、Gamma 点简并结构和参数扫描方向；它的边界则在于不处理开放辐射、有限尺寸、有源阈值和器件级热电问题。把这两面同时看清，PWEM 才能成为整本书建模链中的可靠起点。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从\cref{eq:pwem_hz_scalar} 出发，完整推导\cref{eq:pwem_matrix_hz}，并解释为什么矩阵中会自然出现卷积型傅里叶系数 $\eta_{\gvec-\gvec'}$。
+
+  \item \basicq 对正方晶格圆孔单胞，证明\cref{eq:disk_indicator_fourier} 中的圆孔指标函数傅里叶系数确实包含 Bessel 函数 $J_1$。
+
+  \item \midq 设目标工作波长为 \SI{940}{nm}，若某候选模在 PWEM 图中对应归一化频率 $\Omega_0$，写出晶格常数 $a$ 与 $\Omega_0$ 的关系，并解释为什么这一步不能跳过。
+
+  \item \midq 说明为什么“Gamma 点附近最平的带”不能直接被称为“最低阈值激射模”，并列出至少三个后续必须继续验证的问题。
+
+  \item \hardq 设计一份你自己的 PWEM 输出报告模板，要求它能被 \cref{ch:rcwa,ch:cwt-min} 直接使用。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 立即接着读 \cref{ch:rcwa}。这样最容易看清：PWEM 给出的是被动无限周期候选模目录，而 RCWA 开始处理开放周期结构中的辐射与共振。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想进一步打牢本章的数学基础，可回到 \cref{ch:math-appendix}，重点看 Fourier--Bloch 展开与卷积结构。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想把二维教学模型和真实 PCSEL slab 联系起来，可回看 \cref{ch:epitaxial-optics}，再思考二维 PWEM 中的有效折射率代理到底保留了什么、忽略了什么。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想追溯 PWEM 的经典起点，可参考 \cite{ho1990,leung1990,johnson2001}。 这条阅读的重点是补足本章关于PWEM、带图计算与收敛判断 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

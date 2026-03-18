@@ -1,0 +1,324 @@
+\chapter{周期介质中的 Maxwell 方程}
+\label{ch:maxwell}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 从时域 Maxwell 方程出发，建立本书后续使用的频域本征问题。
+  \item 理解何时可以把 Maxwell 算符看成厄米问题，何时必须视为非厄米开放问题。
+  \item 建立开放 Maxwell 问题的最小函数空间直觉，知道为什么共振模、QNM 与封闭腔本征模不是同一类对象。
+  \item 弄清楚复频率、品质因子、光子寿命和辐射损耗之间的关系。
+\end{itemize}
+
+\section*{先修知识}
+大学电动力学中的 Maxwell 方程、边界条件与向量恒等式。
+
+\section*{本章路线图}
+本章先从最原始的 Maxwell 方程写起，再转入频域形式，随后讨论在何种条件下它成为本征值问题。接着我们解释为什么 PCSEL 从根本上是开放系统，并补上开放问题最关键的数学直觉：共振模为什么不再属于普通平方可积函数空间、QNM / resonant states 最小应如何理解。最后再把这一章和后面的 Bloch 理论、阈值分析接起来。
+
+\section{从时域方程出发：我们到底在求解什么}
+为了避免一上来就落入“把熟悉公式往下抄”的机械状态，我们先明确本章真正的问题：PCSEL 中的光场由什么方程决定？这些方程中的哪些部分来自材料本身，哪些部分来自边界，哪些部分来自我们选择的近似？
+
+在宏观电磁学层面，时域 Maxwell 方程写为
+\begin{align}
+\nabla\cdot\D &= \rho_f, \\
+\nabla\cdot\B &= 0, \\
+\nabla\times\E &= -\frac{\partial \B}{\partial t}, \\
+\nabla\times\Hf &= \J_f + \frac{\partial \D}{\partial t},
+\end{align}
+其中 $\rho_f$ 与 $\J_f$ 是自由电荷和自由电流。在本书讨论的腔模、本征模和被动共振问题中，我们通常取无外加源情形，即 $\rho_f=0$、$\J_f=0$。这并不是说器件里没有载流子，而是说在电磁子问题中，载流子的作用被压缩进本构关系，例如介电函数、增益和损耗之中。
+
+为了把 Maxwell 方程变成可计算问题，还需要本构关系。最基本的写法是
+\[
+\D=\varepsilon_0\varepsilon_r(\rvec,\omega)\E,\qquad
+\B=\mu_0\mu_r(\rvec,\omega)\Hf.
+\]
+在大多数半导体光学问题中，磁响应不显著，后文通常取 $\mu_r\approx 1$。这一近似在近红外到可见光频段（约 400 nm--2 $\mu$m）的非磁性半导体（GaAs、InP、GaN 等）中成立，因为轨道磁响应极弱，对应磁化率通常满足 $\chi_m=\mu_r-1\sim 10^{-5}$。对 THz 频段或人工磁响应超材料，此近似不成立；本书讨论的材料体系均满足 $\mu_r\approx 1$。真正复杂的是 $\varepsilon_r$：它既包含空间分布，又可能包含频率色散、材料损耗、载流子注入和温度依赖。也就是说，PCSEL 的全部复杂性，最终都会不同方式写进 $\varepsilon_r(\rvec,\omega)$ 之中。
+
+\section{转到频域：为什么教材几乎总在频域讨论模式}
+若系统在单频附近工作，或者我们要研究本征模与共振，最自然的做法是采用 \cref{ch:roadmap} 中约定的时间因子 $\ee^{-\ii\omega t}$，把场写成
+\[
+\E(\rvec,t)=\Re\left[\E(\rvec)\ee^{-\ii\omega t}\right],\qquad
+\Hf(\rvec,t)=\Re\left[\Hf(\rvec)\ee^{-\ii\omega t}\right].
+\]
+代回 Maxwell 方程时，关键步骤如下。以 Faraday 定律为例：
+\[
+\nabla\times \E(\rvec,t)=-\frac{\partial \B}{\partial t}
+=-\frac{\partial}{\partial t}\bigl[\mu_0\mu_r\Hf(\rvec)\ee^{-\ii\omega t}\bigr]
+=\ii\omega\mu_0\mu_r\Hf(\rvec)\ee^{-\ii\omega t}.
+\]
+消去公共因子 $\ee^{-\ii\omega t}$ 后即得频域 Faraday 方程。注意正号的来源：时间导数给出 $-(-\ii\omega)=+\ii\omega$，两个负号相消。
+
+\begin{ExampleBox}
+\textbf{符号自洽检查：}设 $\E(\rvec,t)=\E(\rvec)\ee^{-\ii\omega t}$，则 $\partial_t \E=-\ii\omega\E(\rvec)\ee^{-\ii\omega t}$。代入 Faraday 定律 $\nabla\times\E=-\partial_t\B=-\mu_0\mu_r\partial_t\Hf$，右端变为 $-\mu_0\mu_r(-\ii\omega)\Hf\ee^{-\ii\omega t}=+\ii\omega\mu_0\mu_r\Hf\ee^{-\ii\omega t}$，消去公共因子 $\ee^{-\ii\omega t}$ 得 $\nabla\times\E=+\ii\omega\mu_0\mu_r\Hf$。若改用 $\ee^{+\ii\omega t}$ 约定，则 $\partial_t\to +\ii\omega$，所有含 $\ii\omega$ 的符号均翻转——这就是不同文献中频域 Maxwell 方程正负号不同的原因。
+\end{ExampleBox}
+
+对 Amp\`{e}re 定律也应把符号完整走一遍，而不只是“照抄结果”。从
+\[
+\nabla\times \Hf(\rvec,t)=\frac{\partial \D}{\partial t}
+=\frac{\partial}{\partial t}\bigl[\varepsilon_0\varepsilon_r\E(\rvec)\ee^{-\ii\omega t}\bigr]
+=-\ii\omega\varepsilon_0\varepsilon_r\E(\rvec)\ee^{-\ii\omega t}
+\]
+可见，在 $\ee^{-\ii\omega t}$ 约定下，Amp\`{e}re 定律右端会直接给出负号。消去公共因子 $\ee^{-\ii\omega t}$ 后，频域方程写成
+\begin{align}
+\nabla\times \E &= \ii\omega\mu_0\mu_r \Hf, \label{eq:maxwell_freq1}\\
+\nabla\times \Hf &= -\ii\omega\varepsilon_0\varepsilon_r \E. \label{eq:maxwell_freq2}
+\end{align}
+
+对 \cref{eq:maxwell_freq1} 再取一次旋度：
+\[
+\nabla\times(\nabla\times \E)=\nabla\times(\ii\omega\mu_0\mu_r \Hf)
+=\ii\omega\mu_0\mu_r\nabla\times\Hf.
+\]
+若 $\mu_r$ 空间变化，则需写成 $\nabla\times[\mu_r^{-1}(\nabla\times\E)]=\ii\omega\mu_0(\nabla\times\Hf)$。再用 \cref{eq:maxwell_freq2} 消去 $\nabla\times\Hf$，得到电场主方程
+\begin{equation}
+\nabla\times\left[\mu_r^{-1}(\rvec)\nabla\times\E\right]-k_0^2\varepsilon_r(\rvec)\E=0,
+\qquad k_0=\frac{\omega}{c}.
+\label{eq:maxwell-eigen}
+\end{equation}
+这就是后文最常出现的频域 Maxwell 方程。形式上它已经非常像一个本征值问题，但真正要把它当作本征值问题，还需要说明两个问题：边界条件是什么？介质是否损耗、是否开放？
+
+\begin{IntuitionBox}
+\cref{eq:maxwell-eigen} 看起来像一个“求特征值和特征向量”的线性代数问题，但物理上它远比矩阵本征值复杂。真正决定问题性质的，不只是方程本身，还有边界和材料是否允许能量流出。
+\end{IntuitionBox}
+
+\section{算符观点：为什么有时本征频率是实数，有时必须是复数}
+为了建立后文需要的概念，我们把 \cref{eq:maxwell-eigen} 记成算符形式
+\begin{equation}
+\hat{\mathcal L}(\omega)\E = 0,
+\qquad
+\hat{\mathcal L}(\omega)=\nabla\times\mu_r^{-1}\nabla\times-k_0^2\varepsilon_r(\rvec,\omega).
+\label{eq:maxwell_operator}
+\end{equation}
+
+如果材料无损、无色散，边界又是理想封闭的，那么这个算符可以在适当函数空间上写成自伴形式。此时本征频率是实数，不同模式之间具有良好的正交关系。这是很多电磁教材首先讲授的情形，因为它数学上干净，也有助于建立能量守恒图像。
+
+但 PCSEL 的关键恰恰在于它不是这样的系统。它要向自由空间辐射输出；只要允许辐射，系统就不再是封闭腔，模式就不再是严格束缚态，而会变成准束缚态（quasi-bound state）或共振态。在后面的 \cref{ch:bic} 中（完整内容见第 8b 章，位于 Ch08 与 Ch09 之间）我们会进一步看到，某些 $\Gamma$ 点模甚至会以 BIC / quasi-BIC 的形式组织辐射通道。此时本征频率通常写成
+\[
+\tilde{\omega}=\omega_0-\ii\gamma,
+\]
+其中 $\gamma$ 不再是“数值误差”，而是模式能量逸出或耗散的速率编码。也正因为如此，PCSEL 的被动模分析从一开始就必须带着“非厄米开放问题”的意识进行。\cref{fig:complex-freq-plane} 展示了这些模式在复频率平面上的位置和物理含义。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=0.95]
+    \draw[->,thick] (-3.8,0)--(3.8,0) node[right]{$\operatorname{Re}\tilde{\omega}=\omega_r$};
+    \draw[->,thick] (0,-3.2)--(0,1.5) node[above]{$\operatorname{Im}\tilde{\omega}$};
+    \fill[red!8] (-3.7,0) rectangle (3.7,1.4);
+    \node[red!60,font=\footnotesize] at (2.6,0.85){non-physical (passive)};
+    \draw[dashed,gray] (-3.7,0)--(3.7,0);
+    \fill[blue!70] (1.0,-0.4) circle (0.08) node[right,font=\footnotesize]{high-$Q$};
+    \fill[blue!70] (-1.5,-1.8) circle (0.08) node[right,font=\footnotesize]{low-$Q$};
+    \fill[orange!80!black] (2.5,-0.02) circle (0.08) node[above right,font=\footnotesize]{BIC ($\gamma\to 0$)};
+    \fill[green!60!black] (0.5,-1.0) circle (0.08) node[right,font=\footnotesize]{quasi-BIC};
+    \draw[<->,thin] (1.15,-0.02)--(1.15,-0.38);
+    \draw[<->,thin] (-1.35,-0.02)--(-1.35,-1.78);
+    \node[font=\footnotesize] at (0,-2.8){lower half-plane = open/lossy resonances};
+  \end{tikzpicture}
+  \caption{复频率平面示意。被动开放系统的共振模位于下半平面（$\gamma>0$），距实轴越近表示 $Q$ 越高。BIC 理想地处于实轴上（$\gamma=0$），quasi-BIC 则刚刚离开实轴。}
+  \label{fig:complex-freq-plane}
+\end{figure}
+
+\begin{RigorousBox}
+若要把“无损、无色散、封闭边界下 Maxwell 问题可写成自伴形式”说得更正式，最自然的写法其实不是直接把 \cref{eq:maxwell-eigen} 当普通矩阵本征值问题，而是先把它限制在
+\[
+\mathcal X=
+\left\{
+\E\in H(\mathrm{curl};V)
+\ \middle|\
+\nabla\cdot\!\bigl(\varepsilon\E\bigr)=0,\ \text{满足封闭边界条件}
+\right\}
+\]
+这一约束子空间上，再把它改写成广义本征值问题或等价的加权自伴算子问题。下面的命题与证明只给出\textbf{教学化 proof sketch}：它足以解释物理上为什么得到实频率，但不是函数分析层面的完整证明。
+\end{RigorousBox}
+
+\begin{proposition}
+在无损、无色散、封闭边界条件下，Maxwell 本征问题可以写成自伴形式，因此本征频率为实数。
+\end{proposition}
+\begin{proof}[教学化证明思路]
+对两个试探场 $\E_1,\E_2$，构造加权内积
+\[
+\langle \E_1,\E_2\rangle_\varepsilon=\int_V \varepsilon_r(\rvec)\E_1^\ast\cdot\E_2\,\dd V.
+\]
+这里隐含了两个技术前提。第一，我们已经把问题限制在满足 $\nabla\cdot(\varepsilon\E)=0$ 的物理子空间，从而排除了不满足 Gauss 约束的伪解；第二，若 $\varepsilon$ 空间变化而 $\mu_r\approx 1$，更标准的写法是把 \cref{eq:maxwell-eigen} 看成加权广义本征值问题。下面只抓住对“为什么封闭无损时频率为实数”最关键的一步：旋度项在该加权内积下可通过分部积分变成对称形式。利用向量恒等式 $\nabla\cdot(\bm{A}\times\bm{B})=\bm{B}\cdot(\nabla\times\bm{A})-\bm{A}\cdot(\nabla\times\bm{B})$ 对旋度做分部积分，可以把作用在 $\E_2$ 上的旋度“转移”到 $\E_1$ 上：
+\[
+\int_V \E_1^\ast\cdot(\nabla\times\nabla\times \E_2)\,\dd V
+=
+\int_V (\nabla\times\E_1)^\ast\cdot(\nabla\times \E_2)\,\dd V
+-\oint_{\partial V}(\E_1^\ast\times\nabla\times\E_2)\cdot\hat{\bm n}\,\dd S.
+\]
+若边界为理想导体（PEC），则在边界上 $\hat{\bm n}\times\E=\bm{0}$，表面积分项为零；若为周期边界，相对两侧的法向相反且场值满足 Bloch 条件，表面项成对抵消。更具体地，在两侧边界 $\rvec$ 与 $\rvec+\bm{R}$ 上有
+\[
+\E(\rvec+\bm{R})=\E(\rvec)\ee^{\ii\kvec\cdot\bm{R}},
+\]
+表面积分的相位因子与法向翻转带来的负号相抵，因而相消。这一步只在 $\kvec$ 为实向量时成立；若 $\kvec$ 取复值（表示面内衰减），表面积分不再严格抵消，算符也不再严格自伴。对调 $\E_1$ 和 $\E_2$ 后结果不变，于是
+\[
+\langle \E_1,\hat{\mathcal L}\E_2\rangle_\varepsilon=\langle \hat{\mathcal L}\E_1,\E_2\rangle_\varepsilon,
+\]
+这正是自伴性的定义。自伴算符的本征值必为实数。
+
+但对开放辐射边界，$\partial V$ 延伸到无穷远，出射波携带能量使表面积分不为零且不对称，算符不再自伴。本征频率必须取复数 $\tilde{\omega}=\omega_0-\ii\gamma$，其中 $\gamma>0$ 直接编码能量向外辐射的速率。这不是形式主义，而是“能量流出边界”这一物理事实在本征值方程中的必然体现。
+\end{proof}
+
+\begin{RigorousBox}
+一旦出现材料损耗、辐射边界、PML 或频率色散，严格的自伴结构就被破坏。此时再沿用封闭腔正交关系，往往会在归一化、模耦合和扰动分析中埋下错误。
+\end{RigorousBox}
+
+\section{开放 Maxwell 问题的函数空间直觉：为什么它不再是普通闭腔本征值问题}
+这里需要把一个常被轻描淡写、但对 PCSEL 极关键的数学事实讲清楚。封闭腔本征模通常属于普通的平方可积函数空间，因为场在腔外被边界截断或指数衰减，能量积分是有限的。开放系统中的共振模则不同。若某个模满足出射波条件，其远场在三维直觉上可写成
+\begin{equation}
+\E(\rvec)\sim \frac{\ee^{\ii \tilde{k} r}}{r}\bm{f}(\hat{\rvec}),
+\qquad
+\tilde{k}=\frac{\tilde{\omega}}{c},
+\label{eq:outgoing_asymptotic}
+\end{equation}
+其中 $\tilde{\omega}=\omega_r-\ii\gamma$，且 $\gamma>0$。把指数项拆成振荡部分与增长部分后可得
+\begin{equation}
+\ee^{\ii \tilde{k} r}
+=
+\ee^{\ii \omega_r r/c}\,\ee^{+\gamma r/c}.
+\label{eq:outgoing_growth}
+\end{equation}
+这说明一个反直觉但标准的事实：\textbf{若把开放共振模按纯出射边界条件延拓到无穷远，它在空间上通常不是衰减而是增长的。} 这并不表示它“物理上发散了”，而是说它对应的是有限时间窗口内的辐射拖尾（因果响应），并不要求在 $t\to+\infty$ 的真实场中保持该增长；在严格的散射/Green 张量解析延拓意义下，它是共振极点态，而不是普通 Hilbert 空间里的束缚态。
+
+这一步必须讲明白，因为它直接解释了为什么开放系统中的归一化、正交性和微扰理论不能直接照搬封闭厄米问题：问题的根源不只是“损耗让本征值变成复数”，而是\textbf{函数空间本身已经换了。}
+
+\begin{IntuitionBox}
+开放腔模更像“散射问题在复频率平面上的极点”，而不是“一个老老实实待在盒子里的驻波”。只要把这个图像建立起来，后面为什么要引入 QNM、伴随模和广义归一化，就不会再显得像是数学炫技。
+\end{IntuitionBox}
+
+\section{QNM / resonant states 的最小定义}
+在本书语境中，一个准正规模（quasinormal mode, QNM）或共振态（resonant state），最小可以定义为：在无外加源条件下满足 Maxwell 方程，并同时满足纯出射边界条件的非平凡解，
+\begin{equation}
+\hat{\mathcal L}(\tilde{\omega}_n)\E_n^{\mathrm{R}}=0,
+\qquad
+\text{仅允许 outgoing-wave solution}.
+\label{eq:qnm_definition}
+\end{equation}
+
+一个常用的等价描述是 Sommerfeld 辐射条件。以一维标量场为例：
+\begin{equation}
+\lim_{r\to\infty} r\left(\frac{\partial E}{\partial r}-\ii k_0 E\right)=0,
+\label{eq:qnm_radiation_bc}
+\end{equation}
+表示无穷远处只有向外传播分量，也就是只保留向外行波，没有向内入射分量。这与束缚态要求的 $E\to 0$（$r\to\infty$）完全不同；正因为 $\tilde{\omega}$ 的虚部存在，QNM 在空间上可指数增长，导致其 $L^2$ 范数发散。数值计算中采用 PML，正是将这一出射条件以可计算的方式实现。这里上标 $\mathrm{R}$ 表示右模（right mode），是为了和后面会出现的伴随模区分。对应的复频率 $\tilde{\omega}_n$ 可等价地理解为 Green 张量或散射矩阵的极点位置；也就是说，开放系统的模不是先于散射存在的独立对象，而正是散射响应在复频率平面上的结构化奇点 \cite{fan2002guided,sauvan2013qnm,alpeggiani2017qnm}。
+
+这个定义已经足够支撑本书后面的物理主线。它告诉我们：
+\begin{itemize}
+  \item QNM 的本征频率天然是复数；
+  \item QNM 的场型天然带有辐射信息，而不是只描述腔内驻波；
+  \item 只要讨论辐射损耗、准 BIC、远场工程或开放系统微扰，QNM 语言就比封闭腔本征模语言更贴近问题本身。
+\end{itemize}
+
+\begin{RigorousBox}
+QNM 不是“带一点损耗的普通模”这么简单。它的最小数学身份是开放 Maxwell 算子的极点态，因此其归一化、正交性与扰动理论都必须围绕这一点重新建立。更系统的归一化与伴随模框架见 \cref{ch:math-appendix} 中“伴随模、双正交与广义归一化”一节，尤其可对照 \cref{eq:qnm_normalization_appendix} 及其前后说明。
+\end{RigorousBox}
+
+\section{为什么 PCSEL 天然是开放系统}
+到这里，我们可以回答一个看似简单、实际上极其关键的问题：为什么本书反复强调 PCSEL 是开放系统？
+
+原因很直接。PCSEL 的目标之一就是法向出光。既然要出光，就必须允许电磁能量离开器件进入自由空间。能量能够离开，模式就不可能是理想封闭腔中的永不衰减本征态。于是：
+\begin{itemize}
+  \item 模式频率一般是复数；
+  \item 模式品质因子 $Q$ 与衰减率 $\gamma$ 相关；
+  \item 模式场的远场形状与辐射边界实现密切相关；
+  \item 仿真中边界条件的处理不再是数值细节，而是物理模型的一部分。
+\end{itemize}
+
+这就是为什么，哪怕你暂时只想“先看能带图”，也不能完全忘记开放性。一个在封闭近似下看起来很好的模式，到了开放系统中可能因为辐射耦合太强而损耗很大；反过来，一个能有效法向出射的模式也一定不是完全束缚的。PCSEL 的设计任务从来不是“让模式完全不漏”，而是“让目标模式以合适的方式漏”。
+
+\section{复频率、品质因子与光子寿命}
+设某个被动共振模的复频率为
+\[
+\tilde{\omega}=\omega_0-\ii\gamma.
+\]
+若把时间依赖写成 $\Re\!\left[\E(\rvec)\ee^{-\ii\tilde{\omega} t}\right]$，则模场振幅满足
+\[
+|\E(t)|\propto \ee^{-\gamma t}.
+\]
+于是，振幅本身的衰减时间尺度是 $\tau_{\mathrm{amp}}=1/\gamma$。但器件分析里更常用的是储能或光子数寿命。由于电磁能量与场强平方成正比，
+\[
+U(t)\propto |\E(t)|^2\propto \ee^{-2\gamma t},
+\]
+因此损耗功率满足
+\[
+P_{\mathrm{loss}}=-\frac{\dd U}{\dd t}=2\gamma U.
+\]
+这就解释了为什么品质因子的分母是 $2\gamma$ 而不是 $\gamma$：$Q$ 比较的是单位振荡周期内储能衰减得有多慢，所以它天然对应能量寿命，而不是振幅寿命。于是可定义光子寿命
+\begin{equation}
+\tau_p=\frac{1}{2\gamma}.
+\label{eq:photon_lifetime}
+\end{equation}
+进一步，品质因子定义为
+\begin{equation}
+Q=\frac{\omega_0}{2\gamma}=\omega_0\tau_p.
+\label{eq:q_def}
+\end{equation}
+这两个式子在后文会不断出现，因为它们把“复频率”这种看似抽象的本征值，转换成了器件工程师更熟悉的时间尺度和损耗尺度。
+
+但这里必须提前说明一点：$Q$ 是被动信息。即便一个模式的 $Q$ 很高，也只能说明该模式在被动结构中的能量衰减慢。真正的阈值还取决于模式是否与有源区充分重叠、内部吸收是否过大、注入分布是否合理。也就是说，\cref{eq:q_def} 是后续阈值分析的输入之一，而不是终点。
+
+\begin{ExampleBox}
+在数值仿真中，如果用 FDTD 计算一个 PCSEL 冷腔模式的衰减时间常数，再由 \cref{eq:photon_lifetime,eq:q_def} 提取 $Q$，这一步得到的是冷腔品质因子。它可以用于与 RCWA、FEM 做交叉验证，也可以为阈值增益估计提供被动损耗信息，但不能直接当作器件阈值电流。
+\end{ExampleBox}
+
+\section{开放边界的实现：数学边界条件与数值边界条件不是一回事}
+在数学上，开放系统的理想边界意味着只允许向外传播的辐射，而不允许从无穷远无源地返回。这个条件在解析上通常写成“出射波条件”（outgoing-wave condition）。对标量外辐射问题，一个最小的 Sommerfeld 条件可写成
+\begin{equation}
+r\left(\frac{\partial \psi}{\partial r}-\ii \tilde{k}\psi\right)\xrightarrow[r\to\infty]{}0,
+\qquad
+\tilde{k}=\frac{\tilde{\omega}}{c},
+\label{eq:sommerfeld_condition}
+\end{equation}
+它表达的是：远处只允许向外跑的波，而不允许从无穷远无源返回的入射波。对矢量 Maxwell 问题，严格形式会更复杂，但物理含义完全相同。边界条件本身，就是开放系统定义的一部分。
+
+在数值计算中，我们不可能真正把空间做到无穷大，于是需要用辐射边界条件、端口条件或完全匹配层（perfectly matched layer, PML）来近似它。
+
+PML 的核心思想值得在这里做一个最小介绍。它在计算域边界处引入一层特殊介质，通过对坐标做复数延拓
+\[
+x \to x + \frac{\ii\sigma(x)}{\omega},
+\]
+使出射波在该层中指数衰减，但由于变换是连续的、在物理--PML 界面上梯度为零，波在进入该层时不产生反射。需要注意的是，$\sigma/\omega$ 显式依赖频率；对 QNM 这类复频率 $\tilde{\omega}$ 问题，取用哪一个 $\omega$ 会影响虚部精度，因此常需做收敛性检查。换句话说，PML 不是一个物理实体，而是一种把无限开放空间折叠进有限计算域的数学技巧。
+
+这一步看起来像计算细节，实际上极其关键。因为一旦开放边界实现不当，就会发生两类严重误判：
+\begin{itemize}
+  \item 人工反射把本应泄露的模式困住，导致虚假高 $Q$；
+  \item 人工吸收过强，把本应存在的模式洗掉，导致错误低估共振质量。
+\end{itemize}
+
+因此，本书在讨论 FDTD、FEM 和 RCWA 时，会一直强调：边界条件不是软件按钮，而是物理模型的一部分。
+
+\begin{PitfallBox}
+“复频率的虚部很小，说明数值做得很准”这种说法没有物理意义。虚部大小首先反映的是模式本身的损耗与开放性，只有在收敛和边界条件正确的前提下，才谈得上数值精度。
+\end{PitfallBox}
+
+\section{这一章和后文的关系：为什么先讲 Maxwell，再讲 Bloch}
+到这里，读者应该能看出：本章真正建立的是“问题类型”，而不是“最终解法”。我们已经知道 PCSEL 的被动光学子问题来自开放系统中的 Maxwell 方程，但还没有利用二维周期性。周期性一旦被引入，问题就可以借助 Bloch 定理进行分类和简化，这正是下一章的主题。
+
+从逻辑上说，本章回答的是“PCSEL 的电磁问题是什么”；下一章回答的是“在周期性存在时，这个问题如何被组织和分类”；再下一章才会进一步问“在这些被组织好的模式中，哪些最有可能成为 PCSEL 关心的候选模”。
+
+\section*{本章小结}
+本章把 PCSEL 的电磁基础明确成了一个开放、通常非厄米的 Maxwell 本征问题。频域 Maxwell 方程给出模式条件，复频率给出损耗时间尺度，开放边界决定模式是否能正确反映真实面发射结构，而 QNM / resonant states 则给出了开放共振模最小且严格的数学身份。后续所有能带、$\Gamma$ 点、耦合波和阈值分析，都建立在这一本章奠定的框架之上；其中更硬的归一化、伴随模与非厄米微扰公式将在 \cref{ch:cmt,ch:math-appendix} 中继续展开。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 从频域 Maxwell 方程出发，推导磁场形式的主方程，并说明它与电场形式在数值上可能各有什么优缺点。
+
+  \item \basicq 解释为什么“面发射”这一目标本身就迫使 PCSEL 成为开放系统。
+
+  \item \midq 在本书的时间因子约定下，证明 \cref{eq:q_def} 成立。
+
+  \item \midq 利用\cref{eq:outgoing_asymptotic,eq:outgoing_growth}，解释为什么开放共振模通常不属于普通平方可积函数空间。
+
+  \item \hardq 试举出一个边界条件实现错误会如何误导 PCSEL 设计判断的例子。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item \cite{taflove2005} 中关于开放边界与时域电磁计算的章节。 这条阅读的重点是理解本章的开放边界条件怎样在数值求解中被落实。
+
+  \item 关于开放共振模、QNM 归一化与散射极点视角，可结合 \cite{sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm} 阅读。 这条阅读的重点是补足本章关于开放 Maxwell 问题与复频率模的标准数学语言。
+
+  \item 配合 \cref{ch:fdtd-fem,ch:rcwa} 回看本章，可更清楚地理解数值边界为什么不能被当作纯技术细节。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+\end{itemize}
+
+

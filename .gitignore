@@ -1,0 +1,29 @@
+# LaTeX build artifacts
+build/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.xdv
+*.synctex.gz
+*.synctex(busy)
+
+# Root-level generated PDFs from ad-hoc builds
+main.pdf
+pcselbook.pdf
+
+# Python cache / local tooling
+__pycache__/
+*.pyc
+
+# Editor / local workspace
+.claude/
+.vscode/
+
+# OS noise
+.DS_Store
+Thumbs.db

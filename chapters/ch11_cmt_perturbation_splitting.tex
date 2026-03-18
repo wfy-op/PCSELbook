@@ -1,0 +1,366 @@
+\chapter{耦合模理论、微扰观点与模式分裂}
+\label{ch:cmt}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 区分时间耦合模理论（Temporal Coupled-Mode Theory, TCMT）、空间耦合模理论与 PCSEL 专用 CWT 的角色差异。
+  \item 掌握微扰公式如何把“小几何变化”“小折射率漂移”“小损耗改动”转换为频率漂移和损耗变化。
+  \item 理解模式分裂不是数学细节，而是偏振选择、模竞争和远场改变的直接来源。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:cwt-min,ch:cwt-3d,ch:polarization} 中关于 CWT、开放系统和对称性破缺的基础内容。
+
+\section*{本章路线图}
+\cref{ch:cwt-min,ch:cwt-3d} 给出的是 PCSEL 专用的耦合波语言，它特别适合描述晶格散射网络。本章则要把视角再拉高一点。我们会先解释为什么还需要一个更通用的“耦合模”语言，然后说明 TCMT 与 CWT 的关系，再用微扰公式把“结构小改动会怎样改频率和损耗”这件事写清楚，最后把这些公式落回模式分裂与对称性破缺，解释为什么它们是 PCSEL 设计里最常见也最关键的现象之一。
+
+\section{为什么在 CWT 之外还要学耦合模理论}
+很多读者看到这里会自然提问：既然前两章已经有了 CWT，为什么还要再学一个耦合模理论？答案在于两者关注的对象不同。
+
+CWT 的天然基底是“由倒格矢连接起来的内部平面波分量”。它擅长解释光子晶体本身如何组织反馈和辐射。TCMT 则更像是“把整个共振子看成一个或几个端口耦合的模式”，它的天然基底是“已经形成的共振超模”和“与外界交换能量的输入输出通道”。
+
+这意味着，当问题的重点是“孔形改变会如何改写 $x$ 向波和 $y$ 向波之间的散射”，CWT 往往更自然；而当问题变成“某个共振模和上方自由空间、下方衬底或某个波导端口如何耦合”，TCMT 往往更简洁。两者不是谁取代谁，而是对同一系统的不同投影。
+
+\begin{IntuitionBox}
+CWT 说的是“腔内部到底是怎样由周期散射编织出来的”；TCMT 说的是“这个已经形成的腔模怎样与外界端口交换能量”。前者偏内部结构，后者偏端口与通道。对 PCSEL 来说，两者都需要，因为它既是一个周期开放电磁系统，又是一个真正要向外辐射并与测量端口发生关系的器件。
+\end{IntuitionBox}
+
+\section{时间耦合模理论的基本语言}
+先考虑最简单的单模情形。若一个共振模的复振幅为 $a(t)$，其与外部输入输出端口耦合，则 TCMT 的标准写法是
+\begin{align}
+\dot a &= \left(\ii\omega_0-\gamma_\mathrm{i}-\gamma_\mathrm{e}\right)a + \bm{k}^{\mathsf T}\bm{s}_+,
+\label{eq:tcmt_single_a}\\
+\bm{s}_- &= \mathbf{C}\bm{s}_+ + \bm{d}\,a.
+\label{eq:tcmt_single_s}
+\end{align}
+这里，$\omega_0$ 是共振频率，$\gamma_\mathrm{i}$ 是内部损耗，$\gamma_\mathrm{e}$ 是向外部端口泄漏的外耦合损耗，$\bm{s}_+$ 和 $\bm{s}_-$ 分别表示输入与输出通道振幅，$\mathbf{C}$ 是直接散射背景矩阵，$\bm{k}$ 与 $\bm{d}$ 表示模式与端口之间的耦合系数。
+
+为了让这组式子真正能和 RCWA、FDTD/FEM 的输出对接，还必须先说明归一化。教材里最稳妥的约定是把 $a(t)$ 视为\textbf{能量振幅}，于是
+\begin{equation}
+|a|^2 \propto U_{\mathrm{cav}},
+\qquad
+|s_\pm|^2 \propto P_{\mathrm{port}},
+\label{eq:tcmt_norm_units}
+\end{equation}
+其中 $U_{\mathrm{cav}}$ 是腔内储能，$P_{\mathrm{port}}$ 是端口功率通量。于是 $a$ 的量纲更接近 $\sqrt{\mathrm{J}}$，$s_\pm$ 的量纲更接近 $\sqrt{\mathrm{W}}$，而 $\bm{k}$、$\bm{d}$ 的量纲更接近 $\mathrm{s}^{-1/2}$。若换用别的归一化，例如把 $|a|^2$ 直接定义为功率，那么耦合系数的量纲和数值都会跟着变。跨章节、跨软件比较 TCMT 参数时，若不先统一这一步，单看数字大小往往没有意义。
+
+实际从数值结果提取 TCMT 参数时，最常用的接口是被动反射/透射谱的共振峰拟合。以单端口近似为例，共振附近的反射系数可写成
+\begin{equation}
+r(\omega)\approx C_{11}+\frac{\mathrm{i}d_1^2}{\omega-\omega_0+\mathrm{i}(\gamma_i+\gamma_e)},
+\label{eq:tcmt_r_fit}
+\end{equation}
+其中共振峰的半高全宽即 $2(\gamma_i+\gamma_e)$，非共振背景由 $C_{11}$ 给出。通过对 RCWA 或 FDTD 计算的谱线做洛伦兹拟合，可提取 $\gamma_e$（外耦合损耗）与 $\gamma_i$（内部损耗）之和；再结合被动 $Q$（$Q=\omega_0/2(\gamma_i+\gamma_e)$）和上下出光比，可进一步分离 $\gamma_e$ 的上下通道贡献。
+
+这套式子看起来像纯粹的信号处理，但其物理意义非常清楚。第一式说的是：模幅一方面按自身复频率演化，一方面吸收外部输入的驱动；第二式说的是：输出既包含非共振的直接散射背景，也包含经由共振模再辐射出来的部分。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+    \draw[rounded corners,fill=blue!10,thick] (2.6,0.6) rectangle (5.4,3.0);
+    \node at (4.0,1.85) {腔模 $a(t)$};
+    \draw[->,thick] (0.2,2.3)--(2.6,2.3);
+    \node[left] at (0.2,2.3) {$s_{+,1}$};
+    \draw[->,thick] (7.8,2.3)--(5.4,2.3);
+    \node[right] at (7.8,2.3) {$s_{+,2}$};
+    \draw[->,thick] (2.6,1.3)--(0.2,1.3);
+    \node[left] at (0.2,1.3) {$s_{-,1}$};
+    \draw[->,thick] (5.4,1.3)--(7.8,1.3);
+    \node[right] at (7.8,1.3) {$s_{-,2}$};
+    \draw[dashed,gray!70] (1.2,2.75)--(1.2,0.85);
+    \draw[dashed,gray!70] (6.8,2.75)--(6.8,0.85);
+    \node[font=\small] at (1.2,3.15){端口 1};
+    \node[font=\small] at (6.8,3.15){端口 2};
+    \node[font=\small] at (4.0,0.25){直接散射由 $\mathbf C$ 描述，共振再辐射由 $\bm d a$ 描述};
+  \end{tikzpicture}
+  \caption{TCMT 的最小“端口--腔模--端口”图像。PCSEL 语境下，端口可以是上方自由空间、下方衬底辐射通道，或等效的外部耦合通道；TCMT 正是把内部共振模与这些外部端口之间的能量交换压缩成有限维输入输出模型。}
+  \label{fig:tcmt_port_cavity}
+\end{figure}
+
+对 PCSEL 来说，若我们把“上方自由空间出射”“下方衬底辐射”甚至“侧向端口”都视为外部通道，那么 TCMT 很适合描述谱线、共振峰、临界耦合和端口干涉现象。它尤其适用于分析被动散射谱和端口响应，而不要求我们显式追踪内部每一个倒格波分量。
+
+\section{从单模到多模：模式竞争和分裂如何写进 TCMT}
+PCSEL 更常见的是多模或近简并模情形。此时把单个振幅 $a$ 升级成模矢量 $\bm{a}$，就得到
+\begin{align}
+\dot{\bm{a}}
+&=
+\left(\ii\mathbf{\Omega}-\mathbf{\Gamma}\right)\bm{a}
++
+\mathbf{K}\bm{s}_+,
+\label{eq:tcmt_multi_a}\\
+\bm{s}_-
+&=
+\mathbf{C}\bm{s}_+ + \mathbf{D}\bm{a}.
+\label{eq:tcmt_multi_s}
+\end{align}
+其中 $\mathbf{\Omega}$ 是模间保守耦合矩阵，$\mathbf{\Gamma}$ 是损耗与辐射矩阵。到这里你会发现，这和前两章的 CWT 形式已经非常接近。区别不在数学结构，而在基底和参数来源：
+\begin{itemize}
+  \item 在 CWT 中，矩阵索引更偏向内部平面波或“平面波 $\times$ 纵模”基底；
+  \item 在 TCMT 中，矩阵索引更偏向已经形成的共振超模以及它们与端口的关系。
+\end{itemize}
+
+因此，TCMT 与 CWT 并不是两套毫不相干的理论，而是同一个有限维投影思想在不同基底上的两种表述。实际工作中，常常先用 CWT 找出哪个内部耦合通道重要，再把得到的候选超模参数压缩成 TCMT，去解释散射谱、反射峰、Fano 线形和端口干涉。
+
+\section{微扰观点为什么如此重要}
+到了研究和设计阶段，真正频繁发生的并不是“把结构从头推倒重来”，而是反复面对小改动：孔半径轻微变化、刻蚀深度有偏差、温度升高导致折射率上升、重掺杂层吸收增加一点、金属位置向下偏几纳米。这些变化如果每次都完全依赖全波重算，当然能做，但会很慢，也不利于积累物理直觉。微扰理论的作用，就是把“小改动”直接映射到“本征频率和损耗怎样一阶变化”。
+
+对于封闭或近似厄米系统，最熟悉的一阶频移公式是
+\begin{equation}
+\frac{\delta\omega}{\omega}
+\approx
+-
+\frac{1}{2}
+\frac{\int_V \delta\varepsilon(\rvec)\,|\E(\rvec)|^2\,\dd V}
+{\int_V \varepsilon(\rvec)\,|\E(\rvec)|^2\,\dd V}.
+\label{eq:perturb_hermitian}
+\end{equation}
+这个公式的意义并不难：如果某个区域的介电常数增加，而该模在这个区域正好场强很强，那么模式更“愿意”把能量放进去，频率通常会向低频方向漂移。反之，若扰动发生在场很弱的区域，频移就会小得多。
+
+\cref{eq:perturb_hermitian} 的真正价值，在于它把“设计动作”变成了“场重叠问题”。这和前面 CWT 里耦合系数的结构一脉相承：设计之所以有效，从来不是因为改动本身神秘，而是因为它正好发生在模式看得见的地方。
+
+\begin{RigorousBox}
+\cref{eq:perturb_hermitian} 严格依赖厄米归一化和小扰动条件。对强开放的 PCSEL 辐射模，真正严格的处理需要使用准正规模（quasinormal mode）或等价的开放系统归一化框架。工程上常把 \cref{eq:perturb_hermitian} 当作第一近似使用，但必须知道它在强辐射、强非厄米情况下只是一种近似，不是普适精确公式。
+\end{RigorousBox}
+
+\section{先用一个 \texorpdfstring{$2\times2$}{2x2} 非厄米玩具模型把左模/右模讲明白}
+在直接写开放 Maxwell 的一般公式之前，先看一个最小非厄米矩阵
+\begin{equation}
+\mathbf{M}=
+\begin{bmatrix}
+a & b\\
+c & d
+\end{bmatrix},
+\qquad b\neq c\ \text{或}\ a,d,b,c\in\mathbb{C}.
+\label{eq:nh_2x2_matrix}
+\end{equation}
+设其某个本征值为 $\lambda$。对应的右本征矢满足
+\[
+\mathbf M \bm v^{\mathrm R}=\lambda \bm v^{\mathrm R},
+\]
+可取
+\begin{equation}
+\bm v^{\mathrm R}=
+\begin{bmatrix}
+b\\
+\lambda-a
+\end{bmatrix}.
+\label{eq:nh_2x2_right}
+\end{equation}
+左本征矢则满足
+\[
+(\bm v^{\mathrm L})^{\mathsf T}\mathbf M=\lambda (\bm v^{\mathrm L})^{\mathsf T},
+\]
+等价于 $\mathbf M^{\mathsf T}\bm v^{\mathrm L}=\lambda \bm v^{\mathrm L}$，因此可取
+\begin{equation}
+\bm v^{\mathrm L}=
+\begin{bmatrix}
+c\\
+\lambda-a
+\end{bmatrix}.
+\label{eq:nh_2x2_left}
+\end{equation}
+对比 \cref{eq:nh_2x2_right,eq:nh_2x2_left} 就能立刻看出：除非问题退回更特殊的厄米或 complex-symmetric 情形，左矢量并不等于右矢量的复共轭。也就是说，在非厄米问题里，真正关闭投影的对象是左/右本征矢的双线性配对，而不是“拿右本征矢自己做厄米内积”。
+
+这正是开放 Maxwell 微扰里必须引入伴随模的最小代数原因。读者完全可以把左模先理解成“做投影时的测试函数”，而不是另一支必须先看见的神秘物理场。等进入开放系统后，$\E^{\mathrm L}$ 与 $\E^{\mathrm R}$ 才会分别由伴随 Maxwell 算子和原始 Maxwell 算子给出。
+
+\section{为什么非厄米一阶扰动不能直接照搬厄米公式}
+如果只停留在上一节，读者其实还没有真正掌握开放系统微扰，因为最关键的一步还没说透：\textbf{非厄米问题里，右模本身并不足以关闭微扰公式。} 其根源不在于“频率变成复数”这一表面现象，而在于开放 Maxwell 算子不再自伴，右模之间也不再按厄米内积正交。于是，厄米情形里默认成立的三件事都会失效：
+\begin{enumerate}
+  \item 归一化不再能简单用 $\int \varepsilon |\E|^2 \dd V=1$ 关闭；
+  \item 投影时不能默认用右模自己的复共轭来消去一阶模形修正；
+  \item 频移与损耗修正必须被统一看成复频率修正，而不是先算实部、再临时补虚部。
+\end{enumerate}
+
+最稳妥的写法，是先把开放系统本征问题看成一般的非线性非厄米本征问题：
+\begin{equation}
+\hat{\mathcal L}(\tilde{\omega},p)\E^{\mathrm{R}} = 0,
+\label{eq:open_right_mode}
+\end{equation}
+其中 $p$ 表示几何、材料或工作点参数。与之配套，需要引入伴随问题
+\begin{equation}
+\hat{\mathcal L}^{\mathrm{A}}(\tilde{\omega},p)\E^{\mathrm{L}} = 0,
+\label{eq:open_left_mode}
+\end{equation}
+这里 $\mathrm{A}$ 表示伴随算子，$\E^{\mathrm{L}}$ 为左模（left mode）。对一般非厄米问题，真正起投影作用的是左模与右模形成的双正交结构，而不是右模与自身的厄米内积。
+
+现在对 \cref{eq:open_right_mode} 做一阶微扰。若参数改变 $p\to p+\delta p$，则
+\begin{equation}
+\left[
+\left.\frac{\partial \hat{\mathcal L}}{\partial \omega}\right|_n \delta\tilde{\omega}
++ \delta \hat{\mathcal L}
+\right]\E_n^{\mathrm{R}}
++
+\hat{\mathcal L}_n\,\delta \E_n^{\mathrm{R}}
+=
+0.
+\label{eq:open_perturb_expand}
+\end{equation}
+再用左模对它做投影，由于 $\E_n^{\mathrm{L}}$ 满足伴随本征方程，最后一项被消去，于是得到开放系统中最小且真正普适的一阶公式
+\begin{equation}
+\delta\tilde{\omega}_n
+=
+-
+\frac{\left\langle \E_n^{\mathrm{L}},\,\delta \hat{\mathcal L}\,\E_n^{\mathrm{R}}\right\rangle}
+{\left\langle \E_n^{\mathrm{L}},\,\left.\dfrac{\partial \hat{\mathcal L}}{\partial \omega}\right|_n \E_n^{\mathrm{R}}\right\rangle}.
+\label{eq:open_perturb_general}
+\end{equation}
+这就是厄米频移公式在开放系统中的真正骨架。它的分子仍表示“扰动与模式的重叠”，但分母不再只是普通储能积分，而是\textbf{由伴随投影和频率导数共同定义的广义归一化量}。
+
+若材料存在频率色散，这个分母最好至少写出最小形式。对
+\[
+\hat{\mathcal L}(\omega)=
+\nabla\times \mu_r^{-1}\nabla\times
+-\frac{\omega^2}{c^2}\varepsilon_r(\omega)
+\]
+这类 Maxwell 算子，有
+\begin{equation}
+\left\langle \E_n^{\mathrm{L}},\,\frac{\partial \hat{\mathcal L}}{\partial \omega}\E_n^{\mathrm{R}}\right\rangle
+\approx
+-\frac{1}{c^2}
+\int
+\frac{\partial\!\big(\omega^2\varepsilon_r(\omega)\big)}{\partial \omega}
+\,
+\E_n^{\mathrm{L}}\cdot \E_n^{\mathrm{R}}
+\,
+\dd V.
+\label{eq:open_perturb_dispersive_denominator}
+\end{equation}
+若再退回无色散近似，$\partial(\omega^2\varepsilon_r)/\partial\omega \to 2\omega\varepsilon_r$，分母才会进一步退化成更像“储能积分”的形式。也正因为如此，开放系统分母本质上不是普通厄米范数，而是包含材料色散信息的广义归一化量。
+
+\begin{RigorousBox}
+\cref{eq:open_perturb_general} 比 \cref{eq:perturb_hermitian} 更一般，原因不是它看起来更复杂，而是它保留了两件开放系统里不能丢的东西：左/右模的区分，以及算子对频率的显式依赖。只要材料色散、辐射边界或 PML 已经进入模型，这两件事通常都不能省略。
+\end{RigorousBox}
+
+\section{双正交、伴随模与 QNM 归一化在这里各自扮演什么角色}
+到这里很容易产生另一个疑问：左模到底是不是右模的复共轭？答案是，一般并不是。对真正的厄米问题，左模与右模在适当内积下确实可以重合；但对开放系统，它们只在更特殊的条件下才会简化。对互易、无磁光非互易的很多 Maxwell 问题，算子常常在某个\textbf{无复共轭的双线性配对}下呈现 complex-symmetric 结构，此时左模更接近“转置伙伴”，而不是“共轭伙伴”。这也是为什么 QNM 归一化中常出现 $\E\cdot\E$ 而不是 $|\E|^2$。
+
+在实际数值中，常见的一种 QNM 广义归一化可写成
+\begin{equation}
+\left\langle\!\left\langle \Psi_m,\Psi_n\right\rangle\!\right\rangle
+=
+\int_{\Omega+\mathrm{PML}}
+\left[
+\E_m\cdot \frac{\partial(\omega\varepsilon)}{\partial\omega}\E_n
+-
+\Hf_m\cdot \frac{\partial(\omega\mu)}{\partial\omega}\Hf_n
+\right]\dd V,
+\label{eq:qnm_norm_ch11}
+\end{equation}
+其中 $\Psi_n=(\E_n,\Hf_n)$，积分区域包含物理区与 PML。这个式子在正文里不要求读者立即拿去手算，但必须知道它传达的三条信息：
+\begin{enumerate}
+  \item 开放系统归一化通常不再使用普通能量范数；
+  \item 材料色散会直接进入归一化分母，而不是只在“材料参数表”里出现；
+  \item 一旦归一化换了，微扰公式的分母也必须随之更换，不能继续沿用封闭腔形式。
+\end{enumerate}
+
+更系统的函数空间直觉、QNM 定义和归一化讨论见 \cref{ch:maxwell,ch:math-appendix}。本章此处的目标，是让读者在使用微扰语言时，不会再把开放系统误当成“只是多了一个复数频率的封闭腔”。
+
+\section{开放系统中微扰不只改频率，还会改损耗}
+对 PCSEL 而言，只讨论频移是不够的，因为很多设计动作更直接改写的是损耗，而非共振频率本身。举例来说，轻微打破对称性可能几乎不改变两支模式的频率，却显著改变它们与辐射通道的耦合强度，于是损耗分裂比频率分裂更明显。
+
+在开放系统里，更一般地可以把复频率写成
+\[
+\tilde\omega=\omega-\ii\gamma,
+\]
+于是微扰实际上对应的是复频率变化 $\delta\tilde\omega$。其实部给频移，虚部给衰减变化。也就是说，\cref{eq:open_perturb_general} 一旦进入开放系统，天然输出的就不是单一“频移”，而是统一的“频移 + 线宽变化”。于是，模式工程不再只是“调频率”，而是同时在调“模式看到的开放世界”。这也是为什么 \cref{ch:polarization} 里的偏振选择很多时候主要体现为损耗分裂，而非频率分裂。
+
+从设计角度说，这个结论非常关键。因为它提醒我们：如果你只盯着某条能带有没有分开、共振频率有没有错开，而不看相应的辐射损耗是否也被重排，就可能错过真正决定阈值和单模性的那一部分物理。
+
+\section{哪些工程公式可以继续用，哪些地方必须升级到开放系统严格形式}
+到这里，读者最需要的是一条清楚的使用边界，而不是更多公式。对 PCSEL 设计，实践上可分成三层。
+
+第一层是\textbf{可以把厄米公式当作趋势代理}的情形：模式泄露较弱、候选模远离强辐射通道重组区、扰动主要发生在腔内高场区域而不是出光边界附近、并且目标模与竞争模已经明显分离。在这种情况下，\cref{eq:perturb_hermitian} 往往能较可靠地判断“往哪个方向漂移”。  
+
+第二层是\textbf{必须至少用左/右模公式检查一次}的情形：模式本身就是强开放模、设计变量直接作用于出光孔形或上下辐射不对称、材料色散不可忽略、或你已经开始关心虚部变化、偏振损耗分裂和 quasi-BIC 附近的辐射调控。此时，若仍只用 \cref{eq:perturb_hermitian}，最容易把“频移方向判断正确”误当成“损耗排序也正确”。  
+
+第三层是\textbf{微扰理论本身就不该继续扛主问题}的情形：近简并模强混合、模式身份发生交换、扰动显著改变阵列边界或电流孔径、热反馈导致空间分布整体重构、或系统靠近异常点（exceptional point）一类强非厄米重组区域。到了这一步，正确动作不是把一阶公式写得更花，而是回到完整全波或多物理场本征问题重算。
+
+\begin{PitfallBox}
+开放系统里最常见的误判不是“公式完全错了”，而是“用对了方向判断，却错用了定量结论”。尤其在 quasi-BIC、偏振分裂和热漂移问题上，单靠厄米频移公式往往能看出趋势，却未必能给出正确的损耗排序和阈值排序。
+\end{PitfallBox}
+
+\section{两模耦合为什么足以抓住“分裂”的核心}
+尽管真实 PCSEL 可能涉及多模网络，但理解模式分裂时，一个两模模型通常已经足够说明问题。设两个近简并模式的复频率分别为 $\tilde\omega_1$ 和 $\tilde\omega_2$，耦合强度为 $\kappa$，则耦合矩阵为
+\begin{equation}
+\mathbf{M}
+=
+\begin{bmatrix}
+\tilde\omega_1 & \kappa\\
+\kappa & \tilde\omega_2
+\end{bmatrix}.
+\label{eq:two_mode_matrix}
+\end{equation}
+其本征值为
+\begin{equation}
+\tilde\omega_{\pm}
+=
+\frac{\tilde\omega_1+\tilde\omega_2}{2}
+\pm
+\sqrt{\kappa^2+\left(\frac{\tilde\omega_1-\tilde\omega_2}{2}\right)^2}.
+\label{eq:two_mode_split}
+\end{equation}
+
+\cref{eq:two_mode_split} 看上去简单，却几乎浓缩了模式分裂的全部核心。首先，当两模原本简并时，任何非零耦合都可能把它们分开；其次，若 $\tilde\omega_1$ 与 $\tilde\omega_2$ 本身含有不同虚部，那么分裂不再只是“频率上分两条线”，而是“损耗排序也被改写”。这正是前面反复强调的：在 PCSEL 中，分裂往往不是纯粹的谱学现象，而是模式选择的直接前奏。
+
+\section{对称性破缺怎样导致模式分裂}
+现在把上述两模语言落回 \cref{ch:polarization} 的物理图像。设某个理想对称器件在 Gamma 点处支持一对简并或近简并模式，它们对应两种正交偏振或两种不同对称性表示。在完全对称时，系统对这两种模式没有偏好；一旦加入椭圆孔、双晶格扰动、上下一侧更强的辐射出口，或者热、电注入造成横向不均匀，对称性平衡就会被打破，于是出现两类可能的后果。
+
+第一类后果是频率分裂：某一支模式的有效折射率或光程改变得更多，所以其共振频率偏移更大。
+
+第二类后果是损耗分裂：某一支模式与辐射通道或损耗层的重叠增加得更多，所以其衰减更快或更慢。
+
+在实际 PCSEL 设计里，这两类分裂经常同时出现，只是主导程度不同。对于单模和偏振工程，真正关键的是它们最后如何改写净增益排序。也就是说，分裂之所以重要，不是因为“图上线分开了”，而是因为它决定哪一支模在阈值附近首先占优。
+
+\begin{ExampleBox}
+设方格晶格中一对原本简并的正交偏振 Gamma 点模，在引入轻微椭圆孔后出现分裂。若椭圆长轴沿 $x$ 方向，那么沿 $x$ 方向偏振的模式可能首先看到更强的保守耦合修正，于是频率偏移；与此同时，它也可能因为近场对称性改变而更强地耦合到上方辐射通道，于是损耗也改变。最终究竟哪一支模式先起振，不能只看频率谁更接近增益峰，而要看复频率与模增益共同决定的净阈值排序。
+\end{ExampleBox}
+
+这个例子说明，微扰分析和两模分裂模型不是“数学补充”，而是连接对称性破缺与器件表现的最短路径。
+
+\section{TCMT、CWT 和微扰三者怎样配合使用}
+现在可以把这三套语言的分工说得更清楚。
+
+如果你的问题是“哪一种倒格矢散射通道在控制 Gamma 点模式的重组”，优先使用 CWT。
+
+如果你的问题是“某个共振模式和上方自由空间、下方衬底或旁路端口怎样干涉并形成谱线”，优先使用 TCMT。
+
+如果你的问题是“结构改动很小，我想先判断频率和损耗会朝哪个方向变化”，优先使用微扰公式。
+
+这三者之间最合理的关系不是并列选择，而是层层递进。常见的工作路径是：先用 CWT 找到主导模和主导耦合；再在该模附近用微扰公式快速评估若干小改动；最后把得到的候选参数区间送入 TCMT 或全波散射分析，检查端口响应和实际输出行为。这种串联方式往往比“从一开始就完全黑箱扫参”更高效，也更容易形成可迁移的直觉。
+
+\begin{PitfallBox}
+一个常见错误是把 TCMT 参数、CWT 参数和全波仿真输出混在一起直接比较大小，却不检查它们的归一化约定是否一致。对开放系统而言，耦合系数、模幅和端口振幅的定义如果不统一，数值上的“差一个常数”会迅速演变成物理解释上的误判。
+\end{PitfallBox}
+
+\section{为什么本章内容会反复回到后面的器件章节}
+从表面上看，微扰与模式分裂像是“纯光学细节”；但在真实 PCSEL 器件中，它们会持续被电注入和温升重新激活。温度上升引起的折射率漂移、本征增益峰漂移、自由载流子吸收上升，都会通过本章的语言转化为频移、损耗变化和模式分裂再排序。也正因为如此，后面的热-电-光耦合章节并不是另起炉灶，而是把本章的线性小扰动语言变成空间分布和工作点依赖的器件语言。
+
+换句话说，本章给出的并不是一套只在冷腔里有用的数学技巧，而是一种之后会不断被重复调用的思维方式：任何小改动，先问它主要改的是频率、损耗还是重叠；任何模式切换，先问它本质上是哪个简并被打破、哪个通道被重新加权。
+
+\section*{本章小结}
+TCMT、CWT 与微扰理论是互补的三种语言。CWT 擅长追踪光子晶体内部耦合网络，TCMT 擅长描述共振模与外部端口的交换，微扰理论则擅长把小结构改动或小材料改动映射为频率和损耗的一阶变化。对开放 PCSEL 问题，真正严格的一阶扰动骨架应写成左/右模投影形式，而不是简单照搬厄米频移公式；厄米公式在弱开放条件下仍可作为趋势代理，但一旦进入强辐射、quasi-BIC、近简并重组或显著色散区，就必须升级到开放系统归一化甚至完整重算。模式分裂之所以重要，并不是因为它让谱线变成两条，而是因为它会直接改写偏振、远场和阈值排序。真正有效的设计分析，应当能在这三种语言之间来回切换。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 用自己的话解释 TCMT 与 CWT 的区别，并说明为什么它们在 PCSEL 中都不可缺。
+
+  \item \basicq 从 \cref{eq:open_perturb_general} 的推导思路出发，解释为什么开放系统里必须引入左模或伴随模，而不能只用右模自己关闭投影。
+
+  \item \midq 结合 \cref{eq:perturb_hermitian} 与 \cref{eq:open_perturb_general}，说明为什么“把材料改在场强最大的地方”通常最有效，但并不一定总是最优设计策略。
+
+  \item \midq 从 \cref{eq:two_mode_split} 出发，讨论在什么情况下损耗分裂会比频率分裂更直接地影响模式选择。
+
+  \item \hardq 设某 PCSEL 在低温下稳定单偏振工作、升温后出现偏振切换。请用“微扰 + 模式分裂”的语言给出一条可能的解释链。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章开始进入数值方法部分。届时会看到：PWEM 更像是在找候选模目录，而本章的分裂与微扰观点则帮助我们理解为什么这些候选模在后续全波分析中会表现出不同命运。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 如需复习一般光学腔与激光模理论，可参考 \cite{siegman1986,coldren2012} 中关于耦合模、模竞争和频率漂移的相关章节。 这条阅读的重点是补足本章关于TCMT、微扰与模式分裂 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想补充 TCMT 与光子晶体 slab 共振的经典文献，可参考 \cite{fan2002guided,fan2003fano,suh2004tcmt}。 这条阅读的重点是补足本章关于TCMT、微扰与模式分裂 的标准背景、经典语言和代表性文献接口。
+
+  \item 若想进一步打牢开放系统归一化与非厄米微扰，可继续阅读 \cite{leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm}，并与 \cref{ch:math-appendix} 对照。 这条阅读的重点是补足本章关于TCMT、微扰与模式分裂 的标准背景、经典语言和代表性文献接口。
+\end{itemize}
+
+

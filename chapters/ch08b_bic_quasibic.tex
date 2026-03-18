@@ -1,0 +1,269 @@
+﻿\chapter{BIC / quasi-BIC、\texorpdfstring{$\Gamma$}{Gamma} 点辐射与远场工程}
+\label{ch:bic}
+
+\section*{学习目标}
+\begin{itemize}
+  \item 理解连续谱中的束缚态（bound state in the continuum, BIC）与准 BIC 在 PCSEL 中为什么重要。
+  \item 学会把 $\Gamma$ 点、辐射损耗、偏振、远场工程和 BIC 语言明确接起来，而不是把它们当成彼此独立的主题。
+  \item 学会把 \cref{ch:polarization} 中的 little group / 不可约表示分类直接用来判断 exact $\Gamma$ 点的法向辐射允许性。
+  \item 明确 BIC / quasi-BIC 在 PCSEL 中是候选模与辐射工程语言，不是绕过器件物理的捷径。
+\end{itemize}
+
+\section*{先修知识}
+建议已掌握 \cref{ch:maxwell,ch:gamma,ch:polarization} 中关于开放系统、$\Gamma$ 点模、辐射损耗和偏振/远场的内容。
+
+\section*{本章路线图}
+前面几章已经告诉我们：PCSEL 的目标模通常出现在 $\Gamma$ 点附近；它既要有足够弱的辐射损耗，才能降低阈值增益，又要保留可工程化的法向出射，才能形成可用远场。本章引入 BIC / quasi-BIC 语言，就是为了把这两件事放进同一套框架。我们先说明 BIC 这个概念在开放周期系统里究竟意味着什么，再把 \cref{ch:polarization} 的 little group / 不可约表示工具直接接到法向辐射通道上，解释为什么 exact $\Gamma$ 点的某些 irrep 会被 symmetry-protected BIC 机制锁成零辐射。随后再说明 quasi-BIC 如何通过小对称性破缺打开辐射，最后讨论为什么真实 PCSEL 更常工作在 quasi-BIC 设计区，而不是无限大、完美无损的理想 BIC 点上。
+
+\section{为什么 BIC 不是旁枝话题，而是 PCSEL 主线中的辐射语言}
+从第 3 章开始，我们就已经知道 PCSEL 本质上是开放系统。开放系统的核心问题不只是“有哪些模”，还包括“这些模怎样向连续辐射通道泄漏”。BIC 的重要性就在这里：它描述的是一种\textbf{频率落在辐射连续谱内、却因干涉或对称性而不向外泄漏的极限状态}。换句话说，BIC 并不是“频率跑出了辐射区”，而是在辐射区里把辐射振幅组织成了零。
+
+这里说的“辐射连续谱”不是抽象的谱论术语，而是 slab 外自由空间中、位于光锥以内的一整族可传播平面波模。对 PCSEL 读者来说，把它先理解成“所有允许向上、向下逃逸的远场平面波通道的连续集合”就足够了。
+
+这对 PCSEL 尤其关键，因为 PCSEL 的设计目标从来不是简单地找到一个高 $Q$ 模，而是要理解\textbf{为什么某些 $\Gamma$ 点候选模天然更不容易辐射、而另一些模更容易向法向出光}。如果没有 BIC / quasi-BIC 语言，读者很容易把这个问题误解成“某个模式碰巧 $Q$ 高”；一旦引入 BIC 语言，就能把高 $Q$、偏振、法向远场和对称性放回同一个机制之下。
+
+\begin{IntuitionBox}
+对 PCSEL 来说，BIC 不是“完全不出光的理想神态”，而是帮助我们理解辐射为什么会被抑制、又怎样被有控制地重新打开的一种组织语言。设计时真正有用的，往往不是正好落在 BIC 点上，而是站在它附近的 quasi-BIC 区域。
+\end{IntuitionBox}
+
+\section{从辐射振幅到 BIC：什么叫“连续谱中的束缚态”}
+在进入公式之前，先把 BIC、普通束缚态和准 BIC 的边界一次说清。普通束缚态的“不辐射”来自频率本身不在允许传播的连续谱里；BIC 的“不辐射”则更微妙：它的频率已经落在连续谱内，按频率和动量本应可以向外辐射，但所有可用辐射通道的净耦合振幅恰好为零。准 BIC 则是理想 BIC 在有限尺寸、轻微几何扰动、上下层栈不对称或工艺误差作用下打开一条很弱辐射通道后的现实版本。
+
+把某个 $\Gamma$ 点附近候选模与自由空间辐射通道之间的耦合写成一个最小时间耦合模模型。设腔内模振幅为 $a$，上方和下方辐射通道的出射振幅记为 $s_{\uparrow,-}$ 与 $s_{\downarrow,-}$，则可写
+\begin{equation}
+\dot a
+=
+\left(\ii\omega_0-\gamma_{\mathrm{nr}}-\gamma_{\mathrm{rad}}\right)a,
+\qquad
+\begin{bmatrix}
+s_{\uparrow,-}\\
+s_{\downarrow,-}
+\end{bmatrix}
+=
+\begin{bmatrix}
+d_\uparrow\\
+d_\downarrow
+\end{bmatrix} a,
+\label{eq:bic_tcmt}
+\end{equation}
+其中 $\gamma_{\mathrm{nr}}$ 表示非辐射损耗，$\gamma_{\mathrm{rad}}$ 表示辐射损耗，$d_\uparrow,d_\downarrow$ 是模到辐射通道的耦合振幅。若在某个对称性或干涉条件下，
+\begin{equation}
+d_\uparrow = d_\downarrow = 0,
+\label{eq:bic_condition}
+\end{equation}
+则该模即使频率位于辐射连续谱中，也不会向外辐射；理想无损情况下，$\gamma_{\mathrm{rad}}=0$，这就是 BIC 的最小数学图像。
+
+需要特别强调的是，\cref{eq:bic_condition} 表示\textbf{辐射振幅为零}，而不是模式根本不与外界有任何关系。只要结构轻微破坏对称性、有限尺寸边缘打开旁路通道、表面粗糙引入散射，或者工作点变化导致场型重分布，这个零就会被抬起，理想 BIC 便退化成具有有限辐射线宽的 quasi-BIC。
+
+\begin{RigorousBox}
+BIC 的定义依赖开放边界与连续辐射通道。若把问题错误地近似成封闭本征值问题，就既不会看到真正的辐射损耗，也不会正确看到 BIC 的成因。
+\end{RigorousBox}
+
+\begin{ExampleBox}
+\textbf{BIC 的严格口径是什么？}
+
+普通束缚态可概括为“频率不在连续谱内，所以无辐射”；BIC 则应表述为“频率位于连续谱内，但辐射耦合矩阵元为零，所以无辐射”。对 PCSEL 来说，这个区分非常关键，因为 BIC / quasi-BIC 讨论的是开放辐射问题本身，而不是简单靠频率躲开辐射区的模式。
+\end{ExampleBox}
+
+\section{\texorpdfstring{$\Gamma$}{Gamma} 点为什么是 BIC 语言最自然的舞台}
+在二维周期 slab 中，$\Gamma$ 点对应零平面波矢，恰好也是法向出射和法向辐射最直接相关的位置。对 PCSEL 来说，这一点尤为自然：目标模式大多围绕 $\Gamma$ 点组织，因为它最容易同时连接\textbf{面内布拉格反馈}与\textbf{法向面发射}。
+
+而在 $\Gamma$ 点，晶格对称性和场分量奇偶性经常会直接决定某一模是否能够与法向辐射通道耦合。若一个模式的近场对称性与外部法向平面波的表示不匹配，那么即使频率处于辐射连续谱中，它也可以因对称性而成为 symmetry-protected BIC。反过来，若通过轻微单胞扰动、双晶格设计或椭圆孔设计打破这类严格匹配条件，就会把原本封闭的辐射通道重新打开，得到 quasi-BIC。
+
+这也解释了为什么前面几章反复把 $\Gamma$ 点、模简并、偏振选择和法向远场放在一起讲。它们不是四个并列话题，而是在 $\Gamma$ 点这个位置上，由同一组对称性与辐射通道规则共同决定的四个侧面。
+
+\section{把法向辐射通道写成 irrep：BIC 判断才真正可操作}
+\cref{ch:polarization} 已经给出最小分类工具：方格晶格的 $\Gamma$ 点 little group 为 $C_{4v}$，三角晶格为 $C_{6v}$。现在只需再补一条，就得到一套真正可操作的 BIC 初筛规则：\textbf{法向自由空间辐射通道本身也必须按同一 little group 分类。}
+
+对 exact normal incidence，外部自由空间只提供两支横向平面波偏振，因此：
+\begin{itemize}
+  \item 在 $C_{4v}$ 下，法向辐射通道最小地张成二维表示 $E$；
+  \item 在 $C_{6v}$ 下，法向辐射通道最小地张成二维表示 $E_1$。
+\end{itemize}
+于是，若某个 $\Gamma$ 点模的 irrep 与这些辐射通道表示不匹配，那么 direct normal-radiation matrix element 在保持该对称性的前提下就必须为零。这就是 symmetry-protected BIC 最简洁、也最适合教学复用的判断规则。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{exact $\Gamma$ 点法向辐射允许性的一阶 irrep 判断规则。这里给出的是最小 in-plane little-group 规则；更严格的三维 slab 判断还需再结合纵向奇偶性与层栈对称。}
+  \label{tab:gamma-rad-irrep}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{1.8cm}p{1.8cm}p{2.4cm}Y@{}}
+    \toprule
+    晶格 & $\Gamma$ 点 little group & 法向辐射通道 irrep & 最小结论 \\
+    \midrule
+    方格晶格 & $C_{4v}$ & $E$ & 属于 $E$ 的模式在对称性上允许 direct normal radiation；属于 $A_1,A_2,B_1,B_2$ 的模式可形成 symmetry-protected dark family \\
+    三角晶格 & $C_{6v}$ & $E_1$ & 属于 $E_1$ 的模式在对称性上允许 direct normal radiation；属于 $A_1,A_2,B_1,B_2,E_2$ 的模式在 exact $\Gamma$ 点可成为 symmetry-protected dark family \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+这张表的教学意义非常大。它把原本容易被说成“看场图感觉不辐射”的判断，改写成了一个读者可以拿去直接标注新结构的流程：先找 little group，再标 irrep，再与辐射通道 irrep 比较。若不匹配，优先把该模视为 symmetry-protected BIC family 候选；若匹配，再去看耦合强度到底有多大。
+
+\begin{PitfallBox}
+\textbf{in-plane little-group 匹配只是必要的第一层筛选，不是三维 slab 中法向辐射强度的充分判据。} 也就是说，irrep 匹配说明 direct radiation 在对称性上“可以非零”，并不保证它一定很强；而真正的法向辐射强度还会继续受纵向奇偶性、层栈不对称、有限厚度矢量混合和有限尺寸边缘共同影响。
+\end{PitfallBox}
+
+若想把“为什么不匹配就一定不辐射”再往前推进半步，可以用最小偶极矩积分来理解。对 exact $\Gamma$ 点法向直接辐射，主导耦合常可压缩为单胞内某个零级辐射矩
+\begin{equation}
+\bm{d}_0 \propto \int_{V_{\mathrm{cell}}}\bm{P}_{\parallel}(\rvec)\,\dd V,
+\label{eq:gamma_dipole_integral}
+\end{equation}
+其中 $\bm{P}_{\parallel}$ 是与法向辐射通道耦合的平面内极化或等效辐射源分量。若某个对称操作 $g$ 保持单胞与法向辐射通道不变，而模式在该操作下属于特征值 $\chi_\alpha(g)\neq 1$ 的 irrep，则
+\[
+\bm d_0
+=
+\int \bm P_{\parallel}\,\dd V
+=
+\int \hat T(g)\bm P_{\parallel}\,\dd V
+=
+\chi_\alpha(g)\bm d_0.
+\]
+于是只有 $\bm d_0=\bm 0$ 才可能满足上式。这就是 symmetry-protected BIC 的最小推导草案：并不是“因为看起来暗”，而是因为与法向均匀辐射通道耦合的零级积分在对称性上被迫为零。
+
+\begin{ExampleBox}
+若某个方格晶格 slab 在理想上下对称、单胞高对称的条件下支持一个关于镜面对称为奇的 $\Gamma$ 点模，而法向自由空间平面波关于同一镜面为偶，那么该模对法向辐射的耦合振幅便可严格为零。此时它在无限大、理想结构中表现为 symmetry-protected BIC。一旦将圆孔轻微拉成椭圆，或引入双晶格扰动，这个严格零耦合被打破，模式会转化为 quasi-BIC，并出现有限但可控的法向辐射。
+\end{ExampleBox}
+
+\section{从 BIC 到 quasi-BIC：为什么真实 PCSEL 更关心后者}
+如果设计目标只是追求无穷大的被动 $Q$，理想 BIC 看起来像终点；但 PCSEL 不是被动共振器展示题，它要作为激光器工作。激光器需要模式既有足够低的辐射损耗，以降低阈值增益，又保留可控的垂直辐射，以便输出、整形和利用远场。因此，真实器件更常瞄准的是\textbf{靠近 BIC 的 quasi-BIC 区域}。
+
+在最简单的对称破缺参数 $\delta$ 下，辐射振幅常可近似线性展开为
+\begin{equation}
+d \propto \delta,
+\qquad
+\gamma_{\mathrm{rad}} \propto |d|^2 \propto \delta^2,
+\qquad
+Q_{\mathrm{rad}} \propto \delta^{-2}.
+\label{eq:q_scaling_quasibic}
+\end{equation}
+\cref{eq:q_scaling_quasibic} 往往还可进一步写成更适合工程估算的形式
+\begin{equation}
+Q_{\mathrm{rad}} \approx \frac{Q_0}{\delta^2},
+\qquad
+\delta=\frac{d}{a},
+\label{eq:q_delta_explicit}
+\end{equation}
+其中 $d$ 是破缺位移或等效几何扰动幅度，$a$ 是晶格常数，$Q_0$ 吸收了结构 family、工作带支和归一化定义相关的常数。\cref{eq:q_delta_explicit} 的直接后果是：若其余条件近似不变，把 $\delta$ 从 $0.02$ 降到 $0.01$，辐射 $Q$ 通常会提升约四倍。它告诉读者，轻微几何扰动并不是“把高 $Q$ 模一下子彻底毁掉”，而常常是在用一个可控旋钮平滑地打开辐射通道。于是设计问题就变成：给定目标输出功率、阈值增益预算、偏振纯度和远场要求，应该把 $\delta$ 选在什么区间，而不是机械追求越接近 BIC 越好。
+
+这一点也正是 quasi-BIC 与“最优单点设计”的差别。若把 $\delta$ 压得过小，也许被动 $Q$ 极高，但法向提取太弱、有限尺寸边缘和工艺扰动又会变得更敏感；若把 $\delta$ 放得过大，则目标模虽然更易出光，却可能因辐射损耗和竞争模重新排序而抬高阈值。真正成熟的 PCSEL 设计，追求的是在器件约束下足够宽的 quasi-BIC 工作区，而不是数学上的极限点。
+
+\section{进阶：far-field polarization vortex 与拓扑电荷语言}
+到这里为止，本章已经建立了 BIC 的最小对称性与干涉图像。若希望这本书在 2020s 之后仍然站得住，还应再给读者一层现代语言：\textbf{BIC 不只是“零辐射点”，它在动量空间里还常表现为远场偏振矢量场的奇点，也就是 far-field polarization vortex。}
+
+为说明这一点，把某一支 slab 共振模在上方辐射半空间的远场振幅写成二维复向量
+\begin{equation}
+\bm{c}(\kvec_\parallel)
+=
+\begin{bmatrix}
+c_x(\kvec_\parallel)\\
+c_y(\kvec_\parallel)
+\end{bmatrix},
+\label{eq:bic_farfield_vector}
+\end{equation}
+其中 $\kvec_\parallel=(k_x,k_y)$ 是平面内波矢，$c_x,c_y$ 表示该模向两支法向线偏振通道的辐射振幅。BIC 点的最小判据就是
+\begin{equation}
+\bm{c}(\kvec_{\parallel,\mathrm{BIC}})=\bm{0}.
+\label{eq:bic_farfield_zero}
+\end{equation}
+也就是说，BIC 是远场矢量场中的零点。
+
+一旦离开这个零点，远场会重新出现，并携带某个主偏振方向。若沿着包围 BIC 的闭合回路 $C$ 绕一圈，主偏振方向角 $\phi(\kvec_\parallel)$ 发生整数倍 $2\pi$ 的绕转，则可定义拓扑电荷
+\begin{equation}
+q
+=
+\frac{1}{2\pi}\oint_C \nabla_{\kvec_\parallel}\phi\cdot \dd \kvec_\parallel.
+\label{eq:bic_topological_charge}
+\end{equation}
+这个整数 $q$ 就是 far-field polarization vortex 的 winding number。它把“这个 BIC 为什么不是数值偶然出现的零点”转化成了一个拓扑语言：只要相关带支与远场矢量场连续变化，这个零点不能凭空消失，而必须通过\textbf{带着总电荷守恒地移动、成对产生或成对湮灭}的方式演化\cite{zhen2014topological,hsu2016,yang2014bic}。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0,>=Latex]
+    \draw[->] (-2.2,0)--(2.3,0) node[right]{$k_x$};
+    \draw[->] (0,-2.2)--(0,2.3) node[above]{$k_y$};
+    \draw[dashed,gray] (0,0) circle (1.45);
+    \node[gray] at (1.85,1.55){$C$};
+    \filldraw[fill=black,draw=black] (0,0) circle (1.5pt);
+    \node[above right] at (0,0){BIC, $q=+1$};
+    \foreach \ang in {0,30,...,330}{
+      \pgfmathsetmacro{\x}{1.45*cos(\ang)}
+      \pgfmathsetmacro{\y}{1.45*sin(\ang)}
+      \pgfmathsetmacro{\tx}{0.45*cos(\ang+90)}
+      \pgfmathsetmacro{\ty}{0.45*sin(\ang+90)}
+      \draw[blue!70!black,->,line width=0.8pt] (\x,\y)--(\x+\tx,\y+\ty);
+    }
+  \end{tikzpicture}
+  \caption{$k$ 空间中 far-field polarization vortex 的最小示意。闭合回路 $C$ 围绕 BIC 奇点一周时，远场主偏振方向同步绕转一周，对应拓扑电荷 $q=+1$。}
+  \label{fig:bic_polarization_vortex}
+\end{figure}
+
+\begin{RigorousBox}
+拓扑电荷保护的对象，是\emph{动量空间远场矢量场中的奇点结构}，不是器件性能的一切性质。也就是说，电荷守恒可以帮助我们追踪 BIC 在 $\kvec_\parallel$ 空间和参数空间中的迁移、生成与湮灭，但它并不自动保证最低阈值、最佳热稳定性或最佳注入均匀性。对 PCSEL 而言，拓扑语言是用来追踪候选模辐射家族的，不是用来跳过器件模型的。
+\end{RigorousBox}
+
+这套语言对 $\Gamma$ 点附近模式尤其有用。对称性保护型 $\Gamma$ 点 BIC 可以理解成\textbf{被晶格对称性钉扎在区中心的偏振涡旋中心}。当单胞扰动、双晶格参数或外延不对称连续变化时，读者不必只盯着“$Q$ 有没有升高”，还可以追问：
+\begin{itemize}
+  \item 这个偏振涡旋中心是否仍停留在 $\Gamma$ 点，还是已经移到 off-$\Gamma$；
+  \item 总拓扑电荷是否守恒，是否出现了成对移动的 BIC 奇点；
+  \item 目标模式是仍属于原来的 quasi-BIC family，还是已经越过了亮模/暗模家族的分界。
+\end{itemize}
+
+这就是现代 BIC 拓扑语言在 PCSEL 教材中的真正作用。它不是为了追逐“前沿术语”，而是提供了一套比“看哪条谱线更窄”更稳健的追踪方法。特别在 $\Gamma$ 点附近模式彼此很近、偏振与远场又同时变化时，沿着 far-field polarization vortex 与拓扑电荷去追踪模演化，往往比单独盯着 $Q$ 或单独盯着中心亮暗更不容易误判。
+
+\begin{ExampleBox}
+设某个方格晶格 PCSEL 单胞在高对称参数处支持一个位于 $\Gamma$ 点的 symmetry-protected BIC。随着双晶格扰动参数缓慢增大，直接法向辐射被逐步打开，目标模退化为 quasi-BIC。此时若只看单点 $Q$ 值，读者可能只会得到“$Q$ 在下降”这一条信息；而若同时追踪 $\bm{c}(\kvec_\parallel)$ 的零点与绕转方向，就能看出该模究竟是在沿同一拓扑家族连续偏离 BIC，还是已经与邻近亮模发生重组。前者更适合解释为“可控打开辐射”，后者则意味着模式排序、偏振和远场可能一起改写。
+\end{ExampleBox}
+
+\section{对称性破缺在 irrep 语言下如何打开 quasi-BIC}
+有了 little group 工具之后，“对称性破缺打开 quasi-BIC”这句话也可以写得更正式。设一个高对称结构在 $\Gamma$ 点支持某个 dark family，其 irrep 与法向辐射通道 irrep 不匹配，因此 exact $\Gamma$ 点 direct radiation 为零。若加入小扰动把点群降低到某个子群，则原来的 irrep 会在子群下重新分解。此时有两种最常见结果：
+\begin{enumerate}
+  \item 原本的二维 irrep 分裂成两个 singlet，于是偏振被钉扎、频率与损耗同时分裂；
+  \item 原本与辐射通道不匹配的 dark family，在子群中与辐射通道落入同一表示，于是零耦合被抬起，BIC 退化为 quasi-BIC。
+\end{enumerate}
+从教材角度看，这一步就是 \cref{ch:polarization} “偏振选择/模式分裂”和本章“BIC 打开/关闭”之间的正式桥梁。二者不是两个主题，而是同一个降群问题的两种输出：一个看本征频率与偏振，另一个看辐射矩阵元与远场。
+
+\section{BIC 如何连接偏振选择与远场工程}
+\cref{ch:polarization} 已经说明，偏振与远场都来自近场矢量结构和辐射通道的组织方式。BIC 语言把这件事进一步说透：\textbf{哪一种偏振能辐射、向哪个方向辐射、远场中心是亮还是暗，本质上取决于该模如何接近或偏离某一类 BIC 条件}。
+
+对称保护型 BIC 常与特定偏振表示绑定。更严格地说，在方格晶格里这常表现为某一支 $E$ 双重态在降群后更强地获得与法向辐射通道的匹配，而另一支仍更接近 dark family；在三角晶格里则常表现为 $E_1$ 和 $E_2$ family 在小扰动下偏离 BIC 条件的速度不同。于是，当设计者通过单胞形变打破旋转对称性时，实际上做的并不只是“让偏振分裂”，更是在改变不同偏振支路偏离 BIC 条件的速度。某一偏振支路若仍更接近辐射抑制条件，其辐射损耗会更低、阈值增益更小；另一偏振支路若更远离该条件，则更容易辐射、更容易在远场中形成主瓣，但被动损耗也更高。
+
+从远场角度看，BIC / quasi-BIC 还提供了一个极为清楚的读图规则。若某模严格处于 symmetry-protected BIC 点，它在法向中心常表现为零辐射；一旦通过小扰动打破对称性，法向中心便会逐步亮起，远场主瓣和偏振纯度也随之变化。于是，很多看似“经验性的远场整形技巧”，其实都可以翻译成“如何让目标模式以所需方式离开 BIC 点”。
+
+\begin{PitfallBox}
+把 BIC 理解成“理想 PCSEL 就应该完全不辐射”，是概念错误。激光器若完全不向目标通道辐射，就无法作为可用面发射器件工作。BIC 在 PCSEL 中的作用是帮助设计者理解辐射如何被抑制与重开，而不是让器件退化成只会储能的封闭态。
+\end{PitfallBox}
+
+\section{为什么 BIC 仍然不能替代阈值与器件模型}
+到这里必须再次把层级边界说清楚。BIC / quasi-BIC 语言擅长回答的问题是：\textbf{在开放周期光学层面，辐射损耗为什么高或低、怎样通过对称性与干涉调控它、以及这如何影响偏振与远场。}但它不能直接回答阈值电流、热稳定性和真实工作线宽。
+
+原因很直接。首先，理想 BIC 讨论的是无限大、精确对称、无工艺误差的被动结构；真实器件里存在有限阵列边缘、粗糙、刻蚀误差、金属和注入非均匀。其次，即使某个模式具有非常小的辐射损耗，也未必与量子阱重叠最好，未必避开重掺杂损耗层，也未必在热回写后继续保持优势。最后，线宽和调制稳定性还涉及载流子、增益压缩和相位噪声，这已经超出了 BIC 自身的描述范围。
+
+因此，本章在全书中的准确位置是：它把前面 $\Gamma$ 点与偏振/远场的物理图像，翻译成更精确的开放系统辐射语言；然后把这套语言交给后续 CWT、全波和器件章节去继续使用，而不是在这里宣布最终器件结论。
+
+\section*{本章小结}
+BIC / quasi-BIC 为 PCSEL 提供了一套把 $\Gamma$ 点、辐射损耗、偏振和远场工程统一起来的开放系统语言。BIC 的关键不是“频率离开辐射连续谱”，而是在连续谱中通过对称性或干涉把辐射振幅压到零；更正式地说，就是把 $\Gamma$ 点模式的 irrep 与法向辐射通道的 irrep 做比较，若不匹配，则 direct radiation 在对称性上被禁止。quasi-BIC 则是在真实设计中用小而可控的对称破缺重新打开辐射通道。对 PCSEL 来说，真正有用的往往不是理想 BIC 点，而是其附近能同时兼顾低辐射损耗、可用面发射、偏振选择和远场工程的工作区。也正因为如此，BIC 是阈值与器件模型的重要前端语言，却不是这些问题的终点。
+
+\section*{练习题}
+\begin{enumerate}
+  \item \basicq 用自己的话解释为什么 BIC 的定义必须建立在开放边界与辐射连续谱上，而不能在封闭腔语言中直接照搬。
+
+  \item \basicq 结合 \cref{eq:bic_condition} 说明“耦合到连续谱”与“向连续谱辐射”为何不是同一句话。
+
+  \item \midq 对方格晶格，说明为什么 exact $\Gamma$ 点法向辐射通道属于 $E$，并据此解释为什么一维 irrep family 更容易成为 symmetry-protected BIC 候选。
+
+  \item \midq 利用 \cref{eq:q_scaling_quasibic} 讨论为什么 quasi-BIC 设计常出现“越靠近理想 BIC，越需要警惕工艺敏感性”的权衡。
+
+  \item \hardq 选择一种你熟悉的单胞扰动方式，说明它更可能首先改写的是偏振分裂、法向远场，还是辐射损耗，并解释原因。
+\end{enumerate}
+
+\section*{建议继续阅读}
+\begin{itemize}
+  \item 下一章开始进入 CWT 语言。此时再回看本章，会更容易把“某个 irrep 为什么辐射或不辐射”翻译成耦合矩阵中的损耗与模式分裂。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+
+  \item 若想补充 BIC 的一般背景，可参考 \cite{fan2002guided,hsu2013,hsu2016,kodigala2017}；若想进一步理解 far-field polarization vortex 与拓扑电荷，可接着读 \cite{zhen2014topological,yang2014bic}。 这条阅读的重点是补足本章关于BIC、quasi-BIC 与辐射拓扑语言 的标准背景、经典语言和代表性文献接口。
+
+  \item 阅读后续器件章节时，应始终带着一个问题：某个 quasi-BIC 设计在有限尺寸、注入非均匀和热回写后，是否仍保持目标模优势。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+\end{itemize}
+
+
