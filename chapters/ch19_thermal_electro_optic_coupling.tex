@@ -174,15 +174,18 @@ T(\rvec)
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[node distance=1.45cm,>=Stealth]
-    \node[draw,rounded corners,fill=blue!10,minimum width=2.8cm] (e) {Electrical solve};
-    \node[draw,rounded corners,fill=red!10,right=of e,minimum width=2.8cm] (h) {Thermal solve};
-    \node[draw,rounded corners,fill=green!10,right=of h,minimum width=2.8cm] (o) {Optical solve};
-    \draw[->] (e)--node[above]{\small $\bm{J},R,Q$}(h);
-    \draw[->] (h)--node[above]{\small $T(\rvec)$}(o);
-    \draw[->,dashed,bend left=18] (o) to node[below]{\small $\alpha,g,n$ feedback}(e);
+  \begin{tikzpicture}[node distance=1.8cm,>=Stealth]
+    \node[draw,rounded corners=3pt,fill=blue!10,minimum width=3.4cm,minimum height=1.7cm,align=center] (e) {电学求解\\[-0.2em]\small $\phi,n,p,\bm J$\\ \small 接触/孔径/串联电阻};
+    \node[draw,rounded corners=3pt,fill=red!10,right=of e,minimum width=3.5cm,minimum height=1.7cm,align=center] (h) {热学求解\\[-0.2em]\small $T(\rvec)$\\ \small $Q_{\mathrm{Joule}},Q_{\mathrm{nr}},Q_{\mathrm{abs}}$};
+    \node[draw,rounded corners=3pt,fill=green!10,right=of h,minimum width=3.6cm,minimum height=1.7cm,align=center] (o) {光学求解\\[-0.2em]\small $\tilde{\omega},Q,\text{far field}$\\ \small $n(\rvec),g(\rvec),\alpha(\rvec)$};
+    \node[draw,ellipse,fill=gray!10,below=1.65cm of h,minimum width=2.8cm,minimum height=1.05cm,align=center] (iter) {迭代至收敛\\[-0.2em]\small $\Delta T,\Delta\tilde{\omega},\Delta g$ 达标};
+    \draw[->,very thick,blue!70!black] (e)--node[above,align=center]{\small 电流密度、复合率\\\small 热源分布}(h);
+    \draw[->,very thick,red!70!black] (h)--node[above,align=center]{\small $\Delta n,\Delta g,\Delta \alpha,\Delta \mu$}(o);
+    \draw[->,very thick,green!60!black] (o) to[bend left=18] node[below,align=center]{\small 模场重排、吸收热\\\small 空间烧孔反馈}(e);
+    \draw[->,thick,gray!75] (o.south) -- ++(0,-0.7) -| (iter.east);
+    \draw[->,thick,gray!75] (iter.west) -| (e.south);
   \end{tikzpicture}
-  \caption{热-电-光耦合流程图。真正的器件工作点通常需要通过这种闭环迭代获得，而不是单次串行后处理。}
+  \caption{热-电-光耦合闭环的量传递示意图。真正的器件工作点不是“先算电、再算热、最后算光”的一次性串联结果，而是电流分布、热源、温度场和模场分布反复回写直到收敛后的固定点。}
   \label{fig:eto-flow}
 \end{figure}
 

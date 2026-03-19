@@ -162,6 +162,46 @@ h_n(\kvec+\gvec).
 PWEM 的本质不是“用很多平面波去拟合一个模式”，而是“把一个模式理解成许多平面波在周期介质中彼此耦合后的自洽组合”。能带就是这些耦合组合允许出现的本征频率集合。
 \end{IntuitionBox}
 
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+    \begin{scope}
+      \draw[rounded corners,fill=blue!4,draw=blue!35] (-2.7,-2.3) rectangle (2.7,2.3);
+      \foreach \i in {-2,-1,0,1,2}{
+        \foreach \j in {-2,-1,0,1,2}{
+          \pgfmathsetmacro{\x}{\i*0.9}
+          \pgfmathsetmacro{\y}{-\j*0.75}
+          \ifnum\i=\j
+            \node[draw,minimum width=0.82cm,minimum height=0.62cm,fill=blue!18] at (\x,\y) {};
+          \else
+            \node[draw,minimum width=0.82cm,minimum height=0.62cm,fill=orange!10] at (\x,\y) {};
+          \fi
+        }
+      }
+      \node[align=center] at (0,1.95) {截断后的 PWEM 矩阵};
+      \node[align=center,fill=white,inner sep=1pt] at (0,0) {$\eta_{\gvec-\gvec'}$};
+      \node[align=center,fill=white,inner sep=1pt] at (1.8,-1.5) {对角项\\$|\kvec+\gvec|^2\eta_0$};
+      \node[align=center,fill=white,inner sep=1pt] at (-1.9,1.45) {非对角项\\几何 Fourier 耦合};
+    \end{scope}
+    \begin{scope}[xshift=7.6cm]
+      \draw[->] (-2.2,0)--(2.2,0) node[right]{$G_x$};
+      \draw[->] (0,-2.2)--(0,2.2) node[above]{$G_y$};
+      \draw[dashed,gray!70] (-1.45,-1.45) rectangle (1.45,1.45);
+      \foreach \m in {-2,-1,0,1,2}{
+        \foreach \n in {-2,-1,0,1,2}{
+          \fill[blue!60] (\m*0.72,\n*0.72) circle (0.055);
+        }
+      }
+      \fill[red!75] (0,0) circle (0.07);
+      \node[above right=1pt] at (0,0) {$\gvec=\mathbf 0$};
+      \node[align=center] at (0,1.95) {倒格矢截断窗口};
+      \node[align=center] at (0,-1.95) {$|m|,|n|\le N$\\$N_c=(2N+1)^2$ 个平面波通道};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{PWEM 的两个核心离散对象。左图强调矩阵的对角项主要来自“单个平面波通道的波矢权重”，非对角项主要来自介质 Fourier 系数引入的通道耦合；右图强调实际求解并不是保留无限多个倒格矢，而是在 $\gvec$ 空间截断出一个有限窗口。}
+  \label{fig:pwem_matrix_structure}
+\end{figure}
+
 \section{正方晶格圆形孔洞：把单胞几何真正写成傅里叶系数}
 现在把抽象公式落到一个最常用、也最适合入门的教学型几何上：正方晶格空气圆孔，背景为高折射率介质。这个几何与 \cref{fig:square_hole_teaching_setup} 的示意一致。
 
@@ -610,5 +650,4 @@ PWEM 的核心思想，是把周期介质中的 Maxwell 本征问题投影到平
 
   \item 若想追溯 PWEM 的经典起点，可参考 \cite{ho1990,leung1990,johnson2001}。 这条阅读的重点是补足本章关于PWEM、带图计算与收敛判断 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
-
 

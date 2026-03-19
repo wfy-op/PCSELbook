@@ -125,9 +125,9 @@ q\big(p-n+N_D^+-N_A^-\big),
 
 电子和空穴电流密度写为
 \begin{align}
-\bm{J}_n &= q\mu_n n\nabla \phi + qD_n\nabla n,
+\bm{J}_n &= q\mu_n n\bigl(-\nabla \phi\bigr) + qD_n\nabla n,
 \label{eq:jn_dd}\\
-\bm{J}_p &= q\mu_p p\nabla \phi - qD_p\nabla p,
+\bm{J}_p &= q\mu_p p\bigl(-\nabla \phi\bigr) - qD_p\nabla p,
 \label{eq:jp_dd}
 \end{align}
 连续性方程写为
@@ -137,7 +137,7 @@ q\big(p-n+N_D^+-N_A^-\big),
 \nabla\cdot\bm{J}_p &= -q(R-G),
 \label{eq:cont_p}
 \end{align}
-其中 $R$ 表示总复合率，$G$ 表示产生项。对电注入 PCSEL 来说，$G$ 主要体现在边界与接触的注入通量中。\cref{eq:jn_dd,eq:jp_dd,eq:cont_n,eq:cont_p} 都属于\textbf{电学模型}。
+其中 $R$ 表示总复合率，$G$ 表示产生项。对电注入 PCSEL 来说，$G$ 主要体现在边界与接触的注入通量中。\cref{eq:jn_dd,eq:jp_dd,eq:cont_n,eq:cont_p} 都属于\textbf{电学模型}。这里还要把符号约定说死：本书统一取 $\bm E=-\nabla\phi$。因此电子漂移项写成 $q\mu_n n(-\nabla\phi)$，空穴漂移项写成 $q\mu_p p(-\nabla\phi)$，这样才与 \cref{ch:device-appendix} 中的附录方程和半导体器件教材里的静电势定义保持一致。
 
 对第一次接触器件方程的读者，更稳妥的读法是把这三组方程分工记清。Poisson 方程决定电势和电场如何由空间电荷重新分布；漂移--扩散式决定给定电场和浓度梯度后，电子与空穴怎样流动；连续性方程决定这些流动是否真的在某一区域积累或耗尽载流子。只有三者联立，$n(\rvec)$、$p(\rvec)$ 才不只是“看起来合理的分布图”，而是一个与边界条件和复合过程自洽的器件工作点。
 

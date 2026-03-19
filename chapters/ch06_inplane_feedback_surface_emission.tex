@@ -141,36 +141,46 @@ d_\nu
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
-    \draw[->] (-3.2,0)--(3.2,0) node[right]{$k_x$};
-    \draw[->] (0,-0.2)--(0,3.2) node[above]{$k_y$};
-    \draw[thick] (0,0) circle (1.4);
-    \node at (0,1.75){光锥边界};
-    \fill[blue!60] (2.3,0.8) circle (0.08) node[right]{$\kvec_\parallel$};
-    \fill[red!70] (1.0,0.8) circle (0.08) node[above]{$\kvec_\parallel-\gvec$};
-    \draw[->,thick] (2.3,0.8)--(1.0,0.8);
-    \node at (1.65,1.1){散射};
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+    \fill[blue!6] (0,0) circle (1.45);
+    \draw[->] (-3.1,0)--(3.1,0) node[right]{$k_x$};
+    \draw[->] (0,-2.2)--(0,2.6) node[above]{$k_y$};
+    \draw[thick,blue!55!black] (0,0) circle (1.45);
+    \node[blue!55!black] at (0,1.78){光锥/辐射连续谱};
+    \fill[blue!75] (2.35,0.82) circle (0.08) node[above right=1pt]{$\kvec_{\parallel}$};
+    \fill[red!75] (0.95,0.82) circle (0.08) node[above left=1pt]{$\kvec_{\parallel}-\gvec$};
+    \draw[->,very thick,orange!90!black] (2.35,0.82)--node[above,sloped]{$-\gvec$}(0.95,0.82);
+    \draw[dashed,gray!70] (0.95,0.82)--(0.95,0);
+    \draw[dashed,gray!70] (2.35,0.82)--(2.35,0);
+    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,1.72);
+    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,-1.72);
+    \node[teal!70!black,right] at (0.95,1.72){上出光通道};
+    \node[teal!70!black,right] at (0.95,-1.72){下出光通道};
+    \node[align=center,anchor=west] at (1.65,-1.25) {原始导模分量在光锥外\\周期散射后折叠进光锥内};
   \end{tikzpicture}
-  \caption{周期散射把面内导模动量搬运到光锥内的概念图。}
+  \caption{动量折叠把面内导模分量送入辐射连续谱的示意图。蓝点表示原始导模分量，橙色箭头表示由倒格矢提供的动量转移，红点表示折叠后的分量；一旦落入光锥，便可向上下自由空间通道辐射。}
   \label{fig:lightcone_coupling}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=1.1cm,y=1.1cm]
+  \begin{tikzpicture}[x=1.08cm,y=1.08cm]
     \draw[->] (0,0)--(4.9,0) node[right]{$|\kvec_\parallel|$};
     \draw[->] (0,0)--(0,3.8) node[above]{$\omega$};
-    \draw[thick,gray!80] (0,0)--(4.4,3.3) node[above right]{light cone};
-    \draw[thick,blue!70] plot[smooth] coordinates {(0.4,2.1) (1.2,2.25) (2.0,2.55) (2.8,3.0) (3.6,3.45)};
-    \draw[dashed,orange!85] (2.5,0.8)--(2.5,3.4);
-    \draw[->,thick,red!75] (3.15,3.12)--(1.35,3.12);
-    \node[blue!70] at (3.3,2.75){导模色散};
-    \node[red!75] at (2.25,3.35){减去倒格矢 $\gvec$};
-    \fill (3.05,3.18) circle (0.04);
-    \fill (1.25,3.18) circle (0.04);
-    \node at (2.2,0.35){折叠前在光锥外，折叠后可落入光锥内};
+    \fill[blue!6] (0,0)--(4.35,3.25)--(0,3.25)--cycle;
+    \draw[thick,gray!80] (0,0)--(4.35,3.25) node[above right]{light cone};
+    \draw[thick,blue!75] plot[smooth] coordinates {(0.45,2.05) (1.2,2.22) (2.05,2.55) (2.9,3.0) (3.7,3.48)};
+    \draw[thick,red!75,densely dashed] plot[smooth] coordinates {(0.55,3.48) (1.05,3.22) (1.55,2.94) (2.05,2.66) (2.55,2.42)};
+    \draw[dashed,gray!70] (3.05,0)--(3.05,3.25);
+    \draw[dashed,gray!70] (1.55,0)--(1.55,3.25);
+    \draw[->,very thick,orange!90!black] (3.05,3.12)--node[above]{$-\gvec$}(1.55,2.87);
+    \fill[blue!75] (3.05,3.12) circle (0.05);
+    \fill[red!75] (1.55,2.87) circle (0.05);
+    \node[blue!75] at (3.35,2.7){原始导模色散};
+    \node[red!75] at (2.75,2.05){折叠后的等效分支};
+    \node[align=center] at (1.2,0.55){进入光锥后\\可泄漏到自由空间};
   \end{tikzpicture}
-  \caption{slab 导模色散与光锥边界示意。周期散射的作用，不是创造一条新色散，而是把原本位于光锥外的导模分量折叠到光锥内。}
+  \caption{slab 导模色散与光锥边界示意。周期散射并不创造新色散，而是把原本位于光锥外的导模分量平移到光锥内；真正产生辐射的是折叠后的分支与自由空间连续谱的相交。}
   \label{fig:lightcone_dispersion}
 \end{figure}
 

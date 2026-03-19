@@ -413,6 +413,43 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 
 第五，对强开放候选模，不要只记录 $\omega_r$ 或 $Q$，而应同时记录使用的归一化、是否采用 QNM / PML 框架、以及微扰判断使用的是厄米代理还是非厄米左/右模公式。否则后续章节即便复用了同一个符号，也未必在说同一层数学对象。
 
+\section{关键量的首次定义位置索引}
+为便于读者在正文各章之间快速定位，本节给出全书最重要的派生量与合成量在何处首次引入或定义的参考索引。注意：基础物理量（如 $\E$、$\omega$、$\kvec$ 等）不列，只列出由多个基础量组合而成、或由特定物理机制引入的派生量。
+
+\begin{longtable}{p{0.30\textwidth}p{0.62\textwidth}}
+\toprule
+符号/量 & 首次定义章节及位置 \\
+\midrule
+\endhead
+$\Gamma_{\mathrm{opt}}$ & \cref{ch:threshold}，\cref{eq:gamma_opt_def}：光学约束因子，定义为模式与有源区的能量重叠。 \\
+$\alpha_{\mathrm{rad}},\;\alpha_{\mathrm{int}}$ & \cref{ch:threshold}，\cref{eq:gamma_alpha_map}：辐射损耗与内部损耗的等效空间系数。 \\
+$g_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:gth}：阈值增益，$\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$ 与 $\Gamma_{\mathrm{opt}}$ 之比。 \\
+$\kappa_1,\;\kappa_2$ & \cref{ch:cwt-min}，\cref{eq:cwt_kappa}：CWT 中的耦合系数，来自主导几何 Fourier 分量与纵向模重叠。 \\
+$\bm{C}_{\mathrm{1D}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_C1D_matrix}：一维反馈耦合矩阵。 \\
+$\bm{C}_{\mathrm{rad}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_Crad_matrix}：辐射耦合矩阵，非厄米，来自开放通道。 \\
+$\bm{C}_{\mathrm{2D}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_C2D_matrix}：二维高阶耦合矩阵。 \\
+$v_{\mathrm{en}}$ & \cref{ch:threshold}，\cref{eq:energy_velocity_def}：能量速度，将空间增益/损耗映射为时间增长率的参数。 \\
+$\tilde n^2=n^2+2\ii k_0 n\tilde\alpha$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_vector_wave}：含增益/损耗的复折射率。 \\
+$\xi_{m,n}(z)$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_n2_expand}：光子晶体层的 Fourier 系数。 \\
+$\phi_0(z)$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_fundamental_mode}：背景层状波导的基模纵向剖面。 \\
+$\bm{u}_{A_1},\;\bm{u}_{B_1},\;\bm{u}_{E,x/y}$ & \cref{ch:cwt-min}，\cref{eq:cwt_A1_basis,eq:cwt_B1_basis,eq:cwt_E_basis}：四波子空间在 $C_{4v}$ 下的 irrep 基底。 \\
+$G(z,z')$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_green}：辐射波的纵向 Green 函数（近似局域均匀背景）。 \\
+$G_{m,n}(z,z')$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_green_ho}：高阶波在光子晶体层内的倏逝 Green 函数。 \\
+$\delta=\beta-\beta_0$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_eigenvalue}：偏离 Bragg 条件的传播常数偏移。 \\
+$\alpha_{\mathrm{rad},j}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_alpha_rad}：第 $j$ 模的辐射常数，$\;2\,\mathrm{Im}(\delta_j)$。 \\
+$\eta_{N_z}$ & \cref{ch:cwt-3d}，\cref{eq:vertical_truncation_ratio}：纵向模截断能量占比。 \\
+$\mathbf{\Sigma}_{\mathrm{rad}}(\omega)$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_selfenergy}：辐射通道引入的自能项。 \\
+$\Gamma_{\mathrm{PC}}$ & \cref{ch:gamma}，\cref{eq:gamma_pc}：光子晶体层的光学限制因子，用于二维等效介电常数修正。 \\
+$\tilde\varepsilon_a,\;\tilde\varepsilon_b$ & \cref{ch:gamma}，\cref{eq:modified_eps}：送入二维 PWEM 的修正等效介电常数。 \\
+$\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\delta)$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_alpha_rad}：辐射常数与 CWT 本征值虚部的关系。 \\
+$I_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:threshold_rate}：阈值电流，是器件级电-热-光结果，需经电注入模型换算。 \\
+$\Delta G_{\star j}$ & \cref{ch:threshold}：目标模与第 $j$ 竞争模之间的模鉴别裕量。 \\
+$\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_interfaces}：三维 CWT 输出的温度灵敏度导数，用于热耦合接口。 \\
+\bottomrule
+\end{longtable}
+
+这条索引的设计目的只有一个：让读者在遇到某个量时，能在 30 秒内找到它在主线上的定义位置，而不是在各章符号之间来回猜测。本索引不追求穷举，只覆盖"跨越两个以上章节使用"的派生量。基础符号的定义应在各章首次使用时已经明确，此处不再重复。
+
 \section*{本章小结}
 数学附录的作用不是堆公式，而是统一全书的语法。时间因子决定损耗与增益的符号，傅里叶卷积解释了周期介质中的耦合矩阵，QNM / resonant states 说明开放模为何不是普通束缚态，左/右模与广义归一化说明为什么开放系统不能直接照搬厄米内积，复频率给出 $Q$ 与光子寿命的精确定义，互易性与一阶微扰则为耦合和灵敏度分析提供了共同骨架。只要这些约定统一，正文中的光学、器件和仿真章节就能共享同一套数学接口；若这些约定混乱，后面的一切“高级模型”都可能只是表面连贯。
 
