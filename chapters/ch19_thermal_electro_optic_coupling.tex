@@ -171,7 +171,25 @@ T(\rvec)
 \cref{eq:eto_chain} 不是单个方程，而是本章最核心的\textbf{器件逻辑链}。它告诉读者：\cref{ch:epitaxial-optics} 的纵向模、\cref{ch:qw-gain} 的有源区工程和 \cref{ch:electrical} 的注入分布，从这里开始不再是顺次单向传递，而是构成一个迭代闭环。
 
 因此，真正可信的器件工作点往往需要分步迭代：先在初始温度下求电学和载流子分布，再由电学和非辐射复合产生热源求热场，再更新折射率、增益、损耗和迁移率，重新解电学和光学，直到阈值、温度峰值和模式分布都收敛。只做一次“冷腔 + 固定均匀增益 + 平均温升修正”的计算，严格地说还不能叫自洽器件求解。
+\begin{ConvergenceCriteria}{典型的收敛判据}
+热 - 电-光迭代可在以下任一判据满足时停止（建议同时监控三个量，并要求连续两轮都满足）：
+\begin{enumerate}
+  \item \textbf{温度判据}: $\max|T^{(k+1)}-T^{(k)}| < 0.5\,{\rm K}$
+  \item \textbf{光学判据}: $|\lambda_{\rm peak}^{(k+1)}-\lambda_{\rm peak}^{(k)}| < 0.2\,{\rm nm}$
+  \item \textbf{器件判据}: $|I_{\rm th}^{(k+1)}-I_{\rm th}^{(k)}|/I_{\rm th}^{(k)} < 1\%$
+\end{enumerate}
+实践中，通常需要 5--10 轮迭代才能达到稳定收敛。若超过 15 轮仍未收敛，应检查网格分辨率、材料参数的温度依赖性是否过强、或是否存在多稳态竞争。
+\end{ConvergenceCriteria}
 
+\begin{ResourceAlertBox}{三轮耦合的计算成本估算}
+以一个$100\,\mu{\rm m}\times100\,\mu{\rm m}$的 PCSEL 为例：
+\begin{itemize}
+  \item 电学 (CHARGE): ~5 分钟 (稳态漂移 - 扩散方程)
+  \item 热学 (HEAT): ~2 分钟 (稳态热传导)
+  \item 光学 (FDTD 有限阵列): ~4 小时 (若用 RCWA 单胞则~10 分钟)
+\end{itemize}
+若需要 6 轮迭代达到收敛，总时长可能是 24 小时量级。这就是为什么工作流章节建议先用单胞 RCWA 做快速筛选，再对最终候选结构做全耦合验证。在实际研发中，通常会采用分层策略：先用简化模型排除明显不合理的设计，再对少数候选方案投入全耦合计算资源。
+\end{ResourceAlertBox}
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}[node distance=1.8cm,>=Stealth]

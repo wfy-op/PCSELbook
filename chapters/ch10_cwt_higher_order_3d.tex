@@ -1,4 +1,4 @@
-\chapter{更高阶或三维 CWT 观点}
+﻿\chapter{更高阶或三维 CWT 观点}
 \label{ch:cwt-3d}
 
 \section*{学习目标}
@@ -71,7 +71,9 @@
 \varepsilon(\rho,z)=\varepsilon_0(z)+\Delta\varepsilon(\rho,z).
 \label{eq:3dcwt_master}
 \end{equation}
-
+\begin{NoteBox}[breakable]{时域到频域的过渡}
+CWT 的标准特征值形式 \cref{eq:3dcwt_master} 隐含了一个关键的数学步骤：从含时的波动方程出发，假设场具有谐波依赖 $\E(t) = \E\ee^{\ii\omega t}$，代入后消去时间因子得到频域本征值问题。这一过渡在封闭无源系统中是严格的，但在开放系统中需要注意两点：其一，辐射损耗会使本征频率变为复数 $\tilde{\omega} = \omega - \ii\gamma$，对应准模的衰减；其二，当考虑非线性或有源增益时，介电常数本身依赖于场强或载流子密度，此时频域本征值问题需要通过迭代或线性化处理。本章采用频域表述是为了突出模式结构和耦合机制，而在 \cref{ch:dynamics} 中将回到时域框架讨论动态响应。
+\end{NoteBox}
 对背景层状结构，先求出一组纵向本征基底 $\{\bm{e}_n(z)\}$。然后不再像上一章那样只用一个 $\bm{e}_0(z)$，而是写成
 \begin{equation}
 \E(\rho,z)
@@ -236,5 +238,6 @@ A_{mn}(\rho)
 
   \item 若想补充三维和高阶 PCSEL CWT 的代表性文献，可参考 \cite{liang2012square,liang2013triangular,yang2014tm}。 这条阅读的重点是补足本章关于高阶或三维 CWT 的升级判据 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
 
 

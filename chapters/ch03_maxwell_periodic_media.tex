@@ -80,7 +80,36 @@
 \begin{IntuitionBox}
 \cref{eq:maxwell-eigen} 看起来像一个“求特征值和特征向量”的线性代数问题，但物理上它远比矩阵本征值复杂。真正决定问题性质的，不只是方程本身，还有边界和材料是否允许能量流出。
 \end{IntuitionBox}
+\begin{ConnectionBox}{从 Maxwell 方程到能量守恒：坡印廷定理的角色}
+理解 PCSEL 中"开放系统"与"封闭系统"区别的关键，在于追踪能量的流向。我们从频域 Maxwell 旋度方程出发：
+\begin{align}
+\nabla\times\E &= \ii\omega\mu_0\mu_r\Hf, \label{eq:poynting-curl-e}\\
+\nabla\times\Hf &= -\ii\omega\varepsilon_0\varepsilon_r\E. \label{eq:poynting-curl-h}
+\end{align}
 
+利用矢量恒等式 $\nabla\cdot(\E\times\Hf^*) = \Hf^*\cdot(\nabla\times\E) - \E\cdot(\nabla\times\Hf^*)$,并将 (\ref{eq:poynting-curl-e})--(\ref{eq:poynting-curl-h}) 代入，经过直接计算可得
+\begin{equation}
+\nabla\cdot\left(\frac{1}{2}\E\times\Hf^*\right)
+= -\frac{\ii\omega}{2}\left(\mu_0\mu_r|\Hf|^2 - \varepsilon_0\varepsilon_r^*|\E|^2\right).
+\label{eq:poynting-complex}
+\end{equation}
+
+对全空间积分并取实部，得到时间平均功率流：
+\begin{equation}
+P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\cdot\dd\bm{s}
+ = \int_V\frac{\omega}{2}\operatorname{Im}(\varepsilon_r)\varepsilon_0|\E|^2\,\dd V.
+\label{eq:poynting-real-power}
+\end{equation}
+
+\textbf{物理诠释：}
+\begin{itemize}
+  \item \textbf{封闭系统：}若边界为理想导体 ($\bm{n}\times\E=0$)，则左侧面积分为零。若无损耗 ($\operatorname{Im}\varepsilon_r=0$),右侧也为零——能量既不能流出也不能耗散，只能永远囚禁在腔内。此时本征频率必为实数。
+  
+  \item \textbf{开放系统：}PCSEL 表面没有金属屏蔽，光可以从衍射栅耦合出去。此时 (\ref{eq:poynting-real-power}) 左端不为零，意味着能量持续向外辐射。为了维持稳态振荡，场必须以指数衰减:$e^{-\gamma t}$,这正好对应复频率$\tilde{\omega}=\omega_0-\ii\gamma$中的虚部$\gamma > 0$。
+\end{itemize}
+
+因此，判断一个系统是"封闭"还是"开放",不应只看几何形状，而应看坡印亭矢量的净通量是否为零。这也是为什么我们在本节强调：PCSEL 的本征模分析必须采用开放边界的格林函数或散射矩阵框架。
+\end{ConnectionBox}
 \section{算符观点：为什么有时本征频率是实数，有时必须是复数}
 为了建立后文需要的概念，我们把 \cref{eq:maxwell-eigen} 记成算符形式
 \begin{equation}
@@ -97,7 +126,23 @@
 \tilde{\omega}=\omega_0-\ii\gamma,
 \]
 其中 $\gamma$ 不再是“数值误差”，而是模式能量逸出或耗散的速率编码。也正因为如此，PCSEL 的被动模分析从一开始就必须带着“非厄米开放问题”的意识进行。\cref{fig:complex-freq-plane} 展示了这些模式在复频率平面上的位置和物理含义。
+\begin{ComparisonBox}{封闭谐振腔与开放 PCSEL 系统的对比}
+  \begin{center}
+  \begin{tabular}{l l l}
+    \toprule
+    性质 & 封闭腔 (金属壁) & 开放腔 (PCSEL) \\
+    \midrule
+    本征频率 & 实数 $\omega_n$ & 复数 $\omega_n-i\gamma_n$ \\
+    模式正交性 & 标准内积正交 & 需要双正交基 \\
+    边界条件 & $\bm{n}\times\bm{E}=0$ & Sommerfeld 辐射条件 \\
+    $Q$ 因子来源 & 导体损耗/介质损耗 & 辐射损耗 + 介质损耗 \\
+    完备性 & 离散谱完备 & 离散谱 + 连续谱 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
 
+\noindent\textbf{关键理解：}开放系统的复频率不是数学技巧，而是物理必需。虚部$\gamma$直接对应能量衰减速率，满足$Q=\omega_0/(2\gamma)$。
+\end{ComparisonBox}
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}[scale=0.95]

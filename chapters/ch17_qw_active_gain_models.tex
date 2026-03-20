@@ -242,6 +242,35 @@ g_N\,\delta N
 \section*{本章小结}
 PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线来组织。SQW 与 MQW 的选择、应变工程、TE/TM 增益差异、势垒与阻挡层设计，共同决定材料增益能否在真实层栈中转化为目标模式的有效模增益。\cref{ch:epitaxial-optics} 给出的 SCH 与能带台阶在这里继续发挥作用：它们既决定载流子是否被真正限制在有源区，也决定有源区与模式的纵向重叠。到本章结束时，读者应当已经清楚：从材料增益到模增益的链条已经建立，但它仍不能直接越级给出阈值电流，因为电流路径、接触和热反馈还没有进入求解。
 
+\begin{ConnectionBox}{从冷腔到增益补偿：连接第 3--8 章的模式分析与本章的有源区设计}
+回顾本书的理论架构，我们可以清晰地看到两条主线的汇合：
+
+\textbf{主线一（第 3--8 章）：冷腔模式分析}
+\begin{itemize}
+  \item 第 3 章：从 Maxwell 方程导出周期介质中的本征问题
+  \item 第 4--5 章：Bloch 定理与能带结构，识别$\Gamma$点候选模式
+  \item 第 6--8 章：面内反馈机制、偏振选择、远场对称性
+  \item \textbf{核心产出：}被动结构的复频率$\tilde{\omega}_n=\omega_n-i\gamma_n$，其中$\gamma_n$包含辐射损耗+$Q_\text{out}$
+\end{itemize}
+
+\textbf{主线二（第 17--19 章）：有源区增益与注入}
+\begin{itemize}
+  \item 第 17 章：量子阱材料增益$g_\text{mat}(\omega,N,T)$→模增益$g_\text{mod}$
+  \item 第 18 章：电注入、输运、泄漏与非均匀填充
+  \item 第 19 章：热效应对增益谱和折射率的回写
+  \item \textbf{核心产出：}给定注入条件下的净增益能力$g_\text{net}(N,T,I)$
+\end{itemize}
+
+\textbf{两条主线的交汇点：阈值条件}
+\[
+\underbrace{g_{\mathrm{mod}}(N_{\mathrm{th}},T)}_{\text{第 17 章}} = \underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{第 3--8 章}} = \frac{\omega_0}{2Q}
+\]
+
+这个等式的深刻含义是：\textbf{阈值载流子浓度}$N_\text{th}$\textbf{不是一个孤立的材料参数，而是冷腔品质因数$Q$的函数}。高$Q$模式（如 BIC 或 quasi-BIC）之所以重要，正是因为它们降低了$\alpha_\text{rad}$，从而降低了对$g_\text{mod}$的需求，进而降低了$N_\text{th}$。
+
+这也解释了为什么本书反复强调"先做冷腔分析，再做有源区优化"的顺序：如果连被动结构的$Q_\text{out}$都不知道，就无法判断某个增益峰值偏移是否会致命；如果不清楚模式的近场分布，就无法准确计算$\Gamma_\text{QW}$。因此，本章的所有公式都必须建立在第 3--8 章的模式信息之上，而不能脱离具体模式空谈"材料增益大小"。
+\end{ConnectionBox}
+
 \section*{练习题}
 \begin{enumerate}
   \item \basicq 比较 SQW 与 MQW 在 PCSEL 中的优缺点，回答中必须同时讨论模增益容量、注入均匀性和应变累积。

@@ -191,7 +191,101 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
 第三层是“当前结论仍受哪些不确定因素限制”。这让读者知道结果是否已达到可发布级别，还是仍然停留在探索性级别。
 
 对软件路径而言，也应采取同样写法。例如，不必写成“在某软件里点了哪些选项”，而应写成“在周期单胞开放散射模型中已验证傅里叶/网格收敛，在有限阵列开放全波模型中已验证 PML 与阵列尺寸收敛，在器件模型中已验证电热回写后结论不翻转”。这样写既保持与求解器实现解耦，又保留了足够的技术可追溯性。
+\section{数值不确定度量化与报告规范}
+基于 \cref{ch:method-compare} 中的误差分析理论，本节给出可直接用于项目实践的数值不确定度量化流程和报告模板。
 
+\subsection{最小必要收敛扫描组合}
+对 PCSEL 多方法工作流，不建议对所有参数都做全面扫描（那样成本过高），而是聚焦于对最终结论最敏感的三个维度：
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{各方法的最小必要收敛扫描组合。}
+  \label{tab:min-convergence-scan}
+  \begin{tabularx}{\textwidth}{@{}p{2cm}p{3.5cm}X@{}}
+    \toprule
+    方法 & 必扫参数 & 通过标准 \\
+    \midrule
+    PWEM & 平面波截断数 $N_G$ & 目标模频率变化 $< 0.5\%$，简并模分裂 $<$ 邻近模间距的 10\% \\
+    RCWA & 傅里叶阶数 + 纵向切片数 & 共振波长漂移 $< 0.5\,$nm，功率不平衡 $< 10^{-3}$ \\
+    FDTD & 网格密度 + 时间窗长度 & $Q$值变化 $< 5\%$，远场主瓣角度漂移 $< 2^\circ$ \\
+    FEM & 网格自由度 + 单元阶次 & 本征频率实部变化 $< 0.1\%$，虚部变化 $< 10\%$ \\
+    CWT & 主导波数量 & 阈值增益相对变化 $< 2\%$ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{PracticalTipBox}
+实际操作时，建议采用"两步粗扫 + 一步精扫"策略：先在较大步长下确定大致平台区，然后在平台区内做一次精细扫描，最后用 Richardson 外推或直接取平台区的平均值作为最佳估计。这样可以避免陷入局部平台或误判收敛趋势。
+\end{PracticalTipBox}
+
+\subsection{不确定度的合成与传递}
+对多步骤工作流，前一级仿真输出的不确定度会成为下一级输入的误差源。设第$i$级输出的相对不确定度为$\delta_i$，则最终结果的总相对不确定度可用平方和根 (RSS) 估算：
+\begin{equation}
+\delta_{\text{total}} = \sqrt{\sum_{i=1}^N w_i^2 \delta_i^2},
+\label{eq:uncertainty rss}
+\end{equation}
+其中$w_i$是第$i$级对最终结果的灵敏度权重。对缺乏严格灵敏度分析的情况，保守做法是取$w_i=1$。
+
+\begin{NumericalErrorBox}
+\textbf{典型 PCSEL 工作流的不确定度预算示例}
+假设一个完整的冷腔→阈值电流预测链条包含以下步骤：
+\begin{itemize}
+  \item PWEM 带结构：$\delta_1 \approx 0.5\%$（频率定位）
+  \item CWT 耦合系数：$\delta_2 \approx 3\%$（辐射损耗提取）
+  \item 速率方程阈值：$\delta_3 \approx 5\%$（载流子输运模型）
+  \item 热回写迭代：$\delta_4 \approx 2\%$（温度依赖折射率）
+\end{itemize}
+按 RSS 合成，总不确定度约为$\delta_{\text{total}} \approx \sqrt{0.5^2+3^2+5^2+2^2}\% \approx 6.2\%$。这意味着即使每一步都已"收敛"，最终的阈值电流预测仍有约 6\%的本征不确定度。因此，声称"仿真阈值为 150 mA"不如写成"仿真阈值为$150 \pm 10\,$mA"更诚实。
+\end{NumericalErrorBox}
+
+\subsection{交叉验证的可接受偏差范围}
+当使用两种独立方法进行交叉验证时（如 FDTD vs FEM），需要事先定义什么是"一致"。表~\ref{tab:xval-tolerance}给出了基于文献经验和工程实践的建议容差。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{跨方法交叉验证的可接受偏差范围。}
+  \label{tab:xval-tolerance}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\textwidth}{@{}p{2.8cm}p{3.2cm}X@{}}
+    \toprule
+    待比较量 & 宽松容差 (探索级) & 严格容差 (发布级) \\
+    \midrule
+    共振波长/频率 & $< 5\,$nm 或 $< 3\%$ & $< 1\,$nm 或 $< 0.5\%$ \\
+    $Q$值 & 同数量级即可 & 相对偏差 $< 20\%$ \\
+    远场主瓣角度 & $< 5^\circ$ & $< 2^\circ$ \\
+    近场重叠积分 & $> 0.8$ & $> 0.9$ \\
+    阈值增益 & $< 10\%$ & $< 3\%$ \\
+    模式排序 & 完全一致 & 完全一致（硬性要求） \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{WhatCouldGoWrong}
+一个常见误区是用"宽松容差"级别的吻合去支撑"发布级"的强结论。例如，若两种方法的$Q$值只是在同一个数量级（如$10^4$vs$2\times 10^4$），就只能说"定性趋势一致"，而不能宣称"定量预测可靠"。正确的做法是根据所用容差等级，谨慎限定结论的强度。
+\end{WhatCouldGoWrong}
+
+\subsection{可重复性报告的最小信息集}
+为确保他人能够复现你的数值结果，建议在论文或技术报告的附录中包含以下信息：
+
+\begin{ReportingStandardBox}
+\textbf{PCSEL 数值仿真的最小可重复信息清单}
+\begin{enumerate}
+  \item \textbf{几何参数}：晶格常数、孔径/占空比、刻蚀深度、层厚（附公差或加工变异范围更佳）
+  \item \textbf{材料模型}：折射率数据来源（实测/文献/拟合）、色散公式类型（Cauchy/Sellmeier/Drude-Lorentz）、是否包含虚部
+  \item \textbf{离散设置}：网格类型（结构化/非结构化）、关键区域网格尺寸、单元阶次（FEM）、时间步长（FDTD）
+  \item \textbf{边界条件}：PBC/PML/PEC 的位置和参数、PML 层数和吸收剖面
+  \item \textbf{收敛证据}：至少提供一组关键量的收敛曲线（可在 Supplemental Material 中）
+  \item \textbf{软件信息}：求解器名称、版本号、关键插件或自定义脚本
+  \item \textbf{硬件资源}：CPU/GPU型号、内存、单次仿真耗时（有助于他人评估复现成本）
+\end{enumerate}
+示例表述（可放入 Methods 部分）："RCWA 仿真使用 S4 求解器 (v1.8)，傅里叶阶数$N_G=21$，纵向切片数 12 层。网格收敛测试见 Supplementary Fig. SX，共振波长标准偏差为$0.6\,$nm。"
+\end{ReportingStandardBox}
+
+\begin{PracticalTipBox}
+若期刊不允许长篇方法细节，可将完整收敛数据和脚本上传至公开代码仓库（如 GitHub、Zenodo 或 figshare），并在正文中提供 DOI 链接。这已成为计算光子学领域的最佳实践，也是许多高水平期刊的强制要求。
+\end{PracticalTipBox}
 \section*{本章小结}
 仿真验证不是报告末尾的形式性清单，而是物理论证的一部分。RCWA 需要证明单胞开放散射的截断和功率平衡可靠，FDTD 需要证明时间窗、PML 和激励源没有把伪影当成模，FEM 需要证明网格、单元阶次和弱形式实现不会制造伪模。更高一层地说，所有这些方法验证最终都要服务于工作流门槛：只有当 L1 到 L4 的证据依次站稳，结论才应升级。真正可靠的 PCSEL 建模，不只是“求解器跑通”，而是“结论有门槛、异常有决策树、结果有可发布级别”。
 

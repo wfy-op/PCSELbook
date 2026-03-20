@@ -161,7 +161,27 @@ c\\
 对比 \cref{eq:nh_2x2_right,eq:nh_2x2_left} 就能立刻看出：除非问题退回更特殊的厄米或 complex-symmetric 情形，左矢量并不等于右矢量的复共轭。也就是说，在非厄米问题里，真正关闭投影的对象是左/右本征矢的双线性配对，而不是“拿右本征矢自己做厄米内积”。
 
 这正是开放 Maxwell 微扰里必须引入伴随模的最小代数原因。读者完全可以把左模先理解成“做投影时的测试函数”，而不是另一支必须先看见的神秘物理场。等进入开放系统后，$\E^{\mathrm L}$ 与 $\E^{\mathrm R}$ 才会分别由伴随 Maxwell 算子和原始 Maxwell 算子给出。
+\begin{ExampleBox}{数值演示：$2\times2$非厄米矩阵的左右模}
+取$a=1, d=2, b=0.1, c=0.3$，则矩阵$\mathbf{M}=\begin{bsmallmatrix}1&0.1\\0.3&2\end{bsmallmatrix}$。本征值为
+\[
+\lambda_\pm = \frac{3\pm\sqrt{1+0.12}}{2} \approx \frac{3\pm1.058}{2}.
+\]
+对$\lambda_+ \approx 2.029$，右模为$\bm{v}_+^R=[0.1,\lambda_+-1]^T \approx [0.1,1.029]^T$，
+左模需解$\bm{v}_+^L{}^T\mathbf{M}=\lambda_+\bm{v}_+^L{}^T$，得到$\bm{v}_+^L=[0.3,\lambda_+-1]^T \approx [0.3,1.029]^T$。
+验证双正交：$\bm{v}_-^L{}\cdot\bm{v}_+^R = 0.3\times0.1 + (\lambda_--1)(\lambda_+-1)=0$（利用韦达定理可严格证明）。
+这个简单例子说明：即使在$2\times2$情况下，左模也不等于右模的复共轭或转置。
+\end{ExampleBox}
 
+\begin{ApplicationBox}{用非厄米微扰公式估计孔形误差的影响}
+设设计好的圆孔 PCSEL 因工艺误差变成椭圆，介电常数扰动为$\delta\varepsilon(\bm{r})$。
+若已知理想结构的右模场分布$\bm{E}_n^R(\bm{r})$和左模分布$\bm{E}_n^L(\bm{r})$，
+则频率移动的一阶近似为
+\[
+\delta\omega_n \approx -\frac{\omega_n}{2}\frac{\int\delta\varepsilon\,\bm{E}_n^L\cdot\bm{E}_n^R\dd V}
+                                      {\int\varepsilon\,\bm{E}_n^L\cdot\bm{E}_n^R\dd V}.
+\]
+注意分子中出现的是左模与右模的内积，而不是通常的$|\bm{E}|^2$。如果错误地使用右模自身做投影，会得到错误的频移预测，尤其在强辐射损耗模式下误差更大。
+\end{ApplicationBox}
 \section{为什么非厄米一阶扰动不能直接照搬厄米公式}
 如果只停留在上一节，读者其实还没有真正掌握开放系统微扰，因为最关键的一步还没说透：\textbf{非厄米问题里，右模本身并不足以关闭微扰公式。} 其根源不在于“频率变成复数”这一表面现象，而在于开放 Maxwell 算子不再自伴，右模之间也不再按厄米内积正交。于是，厄米情形里默认成立的三件事都会失效：
 \begin{enumerate}
@@ -175,13 +195,19 @@ c\\
 \hat{\mathcal L}(\tilde{\omega},p)\E^{\mathrm{R}} = 0,
 \label{eq:open_right_mode}
 \end{equation}
-其中 $p$ 表示几何、材料或工作点参数。与之配套，需要引入伴随问题
+其中 $p$ 表示几何、材料或工作点参数。与之配套，需要引入\textbf{伴随算子}与\textbf{左模}：
 \begin{equation}
 \hat{\mathcal L}^{\mathrm{A}}(\tilde{\omega},p)\E^{\mathrm{L}} = 0,
 \label{eq:open_left_mode}
 \end{equation}
-这里 $\mathrm{A}$ 表示伴随算子，$\E^{\mathrm{L}}$ 为左模（left mode）。对一般非厄米问题，真正起投影作用的是左模与右模形成的双正交结构，而不是右模与自身的厄米内积。
+这里 $\hat{\mathcal L}^{\mathrm{A}}$ 是伴随算子，它由“内积里的分部积分”定义：
+\begin{equation}
+\langle u,\hat{\mathcal L}v\rangle = \langle \hat{\mathcal L}^{\mathrm{A}}u, v\rangle + \text{边界项}。
+\label{eq:adjoint_def}
+\end{equation}
+直观上，\textbf{把算子从右边搬到左边，在你选定的内积下整理分部积分项，就得到伴随算子}。在封闭厄米问题里边界项为零且 $\hat{\mathcal L}^{\mathrm{A}}=\hat{\mathcal L}$，于是左模等于右模；在开放问题里边界项不再消失，左模与右模必须区分。
 
+对一般非厄米问题，真正起投影作用的是左模与右模形成的双正交结构，而不是右模与自身的厄米内积。可把左模先理解为“做投影时的测试函数”，这会比“寻找另一支物理场”更直观。
 现在对 \cref{eq:open_right_mode} 做一阶微扰。若参数改变 $p\to p+\delta p$，则
 \begin{equation}
 \left[

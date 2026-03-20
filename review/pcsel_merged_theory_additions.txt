@@ -1,0 +1,327 @@
+% ================================================
+% 建议插入位置 A：第五章 5.7 之后，练习题之前
+% 作用：把“能带图读图”推进到“带边模式为何能形成 PCSEL 候选模”
+% ================================================
+
+\subsection{带边模式、缺陷模式与 PCSEL 所需谐振模式的区别}
+
+在光子晶体激光器中，最常见的两类谐振思路是缺陷模式与带边模式。缺陷模式对应于在原本周期完好的光子晶体中人为引入点缺陷或线缺陷，使某一频率位于禁带中的局域态被困在缺陷附近；它的关键词是“局域化”和“缺陷腔”。带边模式则不同，它并不依赖单独的几何缺陷，而是依赖色散关系在某个高对称点或布里渊区边界处出现极值，使群速度趋于零、态密度增大，并在有限尺寸结构中形成长寿命共振。它的关键词不是“缺陷”，而是“色散极值”和“二维分布反馈”。
+
+这一差别对 PCSEL 特别重要。PCSEL 追求的是大面积二维相干振荡与法向面发射，因此更自然的工作方式不是把光强行困在一个很小的点缺陷里，而是让一大片周期结构在带边附近共同参与反馈。也正因此，带边模式在 PCSEL 中不只是一个“能带术语”，而是连接二维分布反馈、法向辐射和大面积单模输出的核心概念。
+
+但这里必须把层级写清楚：
+\begin{enumerate}
+  \item ``带边模式''首先是一个\emph{被动色散概念}，它说明模式位于色散极值附近；
+  \item ``PCSEL 候选模''是在此基础上进一步要求该模式能够与法向辐射通道、纵向波导模和有源区耦合；
+  \item ``真实激射模''还要再经过有限尺寸、净模增益、注入分布和热回写的筛选。
+\end{enumerate}
+因此，带边模式是重要起点，但绝不是器件结论本身。
+
+\subsection{有限尺寸下带边模式的品质因子为什么会随群速度降低而增大}
+
+带边模式之所以在激光器中重要，最常见的物理直觉是：在色散极值附近，群速度
+\begin{equation}
+  \mathbf v_g = \nabla_{\mathbf k}\,\omega(\mathbf k)
+\end{equation}
+趋近于零，光在结构中的驻留时间变长，因此更容易形成高品质因子共振。这个说法在方向上是对的，但教材里最好把它说得更精确一些。
+
+对于有限尺寸的周期结构，Bloch 波矢并不能像无限周期那样被无限精确地确定。若器件的有效横向尺度为 $L$，则在倒空间中总会存在一个有限的波矢不确定度
+\begin{equation}
+  \Delta k \sim \frac{\pi}{L}.
+\end{equation}
+若某一候选模围绕带边波矢 $\mathbf k_0$ 展开，其色散可写成
+\begin{equation}
+  \omega(\mathbf k_0+\mathbf q)
+  = \omega_0 + \mathbf v_g\cdot \mathbf q + \frac{1}{2}\,\mathbf q^{\mathsf T} H\,\mathbf q + \cdots,
+\end{equation}
+其中 $H$ 是曲率张量。于是，有限尺寸导致的谱宽至少会受到以下两层控制：
+\begin{enumerate}
+  \item 若工作点只是接近带边而未精确落在极值点，则有一阶展宽
+  \begin{equation}
+    \Delta\omega_{\mathrm{lin}} \sim |\mathbf v_g|\,\Delta k;
+  \end{equation}
+  \item 若工作点已在真正极值点，使一阶项消失，则剩余展宽由二阶曲率主导，量级为
+  \begin{equation}
+    \Delta\omega_{\mathrm{quad}} \sim \|H\|\, (\Delta k)^2.
+  \end{equation}
+\end{enumerate}
+因此，``带越平，$Q$ 往往越高''的更准确表述应是：\emph{在有限尺寸下，更小的群速度和更小的局部曲率都会压缩由 $\Delta k$ 引起的频率展宽，从而提高由结构色散决定的有效品质因子。}
+
+但同样要加一句边界：带平并不自动等于最高 $Q$，更不自动等于最低阈值。因为真实 $Q$ 还会同时受到垂直辐射、边缘泄露、工艺粗糙和吸收损耗控制。换句话说，带边平坦度是影响 $Q$ 的重要因子，但不是唯一因子。
+
+\subsection{光锥、引导共振与“为什么不是所有带边都适合面发射”}
+
+对理想二维光子晶体来说，能带图只是在回答“给定 Bloch 波矢下允许哪些本征频率”；但 PCSEL 真实结构是有限厚度的光子晶体平板或多层半导体波导，因此带边模式还必须再经过一关：它是否能够耦合到垂直辐射连续谱。
+
+设外部介质折射率为 $n_{\mathrm{out}}$，则某个 Fourier 分量 $(\mathbf k_{\parallel}+\mathbf G)$ 若满足
+\begin{equation}
+  |\mathbf k_{\parallel}+\mathbf G| \le k_0 n_{\mathrm{out}},
+\end{equation}
+便存在沿法向传播的自由空间解。所有满足这类条件的动量点构成光锥。于是，对 slab-PCSEL 而言：
+\begin{enumerate}
+  \item 位于光锥之下的模式更像真正导模，垂直泄露弱；
+  \item 位于光锥之上、但因周期折叠而进入简约布里渊区的模式，则可能成为引导共振（guided resonance），既保留导模特征，又能向外辐射；
+  \item PCSEL 所需的工作带边，不是任意带边，而是\emph{既能提供二维反馈、又能以合适方式打开法向辐射通道}的那一类带边。
+\end{enumerate}
+
+这也是为什么教材里不能只说“带边群速度低，所以适合做激光器”，而必须补一句“还要检查它相对于光锥和辐射通道的位置”。否则读者会误以为只要找到最平的一段带就足够了。
+
+\subsection{用三角晶格 I--IV 的布拉格图像理解：为什么只有某些带边能成为面发射候选模}
+
+为了让读者真正形成“不是所有带边都适合 PCSEL”的直觉，建议在能带章节补一个经典的三角晶格教学图像。它的价值不在于告诉读者未来一定要采用三角晶格，而在于说明：\emph{不同带边点对应的耦合回路和辐射方向本来就不同。}
+
+以三角晶格 TE 模为例，在文献中常把若干典型带边点记为 I、II、III、IV。它们的差别可以概括为：
+\begin{enumerate}
+  \item 在点 I，主要发生的是 $180^\circ$ 反向耦合；由于存在六个等价方向，腔内可对应到多个方向不同的谐振家族；
+  \item 在点 II，相互夹角为 $120^\circ$ 的波之间可以实现耦合，因此耦合图像已不同于单纯的反向反馈；
+  \item 在点 III，六个等价方向上的波可以同时耦合，并且还能通过一阶布拉格衍射把腔内谐振场耦合到法向辐射通道，因此这是最适合拿来解释 PCSEL 面发射原理的教学点；
+  \item 在更高频的点 IV，除了垂直方向外还常伴随倾斜的面外衍射，因此虽然它也能辐射，但并不天然是最优的法向面发射选择。
+\end{enumerate}
+
+这段内容的教学目的非常明确：它告诉读者，PCSEL 设计不是“先找一个带边，再默认它能法向出光”，而是必须检查这个带边对应的布拉格散射网络究竟把光送回了哪里、又把光送出了哪里。
+
+\subsection{方格晶格 \texorpdfstring{$\Gamma_2$}{Gamma2} 处四个带边家族：四波子空间、场图样与 A/B/C/D 标号}
+
+对正方晶格 PCSEL 而言，最常用的工作点是二阶 $\Gamma$ 点附近。这一位置的核心原因不是“$\Gamma$ 点在图中央”，而是此处恰好同时满足：
+\begin{enumerate}
+  \item 四个基本波 $(\pm\beta_0,0)$、$(0,\pm\beta_0)$ 发生强耦合，形成二维分布反馈；
+  \item 周期散射又可以把一部分动量折叠到法向辐射通道中，实现面发射。
+\end{enumerate}
+
+因此，在二阶 $\Gamma$ 点附近，一个最小而又非常重要的四维子空间由以下四个基本波张成：
+\begin{equation}
+  (\beta_0,0),\quad (-\beta_0,0),\quad (0,\beta_0),\quad (0,-\beta_0),
+  \qquad \beta_0=\frac{2\pi}{a}.
+\end{equation}
+由这四个基本波重组出的四个超模解，在 PCSEL 文献中常约定性地记为 A、B、C、D 四个带边家族。这里建议在书中明确说明两件事。
+
+第一，A/B/C/D 首先是\emph{带图中的分支标号}，它的主要作用是便于在某一具体文献的能带图里指认“哪一支是哪一支”。在高对称圆孔方格晶格下，这四个解来自同一个四波子空间，因此它们必然对应不同的面内场图样；其中通常会出现两个 singlet 和一个二维双重态，只是不同论文对 A/B/C/D 的具体排序约定可能不同。
+
+第二，A/B/C/D 不是比对称性标号更“本质”的名字。真正跨文献、跨几何仍然稳固的，是 little group 下的不可约表示标号，而不是 A/B/C/D 的命名顺序。教材里应明确提醒读者：\emph{A/B/C/D 用来指认具体带图分支，$A_1/B_1/E$ 等 irrep 标号用来描述模式对称性；两者相关，但不是同一套语言。}
+
+若把这一层关系讲清楚，读者后面在阅读文献时就不会把“某篇文章说 band A 最容易激射”误解成“凡是别处叫 A 的就一定最好”。更稳妥的表述应是：该文中的某一支带边家族，因其对称性、辐射损耗与增益重叠更有利而成为优选模。
+
+\subsection{为什么对称圆孔常给出中心发暗的远场：带边模、相消干涉与有限尺寸效应}
+
+带边模式章节里还应补一条很实用的结论：即使某一模式确实位于二阶 $\Gamma$ 点附近，也并不意味着它的远场中心一定最亮。对理想方格晶格、圆形孔、完美对称的晶胞而言，某些 $\Gamma$ 点带边模式在法向中心会出现严格或近似的相消干涉，因此在有限尺寸器件里常表现为环形或中心发暗的远场图案。
+
+这并不是说该模式“没有垂直辐射”，而是说：在 exact $\Gamma$ 的 $k_{\parallel}=0$ 位置，辐射振幅可能被对称性和相位关系压成零；真正有限器件中由于阵列尺寸有限，角谱不可避免地扩展到 $\Gamma$ 点附近的非零 $k_{\parallel}$ 区域，于是这些邻近动量分量仍能辐射，最终形成中心发暗但外围有能量的远场图案。
+
+这一段最好提前写在带边或远场前置章节里，因为它能帮助读者更早理解：
+\begin{enumerate}
+  \item ``存在带边谐振''不等于``法向中心一定亮''；
+  \item ``有限尺寸''并不只是边缘损耗问题，它还会主动改写远场角谱；
+  \item 后续通过椭圆孔、双晶格、多孔单胞或 quasi-BIC 扰动去把环形远场改成单主瓣，并不是“另起一个新话题”，而是在重新组织同一带边家族的辐射相位关系。
+\end{enumerate}
+
+\subsection{用于 PCSEL 的二维能带修正：\texorpdfstring{$n_{\mathrm{eff}}$}{neff} 与 \texorpdfstring{$\Gamma_{\mathrm{PC}}$}{GammaPC}}
+
+由于真实 PCSEL 是三维层状外延结构，直接把空气孔和背景材料的真实介电常数代入二维 PWEM，往往会高估周期调制对波导模的作用。一个非常实用、而且在教学上应当明确写出的修正方式，是先由垂直波导求解得到基模有效折射率 $n_{\mathrm{eff}}$，再用光子晶体层的光学限制因子 $\Gamma_{\mathrm{PC}}$ 去修正横向折射率反差。一个常用写法是
+\begin{align}
+  n_{\mathrm{eff}}^2 &= FF\,\tilde\varepsilon_h + (1-FF)\,\tilde\varepsilon_b, \\
+  \tilde\varepsilon_b-\tilde\varepsilon_h &= \Gamma_{\mathrm{PC}}\,(\varepsilon_b' - \varepsilon_h').
+\end{align}
+其中 $FF$ 为占空比，$\varepsilon_h'$ 与 $\varepsilon_b'$ 分别是孔内和背景材料的真实介电常数，$\tilde\varepsilon_h$ 与 $\tilde\varepsilon_b$ 则是送入二维 PWEM 的修正后等效介电常数。
+
+这组式子的物理意义值得展开说明：第一式强制二维模型与真实波导基模拥有相同的平均传播常数；第二式则说明，真实折射率反差并不是百分之百都被导模“看见”，而是要乘以光子晶体层的光学限制因子后才变成有效的横向调制强度。这样处理的结果是，二维带图仍然保留了极高的设计效率，但它不再假装自己是原封不动的三维真值。
+
+同时必须提醒：这个修正只适合做候选带边的初筛与参数扫描，不足以直接给出辐射常数、上下出光比和真实阈值排序。只要问题开始涉及垂直辐射、复杂孔形或显著外延不对称，就应继续交给 3D-FDTD、RCWA 或 3D-CWT。
+
+\subsection{带边章节最后必须写清的一条设计结论}
+
+建议在本章结尾明确加入下面这条总结性表述：
+
+\begin{quote}
+PCSEL 的能带设计不是在寻找“最平的一条带”，而是在寻找“既位于合适带边、又能通过正确的 Bragg 回路形成二维反馈、并且能以可控方式接入法向辐射通道”的那一类候选模。
+\end{quote}
+
+这句话能把缺陷模式/带边模式、光锥、Bragg 衍射、A/B/C/D 带边家族以及后续 CWT 章节真正焊接成一条主线。
+
+
+% ================================================
+% 建议插入位置 B：第十章 10.6 之后，或与第十一章合并整理
+% 作用：把最小四波 CWT 补强为真正“为什么需要 3D-CWT”的教学闭环
+% ================================================
+
+\subsection{为什么二维八波 CWT 仍然不够：它不是错误，而是压缩得太狠}
+
+已有的二维八波 CWT 对 PCSEL 入门非常重要，因为它第一次把 ``四个基本波 $+$ 若干高阶中继波'' 这件事说清楚了。但教材里应进一步说明：二维八波模型之所以会在真实器件中失效，不是因为它“方向错了”，而是因为它压缩了三个在真实 PCSEL 中会重新变重要的自由度。
+\begin{enumerate}
+  \item \textbf{纵向场自由度被压掉了。} 二维模型默认不同波矢分量共享相同的垂直场型，而真实器件中的基本波、辐射波和高阶波在 $z$ 方向上往往看见的是不同的波导环境；
+  \item \textbf{高阶 Fourier 分量被截断得过狠。} 对圆孔、弱调制、近对称结构，这种截断常可接受；但对深刻蚀、非对称孔形、多孔单胞和三晶格结构，高阶 Fourier 分量对二维耦合本身就可能是主导项；
+  \item \textbf{垂直辐射往往被经验化了。} 若只用一个拟合辐射常数去代表所有法向耦合，则很难可靠处理上下出光不对称、远场整形与结构微扰引起的辐射重排。
+\end{enumerate}
+因此，教材里必须把“从二维 CWT 升级到三维 CWT”表述成：\emph{把真实 PCSEL 中被压掉但又重新主导结果的通道显式请回来。}
+
+\subsection{三维 CWT 的起点：三维 Maxwell 方程、三类波与四个基本波}
+
+在与本书其余章节一致的频域约定下，可从
+\begin{equation}
+  \nabla\times\nabla\times \mathbf E(\mathbf r)=k_0^2\,\tilde n^2(\mathbf r)\,\mathbf E(\mathbf r)
+\end{equation}
+出发，其中 $k_0=\omega/c$，$\tilde n(\mathbf r)$ 是吸收了增益与损耗的复折射率。对正方晶格 PCSEL，将折射率和电场在平面内作 Fourier 展开：
+\begin{align}
+  n^2(\mathbf r) &= n_0^2(z)+\sum_{m^2+n^2\neq 0}\xi_{m,n}(z)e^{-i(m\beta_0 x+n\beta_0 y)}, \\
+  E_i(\mathbf r) &= \sum_{m,n} E_{i,mn}(z)e^{-i(m\beta_0 x+n\beta_0 y)},\qquad i=x,y,
+\end{align}
+其中 $\beta_0=2\pi/a$。
+
+这时，按面内波矢长度可把所有参与耦合的分量分成三类：
+\begin{enumerate}
+  \item \textbf{基本波（basic waves）}：$m^2+n^2=1$，即 $(\pm\beta_0,0)$ 与 $(0,\pm\beta_0)$；
+  \item \textbf{辐射波（radiative waves）}：$m=n=0$，对应被折叠到法向辐射通道中的分量；
+  \item \textbf{高阶波（high-order waves）}：$m^2+n^2>1$，它们本身未必是最终输出，但承担二维间接耦合的中继作用。
+\end{enumerate}
+在 second-order $\Gamma$ 点附近，四个基本波的最常用分离变量形式可写成
+\begin{align}
+  E_{x,1,0} &= 0,            & E_{y,1,0} &= R_x\Theta_0(z), \\
+  E_{x,-1,0} &= 0,           & E_{y,-1,0} &= S_x\Theta_0(z), \\
+  E_{x,0,1} &= R_y\Theta_0(z), & E_{y,0,1} &= 0, \\
+  E_{x,0,-1} &= S_y\Theta_0(z),& E_{y,0,-1} &= 0,
+\end{align}
+其中 $\Theta_0(z)$ 是背景层状波导的基模场型，并满足
+\begin{equation}
+  \frac{d^2\Theta_0}{dz^2}+\bigl[k_0^2 n_0^2(z)-\beta^2\bigr]\Theta_0=0.
+\end{equation}
+这一组式子本身就值得写出来，因为它把 ``四波模型'' 从口头图像第一次变成了可投影、可计算的对象。
+
+\subsection{从一条代表性方程到矩阵方程：\texorpdfstring{$(\delta+i\alpha)\mathbf V=C\mathbf V$}{(delta+i alpha)V=CV}}
+
+为了让读者真正看见投影后发生了什么，建议保留一条代表性的基本波方程，而不是只给最后的矩阵结果。以 $R_x$ 为例，消去与之无关的分量后，一个典型的耦合方程可以写成
+\begin{equation}
+  (\delta+i\alpha)R_x
+  = \kappa_{2,0}S_x
+  -\frac{k_0^2}{2\beta_0}\,\xi_{1,0}\int_{\mathrm{PC}} \Delta E_y(z)\Theta_0^*(z)\,dz
+  -\frac{k_0^2}{2\beta_0}\sum_{m^2+n^2>1}\xi_{1-m,-n}\int_{\mathrm{PC}} E_{y,mn}(z)\Theta_0^*(z)\,dz.
+\end{equation}
+这里三项的物理意义分别非常清楚：
+\begin{enumerate}
+  \item 第一项 $\kappa_{2,0}S_x$ 是最传统的 $180^\circ$ 反向耦合；
+  \item 第二项表示基本波与辐射波之间的耦合，也就是法向出光通道；
+  \item 第三项表示基本波通过高阶波完成的二维间接耦合。
+\end{enumerate}
+对另外三个基本波做同样的推导后，可把四个方程压缩成
+\begin{equation}
+  (\delta+i\alpha)\mathbf V=C\mathbf V,
+  \qquad
+  \mathbf V=(R_x,S_x,R_y,S_y)^{\mathsf T},
+\end{equation}
+并将耦合矩阵写成
+\begin{equation}
+  C=C_{\mathrm{1D}}+C_{\mathrm{rad}}+C_{\mathrm{2D}}.
+\end{equation}
+其中：
+\begin{itemize}
+  \item $C_{\mathrm{1D}}$ 表示反向传播基本波之间的传统 DFB 型反馈；
+  \item $C_{\mathrm{rad}}$ 表示基本波与辐射波之间的耦合，是垂直输出和辐射损耗的来源；
+  \item $C_{\mathrm{2D}}$ 表示经由高阶波完成的二维耦合，是 PCSEL 相比一维 DFB 最本质的新增结构。
+\end{itemize}
+这三块矩阵分解是 CWT 章节里最值得强化的一点，因为它把“反馈、辐射、二维中继耦合”三条容易被混写的物理线索第一次拆开了。
+
+\subsection{耦合系数不只是几何参数，而是 ``Fourier 分量 $\times$ 纵向场重叠''}
+
+为了避免读者把 $\kappa$ 误解成纯拟合参数，建议再明确写出一个代表性的 $180^\circ$ 耦合系数：
+\begin{equation}
+  \kappa_{\pm 2,0}=-\frac{k_0^2}{2\beta_0}\int_{\mathrm{PC}} \xi_{\pm 2,0}(z)\,|\Theta_0(z)|^2\,dz,
+  \qquad
+  \kappa_{0,\pm 2}=-\frac{k_0^2}{2\beta_0}\int_{\mathrm{PC}} \xi_{0,\pm 2}(z)\,|\Theta_0(z)|^2\,dz.
+\end{equation}
+这条式子应当被明确解释为：
+\begin{enumerate}
+  \item 光子晶体几何通过 $\xi_{m,n}$ 决定“哪个 Fourier 分量存在、多大、相位如何”；
+  \item 纵向波导模通过 $|\Theta_0|^2$ 决定“导模到底看见了多少横向调制”；
+  \item 所谓几何优化，其实就是在选择性地增强某些 Fourier 分量对应的耦合通道，而不是平均地“把所有耦合都变强”。
+\end{enumerate}
+这条说明对全书主线非常重要，因为它直接把第五章能带章节、当前 CWT 章节和第十七章外延章节焊接在一起了。
+
+\subsection{为什么辐射波与高阶波不能共用基本波的纵向场型}
+
+如果只保留二维有效折射率图像，人们很容易默认所有相关波分量共用同一个 $\Theta_0(z)$。这在真实 PCSEL 中通常并不成立，教材里最好把三类波的纵向物理图像明确写出：
+\begin{enumerate}
+  \item \textbf{基本波}的场型接近背景波导基模，峰值常位于有源层附近，并在上下包层中缓慢衰减；
+  \item \textbf{辐射波}在 $z$ 方向上呈振荡形式，并在 PC 层上下都保持非零幅度，它正对应于从腔内泄露到自由空间的能量；
+  \item \textbf{高阶波}通常比基本波更强地局域在光子晶体层内，并在层外呈倏逝衰减；而且波矢阶数越高，局域往往越强。
+\end{enumerate}
+
+这一点是 3D-CWT 相比 2D 模型最根本的物理进步之一。因为一旦三类波的纵向场型不同，它们与有源区、损耗层、空气/衬底辐射通道的重叠就会不同，从而直接改写：
+\begin{equation}
+  \Gamma_{\mathrm{QW}},\qquad \Gamma_{\mathrm{loss}},\qquad \gamma_{\uparrow},\qquad \gamma_{\downarrow},
+\end{equation}
+进而改写阈值排序、上下出光比和远场。换句话说，\emph{三维结构中的二维耦合问题，最终之所以不能还原成一个纯二维矩阵问题，并不是数学上“写复杂了”，而是因为不同波分量真的看见了不同的 $z$ 向物理世界。}
+
+\subsection{从 \texorpdfstring{$\Gamma$}{Gamma} 点扩展到近 \texorpdfstring{$\Gamma$}{Gamma} 点：非 \texorpdfstring{$\Gamma$}{Gamma} 模、近平带模与竞争模}
+
+教材里还应补一条经常被忽略、但对真实设计很关键的内容：真实器件的竞争模不一定严格落在 exact $\Gamma$ 点。三维 CWT 可以很自然地把这一点纳入，只需在四个基本波上加入一个小的波矢偏移 $\Delta\mathbf k$。此时，四个基本波不再精确沿原始晶格主轴传播，而是变为“围绕 $\Gamma$ 点轻微偏移”的近带边模式；相应地，它们的偏振方向、相位匹配条件和辐射常数也都会发生修正。
+
+这一扩展最值得强调的物理结论是：\emph{在某些结构里，exact $\Gamma$ 点带边模之外，邻近 $\Gamma$ 的近平带模也可能具有极低群速度和相当低的辐射损耗。} 这意味着它们完全可能成为 side-mode 竞争者，而不能因为“它不在 exact $\Gamma$”就提前忽略。
+
+因此，建议在本章或第十一章里明确加入下面这句判断：
+\begin{quote}
+对 PCSEL 而言，$\Gamma$ 点是第一优先检查对象，但不是唯一对象。真正可信的候选模筛选，应当同时检查 exact $\Gamma$ 及其邻域一小片倒空间中的近平带分支。
+\end{quote}
+这句话会大幅减少读者把“盯住一张 exact $\Gamma$ 带图”误当成完整模式筛选的风险。
+
+\subsection{有限尺寸 CWT：从常数振幅到包络方程}
+
+无限周期 CWT 给出的 $R_x,S_x,R_y,S_y$ 是常数振幅；但真实器件总是有限尺寸，因此更好的写法应为
+\begin{equation}
+  R_x(x,y),\quad S_x(x,y),\quad R_y(x,y),\quad S_y(x,y).
+\end{equation}
+在最小包络近似下，可把耦合波方程写成
+\begin{equation}
+  (\delta+i\alpha)\mathbf V
+  = C\mathbf V + iD_x\partial_x \mathbf V + iD_y\partial_y \mathbf V,
+\end{equation}
+或等价地写成显式的一阶包络方程组。这一步的意义在于，它允许有限阵列边缘、吸收环、局域注入窗口与横向热分布进入同一半解析框架。
+
+这类有限尺寸 CWT 的优点并不是替代全波，而是：
+\begin{enumerate}
+  \item 比最小无限周期模型更接近真实器件；
+  \item 比大尺寸 3D-FDTD 更适合扫参数与做灵敏度分析；
+  \item 能自然输出水平损耗、有限阵列模式包络与边缘泄露趋势，从而为第二十二章和第二十五章提供更像器件的中间模型。
+\end{enumerate}
+
+\subsection{三晶格如何直接进入 CWT：Fourier 放大因子与 \texorpdfstring{$180^\circ$}{180 deg} 耦合增强}
+
+若要把多孔单胞或三晶格结构真正纳入教材，而不是只把它当成“经验上更强反馈”的例子，最好的方式是直接在 Fourier 系数层面写清楚。设单晶格光子晶体的介电扰动写成
+\begin{equation}
+  \Delta\varepsilon_{1}(x,y)=\sum_{m,n}F_{m,n}\exp\!\left[i\frac{2\pi}{a}(mx+ny)\right].
+\end{equation}
+若在同一晶胞中再叠加两个相对位移分别为 $(d_{1x},d_{1y})$ 和 $(d_{2x},d_{2y})$ 的嵌套晶格，则三晶格总扰动满足
+\begin{equation}
+  \Delta\varepsilon_{\mathrm{3L}}(x,y)
+  =\sum_{m,n}A_{m,n}F_{m,n}\exp\!\left[i\frac{2\pi}{a}(mx+ny)\right],
+\end{equation}
+其中放大因子为
+\begin{equation}
+  A_{m,n}=1+\exp\!\left[-i\frac{2\pi}{a}(md_{1x}+nd_{1y})\right]
+  +\exp\!\left[-i\frac{2\pi}{a}(md_{2x}+nd_{2y})\right].
+\end{equation}
+
+对正方晶格 PCSEL 而言，四个基本波之间最关键的是 $180^\circ$ 反向耦合，因此首先应关注 $(m,n)=(2,0)$ 与 $(0,2)$：
+\begin{align}
+  A_{2,0} &= 1+\exp\!\left(-i\frac{4\pi}{a}d_{1x}\right)+\exp\!\left(-i\frac{4\pi}{a}d_{2x}\right), \\
+  A_{0,2} &= 1+\exp\!\left(-i\frac{4\pi}{a}d_{1y}\right)+\exp\!\left(-i\frac{4\pi}{a}d_{2y}\right).
+\end{align}
+因此有
+\begin{equation}
+  0\le |A_{2,0}|,|A_{0,2}|\le 3.
+\end{equation}
+这条式子在教材中应当被明确解释为：\emph{三晶格的本质优势不是“孔更多”，而是它允许设计者把最关键的二阶 Fourier 分量从相消一路调到三倍相干增强，从而定向放大 $180^\circ$ 反馈通道。}
+
+对设计而言，这条结果还有两层重要含义：
+\begin{enumerate}
+  \item 若把 $A_{2,0}$ 或 $A_{0,2}$ 调到接近零，就会系统性削弱反向反馈；
+  \item 若把二者同时调到接近 3，则可显著增强面内光反馈、降低水平泄露，并为更小尺寸谐振腔创造条件。
+\end{enumerate}
+但仍须保留严格边界：增强 $180^\circ$ 耦合首先改善的是\emph{冷腔反馈与模式损耗排序}，并不自动等于器件阈值电流最低。真实阈值仍要继续经过 $C_{\mathrm{rad}}$、内部吸收、量子阱重叠、注入与热回写的再筛选。
+
+\subsection{这一部分在全书中的最准确定位}
+
+建议在本章或下一章结尾加入下面这段总结性文字：
+
+\begin{quote}
+能带章节回答的是“哪些 $\Gamma$ 点或近 $\Gamma$ 点带边值得进入候选名单”；CWT 章节回答的是“这些候选模为何会因为 $180^\circ$ 反馈、二维高阶中继耦合与法向辐射通道而被重新排序”。二维 PWEM、三维 CWT 与后续 RCWA/FDTD/FEM 不是彼此替代关系，而是同一个 PCSEL 问题在不同层级上的投影。
+\end{quote}
+
+如果这句总结写清楚，读者就更不容易把 PWEM 误当成“算图工具”，也不会把 CWT 误当成“经验矩阵”。相反，他会更早意识到：带边、辐射、偏振、损耗与模式竞争，从一开始就是同一条理论链上的连续问题。

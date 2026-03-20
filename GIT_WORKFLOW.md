@@ -1,41 +1,51 @@
-# Git Workflow For PCSELbook
+﻿# Git Workflow For PCSELbook
 
-本文件记录 `PCSELbook` 项目的 Git、GitHub、编译与 release 使用约定，供你自己或后续 AI 直接调用。
+本文档记录 `PCSELbook` 项目的 Git、GitHub、编译与 release 流程，供你自己或后续 AI 直接调用。
 
-## 1. 仓库基本信息
+## 1. 项目与仓库信息
 
 - 项目目录：`C:\Users\lenovo\OneDrive\研究生资料\PCSEL指南`
-- Git 元数据目录：`C:\Users\lenovo\OneDrive\研究生资料\PCSEL指南\.git`
+- Git 数据目录：`C:\Users\lenovo\OneDrive\研究生资料\PCSEL指南\.git`
 - 默认分支：`main`
-- 远程仓库：
-  - `origin = https://github.com/wfy-op/PCSELbook.git`
+- 远程仓库：`origin = https://github.com/wfy-op/PCSELbook.git`
 
 ## 2. 当前 Git 身份
 
-本仓库已经配置为使用 GitHub `noreply` 身份：
+本仓库当前使用 GitHub `noreply` 身份：
 
 ```text
 user.name  = Feiyang Wu
 user.email = 154874224+wfy-op@users.noreply.github.com
 ```
 
-查看命令：
+检查命令：
 
 ```powershell
 git config user.name
 git config user.email
 ```
 
-如果需要修改：
+## 3. AI 能读取什么
 
-```powershell
-git config user.name "Feiyang Wu"
-git config user.email "154874224+wfy-op@users.noreply.github.com"
-```
+后续 AI 可以读取：
 
-## 3. 哪些内容会被 Git 追踪
+- 已保存到磁盘的 `.tex`、`.bib`、`.md`、脚本等文件内容
+- 已提交或未提交但已经保存的本地修改
+- `git diff`、`git status`、`git log` 反映出来的版本差异
 
-### 会追踪
+后续 AI 不能读取：
+
+- 你编辑器里尚未保存到磁盘的内容
+- 浏览器页面里未下载到本地的内容
+
+结论：
+
+- 你手动修改过并且已经保存的内容，我可以读取并纳入后续 release 总结
+- 你若希望 AI 在发布时自动总结版本改动，前提是这些改动已经保存到文件里
+
+## 4. 哪些内容会被 Git 追踪
+
+### 会被追踪
 
 - `main.tex`
 - `preamble.tex`
@@ -44,15 +54,15 @@ git config user.email "154874224+wfy-op@users.noreply.github.com"
 - `frontmatter/`
 - `chapters/`
 - `code/`
-- `reference/`
 - `review/`
 - `README.md`
 - `WRITING_GUIDE.md`
+- `GIT_WORKFLOW.md`
 - 其他源码、说明文档、审稿文档
 
-### 不会追踪
+### 不会被追踪
 
-以下内容已经写入 `.gitignore`：
+以下内容已写入 `.gitignore`：
 
 - `build/`
 - LaTeX 辅助文件：`*.aux`, `*.log`, `*.toc`, `*.xdv`, `*.synctex.gz` 等
@@ -62,26 +72,25 @@ git config user.email "154874224+wfy-op@users.noreply.github.com"
 
 ### 特别说明
 
-`version/` 是你自己的本地留档目录，不要提交到 GitHub。  
-如果需要做正式发布，请用 Git tag + GitHub Release，而不是把 PDF 快照直接纳入仓库版本历史。
+- `version/` 是本地版本留档目录，不推送到 GitHub
+- 正式对外版本使用 `git tag + GitHub release`
+- 不要把 `build/` 或 `version/` 当作 Git 历史快照目录
 
-## 4. 日常工作流
+## 5. 日常工作流
 
-### 4.1 查看状态
+### 5.1 查看状态
 
 ```powershell
 git status
 ```
 
-### 4.2 查看改动
+### 5.2 查看改动
 
 ```powershell
 git diff
 ```
 
-### 4.3 编译验收
-
-在项目根目录运行：
+### 5.3 编译验收
 
 ```powershell
 latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=pcselbook main.tex
@@ -93,7 +102,7 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=
 build/pcselbook.pdf
 ```
 
-### 4.4 提交
+### 5.4 提交
 
 ```powershell
 git add .
@@ -102,60 +111,25 @@ git commit -m "你的提交说明"
 
 建议提交粒度：
 
-- 一次修一个主题
-- 一次修一个 review round
-- 一次修一个章节链
+- 一次修一个主链问题
+- 一次处理一个 review round
+- 一次修一个章节组
 
-推荐提交信息风格：
-
-```text
-docs: refine repository homepage readme
-fix: repair chapter 5 gamma-point PWEM section
-refactor: reorganize symmetry and BIC narrative
-chore: ignore local archived versions
-```
-
-### 4.5 推送
+### 5.5 推送
 
 ```powershell
 git push
 ```
 
-## 5. 分支管理建议
+## 6. 版本历史与回退
 
-当前主分支要求：
-
-- `main` 始终保持可编译
-- 不要把明显未完成且无法编译的状态直接推到 `main`
-
-如果要做较大改动，建议新建分支：
-
-```powershell
-git switch -c rewrite-ch16-19
-```
-
-完成后推送：
-
-```powershell
-git push -u origin rewrite-ch16-19
-```
-
-常见分支命名建议：
-
-- `rewrite-ch1-6`
-- `review-round4-fixes`
-- `device-modeling-upgrade`
-- `bic-formalism-pass`
-
-## 6. 查看历史
-
-### 查看简洁历史
+### 查看历史
 
 ```powershell
 git log --oneline --graph --decorate --all
 ```
 
-### 查看某个文件历史
+### 查看单文件历史
 
 ```powershell
 git log -- chapters/ch05_band_gamma_mode_selection.tex
@@ -167,51 +141,33 @@ git log -- chapters/ch05_band_gamma_mode_selection.tex
 git show <commit-hash>
 ```
 
-## 7. 回退与恢复
-
-### 只撤销工作区未提交修改
+### 撤销工作区未提交改动
 
 ```powershell
 git restore 路径
 ```
 
-例子：
-
-```powershell
-git restore chapters/ch05_band_gamma_mode_selection.tex
-```
-
-### 撤销已经 `git add` 的文件
+### 撤销已 add 的文件
 
 ```powershell
 git restore --staged 路径
 ```
 
-### 回到上一个提交但保留改动
+### 回到上一提交但保留改动
 
 ```powershell
 git reset --soft HEAD~1
 ```
 
-### 不要做的事
-
-除非你非常确定，否则不要使用：
+不要轻易使用：
 
 ```powershell
 git reset --hard
 ```
 
-## 8. GitHub CLI (`gh`) 使用
+## 7. GitHub CLI (`gh`) 流程
 
-当前机器已经安装 `gh`，版本约定如下：
-
-```powershell
-gh --version
-```
-
-如果新终端里 `gh` 不生效，先重开终端再试。
-
-### 登录状态检查
+### 检查登录状态
 
 ```powershell
 gh auth status
@@ -223,12 +179,53 @@ gh auth status
 gh auth login --hostname github.com --git-protocol https --web
 ```
 
-登录完成后应看到：
+### 查看 release
 
-- `Logged in as wfy-op`
-- `Active account: true`
+```powershell
+gh release view v3.19
+```
 
-## 9. 发布 release 的项目专用流程
+## 8. 自动生成 release 说明
+
+本项目已提供脚本：
+
+- `scripts/generate_release_notes.ps1`
+
+它的用途：
+
+- 自动读取两个版本之间的 `git diff`
+- 统计修改文件、章节标题、改动类别
+- 生成一份可编辑的 release 说明草稿
+- 在 `CurrentRef=HEAD` 时，还会额外列出当前工作区尚未提交的已保存改动
+
+### 推荐用法
+
+生成 `v3.19` 相对 `v3.18` 的说明草稿：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Version v3.19 -CurrentRef v3.19 -BaseRef v3.18 -OutputPath build\release_notes_v3.19.auto.md
+```
+
+若你只是想在正式发布前预览当前 `HEAD` 的改动总结，可用：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Version draft -CurrentRef HEAD
+```
+
+输出文件默认写入：
+
+```text
+build/release_notes_<version>.auto.md
+```
+
+### 使用原则
+
+- 脚本生成的是初稿，不是最终对外说明
+- 正式 release 前仍应人工收紧措辞
+- 若工作区有未保存内容，脚本无法读取
+- 若工作区有未提交但已保存内容，脚本在 `HEAD` 模式下可以列出它们
+
+## 9. 项目专用 release 流程
 
 ### 9.1 编译正式 PDF
 
@@ -236,104 +233,31 @@ gh auth login --hostname github.com --git-protocol https --web
 latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=pcselbook main.tex
 ```
 
-### 9.2 本地留档（可选）
+### 9.2 本地留档（默认执行）
 
-复制一份到 `version/`，仅本地保留，后缀以日期命名
+每次准备发布新版本时，先把当前 PDF 复制到 `version/`：
 
 ```powershell
 Copy-Item build\pcselbook.pdf version\pcselbook3.19.pdf
 ```
 
-注意：`version/` 不会推送到 GitHub。
+命名规则：
 
-### 9.3 打 tag
+- `version/pcselbook3.19.pdf`
+- `version/pcselbook3.20.pdf`
+- `version/pcselbook3.21.pdf`
 
-通用格式：
+注意：`version/` 不推送到 GitHub。
 
-```powershell
-git tag -a vX.YY -m "PCSELbook release vX.YY"
-git push origin vX.YY
-```
-
-### 9.4 创建 GitHub release 并上传 PDF
+### 9.3 生成 release 说明草稿
 
 ```powershell
-gh release create vX.YY build\pcselbook.pdf --title "PCSELbook vX.YY" --notes "Release vX.YY of PCSELbook. This release includes the compiled PDF generated from the current LaTeX project state."
+powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Version v3.19 -CurrentRef v3.19 -BaseRef v3.18 -OutputPath build\release_notes_v3.19.auto.md
 ```
 
-### 9.5 如果 release 已存在，只更新附件
+然后人工整理这份草稿，生成正式说明文本。
 
-```powershell
-gh release upload vX.YY build\pcselbook.pdf --clobber
-```
-
-`--clobber` 表示覆盖同名附件。
-
-## 10. 当前已经存在的发布记录
-
-已完成：
-
-- GitHub tag: `v3.18`
-- GitHub release: `v3.18`
-- release 附件：`build/pcselbook.pdf`
-
-查看 release：
-
-```powershell
-gh release view v3.18
-```
-
-网页地址：
-
-```text
-https://github.com/wfy-op/PCSELbook/releases/tag/v3.18
-```
-
-## 11. 当前目标版本：v3.19
-
-`v3.19` 当前应理解为“下一次准备发布的工作版本”，不是已经存在于 GitHub 的 release。
-在正式打 tag 和创建 release 之前，应先确认：
-
-1. 工作区改动已经过编译验收
-2. 提交信息能够清楚概括本轮修订主题
-3. `build/pcselbook.pdf` 与正文状态一致
-4. release note 已准备好
-
-### 11.1 v3.19 计划纳入的修订点
-
-根据当前项目内审记录，`v3.19` 主要覆盖以下内容：
-
-- `ch09`：补 Green 函数误差界，并加入 Fresnel 反射的定量估计
-- `ch09`：补 `D_x/D_y` 群速度矩阵的显式 `2\times 2` 推导示例框
-- `ch09/ch07`：统一 `v_g \rightarrow v_{\mathrm{en}}` 的记号，并明确区分能量速度与 Bloch 群速度
-- `ch05`：新增 `ABCD \leftrightarrow irrep` 映射表
-- `ch07`：用 `v_{\mathrm{en}}` 重写阈值映射语境，并补“能量速度” `RigorousBox`
-- `ch10`：新增“本章定位”节，明确“继承什么、升级什么”
-- `ch13`：压缩 RCWA 开篇冗长列表，收紧方法入口叙述
-- `ch09`：补模式竞争动力学框架，与多模速率方程链形成接口
-- `ch09`：新增 `g_{\mathrm{mod}}` 来自 QW 模型的 `RigorousBox`
-- `ch25`：新增关键量首次定义位置索引
-
-### 11.2 v3.19 建议 release notes
-
-可直接作为 `gh release create` 的说明文本使用：
-
-```text
-PCSELbook v3.19
-
-This release focuses on theory-chain tightening and notation cleanup around the core PCSEL modeling workflow.
-
-- Added ABCD-to-irrep mapping in the Gamma-point band chapter
-- Unified energy-velocity notation and clarified its distinction from Bloch group velocity
-- Strengthened the CWT chapter with Green-function error bounds, Dx/Dy 2x2 examples, and multimode competition links
-- Tightened the RCWA chapter introduction
-- Added key-definition indexing in the mathematical appendix
-- Updated the compiled PDF to match the current LaTeX project state
-```
-
-### 11.3 v3.19 正式发布命令模板
-
-当且仅当 `v3.19` 对应的提交已经准备好时，再执行：
+### 9.4 提交与打 tag
 
 ```powershell
 git add .
@@ -341,42 +265,46 @@ git commit -m "release: prepare v3.19"
 git push
 git tag -a v3.19 -m "PCSELbook release v3.19"
 git push origin v3.19
-gh release create v3.19 build\pcselbook.pdf --title "PCSELbook v3.19" --notes-file release_notes_v3.19.txt
 ```
 
-如果不单独准备 `release_notes_v3.19.txt`，也可以直接把上一小节的说明文字写进 `--notes`。
-
-## 12. 对后续 AI 的项目约定
-
-后续 AI 如果要操作本仓库，应遵守以下规则：
-
-1. 默认先看 `git status`
-2. 不要把 `build/` 或 `version/` 加进提交
-3. 提交前先编译，确认 `build/pcselbook.pdf` 正常生成
-4. 大改动优先新建分支，不要直接污染 `main`
-5. release 只上传 `build/pcselbook.pdf`
-6. 本地留档 PDF 只放 `version/`，不推送
-7. 若要改 Git 身份，只改仓库本地配置，不改全局配置，除非用户明确要求
-
-## 13. 一套最小可执行命令
-
-### 提交日常修改
+### 9.5 创建 GitHub release 并上传 PDF
 
 ```powershell
-cd /d C:\Users\lenovo\OneDrive\研究生资料\PCSEL指南
-git status
-latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=pcselbook main.tex
-git add .
-git commit -m "refine chapter 5 Gamma-point derivation"
-git push
+gh release create v3.19 build\pcselbook.pdf --title "PCSELbook v3.19" --notes-file build\release_notes_v3.19.txt
 ```
 
-### 生成新 release
+如果 release 已存在，只更新附件：
 
 ```powershell
-cd /d C:\Users\lenovo\OneDrive\研究生资料\PCSEL指南
-latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=pcselbook main.tex
-git tag -a vX.YY -m "PCSELbook release vX.YY"
-git push origin vX.YY
-gh release create vX.YY build\pcselbook.pdf --title "PCSELbook vX.YY" --notes "Release vX.YY of PCSELbook. This release includes the compiled PDF generated from the current LaTeX project state."
+gh release upload v3.19 build\pcselbook.pdf --clobber
 ```
+
+## 10. 当前已发布版本
+
+- `v3.18`
+- `v3.19`
+
+查看命令：
+
+```powershell
+gh release view v3.19
+```
+
+网页地址：
+
+```text
+https://github.com/wfy-op/PCSELbook/releases
+```
+
+## 11. 对后续 AI 的约定
+
+后续 AI 在执行版本发布时，默认应按下面顺序走：
+
+1. 读取当前工作区已保存改动
+2. 编译 `build/pcselbook.pdf`
+3. 复制一份到 `version/pcselbookX.YY.pdf`
+4. 用 `scripts/generate_release_notes.ps1` 生成 release 说明初稿
+5. 人工或 AI 收紧措辞，形成正式 `release_notes_vX.YY.txt`
+6. 提交、打 tag、创建 GitHub release
+
+如果用户只说“发布新版本”而没有额外说明，默认采用上述流程。

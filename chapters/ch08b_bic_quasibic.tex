@@ -59,11 +59,47 @@ d_\uparrow = d_\downarrow = 0,
 BIC 的定义依赖开放边界与连续辐射通道。若把问题错误地近似成封闭本征值问题，就既不会看到真正的辐射损耗，也不会正确看到 BIC 的成因。
 \end{RigorousBox}
 
+\begin{IntuitionBox}
+\textbf{用声波干涉理解 BIC。}想象两个同频率扬声器发出相位相反的声波。在某些位置，两列波会完全相消，形成静止点。BIC 的本质类似：它不是"没有辐射通道"，而是所有可用辐射通道的振幅相互抵消了。关键在于，这种相消不是偶然巧合，而是由结构对称性强制保证的。
+\end{IntuitionBox}
+
 \begin{ExampleBox}
 \textbf{BIC 的严格口径是什么？}
 
-普通束缚态可概括为“频率不在连续谱内，所以无辐射”；BIC 则应表述为“频率位于连续谱内，但辐射耦合矩阵元为零，所以无辐射”。对 PCSEL 来说，这个区分非常关键，因为 BIC / quasi-BIC 讨论的是开放辐射问题本身，而不是简单靠频率躲开辐射区的模式。
+普通束缚态可概括为"频率不在连续谱内，所以无辐射"；BIC 则应表述为"频率位于连续谱内，但辐射耦合矩阵元为零，所以无辐射"。对 PCSEL 来说，这个区分非常关键，因为 BIC / quasi-BIC 讨论的是开放辐射问题本身，而不是简单靠频率躲开辐射区的模式。
 \end{ExampleBox}
+
+\section{对称性保护 BIC 的物理图像：从偶极子到点群表示}
+\label{sec:symmetry-bic-intuitive}
+第\cref{ch:polarization}已经从点群不可约表示的角度给出了严格的分类规则。但对初次接触这一概念的读者，尤其是尚未系统学习群论的本科生，可能仍然困惑：为什么对称性可以"强制"辐射振幅为零？本节用一个具体的偶极子辐射例子搭建直观桥梁。
+
+考虑一个简单的物理图像：任何局域源的远场辐射都可以做多极展开，最低阶是电偶极辐射。电偶极矩定义为
+\begin{equation}
+\bm{d} = \int_V \bm{P}(\bm{r}) \dd V,
+\label{eq:dipole_moment}
+\end{equation}
+其中$\bm{P}$是极化强度分布。关键问题在于：$\bm{d}$在空间反演操作$\mathcal{I}:\bm{r}\to-\bm{r}$下如何变换？
+
+若模式电场满足奇宇称条件$\bm{E}(-\bm{r}) = -\bm{E}(\bm{r})$，则极化分布也具有相同宇称$\bm{P}(-\bm{r}) = -\bm{P}(\bm{r})$。此时对整个单胞积分：
+\begin{equation}
+\bm{d} = \int_{\rm cell} \bm{P}(\bm{r}) \dd V 
+      = \int_{\rm cell} \bm{P}(-\bm{r}') \dd V' 
+      = -\int_{\rm cell} \bm{P}(\bm{r}') \dd V' 
+      = -\bm{d},
+\end{equation}
+其中用了变量代换$\bm{r}'=-\bm{r}$且积分区域不变（周期单胞关于原点对称）。于是得到$\bm{d} = -\bm{d}$，唯一可能是$\bm{d}=\bm{0}$。\textbf{电偶极矩为零意味着最低阶辐射通道被关闭}。
+
+\begin{NoteBox}{从偶极子禁戒到点群 irrep}
+上面的论证用的是最简单的空间反演对称性（宇称）。对 PCSEL 常用的正方晶格$C_{4v}$点群，情况更丰富：
+\begin{itemize}
+  \item $A_1,A_2$表示是一维的，场分布在某些操作下保持不变或变号
+  \item $B_1,B_2$也是一维，但变换规则不同
+  \item $E$表示是二维的，对应简并对
+\end{itemize}
+法向辐射的自由空间平面波构成$C_{4v}$的某个表示。若模式的 irrep 与辐射场的 irrep 不匹配（直积不含恒等表示），则耦合矩阵元必为零。这就是\cref{ch:polarization}中表格的物理来源。
+\end{NoteBox}
+
+把这个论证推广到$C_{4v}$点群：exact $\Gamma$点的模式可以按照$C_{4v}$的不可约表示分类。法向辐射通道（沿$z$轴传播的平面波）在$C_{4v}$操作下有确定的变换行为。若模式的 irrep 与辐射通道的 irrep 正交，则由群论的正交定理可知，它们的重叠积分必然为零。这就解释了为什么某些$\Gamma$点模式天然是 BIC——不是数值巧合，而是对称性强制的结果。
 
 \section{\texorpdfstring{$\Gamma$}{Gamma} 点为什么是 BIC 语言最自然的舞台}
 在二维周期 slab 中，$\Gamma$ 点对应零平面波矢，恰好也是法向出射和法向辐射最直接相关的位置。对 PCSEL 来说，这一点尤为自然：目标模式大多围绕 $\Gamma$ 点组织，因为它最容易同时连接\textbf{面内布拉格反馈}与\textbf{法向面发射}。
@@ -150,6 +186,16 @@ d \propto \delta,
 Q_{\mathrm{rad}} \propto \delta^{-2}.
 \label{eq:q_scaling_quasibic}
 \end{equation}
+
+\begin{NoteBox}{$Q\propto\delta^{-2}$的量纲分析与物理论证}
+设对称性破缺参数为$\delta$，辐射振幅$d$是最小的线性响应量，则 Taylor 展开给出
+$d = d_0 + d_1\delta + O(\delta^2)$。由于$\delta=0$时对应理想 BIC ($d_0=0$)，故主导项为$d\approx d_1\delta$。
+辐射功率正比于$|d|^2$，因而$\gamma_{\rm rad}\propto\delta^2$，再由$Q=\omega_0/2\gamma_{\rm rad}$即得$Q\propto\delta^{-2}$。
+
+从量纲角度看，$\delta$是无量纲几何扰动（如位移除以晶格常数），$Q$也是无量纲量，因此幂次关系只能是纯数。
+二次方的根源在于：辐射是偶极矩（或更高阶多极矩）的平方，而小扰动下多极矩的变化是线性的。
+\end{NoteBox}
+
 \cref{eq:q_scaling_quasibic} 往往还可进一步写成更适合工程估算的形式
 \begin{equation}
 Q_{\mathrm{rad}} \approx \frac{Q_0}{\delta^2},

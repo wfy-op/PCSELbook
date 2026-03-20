@@ -123,6 +123,158 @@
 \newtcolorbox{RigorousBox}{title=严格表述,fonttitle=\heiti,colframe=red!60!black}
 \newtcolorbox{ExampleBox}{title=例子,fonttitle=\heiti,colframe=green!40!black}
 \newtcolorbox{PitfallBox}{title=易错点,fonttitle=\heiti,colframe=orange!80!black}
+\newtcolorbox{WhatCouldGoWrong}{title=可能出错处,fonttitle=\heiti,colframe=orange!80!black}
+\newtcolorbox{NoteBox}[2][]{%
+  title=#2,
+  fonttitle=\heiti,
+  colframe=purple!60!black,
+  colback=white,
+  #1
+}
+
+\newtcolorbox{ConnectionBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=teal!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=teal!70!black,colback=teal!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+\newtcolorbox{NumericalInsightBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=brown!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=brown!70!black,colback=brown!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{ApplicationBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=violet!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=violet!70!black,colback=violet!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{ReviewBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=gray!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=gray!70!black,colback=gray!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+\newtcolorbox{SymmetryQuick}{title=对称性速成,fonttitle=\heiti,colframe=cyan!60!black}
+\newtcolorbox{ConvergenceCriteria}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=magenta!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=magenta!70!black,colback=magenta!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{ResourceAlertBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=orange!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=orange!70!black,colback=orange!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{PrerequisiteBox}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=blue!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=blue!70!black,colback=blue!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{NormalizationRemark}[1]{%
+  title=#1,
+  fonttitle=\heiti,
+  colframe=indigo!60!black,
+  colback=white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=indigo!70!black,colback=indigo!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}\newtcolorbox{NumericalErrorBox}{title=数值误差控制,fonttitle=\heiti,colframe=teal!60!black}
+\newtcolorbox{CrossValidationBox}{title=交叉验证协议,fonttitle=\heiti,colframe=violet!60!black}
+\newtcolorbox{PracticalTipBox}{title=实用技巧,fonttitle=\heiti,colframe=brown!60!black}
+\newtcolorbox{ReportingStandardBox}{title=报告规范,fonttitle=\heiti,colframe=gray!60!black}
+\newtcolorbox{ExperimentalAlignmentBox}{title=实验对标要求,fonttitle=\heiti,colframe=pink!60!black}
+\newtcolorbox{EthicsReminderBox}{title=学术诚信提醒,fonttitle=\heiti,colframe=red!80!black}
+\newtcolorbox{ComparisonBox}[1]{title=#1,fonttitle=\heiti,colframe=cyan!60!black,colback=white}
+
+% Helper command for NoteBox titles with special characters (optional usage only)
+% Usage: \notetitle[PDF-friendly-text]{Visible Title}
 
 \newcommand{\kvec}{\bm{k}}
 \newcommand{\gvec}{\bm{G}}

@@ -73,8 +73,9 @@
 \end{RigorousBox}
 
 \section{\texorpdfstring{$\Gamma$}{Gamma} 点小群与不可约表示：最小分类工具}
-如果只停留在“镜面对称、旋转对称、奇偶性”这些词上，读者虽然能听懂很多物理解释，但还没有真正得到一套可以反复使用的分类工具。真正教材化的做法，是在 $\Gamma$ 点把模式按小群（little group）的不可约表示分类。
+如果只停留在“镜面对称、旋转对称、奇偶性”这些词上，读者虽然能听懂很多物理解释，但还没有真正得到一套可操作的分类工具。本节只做三件事：\textbf{先解释小群是什么、再说明 irrep 标签怎么贴、最后给出法向辐射的最小判据}。
 
+\paragraph{第一步：小群是“在某个 $\kvec$ 处还活着的对称性”。}
 对任意 Bloch 波矢 $\kvec$，其小群定义为
 \begin{equation}
 \mathcal{G}_{\kvec}
@@ -84,28 +85,43 @@ g\in \mathcal{G}\;\middle|\; g\kvec=\kvec+\gvec,\ \gvec\in \text{倒格矢集合
 \right\},
 \label{eq:little_group_def}
 \end{equation}
-其中 $\mathcal{G}$ 是晶格的点群。对 $\Gamma$ 点而言，$\kvec=\bm{0}$，因此
+其中 $\mathcal{G}$ 是晶格的点群。直觉上，这个定义只是在说：\textbf{对称操作作用到 $\kvec$ 后，如果它仍落在“同一个 Bloch 态”的等价点上（差一个倒格矢），那这个对称操作在该 $\kvec$ 处仍然有效。}
+
+对 $\Gamma$ 点而言，$\kvec=\bm{0}$，因此
 \begin{equation}
 \mathcal{G}_{\Gamma}=\mathcal{G}.
 \end{equation}
-这就是为什么 $\Gamma$ 点最适合做正式对称性标注：此时小群就是完整点群，模式标签最清楚、选择规则也最严格。
+这就是为什么 $\Gamma$ 点最适合做正式对称性标注：此时小群就是完整点群，工具箱最大、标签最清楚、选择规则也最严格。
 
-不可约表示（irreducible representation, irrep）的作用可以概括成三条：
+\begin{IntuitionBox}
+把“点群”想成整套对称工具，把“小群”想成“在某个 $\kvec$ 处还能用的那一部分工具”。$\Gamma$ 点不丢任何工具，所以最适合做标准化标签。
+\end{IntuitionBox}
+
+\paragraph{第二步：irrep 标签回答“对称操作作用后场怎样变化”。}
+不可约表示（irreducible representation, irrep）的最小用途不是“背表”，而是给出三条可操作结论：
 \begin{enumerate}
-  \item 同一 irrep 内的模式在保持该对称性的扰动下可以混合，不同 irrep 的模式则不能直接混合；
-  \item 二维 irrep 对应受对称性保护的简并，因此天然与双偏振、双简并候选模有关；
-  \item 模式是否能耦合到法向辐射通道，首先取决于它的 irrep 是否与辐射通道的 irrep 匹配。
+  \item \textbf{能不能混合：}同一 irrep 内的模式在保持对称性的扰动下可以混合，不同 irrep 的模式不能直接混合；
+  \item \textbf{有没有成对：}二维 irrep 对应受对称性保护的简并，天然与双偏振、双简并候选模有关；
+  \item \textbf{能不能直射：}模式是否能耦合到法向辐射通道，首先取决于它的 irrep 是否与辐射通道的 irrep 匹配。
 \end{enumerate}
 
-物理根源：在 $\Gamma$ 点（$k_\parallel=0$），法向辐射对应的自由空间平面波是均匀平面波，其横向线偏振电场在 $C_{4v}$ 语言中变换为 $E$ 表示。若腔模的 irrep 与自由空间辐射场的 irrep \textbf{不匹配}（即它们在所有对称操作下的特征标乘积积分为零），则两者之间的辐射耦合矩阵元为零——这正是 $A_1$、$A_2$、$B_1$、$B_2$ 四类非简并模通常对应暗模（BIC）的群论原因。只有 $E$ 表示（二维简并模）可与线偏振辐射耦合，是典型的亮模。
+更直观的说法是：对称操作作用到模场上，场要么保持不变（特征标 $+1$）、要么变号（特征标 $-1$）、要么与另一支模式互换（二维表示）。这三个结果已经足够把绝大多数 $\Gamma$ 点模式分到 $A_1/A_2/B_1/B_2/E$ 之中。
+
+\begin{ExampleBox}
+若两支近简并模在 $\pm90^\circ$ 旋转下互相交换，而在某条镜面下分别变号/不变，那么更正确的做法不是给它们各贴一个 singlet 标签，而是把它们合在一起作为二维 $E$ 双重态。
+\end{ExampleBox}
+
+\paragraph{第三步：法向辐射的最小判据。}
+在 $\Gamma$ 点（$k_\parallel=0$），法向辐射对应的自由空间平面波是横向均匀平面波，其两支线偏振 $(\hat{\bm x},\hat{\bm y})$ 在 $C_{4v}$ 语言中张成二维表示 $E$。因此：\textbf{若腔模的 irrep 与辐射通道的 irrep 不匹配，则法向辐射耦合矩阵元在对称性上必为零。} 这正是 $A_1$、$A_2$、$B_1$、$B_2$ 四类非简并模往往成为 dark/BIC 候选的群论原因，而 $E$ 表示则是典型亮模候选。
 
 \begin{RigorousBox}
-本章的 irrep 分类是“最小但可用”的工具。它主要处理平面内 little group 与法向辐射选择规则，已经足以支撑 PCSEL 中的偏振选择、$\Gamma$ 点模标注和 symmetry-protected BIC 判断。若要得到完全严格的三维 slab 结论，还需再结合纵向奇偶性和真实层栈不对称。
+上述判据的正式版本可写成“张量积包含全对称表示”。但在初次使用阶段，只需记住：\textbf{模式 irrep 必须与法向辐射通道 irrep 相容，耦合才可能非零。}
 \end{RigorousBox}
 
 \begin{PitfallBox}
 必须把一句话反复记住：\textbf{in-plane little-group 匹配只是必要的第一层筛选，不是三维 slab 中法向辐射强度的充分判据。} 一个模式即便在平面内表示上允许 direct normal radiation，真实辐射强度仍会继续受纵向奇偶性、层栈不对称、上下光锥和有限厚度矢量混合的共同影响。
 \end{PitfallBox}
+
 
 \section{方格晶格 \texorpdfstring{$\Gamma$}{Gamma} 点：\texorpdfstring{$C_{4v}$}{C4v} 分类}
 对理想方格晶格，$\Gamma$ 点小群是

@@ -1,4 +1,4 @@
-\chapter{PCSEL 的耦合波理论（CWT）}
+﻿\chapter{PCSEL 的耦合波理论（CWT）}
 \label{ch:cwt-min}
 
 \section*{学习目标}
@@ -957,6 +957,61 @@ v_{g,y}^{(j)}
 因此 $\bm D_x,\bm D_y$ 不是额外拍脑袋引入的”速度矩阵”，而是 exact $\Gamma$
 附近色散雅可比在有限维子空间中的线性化结果。
 
+\subsection{从 CWT 本征矢量提取远场偏振方位角}
+\label{subsec:cwt_polarization_angle_extraction}
+
+在实际器件设计中，除了关心模式的辐射常数和品质因子，还需要直接从 CWT 解中提取远场的偏振特性。设第 $j$ 个超模的本征矢量为
+\begin{equation}
+\bm V_j = 
+\begin{bmatrix}
+c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
+\end{bmatrix}^{\mathsf T},
+\end{equation}
+其中下标 $x,y$ 分别表示沿 $\pm x$ 和 $\pm y$ 方向传播的基本波对。在最小四波模型中，远场主要由前向波 $c_{x,j}$ 和 $c_{y,j}$ 贡献（后向波 $s_{x,j},s_{y,j}$ 主要形成驻波反馈）。因此，远场电场的横向分量可近似写为
+\begin{equation}
+\bm E_{\mathrm{ff}} \approx c_{x,j}\,\hat{\bm x} + c_{y,j}\,\hat{\bm y}.
+\end{equation}
+由此可直接定义三个关键偏振参数：
+
+\paragraph{1. 偏振方位角 (azimuth angle)}
+线偏振主轴相对于 $x$轴的夹角为
+\begin{equation}
+\psi_j = \arctan\!\left(\frac{|c_{y,j}|}{|c_{x,j}|}\right),
+\qquad
+\psi_j \in [0, \pi/2].
+\label{eq:polarization_azimuth_from_cxy}
+\end{equation}
+特别地，当 $|c_{x,j}|=|c_{y,j}|$且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当$c_{y,j}=0$时,$\psi_j=0^\circ$,对应纯$x$偏振。
+
+\paragraph{2. 椭圆率 (ellipticity)}
+若考虑复振幅的相对相位 $\delta\phi = \arg(c_{y,j}) - \arg(c_{x,j})$，则偏振椭圆的椭圆率为
+\begin{equation}
+e_j = \tan\chi_j = \frac{2|c_{x,j}||c_{y,j}|\sin(\delta\phi)}{|c_{x,j}|^2 + |c_{y,j}|^2},
+\qquad
+e_j \in [-1, 1],
+\label{eq:polarization_ellipticity_from_cxy}
+\end{equation}
+其中 $e_j=0$ 对应完全线偏振，$|e_j|=1$ 对应圆偏振。
+
+\paragraph{3. 斯托克斯参量 (Stokes parameters)}
+更一般地，可以用归一化斯托克斯参量完整刻画偏振态：
+\begin{align}
+s_0 &= |c_{x,j}|^2 + |c_{y,j}|^2, \notag\\
+s_1 &= \frac{|c_{x,j}|^2 - |c_{y,j}|^2}{s_0}, \notag\\
+s_2 &= \frac{2\mathrm{Re}(c_{x,j}^* c_{y,j})}{s_0}, \notag\\
+s_3 &= \frac{2\mathrm{Im}(c_{x,j}^* c_{y,j})}{s_0}.
+\label{eq:stokes_from_cxy_chapter9}
+\end{align}
+这四个参量满足$s_1^2+s_2^2+s_3^2=1$（完全偏振光），且在庞加莱球上构成一个单位向量。结合 \cref{ch:polarization} 中的对称性分析，可以预测不同模式在不同对称破缺下的轨迹演化。
+
+\begin{NoteBox}[breakable]{实际应用提示}
+在优化算法中，可以直接将 \cref{eq:polarization_azimuth_from_cxy,eq:polarization_ellipticity_from_cxy} 作为目标函数的约束项。例如，若要设计 $45^\circ$线偏振基模，可在损失函数中加入惩罚项
+\begin{equation}
+\mathcal{L}_{\mathrm{pol}} = w_{\psi}\left(\psi_j - \frac{\pi}{4}\right)^2 + w_e |e_j|^2,
+\end{equation}
+其中权重$w_\psi,w_e$控制偏振纯度要求。这种方法比单纯依靠几何猜测更高效，尤其在高阶模抑制和多孔耦合结构中。
+\end{NoteBox}
+
 \begin{ExampleBox}
 \textbf{2$\bm\times$2 子空间的 $\bm D_x$ 具体形式。}
 为说明 $\bm D_x$ 如何从色散导出，以方格晶格四波子空间中的 $E$ doublet 子块为例。
@@ -1211,3 +1266,4 @@ $A_1$、$B_1$ 与 $E$ family 的分解，正是把模式标注、偏振选择和
 
   \item 若想直接对照 PCSEL 专用 CWT 的代表性建立过程，可参考 \cite{liang2012square,liang2013triangular}。 这条阅读的重点是补足本章关于最小 CWT、四波基底与阈值代理 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
