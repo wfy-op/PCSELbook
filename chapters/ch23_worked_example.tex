@@ -1,4 +1,5 @@
-﻿\chapter[教材式例题]{教材式例题：从玩具模型到完整建模框架}
+﻿% !TEX root = ../main.tex
+\chapter[教材式例题]{教材式例题：从玩具模型到完整建模框架}
 \label{ch:worked-example}
 
 \section*{学习目标}
@@ -12,6 +13,10 @@
 建议已掌握 \cref{ch:cwt-min,ch:pwe,ch:workflow,ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling,ch:robustness} 中关于最小 CWT、PWEM、完整工作流、外延层、电注入、热回写与鲁棒性分析的内容。
 
 \section*{本章路线图}
+\ChapterModelLevel{L1→L4}
+\input{figures/fig_ch23_two_layer_example_bridge}
+图 \cref{fig:ch23_two_layer_example_bridge} 先给出本章双层例题的输入/输出边界，后文每一步都按这张桥接图检查“已经证明了什么、还缺什么”。
+
 前面的例题更像一份研究任务单：它告诉读者应该先做什么、后做什么，但还没有把“为什么这样做”和“手上到底应该算出什么”讲到足够像教科书例题。本章因此重写成双层结构。第一层是纸上可走完的玩具模型，我们真的写出一个四波耦合矩阵，算出模式分裂、损耗排序与一个最小阈值判断。第二层是数值全流程例题，我们固定一组简化但合理的参数，逐步完成纵向模检查、单胞候选模筛选、有限阵列验证以及简化电热回写，并在最后汇总每一步的中间结果、可下的可靠结论与仍然悬而未决的问题。读者若能顺着这一章走完，就不应再把“工作流”理解成抽象流程图，而应把它看成一套真正能操作的解题方法。
 
 \section{先把本章放回工作流与失败模式框架中}

@@ -1,0 +1,104 @@
+% !TEX root = ../main.tex
+% Figure: Linewidth enhancement factor and coherence properties
+% Chapter: ch21 - Linewidth, Coherence, and Brightness Characteristics
+% Description: Henry alpha factor impact on spectral purity
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    % Left: Gain and refractive index change vs carrier density
+    \begin{scope}[shift={(-5,0)}]
+      % Axes
+      \draw[->] (0,0) -- (5,0) node[right] {$N$};
+      \draw[->] (0,-2) -- (0,3) node[above] {$g, \Delta n$};
+      
+      % Gain curve (linear increase then saturation)
+      \draw[very thick, blue, domain=0:4.5, samples=50] 
+        plot(\x,{max(0, 0.8*(\x-1)-0.1*(\x-1)^2)});
+      \node[right, blue] at (4.5,1.2) {增益$g(N)$};
+      
+      % Refractive index change (decreasing)
+      \draw[very thick, red, domain=0:4.5, samples=50] 
+        plot(\x,{-0.3*\x-0.05*\x^2});
+      \node[right, red] at (4.5,-2) {折射率变化$\Delta n(N)$};
+      
+      % Transparency point
+      \draw[dashed, gray] (1,-2) -- (1,3);
+      \node[below, gray] at (1,0) {\scriptsize $N_{tr}$};
+      
+      % Slopes indication
+      \draw[<->, blue] (2,0.5) -- (3,0.5);
+      \node[above, blue, font=\small] at (2.5,0.6) {$dg/dN$};
+      
+      \draw[<->, red] (2,-1) -- (3,-1.3);
+      \node[below, red, font=\small] at (2.5,-1.4) {$dn/dN$};
+      
+      \node[above, font=\bfseries] at (2.5,3.2) {(a) 增益与折射率色散};
+    \end{scope}
+    
+    % Right: Linewidth broadening mechanisms
+    \begin{scope}[shift={(2,0)}]
+      % Lorentzian lineshape (Schawlow-Townes)
+      \draw[thick, blue, domain=-3:3, samples=100] 
+        plot(\x,{2/(1+\x*\x)});
+      \node[above, blue] at (0,2.2) {ST 线宽$\Delta\nu_{\mathrm{ST}}$};
+      
+      % Broadened lineshape (Henry factor included)
+      \draw[thick, red, dashed, domain=-3:3, samples=100] 
+        plot(\x,{2/(1+(\x/1.5)^2)});
+      \node[above, red, align=center] at (1.5,1.5) {实际线宽\\$\Delta\nu=(1+\alpha_H^2)\Delta\nu_{\mathrm{ST}}$};
+      
+      % Half-width markers
+      \draw[dashed] (-1,0) -- (-1,1);
+      \draw[dashed] (1,0) -- (1,1);
+      \draw[<->] (-1,-0.3) -- (1,-0.3);
+      \node[below] at (0,-0.4) {$\Delta\nu_{\mathrm{ST}}$};
+      
+      \draw[dashed] (-1.5,0) -- (-1.5,0.75);
+      \draw[dashed] (1.5,0) -- (1.5,0.75);
+      \draw[<->] (-1.5,-0.6) -- (1.5,-0.6);
+      \node[below, red] at (0,-0.7) {$(1+\alpha_H^2)^{1/2}\Delta\nu_{\mathrm{ST}}$};
+      
+      % Frequency axis
+      \draw[->] (-3.5,-1) -- (3.5,-1) node[right] {$\nu-\nu_0$};
+      \node[below] at (0,-1.2) {(b) 线宽展宽机制};
+    \end{scope}
+    
+    % Bottom center: Alpha factor definition
+    \node[draw, align=center, font=\small] at (0,-2.5) {
+      Henry 线宽增强因子定义:\\
+      $\displaystyle\alpha_H = -\frac{4\pi}{\lambda}\frac{dn'/dN}{dg/dN}$\\[6pt]
+      物理意义：振幅 - 相位耦合强度\\
+      典型值：体材料$\alpha_H\sim 3$--$6$, QW $\alpha_H\sim 2$--$4$
+    };
+    
+    % Chirp illustration inset
+    \begin{scope}[shift={(6,1)}, scale=0.8]
+      % Current pulse
+      \draw[->] (0,0) -- (3,0) node[right] {$t$};
+      \draw[->] (0,0) -- (0,2.5) node[above] {$I(t)$};
+      \draw[very thick, blue] (0,0.5) -- (1,0.5) -- (1,2) -- (2,2) -- (2,0.5) -- (3,0.5);
+      \node[above, blue] at (1.5,2.2) {方波调制};
+      
+      % Frequency chirp response
+      \draw[->] (0,-2.5) -- (3,-2.5) node[right] {$t$};
+      \draw[->] (0,-4.5) -- (0,-2) node[above] {$\delta\nu(t)$};
+      \draw[very thick, red] (0,-3) -- (1,-3);
+      \draw[very thick, red] (1,-3) .. controls (1.2,-4) and (1.8,-4) .. (2,-3);
+      \draw[very thick, red] (2,-3) -- (3,-3);
+      \node[below, red] at (1.5,-4.2) {啁啾响应};
+      
+      \node[align=center, font=\small] at (1.5,-1) {动态线宽展宽:\\直接调制引起瞬态频率偏移};
+    \end{scope}
+    
+    % Impact on applications
+    \node[align=left, font=\footnotesize, anchor=south west] at (-6,-4) {
+      \textbf{对应用的影响}:\\
+      $\bullet$ 光谱纯度:$\Delta\lambda = \lambda^2\Delta\nu/c$\\
+      $\bullet$ 相干长度:$L_c = c/(\pi\Delta\nu)$\\
+      $\bullet$ 传感灵敏度$\propto 1/\sqrt{\Delta\nu}$
+    };
+  \end{tikzpicture}
+  \caption{Henry 线宽增强因子 $\alpha_H$ 的物理来源及其对 PCSEL 光谱纯度的影响。(a) 左图示意载流子变化同时引起增益和折射率变化，从而产生振幅与相位耦合；(b) 右图示意 $\alpha_H$ 使实际线宽相对 Schawlow-Townes 极限进一步展宽，并在动态调制中引入频率啁啾。}
+  \label{fig:ch21_linewidth_enhancement}
+\end{figure}

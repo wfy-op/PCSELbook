@@ -1,0 +1,51 @@
+% !TEX root = ../main.tex
+% Figure: Error propagation graph from process variation to device metrics
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=6mm and 8mm,
+    src/.style={rectangle, rounded corners, draw, align=center, fill=blue!12, minimum width=2.8cm, minimum height=8mm},
+    mid/.style={rectangle, rounded corners, draw, align=center, fill=orange!12, minimum width=2.9cm, minimum height=8mm},
+    dst/.style={rectangle, rounded corners, draw, align=center, fill=green!12, minimum width=2.6cm, minimum height=8mm},
+    arr/.style={-Stealth, thick}
+  ]
+    % Sources
+    \node[src] (s1) {hole radius / lattice shift};
+    \node[src, below=of s1] (s2) {etch depth / sidewall angle};
+    \node[src, below=of s2] (s3) {metal/aperture misalignment};
+    \node[src, below=of s3] (s4) {edge truncation / roughness};
+
+    % Mechanisms
+    \node[mid, right=18mm of s1] (m1) {phase-network detuning};
+    \node[mid, right=18mm of s2] (m2) {channel redistribution};
+    \node[mid, right=18mm of s3] (m3) {injection nonuniformity};
+    \node[mid, right=18mm of s4] (m4) {thermal hotspot relocation};
+
+    % Metrics
+    \node[dst, right=19mm of m1] (d1) {$\Delta G_{\star j}$};
+    \node[dst, below=of d1] (d2) {$Q$ and far-field};
+    \node[dst, below=of d2] (d3) {polarization purity};
+    \node[dst, below=of d3] (d4) {$T_{\max}$ and pass rate};
+
+    \draw[arr] (s1) -- (m1);
+    \draw[arr] (s1) -- (m2);
+    \draw[arr] (s2) -- (m2);
+    \draw[arr] (s3) -- (m3);
+    \draw[arr] (s3) -- (m4);
+    \draw[arr] (s4) -- (m1);
+    \draw[arr] (s4) -- (m4);
+
+    \draw[arr] (m1) -- (d1);
+    \draw[arr] (m1) -- (d2);
+    \draw[arr] (m2) -- (d2);
+    \draw[arr] (m2) -- (d3);
+    \draw[arr] (m3) -- (d1);
+    \draw[arr] (m3) -- (d4);
+    \draw[arr] (m4) -- (d4);
+  \end{tikzpicture}
+  }
+  \caption{Error propagation graph for tolerance analysis: process variations map to physical mechanisms, then to observable device metrics.}
+  \label{fig:ch20b_error_propagation_graph}
+\end{figure}

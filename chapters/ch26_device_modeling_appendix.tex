@@ -1,3 +1,4 @@
+﻿% !TEX root = ../main.tex
 \chapter{半导体激光器与器件建模附录}
 \label{ch:device-appendix}
 
@@ -12,6 +13,10 @@
 建议已掌握 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 中关于外延层光学、量子阱增益、电注入和热-电-光耦合的内容。
 
 \section*{本章路线图}
+\ChapterModelLevel{L3→L4}
+\input{figures/fig_ch26_calibration_validation_loop}
+建议先用 \cref{fig:ch26_calibration_validation_loop} 对齐“测量-提取-校准-预测-回验”的闭环，再逐节阅读具体方程与接口定义。
+
 正文 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 已经把器件物理分开讲过，但真正开始做器件模型时，读者仍然很容易卡在一个地方：每一章单独看都懂，一旦想把它们连起来，就不知道变量应该怎样流动。本附录就是为了解决这个问题。我们先建立从材料增益到阈值电流的符号链，说明每个箭头背后对应的是哪一类模型；随后给出最小器件方程组，并明确区分哪些式子属于光学模型，哪些属于电学模型，哪些属于热-电-光耦合模型；再整理常见边界条件、参数来源和校准顺序；然后把“测量 $\rightarrow$ 参数提取 $\rightarrow$ 分层校准 $\rightarrow$ 预测 $\rightarrow$ 回验”写成一条可执行的实验闭环；最后给出不确定性传播与结果报告方式，帮助读者把“能跑通”提升为“能解释、能复核”。
 
 \section{为什么器件建模最容易在“接口”上出错}
@@ -345,5 +350,7 @@ h\,(T-T_\infty),
 
   \item 若想进一步对照半导体激光器器件建模的一般框架，可结合 \cite{coldren2012,zhoupan2023,hirose2014,yoshida2023} 中关于增益、器件设计与实验对接的内容一起阅读。 这条阅读的重点是补足本章关于器件参数链、校准闭环与模型交付 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
+
 
 

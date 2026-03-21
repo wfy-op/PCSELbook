@@ -1,0 +1,34 @@
+% !TEX root = ../main.tex
+% Figure: Bridge between paper toy model and full numerical workflow
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=8mm and 12mm,
+    layer/.style={rectangle, rounded corners, draw, fill=#1!15, minimum width=3.2cm, minimum height=1.0cm, align=center},
+    note/.style={rectangle, draw, fill=#1!8, minimum width=5.2cm, minimum height=1.0cm, align=left},
+    arr/.style={-Stealth, thick}
+  ]
+    \node[layer=blue] (l1) {L1: toy CWT model};
+    \node[layer=teal, below=of l1] (l2) {L2: single-cell modal filter};
+    \node[layer=orange, below=of l2] (l3) {L3: finite-array verification};
+    \node[layer=red, below=of l3] (l4) {L4: electro-thermal loopback};
+
+    \node[note=blue, right=14mm of l1] (n1) {Input: $\kappa_1,\kappa_2,\gamma_i,\gamma_r$\\Output: splitting + ranking intuition};
+    \node[note=teal, right=14mm of l2] (n2) {Input: stack + unit-cell geometry\\Output: candidate modes and passive margins};
+    \node[note=orange, right=14mm of l3] (n3) {Input: aperture + boundary assumptions\\Output: edge leakage, near/far-field stability};
+    \node[note=red, right=14mm of l4] (n4) {Input: $J(\mathbf r),N(\mathbf r),T(\mathbf r)$\\Output: device-level pass/fail statements};
+
+    \draw[arr] (l1) -- (l2);
+    \draw[arr] (l2) -- (l3);
+    \draw[arr] (l3) -- (l4);
+    \draw[arr] (l1) -- (n1);
+    \draw[arr] (l2) -- (n2);
+    \draw[arr] (l3) -- (n3);
+    \draw[arr] (l4) -- (n4);
+  \end{tikzpicture}
+  }
+  \caption{Two-layer worked-example bridge: each level has explicit input, output, and claim boundary, so the reader can track what is proven at each step.}
+  \label{fig:ch23_two_layer_example_bridge}
+\end{figure}

@@ -1,3 +1,4 @@
+﻿% !TEX root = ../main.tex
 \chapter{电注入、载流子输运与阈值电流}
 \label{ch:electrical}
 
@@ -12,6 +13,7 @@
 建议已掌握 \cref{ch:threshold,ch:epitaxial-optics,ch:qw-gain} 中关于阈值增益、纵向重叠与有源区工程的内容。
 
 \section*{本章路线图}
+\ChapterModelLevel{L3}
 前两章已经把“哪一种有源区和纵向层栈更有希望满足目标模阈值增益”讲清楚，但真实器件还缺最后一条关键链：外部电流到底如何进入器件、沿哪些层扩展、在哪些区域变成量子阱载流子、又在哪些区域被串联电阻、漏电、复合和不均匀注入吃掉。本章就沿这条链展开。我们先重新定义阈值电流的器件含义，再讨论欧姆接触、肖特基接触、接触电阻与接触几何；随后引入 current spreading layer 和电流孔径，给出横向电流扩展的最小模型，再写出 Poisson+漂移-扩散+连续性方程组，最后把局域载流子分布与 \cref{ch:qw-gain} 的模增益公式重新接上，明确解释为什么纯冷腔结论和均匀增益模型在这里开始系统性失效。
 
 \section{阈值电流真正回答什么问题}
@@ -106,12 +108,12 @@ R_{\square}=\frac{1}{\sigma_s t_s},
 
 如果电流孔径比目标模式小得多，那么模式外围区域无法获得足够增益，结果会偏向那些更局域的模式；如果孔径形状本身不对称，则本该简并的模式可能被人为分裂，偏振和远场也可能一起偏移；如果孔径位置与接触几何共同导致中心与边缘注入差异，则模式竞争会从“谁损耗更低”转变为“谁更会吃到局域增益”。这就是为什么在 PCSEL 中，注入孔径和模式选择不能分属两个独立章节，它们实际上在器件里是同一件事的两个面。
 
-若只想先得到一个最小横向扩展模型，可把 current spreading layer 近似成一张片电阻为 $R_{\square}$ 的二维导电片，其片上电位 $V_s(x,y)$ 满足
+若只想先得到一个最小横向扩展模型，可把current spreading layer近似成一张片电阻为 $R_{\square}$ 的二维导电片，其片上电位 $V_s(x,y)$ 满足
 \begin{equation}
 \nabla_\parallel^2 V_s-\frac{V_s-V_{\mathrm{cont}}}{L_s^2}=0,
 \label{eq:current_spreading_sheet}
 \end{equation}
-其中 $V_{\mathrm{cont}}$ 是接触电位，$L_s$ 是电流扩展长度。\cref{eq:current_spreading_sheet} 当然不能替代完整漂移--扩散求解，但它在教学上非常有价值：只要 $L_s$ 明显小于器件横向尺寸，均匀注入就不再是默认可信假设。
+其中 $V_{\mathrm{cont}}$ 是接触电位，$L_s$ 是电流扩展长度。典型GaN基PCSEL中，p-GaN 层的片电阻约为$10^3$-$10^4~\Omega/\square$，对应的电流扩展长度$L_s$在几微米到十几微米量级。\cref{eq:current_spreading_sheet}当然不能替代完整漂移--扩散求解，但它在教学上非常有价值：只要$L_s$明显小于器件横向尺寸（例如器件直径~100 μm），均匀注入就不再是默认可信假设。
 
 \section{漂移-扩散方程组：器件模型的骨架}
 把上面的直觉写成可求解模型，基础框架仍是 Poisson 方程、电子和空穴的漂移-扩散与连续性方程。首先是 Poisson 方程
@@ -146,6 +148,19 @@ q\big(p-n+N_D^+-N_A^-\big),
 \bm J_n\cdot\hat{\bm n}=0,\qquad \bm J_p\cdot\hat{\bm n}=0;
 \]
 而肖特基或有限复合速度边界则通过表面通量关系进入。也正因此，接触不是“求解完成后再加的工程细节”，而是漂移--扩散问题定义的一部分。
+
+\begin{IntuitionBox}
+\textbf{欧姆接触 vs 肖特基接触的最小物理图像：}欧姆接触可理解为“金属与半导体在该边界几乎不形成注入势垒”，所以数值上常用固定电势或固定准费米能级；肖特基接触则存在势垒高度，注入通量受势垒与局域电场共同控制，边界条件通常写成温度相关的热发射/隧穿通量模型，而不是简单 Dirichlet 条件。
+\end{IntuitionBox}
+
+\begin{IntuitionBox}
+\textbf{准费米能级为何必须单独定义：}平衡态只有一个费米能级 $E_F$。注入工作时电子与空穴处于“各自局域近平衡、彼此不再全局平衡”的状态，因此要分别引入电子准费米能级 $E_{F_c}$ 与空穴准费米能级 $E_{F_v}$，并用
+\[
+n \approx N_C\exp\!\left(\frac{E_{F_c}-E_C}{k_BT}\right),\qquad
+p \approx N_V\exp\!\left(\frac{E_V-E_{F_v}}{k_BT}\right)
+\]
+把电学求解得到的载流子密度和能带图连接起来。两条准费米能级之间的分离，正是有源区可提供净增益的直接能带判据。
+\end{IntuitionBox}
 
 若载流子仍可近似看作处于局域热平衡，则扩散系数和迁移率之间满足 Einstein 关系
 \begin{equation}
@@ -197,7 +212,14 @@ I_{\mathrm{leak}},
 \cref{eq:gmod_with_injection} 属于\textbf{电学-光学耦合模型}。它说明了为什么注入分布会直接反馈到模式竞争：不同模式采样的是不同的空间权重，因而对同一组 $N(\rvec)$ 的“感受”不同。
 
 这条式子也清楚地解释了为什么大面积 PCSEL 绝不可能把均匀增益当作默认现实。只要接触有限、片电阻有限、孔径有限或热效应存在，$N(\rvec)$ 就必然不是常数，模式竞争排序也就不会等同于冷腔排序。
+\cref{fig:ch18_current_crowding}展示了方形p-接触电极下方的二维电流密度分布。注意边缘处的电流密度可达中心的 3-5 倍，这会引发局部效率下降和热点形成。
 
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch18_current_crowding}
+  \caption{PCSEL 中的电流拥挤效应。(a) 方形 p 接触电极下方的二维电流密度分布 $J(x,y)$ 热力图：红色表示高电流密度，蓝色表示低电流密度。四个角点和边缘处的电流密度最高，因为横向电流倾向于沿电阻最小的路径流动。(b) 沿中心截面的电流密度分布曲线 $J(x)$，清楚显示边缘峰值和中心凹陷的特征。电流拥挤会增强边缘处的俄歇复合、局部焦耳热并引入增益分布非均匀。}
+  \label{fig:ch18_current_crowding}
+\end{figure}
 \begin{ExampleBox}
 设两个候选模式在冷腔中损耗非常接近。模式 A 的横向场更集中在器件中心，模式 B 更偏向边缘。如果接触与 spreading layer 设计导致中心注入远强于边缘，那么\cref{eq:gmod_with_injection} 会使模式 A 获得更大有效模增益，即便模式 B 在被动结构里原本拥有略高的 $Q$。这正是“高 $Q$ 不自动等于最低阈值”的器件版解释。
 \end{ExampleBox}
@@ -256,5 +278,6 @@ g_{\mathrm{th},m}.
 
   \item 若想对照真实电注入 PCSEL 的器件案例，可参考 \cite{hirose2014,wang2024,zhoupan2023}。 这条阅读的重点是补足本章关于电注入、载流子输运与阈值电流 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
 
 

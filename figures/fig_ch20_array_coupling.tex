@@ -1,0 +1,89 @@
+% !TEX root = ../main.tex
+% Figure: Large-area coherent array synchronization mechanisms
+% Chapter: ch20 - Large-Area Single-Mode Operation Strategies
+% Description: Different coupling pathways for phase locking
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=0.92]
+    % Array of emitters (simplified as circles)
+    \def\emitterradius{0.3}
+    
+    % 5x5 emitter grid
+    \foreach \x in {-4,-2,...,4} {
+      \foreach \y in {-4,-2,...,4} {
+        % Emitting aperture
+        \fill[white] (\x,\y) circle (\emitterradius);
+        \draw[thick, blue] (\x,\y) circle (\emitterradius);
+        
+        % Phase indicator (arrow showing oscillation phase)
+        \pgfmathrandominteger{\phase}{0}{359}
+        \draw[->, red, thick] (\x,\y) -- ++(\phase:0.2);
+      }
+    }
+    
+    % Background: Common substrate
+    \fill[gray!10] (-5.5,-5.5) rectangle (5.5,5.5);
+    \node[above right, gray] at (-5.5,-5.5) {公共衬底};
+    
+    % Coupling mechanism 1: Evanescent tunneling (nearest neighbors)
+    \draw[very thick, green!60!black, <->] (-2,0) -- node[above] {\scriptsize 倏逝耦合} (0,0);
+    \draw[very thick, green!60!black, <->] (0,0) -- (2,0);
+    \draw[very thick, green!60!black, <->] (0,-2) -- (0,0);
+    \draw[very thick, green!60!black, <->] (0,0) -- (0,2);
+    
+    % Coupling mechanism 2: Radiation coupling (long-range)
+    \draw[very thick, orange, ->, bend left=20] (-4,-4) to[out=30,in=150] (4,4);
+    \draw[very thick, orange, ->, bend right=20] (4,-4) to[out=150,in=30] (-4,4);
+    \node[orange, align=center] at (0,3.5) {辐射耦合\\远场重叠};
+    
+    % Coupling mechanism 3: Shared cavity mode (global)
+    \draw[ultra thick, purple, dashed] (0,0) circle (5);
+    \node[purple, above] at (0,5.2) {共享腔模};
+    
+    % Boundary conditions
+    \draw[double distance=2pt, thick] (-5.5,-5.5) rectangle (5.5,5.5);
+    \node[below, font=\small] at (0,-5.8) {金属包覆边界或 DBR反射镜};
+    
+    % Zoom-in inset: Unit cell detail
+    \begin{scope}[shift={(7,3)}, scale=2]
+      % Single emitter with PhC cladding
+      \fill[white] (0,0) circle (0.3);
+      \draw[thick, blue] (0,0) circle (0.3);
+      
+      % Surrounding photonic crystal holes
+      \foreach \angle in {0,60,...,300} {
+        \fill[gray] (\angle:0.6) circle (0.08);
+      }
+      
+      % Fundamental mode profile
+      \draw[very thick, red, domain=0:360, samples=100] 
+        plot({0.2*cos(\x)*(1 + 0.12*cos(2*\x))},{0.2*sin(\x)*(1 + 0.12*cos(2*\x))});
+      
+      \node[above, font=\small] at (0,0.8) {单胞放大};
+      \node[below, align=center, font=\footnotesize] at (0,-0.8) {基模$\mathrm{LP}_{01}$\\近场高斯型};
+    \end{scope}
+    
+    % Coherence area illustration
+    \fill[yellow!20, opacity=0.5] (-1,-1) circle (1.5);
+    \node[yellow!60!black, align=center] at (-1,-1) {相干区域\\$A_c$};
+    
+    % Key parameters box
+    \node[draw, align=left, font=\small, anchor=north west] at (-6,6) {
+      \textbf{同步条件}:\\
+      $\bullet$ 耦合强度$\kappa >$频率失谐$\Delta\omega$\\
+      $\bullet$ 相位锁定时间$\tau_c < $光子寿命$\tau_p$\\
+      $\bullet$ 阵列尺寸$L <$相干长度$L_c$
+    };
+    
+    % Output beam quality metrics
+    \node[draw, align=left, font=\small, anchor=south east] at (6,-6) {
+      \textbf{光束质量指标}:\\
+      $\bullet$ $M^2 < 1.2$接近衍射极限\\
+      $\bullet$ 旁瓣抑制比$>15\,\mathrm{dB}$\\
+      $\bullet$ 指向稳定性$<0.1^\circ$
+    };
+  \end{tikzpicture}
+  \caption{大面积 PCSEL 阵列中相干锁定的三种主要横向耦合机制：倏逝近邻耦合、辐射远场耦合以及共享全局腔模。右上角给出单胞局域模式示意，右下角列出评价大面积单模器件时常用的光束质量指标。}
+  \label{fig:ch20_array_coupling}
+\end{figure}

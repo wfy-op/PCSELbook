@@ -1,0 +1,54 @@
+% !TEX root = ../main.tex
+% Figure: Loss breakdown pie chart for threshold gain analysis
+% Chapter: ch07 - Threshold Gain and Loss Mechanisms
+% Description: Pie chart showing typical loss contributions in PCSEL
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % Define colors
+    \definecolor{radiation}{RGB}{231,76,60}      % Red
+    \definecolor{absorption}{RGB}{52,152,219}    % Blue
+    \definecolor{scattering}{RGB}{241,196,15}    % Yellow
+    \definecolor{leakage}{RGB}{155,89,182}       % Purple
+    
+    % Parameters (typical values for PCSEL)
+    \def\totalLoss{100}
+    \def\radiationLoss{45}    % Radiation loss (%)
+    \def\absorptionLoss{30}   % Free carrier absorption (%)
+    \def\scatteringLoss{15}   % Scattering loss (%)
+    \def\leakageLoss{10}      % Current leakage (%)
+    \pgfmathsetmacro{\angleA}{\radiationLoss/100*360}
+    \pgfmathsetmacro{\angleB}{(\radiationLoss+\absorptionLoss)/100*360}
+    \pgfmathsetmacro{\angleC}{(\radiationLoss+\absorptionLoss+\scatteringLoss)/100*360}
+    
+    % Draw pie chart
+    \fill[radiation] (0,0) -- (0:2cm) arc (0:\angleA:2cm) -- cycle;
+    \fill[absorption] (0,0) -- (\angleA:2cm) 
+      arc (\angleA:\angleB:2cm) -- cycle;
+    \fill[scattering] (0,0) -- (\angleB:2cm) 
+      arc (\angleB:\angleC:2cm) -- cycle;
+    \fill[leakage] (0,0) -- (\angleC:2cm) 
+      arc (\angleC:360:2cm) -- cycle;
+    
+    % Add labels with arrows
+    \node[right, align=left, font=\small] at (2.5,1.5) 
+      {\textcolor{radiation}{$\bullet$} 辐射损耗\\\footnotesize $\alpha_{\mathrm{rad}}$ (\radiationLoss\%)};
+    \node[right, align=left, font=\small] at (2.5,0.5) 
+      {\textcolor{absorption}{$\bullet$} 自由载流子吸收\\\footnotesize $\alpha_{\mathrm{fc}}$ (\absorptionLoss\%)};
+    \node[right, align=left, font=\small] at (2.5,-0.5) 
+      {\textcolor{scattering}{$\bullet$} 散射损耗\\\footnotesize $\alpha_{\mathrm{scat}}$ (\scatteringLoss\%)};
+    \node[right, align=left, font=\small] at (2.5,-1.5) 
+      {\textcolor{leakage}{$\bullet$} 电流泄漏\\\footnotesize $\eta_{\mathrm{inj}}<1$ (\leakageLoss\%)};
+    
+    % Title
+    \node[above, font=\bfseries] at (0,2.2) {PCSEL 阈值条件下的典型损耗分解};
+    
+    % Add equation annotation
+    \node[below, align=center, font=\footnotesize] at (0,-2.5) 
+      {$\alpha_{\mathrm{total}} = \alpha_{\mathrm{rad}} + \alpha_{\mathrm{fc}} + \alpha_{\mathrm{scat}} + \cdots$\\
+       $g_{\mathrm{th}} = \alpha_{\mathrm{total}}/\Gamma_{\mathrm{opt}}$};
+  \end{tikzpicture}
+  \caption{PCSEL 中的损耗机制分解示意图。辐射损耗通常占主导地位（尤其是对于表面发射器件），其次是自由载流子吸收和界面散射损耗。降低总损耗是实现低阈值激射的关键途径之一。注意电流泄漏虽然不直接贡献光学损耗，但会降低注入效率$\eta_{\mathrm{inj}}$，从而间接提高阈值电流密度。}
+  \label{fig:ch07_loss_breakdown_piechart}
+\end{figure}

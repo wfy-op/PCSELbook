@@ -1,0 +1,87 @@
+% !TEX root = ../main.tex
+% Figure: Dynamics and modulation response of PCSEL
+% Chapter: ch21b - Dynamics, Modulation, and Noise Characteristics
+% Description: Small-signal modulation bandwidth and resonance peak
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    % AM frequency response plot
+    \begin{scope}
+      % Axes
+      \draw[->, thick] (0,0) -- (7,0) node[right] {频率$f$ [GHz]};
+      \draw[->, thick] (0,-4) -- (0,3) node[above] {归一化响应[dB]};
+      
+      % Grid lines
+      \foreach \y in {-3,-2,...,2} {
+        \draw[gray!30] (0,\y) -- (6.5,\y);
+      }
+      
+      % Three curves for different bias currents
+      \draw[very thick, blue, domain=0:6.5, samples=100] 
+        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/2)^2)^2+(0.5*\x/2)^2)))-3});
+      \node[blue, above] at (3,1) {\scriptsize $I/I_{th}=1.5$};
+      
+      \draw[very thick, red, domain=0:6.5, samples=100] 
+        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/3)^2)^2+(0.4*\x/3)^2)))-1});
+      \node[red, above] at (4,1.5) {\scriptsize $I/I_{th}=2.5$};
+      
+      \draw[very thick, green!60!black, domain=0:6.5, samples=100] 
+        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/4)^2)^2+(0.3*\x/4)^2)))+1});
+      \node[green!60!black, above] at (5,2) {\scriptsize $I/I_{th}=4.0$};
+      
+      % Resonance peaks marking
+      \fill[blue] (1.9,-0.5) circle (2pt);
+      \fill[red] (2.9,0.3) circle (2pt);
+      \fill[green!60!black] (3.9,1.2) circle (2pt);
+      
+      % -3dB bandwidth indication
+      \draw[dashed, thick] (0,-3) -- (5.5,-3);
+      \draw[<->, thick, magenta] (4.2,-3.3) -- node[below] {\scriptsize $f_{-3\mathrm{dB}}$} (5.5,-3.3);
+      
+      % Relaxation oscillation frequency
+      \draw[dotted, thick] (2.9,0) -- (2.9,3);
+      \node[below, red] at (2.9,-0.3) {$f_R$};
+      
+      \node[above, font=\bfseries] at (3.5,3.5) {(a) 小信号调制响应};
+    \end{scope}
+    
+    % Eye diagram inset
+    \begin{scope}[shift={(8,0)}, scale=0.8]
+      % Axes
+      \draw[->, thick] (0,0) -- (5,0) node[right] {时间 [UI]};
+      \draw[->, thick] (0,-2) -- (0,2.5) node[above] {光功率};
+      
+      % Ideal eye pattern
+      \draw[very thick, blue, opacity=0.6] 
+        (0,0) .. controls (1,0.5) and (1.5,1.5) .. (2.5,2)
+        (0,2) .. controls (1,1.5) and (1.5,0.5) .. (2.5,0)
+        (2.5,0) .. controls (3.5,-0.5) and (4,0.5) .. (5,2)
+        (2.5,2) .. controls (3.5,1.5) and (4,0.5) .. (5,0);
+      
+      % Real degraded pattern (overlaid)
+      \draw[thick, red, opacity=0.4] 
+        (0,0.2) .. controls (1,0.6) and (1.5,1.3) .. (2.5,1.8)
+        (0,1.8) .. controls (1,1.4) and (1.5,0.7) .. (2.5,0.2);
+      
+      % Eye opening measurement
+      \draw[<->, thick, green!60!black] (2.3,-0.3) -- (2.3,0.3);
+      \node[right, green!60!black] at (2.4,0) {\scriptsize 眼高};
+      
+      \draw[<->, thick, orange] (1.8,1) -- (3.2,1);
+      \node[above, orange] at (2.5,1.1) {\scriptsize 眼宽};
+      
+      \node[above, font=\bfseries] at (2.5,2.8) {(b) 眼图};
+      
+      % Quality metrics
+      \node[align=left, font=\footnotesize, anchor=north west] at (-0.5,-2.5) {
+        \textbf{信号质量指标}:\\
+        $\bullet$ 消光比 ER: $P_1/P_0 > 8\,\mathrm{dB}$\\
+        $\bullet$ 抖动 Jitter: $<0.1\,\mathrm{UI}$\\
+        $\bullet$ Q 因子:$>6$ (BER<$10^{-9}$)
+      };
+    \end{scope}
+  \end{tikzpicture}
+  \caption{PCSEL 的动态调制响应示意图。(a) 小信号频率响应随偏置电流提升而展宽；(b) 高速数字调制下的眼图及其常用信号质量指标。}
+  \label{fig:ch21b_modulation_response}
+\end{figure}

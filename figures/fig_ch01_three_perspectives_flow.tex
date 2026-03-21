@@ -1,0 +1,121 @@
+% Figure: Three-perspective data flow for PCSEL modeling
+% Chapter: ch01 - Introduction
+% Description: Flowchart showing how L1 (passive EM) -> L2 (active cavity) -> L3 (device) connect
+% Key insight: Each layer takes output from previous layer as input
+
+\begin{tikzpicture}[
+    scale=0.9,
+    layer/.style={rectangle, draw, rounded corners, fill=#1!15, minimum width=4.5cm, minimum height=1.8cm, align=center},
+    input/.style={rectangle, draw, fill=gray!20, minimum width=2.5cm, minimum height=0.8cm, align=center},
+    output/.style={rectangle, draw, fill=green!20, minimum width=2.5cm, minimum height=0.8cm, align=center},
+    arrow_main/.style={->, >=stealth, thick, blue!70!black},
+    arrow_data/.style={->, >=stealth, thick, orange!80!red, dashed},
+    annotation/.style={font=\small, align=center}
+  ]
+    
+    % ========== Layer 1: Passive Electromagnetics ==========
+    \begin{scope}[shift={(0,0)}]
+      \node[layer=blue] (L1) {
+        \textbf{L1: 开放周期电磁系统}\\
+        {\small Maxwell方程 + Bloch理论}\\
+        {\scriptsize 求解器：PWEM, RCWA, FDTD, FEM}
+      };
+      
+      % Inputs to L1
+      \node[input, left=0.3cm of L1.west, anchor=east] (L1_in) {
+        {\scriptsize 结构参数}\\
+        {\scriptsize $\epsilon(x,y,z)$, 晶格常数$a$}
+      };
+      \draw[arrow_main] (L1_in) -- (L1);
+      
+      % Outputs from L1
+      \node[output, right=0.3cm of L1.east, anchor=west] (L1_out) {
+        {\scriptsize 候选模($\tilde{\omega}_n$, $Q_n$)}\\
+        {\scriptsize 辐射损耗 $\alpha_{\mathrm{rad}} = \omega/2Qv_g$}
+      };
+      \draw[arrow_main] (L1) -- (L1_out);
+    \end{scope}
+    
+    % Downward arrow to Layer 2
+    \draw[arrow_main, ultra thick] (0,-1.3) -- (0,-1.9);
+    \node[annotation] at (0,-1.6) {{\scriptsize 传递 $Q$, $\alpha_{\mathrm{rad}}$}};
+    
+    % ========== Layer 2: Active Optical Cavity ==========
+    \begin{scope}[shift={(0,-2.5)}]
+      \node[layer=red] (L2) {
+        \textbf{L2: 半导体有源光学腔}\\
+        {\small 模增益 + 内部损耗}\\
+        {\scriptsize 求解器：CWT, 重叠积分，阈值代理模型}
+      };
+      
+      % Additional inputs to L2
+      \node[input, left=0.3cm of L2.west, anchor=east] (L2_in) {
+        {\scriptsize 有源区参数}\\
+        {\scriptsize 增益谱$g(\lambda)$, $\alpha_{\mathrm{int}}$}
+      };
+      \draw[arrow_main] (L2_in) -- (L2);
+      
+      % Outputs from L2
+      \node[output, right=0.3cm of L2.east, anchor=west] (L2_out) {
+        {\scriptsize 阈值增益 $g_{\mathrm{th}}$}\\
+        {\scriptsize 模增益排序}
+      };
+      \draw[arrow_main] (L2) -- (L2_out);
+    \end{scope}
+    
+    % Downward arrow to Layer 3
+    \draw[arrow_main, ultra thick] (0,-3.8) -- (0,-4.4);
+    \node[annotation] at (0,-4.1) {{\scriptsize 传递 $g_{\mathrm{th}}$}};
+    
+    % ========== Layer 3: Electrical Injection Device ==========
+    \begin{scope}[shift={(0,-5)}]
+      \node[layer=green] (L3) {
+        \textbf{L3: 真实电注入器件}\\
+        {\small Poisson + 漂移扩散 + 热方程}\\
+        {\scriptsize 求解器：CHARGE, Semiconductor, HEAT}
+      };
+      
+      % Additional inputs to L3
+      \node[input, left=0.3cm of L3.west, anchor=east] (L3_in) {
+        {\scriptsize 外延掺杂}\\
+        {\scriptsize 电极几何}\\
+        {\scriptsize 材料热参数}
+      };
+      \draw[arrow_main] (L3_in) -- (L3);
+      
+      % Outputs from L3
+      \node[output, right=0.3cm of L3.east, anchor=west] (L3_out) {
+        {\scriptsize 阈值电流 $I_{\mathrm{th}}$}\\
+        {\scriptsize 温升 $\Delta T$, 电流分布}
+      };
+      \draw[arrow_main] (L3) -- (L3_out);
+    \end{scope}
+    
+    % ========== Feedback loop (thermal-electro-optic coupling) ==========
+    \draw[arrow_data, bend right=30] (L3_out.south) to 
+      node[annotation, midway, below] {{\scriptsize 热回写 $\Delta n(T)$, $\Delta E_g(T)$}} 
+      (L2.south);
+    
+    % ========== Summary equation at bottom ==========
+    \begin{scope}[shift={(0,-6.5)}]
+      \draw[rounded corners, fill=yellow!15] (-6,-0.6) rectangle (6, 0.6);
+      \node[anchor=center] at (0,0.2) {
+        \textbf{最小量级传递链:}
+      };
+      \node[anchor=center] at (0,-0.2) {
+        \normalsize $Q, \tilde{\omega} \Rightarrow \alpha_{\mathrm{rad}} \Rightarrow g_{\mathrm{th}} \Rightarrow I_{\mathrm{th}}$
+      };
+    \end{scope}
+    
+    % ========== Key Insight Box ==========
+    \begin{scope}[shift={(-6.5,-3)}]
+      \draw[rounded corners, fill=cyan!15, dashed] (-0.3,-1.5) rectangle (2.3, 1.5);
+      \node[anchor=north west, font=\small] at (-0.2, 1.3) {\textbf{关键点}:};
+      \node[anchor=north west, align=left, font=\footnotesize] at (-0.2, 1.0) {• L1决定\textit{有什么模}};
+      \node[anchor=north west, align=left, font=\footnotesize] at (-0.2, 0.5) {• L2决定\textit{哪个模阈值最低}};
+      \node[anchor=north west, align=left, font=\footnotesize] at (-0.2, 0.0) {• L3决定\textit{器件能否达到}};
+      \node[anchor=north west, align=left, font=\footnotesize] at (-0.2, -0.5) {• 热回写可能\textit{重新排序}};
+      \node[anchor=north west, align=left, font=\footnotesize] at (-0.2, -1.0) {• \textit{高Q 不自动=低$I_{\mathrm{th}}$}};
+    \end{scope}
+    
+\end{tikzpicture}

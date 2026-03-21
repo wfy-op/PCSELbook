@@ -1,3 +1,4 @@
+﻿% !TEX root = ../main.tex
 \chapter{热效应、非均匀性与热-电-光耦合}
 \label{ch:eto-coupling}
 
@@ -12,6 +13,7 @@
 建议已掌握 \cref{ch:threshold,ch:qw-gain,ch:electrical} 中关于阈值条件、局域增益分布和电注入输运的内容。
 
 \section*{本章路线图}
+\ChapterModelLevel{L4}
 到上一章为止，我们已经知道阈值电流为什么是一个空间分辨的器件问题，但那仍是在等温框架下建立的。真实 PCSEL 一旦开始导通，接触、电流扩展层、阻挡层和有源区就会发热，而温度又会反过来改写迁移率、复合、折射率、材料增益和吸收。于是，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 中看似分别处理的外延层、有源区和输运，会在本章重新闭合成一个热-电-光回路。本章先从热源开始，再讨论温升如何同时回写到光学和电学；随后解释热斑、空间烧孔和模式竞争的关系，最后用一个平台差异小节说明：同一套 PCSEL 理论框架在 GaAs、InP、GaN 上会怎样“变形”。
 
 \section{为什么热效应在 PCSEL 中比在许多小面积激光器里更具结构性}
@@ -134,6 +136,38 @@ g_{\mathrm{mat}}(\omega,N,T),
 \label{eq:thermal_feedback_mu}
 \end{align}
 \cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把“热会改写光和电”这句口头话，变成真正可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。若只需教材级量纲感，可先记住：GaAs 体系常用 $\partial n/\partial T \sim 2\times10^{-4}\,\mathrm{K}^{-1}$ 作为一阶估算；模增益对温度的等效斜率常表现为负值，量级可粗看成 $-0.1$ 到 $-0.2\,\mathrm{cm}^{-1}\,\mathrm{K}^{-1}$，表示升温会压低净增益裕量。
+
+\begin{NumericalInsightBox}{\texorpdfstring{$dn/dT$}{dn/dT} 回写的数量级估算（benchmark 量级）}
+取 $n_{\mathrm{eff}}\approx 3.5$、$\partial n/\partial T\approx 2.5\times10^{-4}\,\mathrm{K}^{-1}$、$\Delta T=10\,\mathrm{K}$，则
+\[
+\Delta n_{\mathrm{eff}}\approx \frac{\partial n}{\partial T}\Delta T \approx 2.5\times10^{-3},
+\qquad
+\frac{\Delta \omega}{\omega}\approx-\frac{\Delta n_{\mathrm{eff}}}{n_{\mathrm{eff}}}\approx-7.1\times10^{-4}.
+\]
+若中心波长约 $\lambda_0\approx 940\,\mathrm{nm}$，对应
+\[
+\Delta\lambda\approx \lambda_0\frac{\Delta n_{\mathrm{eff}}}{n_{\mathrm{eff}}}\approx 0.67\,\mathrm{nm}.
+\]
+这说明即使只有 $10\,\mathrm{K}$ 的温升，热致频移也已达到亚纳米到纳米量级；当候选模间隔、远场最优点或偏振稳定窗口本身就很窄时，这个漂移足以改写模式排序。
+\end{NumericalInsightBox}
+
+这些多物理场耦合路径总结于图~\ref{fig:ch19_thermal_coupling}。如图所示，温度升高$\Delta T$通过四个主要通道影响器件性能：光学通道（折射率和带隙变化）、电学通道（迁移率和电阻变化）、力学通道（热应力累积），以及它们之间可能形成的正反馈回路。理解这些耦合机制是设计高效散热方案和避免热失控的前提。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch19_thermal_coupling_mechanisms.tex}
+  \caption{PCSEL中热效应的多物理场耦合路径图}
+  \label{fig:ch19_thermal_coupling}
+\end{figure}
+
+为了帮助读者直观理解热阻的概念，\cref{fig:ch19_thermal_circuit_analogy}将热路与熟悉的电路进行类比。这种类比的價值在于可以将复杂的三维热传导问题简化为等效热阻网络进行分析。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch19_thermal_circuit_analogy}
+  \caption{热路等效电路类比图。(a) 熟悉的直流电路：电压源驱动电流流过电阻，遵循欧姆定律 $V=IR$；(b) 热路系统：热源驱动热流流过热阻，遵循傅里叶定律 $\Delta T = P \cdot R_{\mathrm{th}}$。这种类比可以把复杂的三维热传导问题压缩为等效热阻网络，用电路分析的方法快速估算关键节点的温升。}
+  \label{fig:ch19_thermal_circuit_analogy}
+\end{figure}
 
 \section[温升如何回写到电学]{温升如何回写到电学：热又在重写注入分布}
 热反馈的危险不只在光学侧。温度上升通常会降低迁移率、改变接触电阻、改写复合系数，甚至加重局部电流拥挤。于是，\cref{ch:electrical} 里的 $n(\rvec)$、$p(\rvec)$ 与 $\bm{J}(\rvec)$ 其实是温度相关的。用更直白的话说，热场不是求出之后“交给光学后处理”的终点，它会反过来改变电流路径本身。

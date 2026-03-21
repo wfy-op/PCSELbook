@@ -1,0 +1,77 @@
+% !TEX root = ../main.tex
+% Figure: Thermal-electro-optic coupling mechanisms in PCSEL
+% Chapter: ch19 - Thermal Effects and Electro-Optic Coupling
+% Description: Multiphysics coupling pathways showing temperature impacts
+
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=2.8cm, minimum height=1cm, align=center},
+    thermo/.style={box=red},
+    electro/.style={box=blue},
+    optical/.style={box=green!60!black},
+    mech/.style={box=orange},
+    arrow/.style={->, >=stealth, thick},
+    bidir/.style={<->, >=stealth, thick, dashed}
+  ]
+    % Define callout pic first
+    \tikzset{
+      pics/callout/.style args={#1#2}{
+        code={
+          \node[align=center, font=\scriptsize, draw, rounded corners, fill=white] at #1 {#2};
+          \draw[->] (#1) -- ++(-0.3,-0.5);
+        }
+      }
+    }
+    
+    % Central node: Temperature rise
+    \node[thermo, minimum size=2cm, circle] (temp) at (0,0) {温度升高\\$\Delta T$};
+    
+    % Optical effects branch (top)
+    \node[optical, above=2cm of temp] (optics) {光学特性变化\\折射率$n(T)$, 带隙$E_g(T)$};
+    \draw[arrow, red] (temp) -- node[right, pos=0.3] {\scriptsize $\frac{dn}{dT}>0$} (optics);
+    
+    \node[optical, above=3.5cm of temp, xshift=-2cm] (wavelength) {激射波长红移\\$\frac{d\lambda}{dT}\approx 0.1\,\mathrm{nm/K}$};
+    \draw[arrow] (optics) -- (wavelength);
+    
+    \node[optical, above=3.5cm of temp, xshift=2cm] (threshold) {阈值电流增加\\$I_{\mathrm{th}}(T)\uparrow$};
+    \draw[arrow] (optics) -- (threshold);
+    
+    % Electrical effects branch (left)
+    \node[electro, left=3cm of temp] (carrier) {载流子输运\\迁移率$\mu(T)\downarrow$,电阻$\rho(T)\uparrow$};
+    \draw[arrow, blue] (temp) -- node[below, pos=0.5] {\scriptsize 声子散射增强} (carrier);
+    
+    \node[electro, left=5.5cm of temp] (joule) {焦耳热加剧\\$P_{\mathrm{heat}}=I^2 R(T)$};
+    \draw[bidir] (carrier) -- (joule);
+    
+    % Mechanical effects branch (bottom right)
+    \node[mech, below right=2cm and 1cm of temp] (stress) {热应力累积\\$\sigma_{ij}=\alpha_E\Delta T$};
+    \draw[arrow, orange] (temp) -- node[right] {\scriptsize 热膨胀系数$\alpha_E$} (stress);
+    
+    \node[mech, below=3.5cm of temp, xshift=2cm] (deform) {形变/翘曲\\可能导致键合失效};
+    \draw[arrow] (stress) -- (deform);
+    
+    % Positive feedback loop (thermal runaway risk)
+    \node[draw, thick, red, align=center, font=\small] at (-4,-3) {正反馈风险:\\结温上升$\to$效率下降$\to$发热增加\\\textbf{热失控}$^\dagger$};
+    \draw[->, very thick, red, bend left] (threshold) to[out=180,in=90] (-4,-2);
+    
+    % Mitigation strategies box
+    \node[draw, dashed, align=left, font=\footnotesize, anchor=north east] at (5,4) {
+      \textbf{散热优化策略}:\\
+      $\bullet$ 倒装焊 flip-chip bonding\\
+      $\bullet$ 金刚石热沉 ($\kappa > 1000\,\mathrm{W/mK}$)\\
+      $\bullet$ 热电制冷 TEC 控温\\
+      $\bullet$ 降低串联电阻设计
+    };
+    
+    % Characteristic temperatures
+    \node[align=left, font=\small, anchor=south west] at (-5.5,-1) {
+      \textbf{特征温度参数}:\\
+      $T_0$: $I_{\mathrm{th}}(T)=I_0\exp(T/T_0)$\\
+      $T_1$: $\eta_d(T)=\eta_0[1-(T/T_1)^2]$\\
+      典型值:$T_0\sim 100\text{--}200\,\mathrm{K}$
+    };
+    
+    % Annotation on thermooptic coefficient
+    \node[align=center, font=\scriptsize, draw, rounded corners, fill=white] at (0.5,1.5) {$\frac{dn}{dT}\approx 2\times10^{-4}/\mathrm{K}$\\(GaAs@300K)};
+  \end{tikzpicture}
+  \caption{PCSEL 中热效应的多物理场耦合路径图。中心节点为有源区温度升高$\Delta T$（由非辐射复合、欧姆损耗和光吸收引起），它通过四种主要途径影响器件性能：(1) \textbf{光学通道}（上方）：半导体材料的折射率温度系数$dn/dT>0$（ GaAs 约$2\times10^{-4}$/K）导致谐振腔模式波长红移；同时禁带宽度随温度收缩$E_g(T)$遵循 Varshni 公式，使增益峰也向长波移动——但两者的漂移速率不同（~0.1 nm/K vs ~0.3 nm/K），可能引发 mode mismatch 从而恶化斜率效率。(2) \textbf{电学通道}（左侧）：高温下载流子迁移率因声子散射增强而下降，导致串联电阻增大和填充因子劣化；这会进一步推高焦耳热功率$I^2R(T)$形成恶性循环。(3) \textbf{力学通道}（右下）：异质外延层间的热膨胀系数失配会在降温过程中积累残余应力，极端情况下诱发裂纹或界面分层。(4) \textbf{正反馈回路}（左下虚线框）：上述效应的协同作用可能触发热逃逸 (thermal runaway)——特别是当热阻过大或散热不良时，局部热点会迅速扩散并最终烧毁器件。因此高效的热管理（如倒装焊、金刚石热沉、主动温控）是实现高功率连续波工作的先决条件。图中还标出了两个经验拟合参数$T_0$和$T_1$的定义式，它们定量描述了阈值和微分效率的温度敏感性。}

@@ -1,0 +1,174 @@
+% Figure: Gamma point vs non-Gamma point mode comparison
+% Chapter: ch05 - Band, Gamma Point, and Mode Selection
+% Description: Near-field distribution and far-field radiation pattern comparison
+% Key insight: Gamma point modes radiate vertically due to coherent superposition
+
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    scale=0.85,
+    unit_cell/.style={draw, thick},
+    field_positive/.style={fill=red!40, opacity=0.6},
+    field_negative/.style={fill=blue!40, opacity=0.6},
+    arrow_near/.style={->, >=stealth, thick, purple!70!black},
+    arrow_far/.style={->, >=stealth, thick, orange!80!red},
+    annotation/.style={font=\small, align=center}
+  ]
+    
+    % ========== Left Column: Gamma Point Mode ==========
+    \begin{scope}[shift={(0,0)}]
+      \node[anchor=south, font=\large\bfseries] at (3, 7.5) {(a) Γ点模式($k_x=k_y=0$)};
+      
+      % Near-field distribution (all unit cells in phase)
+      \begin{scope}[shift={(0,4)}]
+        \node[anchor=south] at (3, 3.3) {\textbf{近场分布}};
+        
+        % Draw 5x5 array of unit cells with identical fields
+        \foreach \x in {0,1,...,5} {
+          \foreach \y in {0,1,...,5} {
+            \draw[unit_cell] (\x*1.2, \y*1.2) rectangle ++(1.2, 1.2);
+            % All cells oscillate in phase (same color)
+            \fill[field_positive] (\x*1.2+0.6, \y*1.2+0.6) circle (0.4);
+          }
+        }
+        
+        % Phase relationship annotation
+        \draw[<->, thick, blue] (0.5, -0.5) -- (2.9, -0.5) node[midway, below] {\scriptsize 同相位};
+        \draw[<->, thick, blue] (2.9, -0.5) -- (5.3, -0.5) node[midway, below] {\scriptsize 同相位};
+        
+        % In-phase oscillation arrows
+        \foreach \x in {0.5, 1.7, ..., 5.3} {
+          \draw[arrow_near, ->] (\x, 0.3) -- (\x, 0.9);
+          \draw[arrow_near, <-] (\x+1.2, 0.3) -- (\x+1.2, 0.9);
+        }
+      \end{scope}
+      
+      % Far-field radiation pattern
+      \begin{scope}[shift={(0,0)}]
+        \node[anchor=south] at (3, 3.3) {\textbf{远场辐射}};
+        
+        % Coordinate axes
+        \draw[->, thick] (-3, 0) -- (3, 0) node[right] {$k_x$};
+        \draw[->, thick] (0, -3) -- (0, 3) node[above] {$k_y$};
+        
+        % Main lobe at center (vertical emission)
+        \shade[inner color=orange!80, outer color=orange!10] (0,0) circle (1.2);
+        \fill[orange!90] (0,0) circle (0.3);
+        
+        % Radiation direction arrow
+        \draw[arrow_far, ultra thick] (0, 0.5) -- (0, 2.5) node[midway, right] {法向辐射};
+        
+        % Angle annotation
+        \draw[<->] (0.8, 0) arc (0:90:0.8);
+        \node[anchor=south west] at (0.5, 0.5) {$\theta = 0^\circ$};
+        
+        % Side lobes (suppressed)
+        \foreach \angle in {45, 135, 225, 315} {
+          \shade[inner color=gray!60, outer color=gray!10] (\angle:2) circle (0.4);
+        }
+        \node[anchor=north] at (0, -2.5) {\small 旁瓣suppressed};
+      \end{scope}
+      
+      % Physical explanation box
+      \begin{scope}[shift={(0,-3.5)}]
+        \draw[rounded corners, fill=green!15] (-0.5,-1.2) rectangle (6.5, 0.3);
+        \node[anchor=west, font=\small] at (-0.3, -0.2) {
+          \textbf{物理机制}: 所有单元\textbf{同相位}振动 $\Rightarrow$ 远场相干叠加形成法向主瓣
+        };
+      \end{scope}
+    \end{scope}
+    
+    % ========== Right Column: Non-Gamma Point Mode ==========
+    \begin{scope}[shift={(8,0)}]
+      \node[anchor=south, font=\large\bfseries] at (3, 7.5) {(b)非Γ点模式($k_x,k_y \neq 0$)};
+      
+      % Near-field distribution (traveling wave with phase gradient)
+      \begin{scope}[shift={(0,4)}]
+        \node[anchor=south] at (3, 3.3) {\textbf{近场分布}};
+        
+        % Draw 5x5 array with phase progression (traveling wave)
+        \foreach \x in {0,1,...,5} {
+          \foreach \y in {0,1,...,5} {
+            \draw[unit_cell] (\x*1.2, \y*1.2) rectangle ++(1.2, 1.2);
+            % Phase varies along x-direction (color intensity indicates phase)
+            \pgfmathparse{sin((\x + \y)*36)}
+            \ifdim\pgfmathresult pt > 0.5pt
+              \fill[field_positive] (\x*1.2+0.6, \y*1.2+0.6) circle (0.4);
+            \else\ifdim\pgfmathresult pt < -0.5pt
+              \fill[field_negative] (\x*1.2+0.6, \y*1.2+0.6) circle (0.4);
+            \fi\fi
+          }
+        }
+        
+        % Phase progression annotation
+        \draw[->, ultra thick, blue!70!black] (0.5, -0.5) -- (5.3, -0.5) 
+          node[midway, below] {\scriptsize 行波传播方向};
+        
+        % Phase arrows showing progression
+        \foreach \x in {0.5, 1.7, ..., 5.3} {
+          \pgfmathparse{int(mod(\x/1.2, 4))}
+          \ifnum\pgfmathresult=0
+            \draw[arrow_near, ->] (\x, 0.3) -- (\x, 0.9);
+          \else\ifnum\pgfmathresult=1
+            \draw[arrow_near] (\x, 0.6) -- ++(0.3, 0.3);
+          \else\ifnum\pgfmathresult=2
+            \draw[arrow_near, <-] (\x, 0.3) -- (\x, 0.9);
+          \else
+            \draw[arrow_near] (\x, 0.6) -- ++(-0.3, 0.3);
+          \fi\fi\fi
+        }
+      \end{scope}
+      
+      % Far-field radiation pattern (off-axis lobes)
+      \begin{scope}[shift={(0,0)}]
+        \node[anchor=south] at (3, 3.3) {\textbf{远场辐射}};
+        
+        % Coordinate axes
+        \draw[->, thick] (-3, 0) -- (3, 0) node[right] {$k_x$};
+        \draw[->, thick] (0, -3) -- (0, 3) node[above] {$k_y$};
+        
+        % Main lobes off-center (tilted emission)
+        \foreach \x/\y in {1.5/1.5, -1.5/1.5, 1.5/-1.5, -1.5/-1.5} {
+          \shade[inner color=orange!80, outer color=orange!10] (\x,\y) circle (0.8);
+          \fill[orange!90] (\x,\y) circle (0.25);
+        }
+        
+        % Center suppressed
+        \draw[dashed, gray] (0,0) circle (0.3);
+        \node[anchor=south] at (0, 0.3) {\tiny 中心suppressed};
+        
+        % Radiation angle annotation
+        \draw[arrow_far, ultra thick] (1.5, 1.5) -- (2.2, 2.2) node[midway, above right] {倾斜辐射};
+        \draw[<->] (0.8, 0) arc (0:45:0.8);
+        \node[anchor=south west] at (0.5, 0.3) {$\theta \approx 45^\circ$};
+        
+        \node[anchor=north] at (0, -2.5) {\small 多瓣结构};
+      \end{scope}
+      
+      % Physical explanation box
+      \begin{scope}[shift={(0,-3.5)}]
+        \draw[rounded corners, fill=red!15] (-0.5,-1.2) rectangle (6.5, 0.3);
+        \node[anchor=west, font=\small] at (-0.3, -0.2) {
+          \textbf{物理机制}: 行波在面内传播 $\Rightarrow$ 辐射方向图倾斜，不利于法向输出
+        };
+      \end{scope}
+    \end{scope}
+    
+    % ========== Bottom Summary ==========
+    \begin{scope}[shift={(0,-8)}]
+      \draw[rounded corners, fill=blue!10] (-0.5,-1.3) rectangle (14.5, 0.8);
+      \node[anchor=west, font=\small] at (-0.3, 0.4) {
+        \textbf{关键结论}: PCSEL工作在Γ点附近的原因
+      };
+      \node[anchor=west, font=\small] at (-0.3, -0.1) {
+        ✓ 面内所有单元相干叠加，远场能量集中于法向
+      };
+      \node[anchor=west, font=\small] at (-0.3, -0.6) {
+        ✓ 群速度$v_g = d\omega/dk \approx 0$（flat band），光子停留时间长，$Q$值高
+      };
+      \node[anchor=west, font=\small] at (-0.3, -1.1) {
+        ✗ 非Γ点模式辐射方向倾斜，难以形成高质量面发射光束
+      };
+    \end{scope}
+    
+\end{tikzpicture}%
+}

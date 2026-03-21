@@ -1,0 +1,137 @@
+% Figure: Current crowding effect in PCSEL
+% Chapter: ch18 - Electrical Injection and Carrier Transport
+% Description: 2D heatmap showing non-uniform current density distribution under p-contact
+% Key insight: Current density peaks near electrode edges due to lateral resistance
+
+\begin{tikzpicture}[
+  scale=0.9,
+  axis_label/.style={font=\small},
+  tick_label/.style={font=\footnotesize}
+]
+    
+    % ========== Main 2D Heatmap ==========
+    \begin{scope}[shift={(0,0)}]
+      % Draw coordinate grid
+      \draw[->, thick] (0,0) -- (7.5,0) node[right, axis_label] {$x$ ($\mu$m)};
+      \draw[->, thick] (0,0) -- (0,7.5) node[above, axis_label] {$y$ ($\mu$m)};
+      
+      % Color gradient representing current density J(x,y)
+      % Using concentric pattern: high at edges, low at center
+      \foreach \r in {0.2, 0.4, ..., 3.5} {
+        \pgfmathsetmacro{\opacity}{\r/3.5}
+        \ifdim\r pt < 1.0pt
+          \draw[fill=red!\opacity!orange, opacity=0.3] (3.5,3.5) circle (\r);
+        \else\ifdim\r pt < 2.0pt
+          \draw[fill=orange!\opacity!yellow, opacity=0.3] (3.5,3.5) circle (\r);
+        \else
+          \draw[fill=yellow!\opacity!blue, opacity=0.3] (3.5,3.5) circle (\r);
+        \fi\fi
+      }
+      
+      % Square p-contact boundary
+      \draw[ultra thick, dashed] (1.5,1.5) rectangle (5.5,5.5);
+      \node[anchor=north west] at (5.6, 5.5) {\small p-接触边界};
+      
+      % High current density regions (edges/corners)
+      \fill[red!60, opacity=0.5] (1.5,1.5) rectangle (2.0,2.0);
+      \fill[red!60, opacity=0.5] (5.0,1.5) rectangle (5.5,2.0);
+      \fill[red!60, opacity=0.5] (1.5,5.0) rectangle (2.0,5.5);
+      \fill[red!60, opacity=0.5] (5.0,5.0) rectangle (5.5,5.5);
+      
+      % Edge hotspots
+      \foreach \pos in {2.5, 3.5, 4.5} {
+        \fill[red!50, opacity=0.4] (1.5,\pos) rectangle (1.8,\pos+0.3);
+        \fill[red!50, opacity=0.4] (5.2,\pos) rectangle (5.5,\pos+0.3);
+        \fill[red!50, opacity=0.4] (\pos,1.5) rectangle (\pos+0.3,1.8);
+        \fill[red!50, opacity=0.4] (\pos,5.2) rectangle (\pos+0.3,5.5);
+      }
+      
+      % Low current density region (center)
+      \fill[blue!30, opacity=0.3] (3.0,3.0) rectangle (4.0,4.0);
+      \node[anchor=center] at (3.5,3.5) {\scriptsize $J$最小};
+      
+      % Current flow arrows (from edges toward center but decaying)
+      \foreach \angle in {0, 45, ..., 315} {
+        \draw[->, thick, purple!70!black] (3.5+\angle/360*2, 3.5+\angle/360*2) -- 
+          (3.5+\angle/360*1.2, 3.5+\angle/360*1.2);
+      }
+      
+      % Annotation arrows
+      \draw[->, thick, red] (6.5, 5.0) -- (5.8, 5.0) node[midway, above] {\small 边缘电流密集};
+      \draw[->, thick, blue] (6.5, 2.0) -- (4.0, 3.2) node[midway, right] {\small 中心电流稀疏};
+      
+      % Title
+      \node[anchor=south, font=\large\bfseries] at (3.5, 7.8) {(a)电流密度分布 $J(x,y)$};
+    \end{scope}
+    
+    % ========== Colorbar ==========
+    \begin{scope}[shift={(8,2)}]
+      % Gradient bar
+      \shade[top color=red, middle color=yellow, bottom color=blue] 
+        (0,0) rectangle (0.8, 4);
+      
+      % Colorbar frame
+      \draw[thick] (0,0) rectangle (0.8, 4);
+      
+      % Tick marks and labels
+      \foreach \y/\val in {0/0, 1/5, 2/10, 3/15, 4/20} {
+        \draw[-] (0.8, \y) -- (1.0, \y);
+        \node[anchor=west, tick_label] at (1.0, \y) {$\val$};
+      }
+      
+      % Colorbar label
+      \node[anchor=south, rotate=90, axis_label] at (-0.5, 2) {电流密度 $J$ (kA/cm$^2$)};
+      
+      % High/Low markers
+      \node[anchor=west, font=\small, red] at (1.1, 4) {高 $J$};
+      \node[anchor=west, font=\small, blue] at (1.1, 0) {低 $J$};
+    \end{scope}
+    
+    % ========== Cross-section plot ==========
+    \begin{scope}[shift={(8,-2)}]
+      \node[anchor=south, font=\large\bfseries] at (2, 3.8) {(b) 截面分布};
+      
+      % Axes
+      \draw[->, thick] (0,0) -- (4.5,0) node[right, axis_label] {$x$ ($\mu$m)};
+      \draw[->, thick] (0,0) -- (0,3.5) node[above, axis_label] {$J(x)$};
+      
+      % Current density profile (peaks at edges)
+      \draw[thick, red, domain=0:4, samples=100] plot (\x, {
+        0.5 + 2.0*exp(-(\x-0.5)^2/0.3) + 2.0*exp(-(\x-3.5)^2/0.3)
+      });
+      
+      % Contact edges
+      \draw[dashed] (0.5, 0) -- (0.5, 3.2) node[above] {\scriptsize 边缘};
+      \draw[dashed] (3.5, 0) -- (3.5, 3.2) node[above] {\scriptsize 边缘};
+      
+      % Peak markers
+      \draw[<->, red, thick] (0.5, 2.8) -- (0.5, 3.0);
+      \node[anchor=south, red, font=\small] at (0.5, 3.0) {$J_{\max}$};
+      
+      % Center minimum
+      \draw[<->, blue, thick] (2.0, 0) -- (2.0, 0.3);
+      \node[anchor=south, blue, font=\small] at (2.0, 0.3) {$J_{\min}$};
+      
+      % Shaded contact region
+      \fill[gray!20] (0.5, 0) rectangle (3.5, -0.3);
+      \node[anchor=north] at (2, -0.3) {\scriptsize p-接触下方};
+    \end{scope}
+    
+    % ========== Physics explanation box ==========
+    \begin{scope}[shift={(0,-2.5)}]
+      \draw[rounded corners, fill=orange!15] (-0.5,-1.5) rectangle (14.5, 0.5);
+      \node[anchor=west, font=\small] at (-0.3, 0.1) {
+        \textbf{物理机制}: 电流拥挤效应的成因
+      };
+      \node[anchor=west, font=\small] at (-0.3, -0.4) {
+        • 横向电阻：空穴在p 型层中横向流动时遇到电阻，倾向于走最短路径（边缘）
+      };
+      \node[anchor=west, font=\small] at (-0.3, -0.9) {
+        • 接触电阻：金属 - 半导体界面的非理想欧姆接触加剧边缘集中
+      };
+      \node[anchor=west, font=\small] at (-0.3, -1.4) {
+        \textbf{后果}: 边缘处载流子浓度过高 $\Rightarrow$ 俄歇复合增强 $\Rightarrow$ 效率下降 + 局部发热
+      };
+    \end{scope}
+    
+\end{tikzpicture}

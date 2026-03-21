@@ -1,0 +1,66 @@
+% !TEX root = ../main.tex
+% Figure: Threshold gain decomposition analysis
+% Chapter: ch07 - Threshold Condition and Modal Gain/Loss Balance
+% Description: Bar chart showing various loss contributions
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    % Axes
+    \draw[->, thick] (0,0) -- (8,0) node[right] {损耗来源};
+    \draw[->, thick] (0,0) -- (0,6) node[above] {$g_{\mathrm{th}}\,[\mathrm{cm}^{-1}]$};
+    
+    % Stacked bar components
+    \fill[blue!60!white] (1,0) rectangle (2,1.5);
+    \node[rotate=90, font=\small, white] at (1.5,0.75) {辐射损耗};
+    \node[below, align=center, font=\footnotesize] at (1.5,-0.3) {\scriptsize $\alpha_{\mathrm{rad}}$\\$1.5$};
+    
+    \fill[green!60!black] (2.5,0) rectangle (3.5,2.2);
+    \node[rotate=90, font=\small, white] at (3,1.1) {吸收损耗};
+    \node[below, align=center, font=\footnotesize] at (3,-0.3) {\scriptsize $\alpha_{\mathrm{abs}}$\\$2.2$};
+    
+    \fill[orange!70!white] (4,0) rectangle (5,1.0);
+    \node[rotate=90, font=\small, black] at (4.5,0.5) {散射损耗};
+    \node[below, align=center, font=\footnotesize] at (4.5,-0.3) {\scriptsize $\alpha_{\mathrm{sca}}$\\$1.0$};
+    
+    \fill[red!70!white] (5.5,0) rectangle (6.5,0.8);
+    \node[rotate=90, font=\small, white] at (6,0.4) {泄漏损耗};
+    \node[below, align=center, font=\footnotesize] at (6,-0.3) {\scriptsize $\alpha_{\mathrm{leak}}$\\$0.8$};
+    
+    % Total threshold gain marker
+    \draw[dashed, very thick, purple] (0,5.5) -- (7,5.5);
+    \node[purple, font=\bfseries] at (7.2,5.5) {$g_{\mathrm{th,tot}}=5.5$};
+    
+    % Transparent region above total
+    \fill[pattern=north east lines, pattern color=gray!50] (1,1.5) rectangle (2,5.5);
+    \fill[pattern=north east lines, pattern color=gray!50] (2.5,2.2) rectangle (3.5,5.5);
+    \fill[pattern=north east lines, pattern color=gray!50] (4,1.0) rectangle (5,5.5);
+    \fill[pattern=north east lines, pattern color=gray!50] (5.5,0.8) rectangle (6.5,5.5);
+    
+    % Margin indication
+    \draw[<->, thick, magenta] (7.5,0) -- node[right] {\scriptsize 增益裕度} (7.5,5.5);
+    \draw[dashed, magenta] (7.5,5.5) -- (6.5,5.5);
+    
+    % Material gain capability
+    \draw[very thick, cyan] (0.5,7) -- (7.5,7);
+    \node[cyan, font=\bfseries, above] at (4,7) {$g_{\mathrm{mat,max}}\approx 15\,\mathrm{cm}^{-1}$};
+    
+    % Equation box
+    \node[draw, align=center, font=\small] at (4,-1.2) {
+      阈值条件:\\
+      $g_{\mathrm{th}} = \alpha_{\mathrm{rad}} + \alpha_{\mathrm{abs}} + \alpha_{\mathrm{sca}} + \alpha_{\mathrm{leak}} + \alpha_m$\\[4pt]
+      其中$\alpha_m=\frac{1}{2L}\ln\left(\frac{1}{R_1 R_2}\right)$为镜面损耗
+    };
+    
+    % Optimization tips
+    \node[align=left, font=\footnotesize, anchor=south west] at (-1,-2.5) {
+      \textbf{降低阈值的途径}:\\
+      $\bullet$ 提高限制因子$\Gamma$:减小模式体积\\
+      $\bullet$ 优化 PhC 参数：增加耦合系数$\kappa$\\
+      $\bullet$ 减少无序性：降低散射$\alpha_{\mathrm{sca}}$\\
+      $\bullet$ 高反射 DBR:降低$\alpha_m$至$<0.1\,\mathrm{cm}^{-1}$
+    };
+  \end{tikzpicture}
+  \caption{PCSEL 阈值增益密度的分解柱状图。图中四个彩色柱子从左到右依次代表：(1) \textbf{辐射损耗}$\alpha_{\mathrm{rad}}$（蓝色）：这是表面发射过程中不可避免的本征损耗，因为部分导模能量被耦合到自由空间形成有用的激光输出，看似“损耗”实则是器件的正常功能，其大小由 PhC 的耦合强度$\kappa$和占空比决定，典型值$1$--$3\,\mathrm{cm}^{-1}$；(2) \textbf{吸收损耗}$\alpha_{\mathrm{abs}}$（绿色）：包括有源区未泵浦部分的带间吸收、自由载流子吸收 (FCA) 以及金属接触的等离子体吸收，这项通常占总损耗的 40\% 左右，可通过优化波导结构和电流限制来降低；(3) \textbf{散射损耗}$\alpha_{\mathrm{sca}}$（橙色）：源于侧壁粗糙度、孔径偏差、界面缺陷等制造不完美性引起的 Rayleigh 散射和 Mie 散射，它与波长的四次方成反比因此在短波段更为严重，先进工艺可将其控制在$0.5$--$1.5\,\mathrm{cm}^{-1}$；(4) \textbf{泄漏损耗}$\alpha_{\mathrm{leak}}$（红色）：指模式场穿透进衬底或包层后被吸收的部分，特别是在 DBR 反射率不足或外延设计不当的情况下会发生显著的垂直泄漏，良好设计应使此项<$1\,\mathrm{cm}^{-1}$。紫色虚线标示了总的阈值增益$g_{\mathrm{th,tot}}=\sum_i\alpha_i=5.5\,\mathrm{cm}^{-1}$，而青色水平线代表了材料在额定注入条件下能够提供的最大 modal gain$g_{\mathrm{mat,max}}\approx 15\,\mathrm{cm}^{-1}$，两者之间的差值即为增益裕度 (gain margin)，它决定了器件能否可靠起振并抵抗温度漂移等因素的影响。底部公式框回顾了多模激光器的一般阈值条件：modal gain 必须等于所有内部损耗之和加上端面 (mirror) 损耗$\alpha_m$，对于 PCSEL 而言由于 DFB 反馈机制的存在$\alpha_m\approx 0$（除非特意设计有限尺寸的腔面）。左下角注释栏总结了四条降低阈值的主要技术途径：提高光学限制因子、优化 PhC 几何参数、改善工艺质量减少无序性、采用高反射率 DBR 降低漏损。这些信息对于指导初次设计者合理分配优化资源具有重要参考价值。}
+  \label{fig:ch07_threshold_gain_breakdown}
+\end{figure}

@@ -1,0 +1,42 @@
+% Benchmark device schematic used across the book
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+  % (a) Top view
+  \begin{scope}[shift={(0,0)}]
+    \node[anchor=south,font=\bfseries] at (2.2,3.0) {(a) 俯视：方格孔阵};
+    \draw[thick] (0,0) rectangle (4.4,2.7);
+    \foreach \x in {0.5,1.3,2.1,2.9,3.7} {
+      \foreach \y in {0.45,1.15,1.85,2.55} {
+        \draw[fill=white] (\x,\y) circle (0.16);
+      }
+    }
+    \draw[<->,thick] (0.5,-0.25)--(1.3,-0.25);
+    \node[below] at (0.9,-0.25) {$a$};
+    \draw[<->,thick] (2.1,1.15)--(2.26,1.15);
+    \node[above right] at (2.26,1.15) {$r$};
+    \node[below right] at (0,2.7) {周期边界方向 $x,y$};
+  \end{scope}
+
+  % (b) Side view
+  \begin{scope}[shift={(6.2,0)}]
+    \node[anchor=south,font=\bfseries] at (2.7,3.0) {(b) 侧视：外延层栈};
+    \draw[fill=purple!15] (0,1.7) rectangle (5.4,2.35);
+    \draw[fill=red!18]    (0,1.25) rectangle (5.4,1.7);
+    \draw[fill=green!14]  (0,0.9) rectangle (5.4,1.25);
+    \draw[fill=blue!12]   (0,0.0) rectangle (5.4,0.9);
+    \foreach \x in {0.45,1.35,2.25,3.15,4.05,4.95} {
+      \draw[fill=white] (\x,2.02) circle (0.16);
+    }
+    \draw[thick] (0,0) rectangle (5.4,2.35);
+
+    \draw[<->] (5.65,1.7)--(5.65,2.35); \node[right] at (5.65,2.02) {$t_{\mathrm{pc}}$};
+    \draw[<->] (5.65,1.25)--(5.65,1.7); \node[right] at (5.65,1.48) {$t_{\mathrm{core}}$};
+    \draw[<->] (5.65,0.9)--(5.65,1.25); \node[right] at (5.65,1.07) {$t_{\mathrm{clad}}$};
+    \draw[<->] (5.65,0.0)--(5.65,0.9); \node[right] at (5.65,0.45) {$t_{\mathrm{sub}}$};
+
+    \node[left] at (0,2.02) {\scriptsize PC 层};
+    \node[left] at (0,1.47) {\scriptsize 波导芯层/MQW};
+    \node[left] at (0,1.08) {\scriptsize 包层};
+    \node[left] at (0,0.45) {\scriptsize 衬底};
+  \end{scope}
+\end{tikzpicture}
+

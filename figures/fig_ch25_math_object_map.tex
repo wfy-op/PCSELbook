@@ -1,0 +1,31 @@
+% !TEX root = ../main.tex
+% Figure: Map of mathematical objects used across the book
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=8mm and 10mm,
+    obj/.style={rectangle, rounded corners, draw, fill=#1!14, minimum width=3.1cm, minimum height=9mm, align=center},
+    arr/.style={-Stealth, thick}
+  ]
+    \node[obj=blue] (space) {Function spaces\\$\mathcal H$, weighted spaces};
+    \node[obj=teal, below left=14mm and 18mm of space] (op) {Operators\\$\hat{\mathcal L}$, adjoint};
+    \node[obj=orange, below right=14mm and 18mm of space] (spec) {Spectra\\Bloch bands / QNM poles};
+    \node[obj=green, below=16mm of op] (mode) {Mode sets\\right/left modes, biorthogonality};
+    \node[obj=purple, right=22mm of mode] (green) {Green tensor\\resolvent / residue expansion};
+    \node[obj=red, below=16mm of mode, minimum width=7.2cm] (use) {Practical outputs: normalization, perturbation formula, parameter sensitivity};
+
+    \draw[arr] (space) -- (op);
+    \draw[arr] (space) -- (spec);
+    \draw[arr] (op) -- (mode);
+    \draw[arr] (spec) -- (mode);
+    \draw[arr] (spec) -- (green);
+    \draw[arr] (mode) -- (green);
+    \draw[arr] (mode) -- (use);
+    \draw[arr] (green) -- (use);
+  \end{tikzpicture}
+  }
+  \caption{Math-object map for this appendix: from spaces and operators to spectrum, mode expansions, Green tensor, and finally usable formulas.}
+  \label{fig:ch25_math_object_map}
+\end{figure}

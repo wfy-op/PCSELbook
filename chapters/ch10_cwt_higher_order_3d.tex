@@ -1,4 +1,5 @@
-﻿\chapter{更高阶或三维 CWT 观点}
+﻿% !TEX root = ../main.tex
+\chapter{更高阶或三维 CWT 观点}
 \label{ch:cwt-3d}
 
 \section*{学习目标}
@@ -29,6 +30,10 @@
 把真实 PCSEL 中被压掉但又重新主导结果的通道逐条请回来。
 
 \section*{本章路线图}
+\ChapterModelLevel{L1→L2}
+\input{figures/fig_ch10_cwt_upgrade_map}
+上图把本章“为何升级、升级什么、输出什么”放在同一视角下，便于在后文每一节定位当前恢复的是哪一类自由度。
+
 上一章建立了最小 CWT，它足以解释很多 Gamma 点附近的主导耦合现象。但真实 PCSEL 并不是“一个带有效折射率的二维薄片”。它有纵向层栈、有上下不对称辐射、有金属和重掺杂层带来的附加损耗，还可能有有限孔阵边界与横向注入不均匀。于是，本章要回答三个更实际的问题：二维最小模型究竟在什么地方开始失真；若要升级，应该把哪些自由度请回来；升级后的 CWT 又该如何与后续全波和器件模型接口。
 
 \begin{RigorousBox}
@@ -238,6 +243,8 @@ A_{mn}(\rho)
 
   \item 若想补充三维和高阶 PCSEL CWT 的代表性文献，可参考 \cite{liang2012square,liang2013triangular,yang2014tm}。 这条阅读的重点是补足本章关于高阶或三维 CWT 的升级判据 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
+
 
 
 

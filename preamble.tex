@@ -1,9 +1,11 @@
+% !TEX root = ./main.tex
 \usepackage{amsmath,amssymb,amsthm,mathtools,bm}
 \usepackage[a4paper,left=2.7cm,right=2.7cm,top=2.8cm,bottom=2.8cm]{geometry}
 \usepackage{siunitx}
 \usepackage{booktabs,longtable,array,multirow}
 \usepackage{graphicx}
 \usepackage{tikz,pgfplots}
+\usepackage[american]{circuitikz}
 \usepackage{xcolor}
 \usepackage[unicode,pdfencoding=auto,psdextra]{hyperref}
 \usepackage{bookmark}
@@ -13,7 +15,7 @@
 \usepackage{tabularx}
 
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.geometric}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.geometric,patterns}
 
 \hypersetup{
   colorlinks=true,
@@ -53,7 +55,8 @@
 \setcounter{tocdepth}{2}
 \newcommand{\basicq}{\textbf{[基础]}}
 \newcommand{\midq}{\textbf{[进阶]}}
-\newcommand{\hardq}{\textbf{[综合]}}
+\newcommand{\hardq}{\textbf{[综合]}（思路提示：先定层级，再列关键式）}
+\newcommand{\ChapterModelLevel}[1]{\noindent\textbf{本章所处模型层级：#1}\par\smallskip}
 
 \providecommand{\crefpairconjunction}{和}
 \providecommand{\crefmiddleconjunction}{、}
@@ -119,11 +122,11 @@
   boxrule=0.6pt,
   arc=1pt
 }
-\newtcolorbox{IntuitionBox}{title=直觉框,fonttitle=\heiti,colframe=blue!60!black}
-\newtcolorbox{RigorousBox}{title=严格表述,fonttitle=\heiti,colframe=red!60!black}
-\newtcolorbox{ExampleBox}{title=例子,fonttitle=\heiti,colframe=green!40!black}
-\newtcolorbox{PitfallBox}{title=易错点,fonttitle=\heiti,colframe=orange!80!black}
-\newtcolorbox{WhatCouldGoWrong}{title=可能出错处,fonttitle=\heiti,colframe=orange!80!black}
+\newtcolorbox{IntuitionBox}{title=直觉框,fonttitle=\heiti,colframe=blue!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{RigorousBox}[1][★]{title=严格表述（难度 #1）,fonttitle=\heiti,colframe=red!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{ExampleBox}{title=例子,fonttitle=\heiti,colframe=green!40!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{PitfallBox}{title=易错点,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{WhatCouldGoWrong}{title=可能出错处,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{NoteBox}[2][]{%
   title=#2,
   fonttitle=\heiti,
@@ -198,7 +201,7 @@
   boxed title style={colframe=gray!70!black,colback=gray!60!black,sharp corners,size=small},
   fontupper=\normalsize
 }
-\newtcolorbox{SymmetryQuick}{title=对称性速成,fonttitle=\heiti,colframe=cyan!60!black}
+\newtcolorbox{SymmetryQuick}{title=对称性速成,fonttitle=\heiti,colframe=cyan!60!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{ConvergenceCriteria}[1]{%
   title=#1,
   fonttitle=\heiti,
@@ -265,13 +268,23 @@
   attach boxed title to top center={yshift=-2mm},
   boxed title style={colframe=indigo!70!black,colback=indigo!60!black,sharp corners,size=small},
   fontupper=\normalsize
-}\newtcolorbox{NumericalErrorBox}{title=数值误差控制,fonttitle=\heiti,colframe=teal!60!black}
-\newtcolorbox{CrossValidationBox}{title=交叉验证协议,fonttitle=\heiti,colframe=violet!60!black}
-\newtcolorbox{PracticalTipBox}{title=实用技巧,fonttitle=\heiti,colframe=brown!60!black}
-\newtcolorbox{ReportingStandardBox}{title=报告规范,fonttitle=\heiti,colframe=gray!60!black}
-\newtcolorbox{ExperimentalAlignmentBox}{title=实验对标要求,fonttitle=\heiti,colframe=pink!60!black}
-\newtcolorbox{EthicsReminderBox}{title=学术诚信提醒,fonttitle=\heiti,colframe=red!80!black}
-\newtcolorbox{ComparisonBox}[1]{title=#1,fonttitle=\heiti,colframe=cyan!60!black,colback=white}
+}
+\newtcolorbox{NumericalErrorBox}{title=数值误差控制,fonttitle=\heiti,colframe=teal!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{CrossValidationBox}{title=交叉验证协议,fonttitle=\heiti,colframe=violet!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{PracticalTipBox}{title=实用技巧,fonttitle=\heiti,colframe=brown!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{ReportingStandardBox}{title=报告规范,fonttitle=\heiti,colframe=gray!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{ExperimentalAlignmentBox}{title=实验对标要求,fonttitle=\heiti,colframe=pink!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{EthicsReminderBox}{title=学术诚信提醒,fonttitle=\heiti,colframe=red!80!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{ComparisonBox}[1]{title=#1,fonttitle=\heiti,colframe=cyan!60!black,colback=white,enhanced,breakable,sharp corners}
+
+% Mathematical foundation and advanced theory boxes
+\newtcolorbox{MathematicalFoundationBox}[2][]{colback=gray!5!white,colframe=gray!75!black,title={数学基础：#2},fonttitle=\heiti,enhanced,breakable,sharp corners,#1}
+
+\newtcolorbox{AssumptionAuditBox}[2][]{colback=orange!5!white,colframe=orange!75!black,title={假设审查：#2},fonttitle=\heiti,enhanced,breakable,sharp corners,#1}
+
+\newtcolorbox{SymmetryToolkitBox}[2][]{colback=yellow!5!white,colframe=yellow!60!black,title={对称性工具箱：#2},fonttitle=\heiti,enhanced,breakable,sharp corners,#1}
+
+\newtcolorbox{DimensionCheckNote}[1][]{colback=gray!3!white,colframe=gray!40!black,sharp corners,size=minimal,enlarge top by=-2mm,enlarge bottom by=-2mm,title=量纲检查：#1,fonttitle=\sffamily\footnotesize}
 
 % Helper command for NoteBox titles with special characters (optional usage only)
 % Usage: \notetitle[PDF-friendly-text]{Visible Title}
@@ -279,6 +292,9 @@
 \newcommand{\kvec}{\bm{k}}
 \newcommand{\gvec}{\bm{G}}
 \newcommand{\rvec}{\bm{r}}
+\newcommand{\betaslab}{\beta_{\mathrm{slab}}}
+\newcommand{\betasp}{\beta_{\mathrm{sp}}}
+\newcommand{\betabloch}{\beta_{\mathrm{Bloch}}}
 \newcommand{\E}{\bm{E}}
 \newcommand{\Hf}{\bm{H}}
 \newcommand{\D}{\bm{D}}

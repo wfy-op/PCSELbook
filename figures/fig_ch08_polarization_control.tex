@@ -1,0 +1,109 @@
+% !TEX root = ../main.tex
+% Figure: Polarization control mechanisms in PCSEL
+% Chapter: ch08 - Polarization Symmetry and Far-Field Control
+% Description: Various strategies for stabilizing polarization
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.0]
+    % Four subplots arranged in 2x2 grid
+    
+    % (a) Elliptical holes - shape anisotropy
+    \begin{scope}[shift={(-4,3)}]
+      % Elongated holes
+      \foreach \x in {-1.5,-0.5,...,1.5} {
+        \foreach \y in {-1,-0.5,...,1} {
+          \fill[gray!30] (\x,\y) ellipse (0.15 and 0.25);
+          \draw[thick] (\x,\y) ellipse (0.15 and 0.25);
+        }
+      }
+      
+      % Preferred polarization direction
+      \draw[->, very thick, red] (-2,-1.5) -- (2,-1.5);
+      \node[below, red, font=\bfseries] at (0,-1.6) {(a) 椭圆孔形状各向异性};
+      
+      % Aspect ratio label
+      \draw[<->] (1.8,-0.5) -- node[right] {\scriptsize $b/a>1$} (1.8,0.5);
+      
+      \node[align=center, font=\small] at (0,1.5) {打破$C_4$对称性\\\scriptsize 优先支持 TE$_x$模};
+    \end{scope}
+    
+    % (b) Rectangular lattice - period difference
+    \begin{scope}[shift={(2,3)}]
+      % Rectangular arrangement
+      \foreach \x in {-2,-1,...,2} {
+        \foreach \y in {-1,0,1} {
+          \fill[gray!30] (\x*0.8,\y*1.2) circle (0.15);
+          \draw[thick] (\x*0.8,\y*1.2) circle (0.15);
+        }
+      }
+      
+      % Lattice constants
+      \draw[<->] (-2.3,-1.2) -- node[left] {\scriptsize $a_y$} (-2.3,1.2);
+      \draw[<->] (-2,-1.5) -- node[below] {\scriptsize $a_x$} (2,-1.5);
+      
+      \draw[->, very thick, blue] (-2.5,-2) -- (2.5,-2);
+      \node[below, blue, font=\bfseries] at (0,-2.1) {(b) 矩形晶格};
+      
+      \node[align=center, font=\small] at (0,1.5) {$a_x\neq a_y$\\\scriptsize 能带折叠产生偏振依赖};
+    \end{scope}
+    
+    % (c) Slot-type PhC - field confinement
+    \begin{scope}[shift={(-4,-1)}]
+      % Slot waveguide structure
+      \fill[gray!30] (-2,-1) rectangle (2,1);
+      \fill[white] (-0.3,-1) rectangle (0.3,1);
+      \draw[thick] (-2,-1) rectangle (2,1);
+      \draw[thick] (-0.3,-1) rectangle (0.3,1);
+      
+      % Air holes on sides
+      \foreach \y in {-0.75,-0.25,0.25,0.75} {
+        \fill[white] (-1.2,\y) circle (0.2);
+        \draw[thick] (-1.2,\y) circle (0.2);
+        \fill[white] (1.2,\y) circle (0.2);
+        \draw[thick] (1.2,\y) circle (0.2);
+      }
+      
+      % Strong E-field in slot
+      \draw[very thick, red, <->] (-0.25,0) -- (0.25,0);
+      \node[above, red, font=\bfseries] at (0,0.8) {(c) 狭缝型 PhC};
+      
+      \node[align=center, font=\small] at (0,-1.8) {高折射率对比度\\\scriptsize TM 模强限制};
+    \end{scope}
+    
+    % (d) Integrated polarizer - selective loss
+    \begin{scope}[shift={(2,-1)}]
+      % Wire grid polarizer
+      \foreach \x in {-1.8,-1.4,...,1.8} {
+        \fill[gray!60] (\x,-1) rectangle ++(0.2,2);
+        \draw[thick] (\x,-1) -- (\x,1);
+      }
+      
+      % Transmitted polarization
+      \draw[->, very thick, green!60!black] (-2.5,0) -- node[above] {TE} (-1.9,0);
+      \draw[->, thick, red, dashed] (-2.5,0.3) -- node[above] {TM} (-1.9,0.3);
+      
+      % Blocked polarization (absorbed)
+      \draw[very thick, red] (1.9,0.3) -- (2.5,0.3);
+      \node[red, below] at (2.2,0.3) {\scriptsize 被吸收};
+      
+      \node[above, font=\bfseries] at (0,1.2) {(d) 集成线栅偏振片};
+      
+      \node[align=center, font=\small] at (0,-1.8) {金属光栅选择性透过\\\scriptsize PER > 20 dB};
+    \end{scope}
+    
+    % Overall title
+    \node[above, font=\Large\bfseries] at (0,5) {PCSEL 偏振控制技术汇总};
+    
+    % Summary box at bottom
+    \node[draw, align=center, font=\small] at (0,-3.5) {
+      \textbf{偏振消光比 (PER) 典型值}:\\
+      椭圆孔:$8$--$12\,\mathrm{dB}$, 矩形晶格:$10$--$15\,\mathrm{dB}$\\
+      狭缝型:$>15\,\mathrm{dB}$, 金属光栅:$>20\,\mathrm{dB}$\\[4pt]
+      \textbf{设计原则}:引入可控的各向异性打破简并\\
+      使目标偏振模式的阈值低于正交偏振
+    };
+  \end{tikzpicture}
+  \caption{PCSEL中实现稳定线偏振输出的四种主要技术手段对比。(a) \textbf{椭圆孔形状各向异性}：将原本圆形的 PhC空气孔拉伸成椭圆形（长短轴之比$b/a>1$），这种几何变形会破坏正方晶格的$C_4$旋转对称性，导致原本简并的$x$和$y$偏振模式发生分裂，通常沿长轴方向振荡的 TE$_x$模具有更低的有效折射率和更高的品质因子，因此优先起振。该方法工艺兼容性好但 PER 有限（约 10 dB）。(b) \textbf{矩形晶格}：采用$a_x\neq a_y$的长方格子代替正方格子，这使得 Brillouin 区在两个方向上的边界位置不同，从而导致能带折叠产生的带边模式频率出现偏振依赖性。通过精心选择纵横比可以使一个偏振落在增益谱中心而另一个偏离，实现$10$--$15\,\mathrm{dB}$的消光比。(c) \textbf{狭缝型 PhC}：在高折射率介质板中央开出一条纳米级的狭缝（宽度<$\lambda/2n$），利用全内反射原理将 TM 偏振的电场强烈局限在低折射率的缝隙区域内（因为电位移矢量$\mathbf{D}$的法向分量连续，所以低$\varepsilon$区的$\mathbf{E}$场更强），而 TE 偏振则几乎不受影响地分布在两侧，这种结构可以实现极高的 PER（>15 dB）但制备难度较大。(d) \textbf{集成线栅偏振片}：在出光口直接制作亚波长周期的金属光栅（周期$\Lambda<\lambda/2$），根据 wire-grid偏振器原理，电场平行于金属丝的方向会被强烈反射或吸收，而垂直方向则可以高效透过，从而实现最高的 PER（>20 dB）但同时也会引入额外的插入损耗。底部总结框列出了四种方法的典型性能指标和设计哲学，核心思想都是通过某种形式的各向异性来打破偏振简并，使得期望的那个偏振态具有明显更低的阈值增益，从而在模式竞争中胜出。实际应用中可根据具体需求权衡选择：若只需中等 PER 且追求低成本则选 (a) 或 (b)，若需要超高纯度偏振则考虑(c)+(d)组合方案。}
+  \label{fig:ch08_polarization_control}
+\end{figure}

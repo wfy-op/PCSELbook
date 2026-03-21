@@ -1,0 +1,105 @@
+% !TEX root = ../main.tex
+% Figure: RCWA unit cell discretization into layers
+% Chapter: ch13 - Rigorous Coupled-Wave Analysis
+% Description: Staircase approximation of arbitrary profiles
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[scale=1.15]
+    % Original continuous profile (slanted grating)
+    \begin{scope}[shift={(-4,0)}]
+      % Substrate
+      \fill[gray!30] (-2,-1) rectangle (2,0);
+      \draw[thick] (-2,0) -- (2,0);
+      \node[right] at (2.1,-0.5) {衬底$n_s$};
+      
+      % Slanted grating teeth
+      \foreach \x in {-1.5,-0.75,...,1.5} {
+        \fill[blue!20] (\x,0) -- (\x+0.3,0) -- (\x+0.5,1.5) -- (\x+0.2,1.5) -- cycle;
+        \draw[thick, blue] (\x,0) -- (\x+0.3,0) -- (\x+0.5,1.5) -- (\x+0.2,1.5) -- cycle;
+      }
+      
+      % Superstrate (air)
+      \fill[blue!5] (-2,1.5) rectangle (2,2.5);
+      \draw[thick] (-2,1.5) -- (2,1.5);
+      \node[right] at (2.1,2) {超strate$n_0$};
+      
+      % Incident plane wave
+      \draw[->, very thick, red] (-2.5,1) -- (-1.8,1.3);
+      \node[left, red] at (-2.5,1) {入射光};
+      
+      % Period indication
+      \draw[<->, thick] (-1.5,-0.3) -- node[below] {$\Lambda$} (-0.75,-0.3);
+      
+      % Height indication
+      \draw[<->, thick] (2.3,0) -- node[right] {$h$} (2.3,1.5);
+      
+      % Tilt angle
+      \draw[->] (-1.5,0) arc (90:75:0.8);
+      \node[right] at (-1.3,0.6) {\scriptsize $\theta_t$};
+      
+      \node[above, font=\bfseries] at (0,2.8) {(a) 真实倾斜光栅};
+      
+      % Fill factor label
+      \node[align=center, font=\small] at (0,-0.8) {占空比$f=w/\Lambda$\\锥角$\theta_t$};
+    \end{scope}
+    
+    % Discretized staircase approximation
+    \begin{scope}[shift={(2,0)}]
+      % Substrate
+      \fill[gray!30] (-2,-1) rectangle (2,0);
+      \draw[thick] (-2,0) -- (2,0);
+      \node[right] at (2.1,-0.5) {衬底$n_s$};
+      
+      % Staircase layers (10 slices)
+      \foreach \y [count=\i] in {0.15,0.3,...,1.5} {
+        \pgfmathsetmacro{\width}{1.5 - \i*0.1}
+        \fill[green!\i0!blue!20] (-1.5,\y-0.15) rectangle ++(\width,0.15);
+        \draw[dashed, gray] (-2,\y) -- (2,\y);
+      }
+      
+      % Layer numbering
+      \node[left, font=\small] at (-2.1,0.75) {$\ell=1$};
+      \node[left, font=\small] at (-2.1,1.5) {$\ell=N_L$};
+      
+      % Effective index in each layer
+      \node[right, font=\footnotesize] at (1.2,0.5) {$n_{\mathrm{eff}}^{(1)}$};
+      \node[right, font=\footnotesize] at (1.2,1.0) {$n_{\mathrm{eff}}^{(2)}$};
+      \node[right, font=\footnotesize] at (1.2,1.4) {$n_{\mathrm{eff}}^{(N_L)}$};
+      
+      % Superstrate
+      \fill[blue!5] (-2,1.5) rectangle (2,2.5);
+      \draw[thick] (-2,1.5) -- (2,1.5);
+      \node[right] at (2.1,2) {超strate$n_0$};
+      
+      \node[above, font=\bfseries] at (0,2.8) {(b) 阶梯近似分层};
+      
+      % Number of layers
+      \draw[<->, thick] (2.3,0) -- node[right] {$N_L=10$} (2.3,1.5);
+    \end{scope}
+    
+    % Connecting arrow showing approximation concept
+    \draw[->, ultra thick, orange, bend left=15] (-1.5,2.5) to[out=20,in=160] 
+      node[above, align=center, font=\small] {Li 因子化 + 傅里叶谐波展开\\\\tiny 每层内介电常数$\varepsilon(x,y)$分段恒定} (0,2.5);
+    
+    % Bottom: Fourier series representation
+    \node[draw, align=center, font=\small] at (0,-1.5) {
+      第$\ell$层介电函数的傅里叶展开:\\
+      $\varepsilon^{(\ell)}(x) = \sum_{m=-\infty}^{\infty}\hat{\varepsilon}_m^{(\ell)}e^{i m G x}$,\\
+      其中$G=2\pi/\Lambda$,截断至$m=\pm N_h$个谐波\\[4pt]
+      S-matrix 算法保证数值稳定性
+    };
+    
+    % Convergence note
+    \node[align=left, font=\footnotesize, anchor=south west] at (-3.5,-2.5) {
+      \textbf{收敛准则}:\\
+      $\bullet$ 谐波数$N_h\geq 21$保证$<1\%$误差\\
+      $\bullet$ 分层数$N_L$:陡峭侧壁需更细划分\\
+      $\bullet$ Li 规则处理不连续面避免 Gibbs 震荡
+    };
+  \end{tikzpicture}%
+  }
+  \caption{RCWA 中常用的阶梯离散化策略。(a) 上图示意具有倾斜侧壁的真实周期结构；(b) 下图示意将其沿纵向切分为 $N_L$ 个矩形薄层，并在每层内用有限谐波数 $N_h$ 展开介电函数。配合界面连续条件和散射矩阵递推，可得到整体的反射、透射与模式耦合信息。}
+  \label{fig:ch13_rcwa_discretization}
+\end{figure}

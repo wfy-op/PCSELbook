@@ -1,0 +1,87 @@
+% !TEX root = ../main.tex
+% Figure: Brillouin zone and high-symmetry paths for square lattice
+% Chapter: ch04 - Bloch Theory and 2D Photonic Crystals
+% Description: Real space lattice vectors and reciprocal space BZ
+
+\begin{tikzpicture}[scale=1.2]
+    % Left subplot: Real space square lattice
+    \begin{scope}[shift={(-4,0)}]
+      % Lattice points
+      \foreach \x in {-2,-1,...,2} {
+        \foreach \y in {-2,-1,...,2} {
+          \fill (\x,\y) circle (2pt);
+        }
+      }
+      
+      % Primitive lattice vectors
+      \draw[->, very thick, blue] (0,0) -- (2,0) node[midway, below] {$\mathbf{a}_1=a\hat{x}$};
+      \draw[->, very thick, red] (0,0) -- (0,2) node[midway, left] {$\mathbf{a}_2=a\hat{y}$};
+      
+      % Unit cell boundary
+      \draw[dashed, thick] (0,0) rectangle (2,2);
+      \node[above right] at (0,0) {原胞};
+      
+      % Wigner-Seitz cell (also square for square lattice)
+      \draw[thick, green!60!black] (-1,-1) rectangle (1,1);
+      \node[below, green!60!black] at (0,-1.2) {WS 原胞};
+      
+      % Title
+      \node[above, font=\bfseries] at (0,2.5) {(a) 实空间正方晶格};
+      
+      % Lattice constant label
+      \draw[<->] (2.3,-1) -- node[right] {$a$} (2.3,1);
+    \end{scope}
+    
+    % Right subplot: Reciprocal space Brillouin zone
+    \begin{scope}[shift={(2,0)}]
+      % First Brillouin zone (square)
+      \draw[thick, blue] (-1.5,-1.5) rectangle (1.5,1.5);
+      \fill[blue!10] (-1.5,-1.5) rectangle (1.5,1.5);
+      
+      % High symmetry points
+      \fill (0,0) circle (2pt) node[below right] {$\Gamma(0,0)$};
+      \fill (1.5,0) circle (2pt) node[below] {$X(\pi/a,0)$};
+      \fill (0,1.5) circle (2pt) node[left] {$Y(0,\pi/a)$};
+      \fill (1.5,1.5) circle (2pt) node[above right] {$M(\pi/a,\pi/a)$};
+      
+      % Irreducible wedge path
+      \draw[very thick, red, ->] (0,0) -- (1.5,0) -- (1.5,1.5) -- cycle;
+      \node[right, red, pos=0.3] at (0.75,0) {\scriptsize $\Gamma\to X$};
+      \node[above, red, pos=0.7] at (1.5,0.75) {\scriptsize $X\to M$};
+      \node[above left, red] at (0.75,0.75) {\scriptsize $M\to\Gamma$};
+      
+      % Reciprocal lattice vectors
+      \draw[->, dashed, thick] (0,0) -- (3,0) node[right] {$\mathbf{b}_1=\frac{2\pi}{a}\hat{x}$};
+      \draw[->, dashed, thick] (0,0) -- (0,3) node[above] {$\mathbf{b}_2=\frac{2\pi}{a}\hat{y}$};
+      
+      % Second Brillouin zone boundaries
+      \draw[dashed, gray] (-3,-3) rectangle (3,3);
+      \node[gray] at (2.5,2.5) {第二布里渊区};
+      
+      % Title
+      \node[above, font=\bfseries] at (0,2.5) {(b) 倒易空间与第一布里渊区};
+      
+      % Path length axis for band structure
+      \begin{scope}[shift={(0,-2.5)}, scale=0.8]
+        \draw[->] (0,0) -- (5,0) node[right] {$|\mathbf{k}|$};
+        
+        % Tick marks for Gamma-X-M-Gamma
+        \draw (0,-0.1) -- (0,0.1) node[below] {$\Gamma$};
+        \draw (1.5,-0.1) -- (1.5,0.1) node[below] {$X$};
+        \draw (3.0,-0.1) -- (3.0,0.1) node[below] {$M$};
+        \draw (4.5,-0.1) -- (4.5,0.1) node[below] {$\Gamma$};
+        
+        \node[above, align=center] at (2.25,0.3) {\scriptsize 标准路径\\用于能带计算};
+      \end{scope}
+    \end{scope}
+    
+    % Connecting arrow between real and reciprocal space
+    \draw[->, very thick, purple, bend left=30] (-1.5,2.8) to[out=30,in=150] node[above, sloped] {傅里叶变换} (1.5,2.8);
+    
+    % Mathematical relationship at bottom
+    \node[draw, align=center, font=\small] at (0,-3.5) {
+      倒格矢定义:\\
+      $\mathbf{b}_i\cdot\mathbf{a}_j=2\pi\delta_{ij}$\\[2pt]
+      对于正方晶格:$|\mathbf{b}_1|=|\mathbf{b}_2|=\frac{2\pi}{a}$
+    };
+\end{tikzpicture}

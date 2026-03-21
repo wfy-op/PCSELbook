@@ -1,4 +1,5 @@
-﻿\chapter{PCSEL 的耦合波理论（CWT）}
+﻿% !TEX root = ../main.tex
+\chapter{PCSEL 的耦合波理论（CWT）}
 \label{ch:cwt-min}
 
 \section*{学习目标}
@@ -13,7 +14,10 @@
 建议已掌握 \cref{ch:maxwell,ch:gamma,ch:feedback,ch:threshold} 中关于开放 Maxwell 问题、Gamma 点候选模、面内耦合与阈值条件的内容。
 
 \section*{本章路线图}
+\ChapterModelLevel{L1→L2}
 上一章我们已经知道：PCSEL 的面发射来自周期散射把面内导模耦合到垂直辐射通道；阈值问题则要求把增益和损耗写进同一个动力学框架。到这里，一个自然的问题出现了：有没有一种比全波仿真更容易读懂、又比纯口头图像更能计算的中间模型？CWT 就是为此存在的。本章先说明为什么单靠能带图还不够，再从场展开和投影出发建立最小模型，随后解释矩阵里每一类项各自代表什么物理，并把四波基底正式改写成 $\Gamma$ 点 irrep 基底，让模式标签、偏振选择和辐射选择规则进入同一套矩阵语言。最后给出它在设计流程中的正确用法与边界。
+
+\noindent\textbf{记号约定（避免符号歧义）}：本章与导波相关的 $\beta$ 默认都指 $\betaslab$（slab 面内传播常数）；自发辐射耦合因子统一写作 $\betasp$，仅在动态与噪声章节使用。
 
 \begin{RigorousBox}
 除非另作声明，本章的时间因子约定与全书一致，均采用 $\ee^{-\ii\omega t}$。因此后文所有等效损耗、增益和复频率符号，均应与 \cref{ch:maxwell,ch:math-appendix} 的频域约定联读，而不能另行切换正负号解释。
@@ -1266,4 +1270,6 @@ $A_1$、$B_1$ 与 $E$ family 的分解，正是把模式标注、偏振选择和
 
   \item 若想直接对照 PCSEL 专用 CWT 的代表性建立过程，可参考 \cite{liang2012square,liang2013triangular}。 这条阅读的重点是补足本章关于最小 CWT、四波基底与阈值代理 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
+
+
 

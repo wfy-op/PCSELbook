@@ -1,0 +1,12 @@
+% Visual summary of six red lines
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+  \tikzset{
+    warn/.style={draw=red!70!black,fill=red!6,rounded corners,minimum width=5.0cm,minimum height=1.45cm,align=left,font=\scriptsize}
+  }
+  \node[warn] (r1) at (0,0) {⚠ 红线 \#1\\无限周期 Bloch 模 $\neq$ 有限器件工作模};
+  \node[warn,right=0.5cm of r1] (r2) {⚠ 红线 \#2\\被动冷腔共振 $\neq$ 有源阈值};
+  \node[warn,below=0.45cm of r1] (r3) {⚠ 红线 \#3\\阈值增益 $g_{\mathrm{th}}$ $\neq$ 阈值电流 $I_{\mathrm{th}}$};
+  \node[warn,right=0.5cm of r3] (r4) {⚠ 红线 \#4\\均匀增益/有效折射率只是代理，不是器件默认状态};
+  \node[warn,below=0.45cm of r3] (r5) {⚠ 红线 \#5\\二维教学模型结论不可直接替代三维 slab 器件结论};
+  \node[warn,right=0.5cm of r5] (r6) {⚠ 红线 \#6\\线性阈值代理 $\neq$ 阈上稳态激光理论};
+\end{tikzpicture}

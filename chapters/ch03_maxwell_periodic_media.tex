@@ -1,3 +1,4 @@
+﻿% !TEX root = ../main.tex
 \chapter{周期介质中的 Maxwell 方程}
 \label{ch:maxwell}
 
@@ -13,6 +14,7 @@
 大学电动力学中的 Maxwell 方程、边界条件与向量恒等式。
 
 \section*{本章路线图}
+\ChapterModelLevel{L1}
 本章先从最原始的 Maxwell 方程写起，再转入频域形式，随后讨论在何种条件下它成为本征值问题。接着我们解释为什么 PCSEL 从根本上是开放系统，并补上开放问题最关键的数学直觉：共振模为什么不再属于普通平方可积函数空间、QNM / resonant states 最小应如何理解。最后再把这一章和后面的 Bloch 理论、阈值分析接起来。
 
 \section{从时域方程出发：我们到底在求解什么}
@@ -110,6 +112,44 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
 
 因此，判断一个系统是"封闭"还是"开放",不应只看几何形状，而应看坡印亭矢量的净通量是否为零。这也是为什么我们在本节强调：PCSEL 的本征模分析必须采用开放边界的格林函数或散射矩阵框架。
 \end{ConnectionBox}
+
+\begin{IntuitionBox}
+在进入算符语言前，可先用一自由度 RLC 共振器类比建立直觉：理想无损 RLC 的本征频率是实数，振荡幅度不会自行衰减；一旦串入电阻，频率就变成“振荡频率 + 衰减率”的复数形式。Maxwell 算符在无损封闭边界下对应“无电阻”，在开放/有损条件下对应“有电阻”。这就是“厄米 $\rightarrow$ 实频率、非厄米 $\rightarrow$ 复频率”的最小物理图像。
+\end{IntuitionBox}
+
+\begin{MathematicalFoundationBox}{Maxwell 算符的厄米性与内积定义}
+考虑频域 Maxwell 旋度方程组成的算符形式。定义六分量场向量
+$$\Psi = \begin{pmatrix} \E \\ \Hf \end{pmatrix},$$
+并将 Maxwell 方程写作本征值问题：
+$$\mathcal{M}\Psi = \omega\Psi,$$
+其中算符 $\mathcal{M}$ 的具体形式可由旋度运算构造。
+
+\textbf{内积定义}: 电磁场的自然内积应包含能量权重：
+$$\langle \Psi_1, \Psi_2 \rangle = \int_V \left( \varepsilon_0\varepsilon(\mathbf{r}) \E_1^*\cdot\E_2 + \mu_0\mu(\mathbf{r}) \Hf_1^*\cdot\Hf_2 \right) d^3r.$$
+
+\textbf{厄米性条件}: 算符 $\mathcal{M}$ 为厄米的充要条件是：
+$$\langle \Psi_1, \mathcal{M}\Psi_2 \rangle = \langle \mathcal{M}\Psi_1, \Psi_2 \rangle.$$
+
+通过分部积分并利用矢量恒等式 $\nabla\cdot(\mathbf{A}\times\mathbf{B}) = \mathbf{B}\cdot(\nabla\times\mathbf{A}) - \mathbf{A}\cdot(\nabla\times\mathbf{B})$，可得：
+\begin{align*}
+\langle \Psi_1, \mathcal{M}\Psi_2 \rangle - \langle \mathcal{M}\Psi_1, \Psi_2 \rangle 
+&= \oint_{\partial V} (\E_1^*\times\Hf_2 - \E_2\times\Hf_1^*)\cdot d\mathbf{S}.
+\end{align*}
+
+因此，厄米性成立的条件是：
+\begin{enumerate}
+  \item 介质参数 $\varepsilon(\mathbf{r})$ 和 $\mu(\mathbf{r})$ 为实数（无损耗/增益）
+  \item 边界项为零，这可通过以下方式实现：
+    \begin{itemize}
+      \item 完美导体边界：$\hat{n}\times\E=0$
+      \item 周期性边界：对面贡献相消
+      \item 无穷远辐射条件：场衰减足够快
+    \end{itemize}
+\end{enumerate}
+
+当介质存在损耗（$\Im\varepsilon > 0$）或增益（$\Im\varepsilon < 0$）时，上述第一项不再相等，算符变为非厄米，本征频率可为复数。这正是第 7 章讨论阈值增益和第 25 章引入 QNM 理论的数学根源。
+\end{MathematicalFoundationBox}
+
 \section{算符观点：为什么有时本征频率是实数，有时必须是复数}
 为了建立后文需要的概念，我们把 \cref{eq:maxwell-eigen} 记成算符形式
 \begin{equation}
@@ -118,6 +158,8 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
 \hat{\mathcal L}(\omega)=\nabla\times\mu_r^{-1}\nabla\times-k_0^2\varepsilon_r(\rvec,\omega).
 \label{eq:maxwell_operator}
 \end{equation}
+
+\textbf{物理含义：}方程\cref{eq:maxwell_operator}定义了开放光学系统的本征问题框架。算符$\hat{\mathcal L}(\omega)$的第一项$\nabla\times\mu_r^{-1}\nabla\times$描述磁场的旋度能量，第二项$k_0^2\varepsilon_r$描述电场在介质中的存储能力。求解$\det[\hat{\mathcal L}(\omega)]=0$即得到系统的本征频率和本征模式。
 
 如果材料无损、无色散，边界又是理想封闭的，那么这个算符可以在适当函数空间上写成自伴形式。此时本征频率是实数，不同模式之间具有良好的正交关系。这是很多电磁教材首先讲授的情形，因为它数学上干净，也有助于建立能量守恒图像。
 
@@ -155,6 +197,8 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
     \fill[blue!70] (-1.5,-1.8) circle (0.08) node[right,font=\footnotesize]{low-$Q$};
     \fill[orange!80!black] (2.5,-0.02) circle (0.08) node[above right,font=\footnotesize]{BIC ($\gamma\to 0$)};
     \fill[green!60!black] (0.5,-1.0) circle (0.08) node[right,font=\footnotesize]{quasi-BIC};
+    \draw[densely dotted,gray!70] (-3.6,-0.35)--(3.6,-0.35) node[right,font=\scriptsize]{$Q\sim10^3$ 量级};
+    \draw[densely dotted,gray!70] (-3.6,-0.06)--(3.6,-0.06) node[right,font=\scriptsize]{$Q\sim10^5$ 量级};
     \draw[<->,thin] (1.15,-0.02)--(1.15,-0.38);
     \draw[<->,thin] (-1.35,-0.02)--(-1.35,-1.78);
     \node[font=\footnotesize] at (0,-2.8){lower half-plane = open/lossy resonances};
@@ -162,6 +206,12 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
   \caption{复频率平面示意。被动开放系统的共振模位于下半平面（$\gamma>0$），距实轴越近表示 $Q$ 越高。BIC 理想地处于实轴上（$\gamma=0$），quasi-BIC 则刚刚离开实轴。}
   \label{fig:complex-freq-plane}
 \end{figure}
+
+对 PCSEL 常见近红外工作点（$\omega_0\sim10^{15}\ \mathrm{rad/s}$），由
+\[
+Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}{2Q}
+\]
+可得：$Q=10^3$ 时 $\gamma/\omega_0\approx5\times10^{-4}$，$Q=10^5$ 时 $\gamma/\omega_0\approx5\times10^{-6}$。因此“离实轴多远算 high-$Q$”可以直接用这个比例估算，而不必只靠定性描述。
 
 \begin{RigorousBox}
 若要把“无损、无色散、封闭边界下 Maxwell 问题可写成自伴形式”说得更正式，最自然的写法其实不是直接把 \cref{eq:maxwell-eigen} 当普通矩阵本征值问题，而是先把它限制在
@@ -324,6 +374,14 @@ x \to x + \frac{\ii\sigma(x)}{\omega},
 \]
 使出射波在该层中指数衰减，但由于变换是连续的、在物理--PML 界面上梯度为零，波在进入该层时不产生反射。需要注意的是，$\sigma/\omega$ 显式依赖频率；对 QNM 这类复频率 $\tilde{\omega}$ 问题，取用哪一个 $\omega$ 会影响虚部精度，因此常需做收敛性检查。换句话说，PML 不是一个物理实体，而是一种把无限开放空间折叠进有限计算域的数学技巧。
 
+若想看到“为什么会衰减”的最小代数，可取一维右行波 $E(x)=\ee^{\ii kx}$。代入复坐标延拓后：
+\[
+E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
+=
+\ee^{\ii kx}\,\ee^{-k\sigma x/\omega}.
+\]
+后面的指数因子 $\ee^{-k\sigma x/\omega}$ 就是 PML 区域中的吸收包络；它直接展示了“复坐标 $\rightarrow$ 指数衰减”的物理效果。
+
 这一步看起来像计算细节，实际上极其关键。因为一旦开放边界实现不当，就会发生两类严重误判：
 \begin{itemize}
   \item 人工反射把本应泄露的模式困住，导致虚假高 $Q$；
@@ -365,5 +423,7 @@ x \to x + \frac{\ii\sigma(x)}{\omega},
 
   \item 配合 \cref{ch:fdtd-fem,ch:rcwa} 回看本章，可更清楚地理解数值边界为什么不能被当作纯技术细节。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
 \end{itemize}
+
+
 
 

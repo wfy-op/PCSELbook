@@ -1,3 +1,4 @@
+% !TEX root = ./main.tex
 \chapter*{符号与记号}
 \addcontentsline{toc}{chapter}{符号与记号}
 
@@ -17,6 +18,9 @@ $\varepsilon(\rvec,\omega)$ & 介电函数；可含色散与损耗。 \\
 $Q$ & 品质因子，$Q=\omega_0/(2\gamma)$（被动定义）。 \\
 $\gamma_\mathrm{rad},\gamma_\mathrm{int}$ & 辐射损耗与内部损耗对应的衰减率。 \\
 $\kappa_1,\kappa_2$ & CWT 中由主导几何傅里叶分量和纵向模重叠给出的耦合系数。 \\
+$\betaslab$ & slab/导波模型中的面内传播常数（单位：\si{\per\meter}）。 \\
+$\betasp$ & 自发辐射耦合因子（无量纲），定义见动态与噪声章节。 \\
+$\betabloch$ & 仅在少数上下文中用于记 Bloch 波矢分量；默认更推荐直接写 $\kvec$ 分量以避免歧义。 \\
 $g_\mathrm{mat}$ & 材料增益（material gain）。 \\
 $g_N$ & 微分增益（differential gain），即材料增益对载流子密度的局域导数。 \\
 $N_\mathrm{tr}$ & 透明载流子密度（transparency carrier density）。 \\
@@ -34,7 +38,7 @@ $L_s$ & 电流扩展长度（spreading length）。 \\
 \end{longtable}
 
 \begin{PitfallBox}
-符号 $Q$、$g_\mathrm{th}$、$I_\mathrm{th}$ 分别对应被动腔、光学阈值、器件阈值三个层级，不能互相替代。
+符号 $Q$、$g_\mathrm{th}$、$I_\mathrm{th}$ 分别对应被动腔、光学阈值、器件阈值三个层级，不能互相替代。$\beta$ 统一优先写成 $\betaslab$ 或 $\betasp$，避免跨章节误读。
 \end{PitfallBox}
 
 \chapter*{缩略语表}

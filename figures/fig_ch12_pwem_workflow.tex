@@ -1,0 +1,66 @@
+% !TEX root = ../main.tex
+% Figure: PWEM plane wave expansion method workflow
+% Chapter: ch12 - Plane Wave Expansion Method and Eigenvalue Solvers
+% Description: Flowchart showing the computational steps in PWEM calculation
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[scale=0.92, transform shape,
+    block/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3cm, minimum height=0.8cm, align=center},
+    decision/.style={diamond, draw, aspect=2, fill=#1!20, minimum width=2.5cm, align=center},
+    arrow/.style={->, >=stealth, thick}
+  ]
+    % Input stage
+    \node[block=blue, minimum height=1.2cm] (input) at (0,8) {输入结构参数\\晶格类型$a$,填充因子$f$,折射率$n$};
+    
+    % Geometry setup
+    \node[block=green] (geometry) at (0,6.5) {构建介电函数$\varepsilon(\mathbf{G})$\\傅里叶分量计算};
+    \draw[arrow] (input) -- (geometry);
+    
+    % Reciprocal lattice
+    \node[block=yellow, right=2cm of geometry] (recip) {生成倒格矢$\{\mathbf{G}_n\}$\\截断至$N_{\mathrm{pw}}$个平面波};
+    \draw[arrow] (geometry) -- (recip);
+    
+    % Master equation assembly
+    \node[block=orange] (matrix) at (0,5) {组装本征方程\\$\sum_{\mathbf{G}'}\Theta_{\mathbf{G},\mathbf{G}'}H_{\mathbf{G}'}=\left(\frac{\omega}{c}\right)^2 H_{\mathbf{G}}$};
+    \draw[arrow] (recip) |- (matrix);
+    \draw[arrow] (geometry) -- (matrix);
+    
+    % K-point sampling
+    \node[block=cyan, left=2cm of matrix] (kspace) {$\mathbf{k}$空间采样\\沿不可约路径取点};
+    \draw[arrow] (kspace) -- (matrix);
+    
+    % Eigenvalue solver
+    \node[decision=red] (solver) at (0,3.5) {求解大规模稀疏\\矩阵本征值？};
+    \draw[arrow] (matrix) -- (solver);
+    
+    % Iterative refinement loop
+    \node[block=purple] (iterate) at (-3,2) {增加$N_{\mathrm{pw}}$\\提高精度};
+    \draw[arrow] (solver) -| node[pos=0.3,above] {否/收敛慢} (iterate);
+    \draw[arrow] (iterate) |- (matrix);
+    
+    % Post-processing
+    \node[block=pink] (postproc) at (3,2) {后处理\\群速度$v_g=d\omega/dk$\\态密度 DOS};
+    \draw[arrow] (solver) -| node[pos=0.3,above] {是} (postproc);
+    
+    % Output
+    \node[block=blue, minimum height=1.2cm] (output) at (0,0.5) {输出结果\\能带图$\omega_n(\mathbf{k})$, 场分布，偏振信息};
+    \draw[arrow] (postproc) |- (output);
+    \draw[arrow] (iterate) |- (output);
+    
+    % Computational cost annotation
+    \node[draw, dashed, align=center, font=\small] at (-5,4) {计算复杂度:\\$O(N_{\mathrm{pw}}^3)$\\内存:$O(N_{\mathrm{pw}}^2)$};
+    
+    % Tips box
+    \node[align=left, font=\footnotesize, anchor=south west] at (4.5,0.5) {
+      \textbf{实用建议}:\\
+      $\bullet$ $N_{\mathrm{pw}} \geq 441$ ($21\times21$) 保证收敛\\
+      $\bullet$ 使用 ARPACK 迭代求解器加速\\
+      $\bullet$ 对称性简化可减少 8 倍计算量
+    };
+  \end{tikzpicture}%
+  }
+  \caption{PWEM 的标准计算流程：由几何与材料参数构造倒格矢和介电函数傅里叶分量，离散 Maxwell 本征方程并沿高对称路径求解本征频率与本征矢量；若结果未收敛，则增大 $N_{\mathrm{pw}}$ 重新计算。输出的能带、模场和群速度等量可用于 PCSEL 的初始选模与参数扫描。}
+  \label{fig:ch12_pwem_workflow}
+\end{figure}

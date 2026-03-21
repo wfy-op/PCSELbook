@@ -1,0 +1,83 @@
+% !TEX root = ../main.tex
+% Figure: Far-field radiation pattern for PCSEL
+% Chapter: ch08 - Polarization, Symmetry, and Far-field Control
+% Description: Polar plot showing typical far-field pattern with dual-lobes
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.5]
+    % Define colors
+    \definecolor{mainlobe}{RGB}{52,152,219}    % Blue
+    \definecolor{sidelobe}{RGB}{231,76,60}     % Red
+    
+    % Draw polar grid
+    \foreach \r in {0.2,0.4,...,1} {
+      \draw[gray!30] (0,0) circle (\r);
+    }
+    \foreach \theta in {0,30,...,330} {
+      \draw[gray!30] (0,0) -- (\theta:1.1);
+    }
+    
+    % Label angles
+    \node[right] at (1.05,0) {\tiny $0^\circ$};
+    \node[left] at (-1.05,0) {\tiny $180^\circ$};
+    \node[above] at (0,1.05) {\tiny $90^\circ$};
+    \node[below] at (0,-1.05) {\tiny $270^\circ$};
+    
+    % Draw main lobes (typical dipole-like pattern for fundamental mode)
+    \fill[mainlobe, opacity=0.6] 
+      plot[domain=-60:60, smooth] (\x:{0.3 + 0.7*cos(\x)}) -- cycle;
+    \fill[mainlobe, opacity=0.6] 
+      plot[domain=120:240, smooth] (\x:{0.3 + 0.7*cos(\x-180)}) -- cycle;
+    
+    % Draw side lobes (higher-order contributions)
+    \fill[sidelobe, opacity=0.4] 
+      plot[domain=30:150, smooth] (\x:{0.15 + 0.25*sin(\x)}) -- cycle;
+    \fill[sidelobe, opacity=0.4] 
+      plot[domain=210:330, smooth] (\x:{0.15 + 0.25*sin(\x-180)}) -- cycle;
+    
+    % Add intensity scale bar
+    \begin{scope}[shift={(1.8,0)}]
+      \shade[top color=white, bottom color=blue] (0,0) rectangle (0.3,1);
+      \node[right] at (0.35,0.5) {\scriptsize 强度};
+      \node[right] at (0.35,0.9) {\tiny 高};
+      \node[right] at (0.35,0.1) {\tiny 低};
+    \end{scope}
+    
+    % Annotations
+    \node[above, font=\bfseries] at (0,1.3) {PCSEL 典型远场辐射方向图};
+    \node[below, align=center, font=\small] at (0,-1.4) 
+      {(a) 基模偶极辐射\\主瓣半角宽度 $\sim 10^\circ$--$20^\circ$};
+    
+    % Coordinate axes
+    \draw[->, thick] (-1.3,0) -- (1.3,0) node[right] {$k_x$};
+    \draw[->, thick] (0,-1.3) -- (0,1.3) node[above] {$k_y$};
+  \end{tikzpicture}
+  \quad
+  \begin{tikzpicture}[scale=1.5]
+    % Second subplot: Higher-order mode with four-lobe pattern
+    \definecolor{quadrupole}{RGB}{155,89,182}  % Purple
+    
+    % Draw polar grid
+    \foreach \r in {0.2,0.4,...,1} {
+      \draw[gray!30] (0,0) circle (\r);
+    }
+    
+    % Draw quadrupole lobes
+    \foreach \angle in {45,135,225,315} {
+      \fill[quadrupole, opacity=0.5, rotate around={\angle:(0,0)}]
+        plot[domain=-40:40, smooth] (\x:{0.2 + 0.6*cos(\x)}) -- cycle;
+    }
+    
+    % Title
+    \node[above, font=\bfseries] at (0,1.3) {高阶模四极辐射};
+    \node[below, align=center, font=\small] at (0,-1.4) 
+      {(b) 四极矩模式\\特征四叶草形状};
+    
+    % Axes
+    \draw[->, thick] (-1.3,0) -- (1.3,0) node[right] {$k_x$};
+    \draw[->, thick] (0,-1.3) -- (0,1.3) node[above] {$k_y$};
+  \end{tikzpicture}
+  \caption{PCSEL 的远场辐射方向图。(a) 基模（通常是偶极模）显示出双瓣特性，主辐射方向沿晶格主轴；(b) 高阶四极模呈现特征的四叶草形状，表明存在方位角依赖的辐射干涉。这些图案可以直接从傅里叶变换的近场分布计算得到，也可通过角度分辨 EL/PL 测量实验获取。注意中心$\Gamma$点的辐射强度与模式的对称性密切相关——某些对称性保护的 BIC 模式在完美结构中完全不辐射（暗模），只有在对称性破缺后才泄漏出有限辐射。}
+  \label{fig:ch08_farfield_pattern}
+\end{figure}

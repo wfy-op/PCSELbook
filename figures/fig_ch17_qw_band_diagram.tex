@@ -1,0 +1,71 @@
+% !TEX root = ../main.tex
+% Figure: Quantum well band diagram with strain effects
+% Chapter: ch17 - Active Region Modeling and Gain Calculation
+% Description: Energy band alignment in compressively strained QWs
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[scale=1.2]
+    % Conduction band edge (parabolic)
+    \draw[thick, blue, domain=-3:3, samples=100] 
+      plot(\x,{0.3*\x*\x + 1.5}) node[right] {$E_c(z)$};
+    
+    % Valence band edges (heavy hole and light hole)
+    \draw[thick, red, domain=-3:3, samples=100] 
+      plot(\x,{-0.2*\x*\x - 0.5}) node[right] {$E_{\mathrm{HH}}(z)$};
+    
+    \draw[thick, green!60!black, domain=-3:3, samples=100] 
+      plot(\x,{-0.15*\x*\x - 0.8}) node[right] {$E_{\mathrm{LH}}(z)$};
+    
+    % Well region shading
+    \fill[blue!10] (-1,-1.5) rectangle (1,2.5);
+    \node[above, blue!60!white] at (0,2.5) {量子阱区};
+    
+    % Barrier regions
+    \node[left] at (-3,0) {势垒区};
+    \node[right] at (3,0) {势垒区};
+    
+    % Band offset labels
+    \draw[<->, thick] (2.5,-0.5) -- node[right] {$\Delta E_v$} (2.5,1.5);
+    \draw[dashed] (2.5,-0.5) -- (3,-0.5);
+    \draw[dashed] (2.5,1.5) -- (3,1.5);
+    
+    % Strain-induced splitting
+    \draw[<->, thick] (3.5,-0.8) -- node[right] {\scriptsize $\delta E_{\mathrm{strain}}$} (3.5,-0.5);
+    \draw[dashed] (3.5,-0.8) -- (4,-0.8);
+    \draw[dashed] (3.5,-0.5) -- (4,-0.5);
+    
+    % Quantized energy levels
+    \draw[dashed, thick, blue] (-3,1.8) -- (3,1.8) node[right, font=\bfseries] {$E_{c1}$};
+    \draw[dashed, thick, red] (-3,-0.3) -- (3,-0.3) node[right, font=\bfseries] {$E_{hh1}$};
+    \draw[dashed, thick, green!60!black] (-3,-0.6) -- (3,-0.6) node[right, font=\bfseries] {$E_{lh1}$};
+    
+    % Wavefunctions (schematic)
+    \draw[very thick, blue, opacity=0.6, domain=-1:1, samples=50] 
+      plot({\x+2},{0.3*cos(deg(1.5*\x))+1.8});
+    
+    \draw[very thick, red, opacity=0.6, domain=-1:1, samples=50] 
+      plot({\x+2},{0.2*cos(deg(1.57*\x))-0.3});
+    
+    % Transition arrow (lasing transition)
+    \draw[->, ultra thick, orange] (0,1.75) -- (0,-0.25);
+    \node[right, orange, font=\bfseries] at (0,0.8) {$h\nu = E_g^{\mathrm{eff}}$};
+    
+    % Fermi levels under injection
+    \draw[dash dot, thick, purple] (-3,1.2) -- (3,1.2) node[right] {$E_{Fc}$};
+    \draw[dash dot, thick, brown] (-3,-0.7) -- (3,-0.7) node[right] {$E_{Fv}$};
+    
+    % Population inversion condition
+    \node[draw, align=center, font=\small, fill=yellow!20] at (0,-1.3) {粒子数反转条件\\$E_{Fc}-E_{Fv}>E_g^{\mathrm{eff}}$};
+    
+    % Material composition annotation
+    \node[align=left, font=\footnotesize, anchor=south west] at (-4,2.5) {
+      \textbf{典型材料体系}:\\
+      $\bullet$ InGaAs/GaAs 压缩应变阱\\
+      $\bullet$ 应变量:$f_r \approx -1\%$至$-2\%$\\
+      $\bullet$ HH-LH 分裂:$\sim 30\,\mathrm{meV}$
+    };
+  \end{tikzpicture}
+  \caption{压缩应变量子阱的能带结构示意图。蓝色抛物线为导带边$E_c(z)$，红色和绿色曲线分别为重空穴 (HH) 和轻空穴 (LH) 价带边。由于晶格失配引起的双轴压缩应变 ($f_r < 0$)，HH 和 LH 带在阱区发生分离（右侧标注$\delta E_{\mathrm{strain}}$），使得 HH 成为最高价带——这有利于实现低阈值、高效率的 TE 偏振增益。阴影区域标示了量子阱的空间范围（通常厚度$L_w=6$--$10\,\mathrm{nm}$）。水平虚线表示量子约束效应产生的分立能级：$E_{c1}$为电子基态，$E_{hh1}$为重空穴基态，$E_{lh1}$为轻空穴第一激发态。橙色粗箭头示出了主要的辐射复合跃迁过程，光子能量近似等于有效带隙$h\nu \approx E_{c1}-E_{hh1}=E_g^{\mathrm{eff}}$。紫色和棕色点划线分别代表准费米能级$E_{Fc}$和$E_{Fv}$——当注入载流子浓度达到透明条件时，两者之差超过有效带隙$(E_{Fc}-E_{Fv})>E_g^{\mathrm{eff}}$，实现净增益。左上角注释框列出了常用的 InGaAs/GaAs 材料体系的典型参数。这种能带工程是 PCSEL 获得高性能的关键：通过调节 In 组分控制应变大小，可以同时优化增益谱位置、微分增益系数和俄歇复合速率。}
+  \label{fig:ch17_qw_band_diagram}
+\end{figure}

@@ -1,0 +1,36 @@
+% !TEX root = ../main.tex
+% Figure: Failure diagnosis flow for PCSEL modeling
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=7mm and 10mm,
+    s/.style={rectangle, rounded corners, draw, fill=#1!14, minimum width=3.0cm, minimum height=9mm, align=center},
+    d/.style={diamond, draw, fill=yellow!15, aspect=2.0, align=center, inner sep=1.5pt},
+    arr/.style={-Stealth, thick}
+  ]
+    \node[s=blue] (start) {Observed anomaly};
+
+    \node[d, below=of start] (lcheck) {Claim level\\matched?};
+    \node[s=teal, below left=12mm and 26mm of lcheck] (fix1) {Downgrade claim\\L4 $\rightarrow$ L2/L1};
+    \node[d, below right=12mm and 26mm of lcheck] (pcheck) {Physics model\\consistent?};
+
+    \node[s=orange, below left=12mm and 26mm of pcheck] (fix2) {Fix geometry / BC / interfaces};
+    \node[d, below right=12mm and 26mm of pcheck] (ncheck) {Numerics\\converged?};
+
+    \node[s=purple, below left=12mm and 26mm of ncheck] (fix3) {Refine mesh / PML / truncation};
+    \node[s=green, below right=12mm and 26mm of ncheck] (ok) {Rebuild evidence chain\\and report confidence};
+
+    \draw[arr] (start) -- (lcheck);
+    \draw[arr] (lcheck) -- node[left, font=\small]{No} (fix1);
+    \draw[arr] (lcheck) -- node[above, font=\small]{Yes} (pcheck);
+    \draw[arr] (pcheck) -- node[left, font=\small]{No} (fix2);
+    \draw[arr] (pcheck) -- node[above, font=\small]{Yes} (ncheck);
+    \draw[arr] (ncheck) -- node[left, font=\small]{No} (fix3);
+    \draw[arr] (ncheck) -- node[above, font=\small]{Yes} (ok);
+  \end{tikzpicture}
+  }
+  \caption{Failure diagnosis flow aligned with this chapter: debug in the order of claim level, physics consistency, then numerical convergence.}
+  \label{fig:ch24_failure_diagnosis_flow}
+\end{figure}

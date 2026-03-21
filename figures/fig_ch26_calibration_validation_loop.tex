@@ -1,0 +1,29 @@
+% !TEX root = ../main.tex
+% Figure: Calibration-validation loop for device modeling
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[
+    node distance=10mm and 12mm,
+    step/.style={rectangle, rounded corners, draw, fill=#1!15, minimum width=3.1cm, minimum height=9mm, align=center},
+    arr/.style={-Stealth, thick}
+  ]
+    \node[step=blue] (m) {Measure\\(geometry, IV, spectra, thermal)};
+    \node[step=teal, right=of m] (e) {Extract\\direct vs inferred parameters};
+    \node[step=orange, below=of e] (c) {Calibrate\\electrical $\rightarrow$ thermal $\rightarrow$ optical};
+    \node[step=green, left=of c] (p) {Predict\\$I_{\mathrm{th}}$, far-field, stability};
+    \node[step=purple, below=of p] (v) {Validate\\with held-out experiments};
+    \node[step=red, right=of v] (u) {Update\\uncertainty budget + interfaces};
+
+    \draw[arr] (m) -- (e);
+    \draw[arr] (e) -- (c);
+    \draw[arr] (c) -- (p);
+    \draw[arr] (p) -- (v);
+    \draw[arr] (v) -- (u);
+    \draw[arr] (u) -- (m);
+  \end{tikzpicture}
+  }
+  \caption{Calibration-validation loop for device-level modeling: measurement to extraction, staged calibration, prediction, held-out validation, and uncertainty update.}
+  \label{fig:ch26_calibration_validation_loop}
+\end{figure}

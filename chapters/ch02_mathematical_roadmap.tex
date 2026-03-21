@@ -1,4 +1,5 @@
-﻿\chapter{全书路线图、符号、坐标与基本约定}
+﻿% !TEX root = ../main.tex
+\chapter{全书路线图、符号、坐标与基本约定}
 \label{ch:roadmap}
 
 \section*{学习目标}
@@ -12,6 +13,7 @@
 复数表示、向量分析、傅里叶级数与基本晶体学记号。
 
 \section*{本章路线图}
+\ChapterModelLevel{L1→L4（层级接口总览）}
 本章不追求推导复杂结果，而是为全书搭一套共同语言。先统一坐标和频域约定，再建立晶格与倒格矢记号，随后说明模型层级与术语边界，最后给出阅读全书时必须守住的几条“红线”。
 
 \section{为什么在第二章先停下来统一语言}
@@ -32,6 +34,13 @@
   \item 目标问题：从 $\Gamma$ 点候选模出发，逐层推进到有限尺寸、电注入与热回写。
 \end{itemize}
 
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch02_benchmark_device}
+  \caption{本书统一 benchmark 器件示意。(a) 俯视图给出方格孔阵和几何参数 $a,r$；(b) 侧视图给出层栈与常用纵向参数（$t_{\mathrm{pc}},t_{\mathrm{core}},t_{\mathrm{sub}}$ 等）。后续章节若未特别声明，默认都以此结构作为教学对象。}
+  \label{fig:ch02_benchmark_device}
+\end{figure}
+
 这并不是说全书结论只对这一类器件成立，而是说：\textbf{若某章没有特别声明，我们优先把抽象公式和分类工具投影回这一个统一对象。} 这样做的好处是，读者从 \cref{ch:bloch,ch:gamma,ch:pwe} 读到 \cref{ch:workflow,ch:worked-example} 时，脑中追踪的是同一个器件在不同层级的投影，而不是每章换一个新结构。
 
 \section{前置工具页：全书最高频符号先一次看全}
@@ -39,22 +48,22 @@
 
 \begin{table}[htbp]
   \centering
-  \footnotesize
+  \scriptsize
   \caption{全书最高频核心符号的前置工具页。}
   \label{tab:core_symbols_toolpage}
-  \setlength{\tabcolsep}{4pt}
-  \begin{tabularx}{\textwidth}{@{}p{2.1cm}p{2.6cm}Y@{}}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\textwidth}{@{}p{1.95cm}p{1.95cm}p{2.2cm}Y@{}}
     \toprule
-    符号 & 所属层级 & 最小含义 \\
+    符号 & 所属层级 & 典型单位/量级 & 最小含义 \\
     \midrule
-    $\tilde{\omega}=\omega_r-\ii\gamma$ & L1 & 开放系统复频率；实部给出中心频率，虚部给出衰减率 \\
-    $Q,\tau_p$ & L1/L2 & 品质因子与光子寿命；描述被动或线性工作点下的损耗时间尺度 \\
-    $g_{\mathrm{mat}},g_{\mathrm{mod}},g_{\mathrm{th}}$ & L2 & 材料增益、模增益、阈值增益；回答“增益补偿损耗需要到哪一步” \\
-    $I_{\mathrm{th}}$ & L3/L4 & 阈值电流；真实器件达到阈值工作点所需的注入电流 \\
-    $\Gamma_{\mathrm{opt}},\Gamma_{\mathrm{loss}}$ & L1/L2 & 目标模与有源区、损耗区的重叠因子 \\
-    $\alpha_{\mathrm{rad}},\alpha_{\mathrm{int}}$ & L1/L2 & 辐射损耗与内部损耗的等效损耗系数 \\
-    $N,S,T,J$ & L3/L4 & 载流子、光子数、温度、电流密度；器件动态与多物理场的最小状态量 \\
-    $\E(\rvec)$、角谱 $\tilde{E}$ & L1 & 近场与角谱/远场表示，用于连接模场、偏振与远场 \\
+    $\tilde{\omega}=\omega_r-\ii\gamma$ & L1 & \si{rad.s^{-1}}（$\omega_r\sim10^{15}$） & 开放系统复频率；实部给出中心频率，虚部给出衰减率 \\
+    $Q,\tau_p$ & L1/L2 & $Q$ 无量纲；$\tau_p$ 常为 ps--ns & 品质因子与光子寿命；描述被动或线性工作点下的损耗时间尺度 \\
+    $g_{\mathrm{mat}},g_{\mathrm{mod}},g_{\mathrm{th}}$ & L2 & \si{cm^{-1}}（常见 $10^1$--$10^3$） & 材料增益、模增益、阈值增益；回答“增益补偿损耗需要到哪一步” \\
+    $I_{\mathrm{th}}$ & L3/L4 & \si{mA}--\si{A}（随面积变化） & 阈值电流；真实器件达到阈值工作点所需的注入电流 \\
+    $\Gamma_{\mathrm{opt}},\Gamma_{\mathrm{loss}}$ & L1/L2 & 无量纲（常见 $10^{-2}$--$10^{-1}$） & 目标模与有源区、损耗区的重叠因子 \\
+    $\alpha_{\mathrm{rad}},\alpha_{\mathrm{int}}$ & L1/L2 & \si{cm^{-1}} 或 \si{m^{-1}} & 辐射损耗与内部损耗的等效损耗系数 \\
+    $N,S,T,J$ & L3/L4 & $N$:\si{cm^{-3}}；$T$:\si{K}；$J$:\si{A.cm^{-2}} & 载流子、光子数、温度、电流密度；器件动态与多物理场的最小状态量 \\
+    $\E(\rvec)$、角谱 $\tilde{E}$ & L1 & 归一化或 \si{V.m^{-1}} & 近场与角谱/远场表示，用于连接模场、偏振与远场 \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -71,7 +80,16 @@
   \item 当需要把平面内向量单独拿出来时，记作 $\rho=(x,y)$。
 \end{itemize}
 
-这个约定看似简单，但会反复用到。因为对 PCSEL 而言，纵向与横向承担的是不同物理角色：纵向层栈决定导模约束、外延不对称和吸收层分布；横向周期结构决定 Bloch 模分类、布拉格耦合与远场工程。后文如果不特别说明，看到“纵向”就默认与外延层栈相关，看到“面内”就默认与二维周期和横向模式选择相关。
+这个约定看似简单，但会反复用到。因为对PCSEL而言，纵向与横向承担的是不同物理角色：纵向层栈决定导模约束、外延不对称和吸收层分布；横向周期结构决定Bloch模分类、布拉格耦合与远场工程。后文如果不特别说明，看到"纵向"就默认与外延层栈相关，看到"面内"就默认与二维周期和横向模式选择相关。
+
+\cref{tab:ch02_model_hierarchy_interface}详细总结了四层模型的接口规范。读者在实际建模时应当严格遵循这张表的输入输出定义，确保数据传递的正确性。
+
+\begin{table}[htbp]
+  \centering
+  \caption{PCSEL 四层建模体系的接口规范。以“计算阈值电流”为例说明数据如何在各层之间传递。每一层的输出成为下一层的输入，形成完整的证据链。}
+  \label{tab:ch02_model_hierarchy_interface}
+  \input{figures/tab_ch02_model_hierarchy_interface}
+\end{table}
 
 \subsection{晶格与倒格矢}
 若二维晶格的原胞基矢为 $\bm{a}_1,\bm{a}_2$，则倒格矢基矢 $\bm{b}_1,\bm{b}_2$ 定义为
@@ -286,6 +304,12 @@ I_{\mathrm{th},m}.
 
 \section{本书必须反复守住的六条红线}
 到这里，可以把本章压缩成六条阅读守则：
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch02_six_redlines}
+  \caption{“六条红线”可视化速记图。后文首次触及对应误区时，统一用“⚠ 红线 \#N”作边注提示。}
+  \label{fig:ch02_six_redlines}
+\end{figure}
 \begin{enumerate}
   \item 无限周期的 Bloch 模不是有限器件的最终工作模（L1 \textrightarrow{} 器件层）；
   \item 被动冷腔共振不是有源阈值（L1 \textrightarrow{} L2）；
