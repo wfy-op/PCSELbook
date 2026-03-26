@@ -33,7 +33,7 @@
 第一，如果把增益材料本身直接做成唯一波导层，模式会过于贴近高吸收、高散射或高掺杂区域，阈值增益需求迅速恶化。第二，PCSEL 常常还需要在量子阱上方再放入光子晶体层、接触层乃至空气孔结构，这要求光学模既要与量子阱有足够重叠，又不能被过度拉向表面损耗区。第三，面发射器件中上下边界天然不对称，如果没有 SCH 提供的纵向缓冲和再分配空间，模式很容易被上表面工艺层或下方衬底通道拖偏。
 
 因此，SCH 不是“传统边发射激光器也这么做，所以 PCSEL 也顺便照搬”的结构模板，而是把 \cref{ch:threshold} 的阈值条件真正放进器件里时最基本的器件逻辑：它让模式可以在量子阱附近获得足够光学重叠，又不至于被表面与接触损耗吃掉。
-为了帮助读者直观理解 PCSEL 的典型纵向外延层堆叠结构，\cref{fig:ch16_epitaxial_stack}展示了一个完整的 GaAs 基 PCSEL 外延层结构示意图，从下至上依次包括：GaAs 衬底、n-DBR反射镜（20-30对AlGaAs异质结）、下SCH波导层（约200 nm）、多量子阱有源区（3-5个InGaAs阱）、上SCH波导层（约200 nm）、光子晶体层、电流阻挡层和 p型接触层。图中清晰标注了各层的典型厚度范围、材料体系和掺杂类型，这些参数对于理解后续章节的电注入设计和热管理策略至关重要。
+为了帮助读者直观理解 PCSEL 的典型纵向外延层堆叠结构，\cref{fig:ch16_epitaxial_stack}展示了一个完整的 GaAs 基 PCSEL 外延层结构示意图。典型的 PCSEL 外延结构从下至上依次包括：GaAs 衬底、下 SCH 波导层（约 200 nm）、多量子阱有源区（3-5 个 InGaAs 阱）、上 SCH 波导层（约 200 nm）、光子晶体层、电流阻挡层和 p 型接触层。某些设计可能在底部包含 n 型掺杂层以降低串联电阻，但 PCSEL 的面内反馈机制使其通常不需要 DBR 反射镜——这与 VCSEL 的结构形成鲜明对比。图中清晰标注了各层的典型厚度范围、材料体系和掺杂类型，这些参数对于理解后续章节的电注入设计和热管理策略至关重要。
 
 \input{figures/fig_ch16_epitaxial_stack}
 \section{异质结和能带对齐为什么必须在本章就讲}
@@ -52,7 +52,26 @@
 \end{equation}
 其中 $Q_c$ 是导带偏移系数。\cref{eq:band_offsets} 属于\textbf{器件材料与电学-光学接口模型}。它的意义在于：材料层一旦确定，不仅折射率剖面确定了，电子与空穴在纵向上看到的势垒也同时确定了。
 
-对常见 III--V 体系，$Q_c$ 往往落在 $0.3$--$0.7$ 的范围内；教材级估算时，GaAs/AlGaAs 常可先取 $Q_c\approx0.67$（室温 $T\approx300\,\mathrm{K}$ 值，高温下因热膨胀和形变势变化会有漂移，高功率 PCSEL 分析时需重新校准），InGaAsP/InP 常取 $Q_c\approx0.35$--$0.40$，而 InGaN/GaN 体系由于极化场、应变和组分敏感性更强，常只能把 $Q_c\approx0.7$ 视为起始量级而非定值。这里最重要的不是背一个”标准值”，而是记住它只是\textbf{材料平台相关的分配系数}，不是普适常数。只要 $Q_c$ 变化，电子与空穴各自的限制强弱、泄漏倾向以及对阻挡层的需求都会一起改变。
+对常见 III--V 体系，$Q_c$ 必须按平台给初值，而不是跨平台共用单个“标准值”。\cref{tab:ch16_qc_platform} 给出本书采用的分平台起始区间，均应理解为\textbf{建模初值}：真实器件分析时仍需结合温度、应变和组分做二次标定。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{$Q_c$ 的平台化初值口径（仅作建模起点，不是跨平台通用常数；温度 $T=300\,\mathrm{K}$)。}
+  \label{tab:ch16_qc_platform}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{0.23\textwidth}p{0.18\textwidth}p{0.16\textwidth}Y@{}}
+    \toprule
+    材料平台 & $Q_c$ 起始区间 & 来源类型 & 说明 \\
+    \midrule
+    GaAs/AlGaAs（近红外） & $0.60$--$0.70$ & \textbf{[文献值]} & 教材与器件文献常见区间；室温附近常见初值约 $0.67$\cite{coldren2012,noda2024pcselreview} \\
+    InGaAsP/InP（1.3/1.55 \si{\micro\meter}） & $0.35$--$0.45$ & \textbf{[文献值]} & 需随组分和应变重新标定，不可直接外推到 GaAs 平台\cite{coldren2012,noda2024pcselreview} \\
+    InGaN/AlGaN（蓝光/深紫外） & $0.60$--$0.80$ & \textbf{[工程经验]}起点 & 极化场与应变耦合更强，建议先取宽区间再做平台内拟合\cite{lu2025deepuvpcsel,noda2024pcselreview} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+这里最重要的不是背一个“标准值”，而是记住 $Q_c$ 只是\textbf{材料平台相关的分配系数}。只要 $Q_c$ 变化，电子与空穴各自的限制强弱、泄漏倾向以及对阻挡层的需求都会一起改变。
 
 这对 PCSEL 的影响非常直接。若 $\Delta E_c$ 太小，电子在高注入或高温下容易越过量子阱区泄漏到上包层或接触层；若 $\Delta E_v$ 太小，则空穴更难被有效限制在有源区，因为空穴有效质量更大、迁移率更低、注入路径也常更差。于是，一个看似“光学上模重叠不错”的外延层，只要能带台阶设计不合理，到了电注入时就会表现出电子泄漏、空穴堆积或有源区载流子不足。这正是“冷腔结论不能直接变成器件结论”的第一层原因。
 
@@ -60,7 +79,7 @@
   \centering
   \begin{tikzpicture}[x=1cm,y=1cm]
     \draw[->] (0,0) -- (11,0) node[right] {$z$};
-    \draw[->] (0,0) -- (0,4.8) node[above] {Energy};
+    \draw[->] (0,0) -- (0,4.8) node[above] {能量};
     \draw[thick,blue!70!black]
       (0.6,3.8) -- (2.8,3.8) -- (2.8,3.2) -- (4.2,3.2) -- (4.2,2.7) -- (5.4,2.7)
       -- (5.4,3.2) -- (6.8,3.2) -- (6.8,3.8) -- (10.2,3.8);
@@ -69,9 +88,9 @@
       -- (5.4,1.4) -- (6.8,1.4) -- (6.8,0.9) -- (10.2,0.9);
     \draw[dashed,gray!70] (4.2,0.5) -- (4.2,4.3);
     \draw[dashed,gray!70] (5.4,0.5) -- (5.4,4.3);
-    \node at (1.7,4.2) {Barrier / SCH};
-    \node at (4.8,4.2) {QW};
-    \node at (8.5,4.2) {Barrier / SCH};
+    \node at (1.7,4.2) {势垒/限制层};
+    \node at (4.8,4.2) {量子阱};
+    \node at (8.5,4.2) {势垒/限制层};
     \node[blue!70!black] at (9.1,3.15) {$E_c$};
     \node[red!75!black] at (9.1,1.55) {$E_v$};
     \draw[<->,gray!80] (4.05,3.2) -- node[left] {$\Delta E_c$} (4.05,2.7);
@@ -112,13 +131,13 @@
     \draw[fill=green!12] (0,3.05) rectangle (10,3.8);
     \draw[fill=orange!22] (0,3.8) rectangle (10,4.5);
     \draw[fill=red!15] (0,4.5) rectangle (10,5.25);
-    \node[left] at (0,0.4) {Substrate};
-    \node[left] at (0,1.3) {n-cladding};
-    \node[left] at (0,2.18) {Lower SCH};
-    \node[left] at (0,2.8) {MQW};
-    \node[left] at (0,3.45) {Upper SCH};
-    \node[left] at (0,4.15) {PC layer};
-    \node[left] at (0,4.88) {p-cladding/contact};
+    \node[left] at (0,0.4) {衬底};
+    \node[left] at (0,1.3) {n包层};
+    \node[left] at (0,2.18) {下限制层};
+    \node[left] at (0,2.8) {多量子阱};
+    \node[left] at (0,3.45) {上限制层};
+    \node[left] at (0,4.15) {光子晶体层};
+    \node[left] at (0,4.88) {p包层/接触层};
     \node[right] at (10,0.4) {$t_1,n_1$};
     \node[right] at (10,1.3) {$t_2,n_2$};
     \node[right] at (10,2.18) {$t_3,n_3$};
@@ -233,8 +252,8 @@ g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}\,g_{\mathrm{mat}}.
       \draw[fill=yellow!40] (0.9,\y-0.08) rectangle (7.1,\y+0.08);
     }
     \draw[thick,red!75!black] plot[smooth] coordinates {(0.4,0.2) (1.1,0.7) (2.4,1.8) (4.0,2.45) (5.2,2.05) (6.4,1.0) (7.6,0.25)};
-    \node[left] at (0,2.95) {p-contact};
-    \node[left] at (0,1.45) {MQW};
+    \node[left] at (0,2.95) {$p$ 型接触层};
+    \node[left] at (0,1.45) {多量子阱};
     \node[right] at (8,2.5) {$|E|^2$};
   \end{tikzpicture}
   \caption{量子阱重叠与损耗重叠示意。模式若被上表面和接触层拉得过近，即使量子阱重叠增加，也可能同时增加内部损耗。}
@@ -248,6 +267,20 @@ g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}\,g_{\mathrm{mat}}.
 \label{eq:fca_simple}
 \end{equation}
 其中 $n,p$ 是载流子浓度，$\sigma_n,\sigma_p$ 是等效吸收系数。\cref{eq:fca_simple} 属于\textbf{光学损耗代理模型}，它的教学意义不在于给出最精确的数值，而在于提醒读者：掺杂既改变电阻，也改变阈值。
+
+\begin{notebox}
+\textbf{自由载流子吸收的波长和温度依赖性。}式\cref{eq:fca_simple}中的系数$\sigma_n,\sigma_p$并非常数，而是强烈依赖于波长和温度。对GaAs 材料，经验公式给出~\cite{soref1987free}:
+\[
+\sigma_{n,p}(\lambda,T) \propto \lambda^q \cdot \left(\frac{T}{300\,\mathrm{K}}\right)^s,
+\]
+其中$q \approx 2$--$3$（波长指数），$s \approx 1$--$2$（温度指数）。这意味着:
+\begin{itemize}
+  \item 长波长器件（如 1.55 $\mu$m InP 基 PCSEL）的 FCA 损耗显著高于近红外器件
+  \item 高温工作时 FCA 会进一步增加，形成正反馈的热 - 光耦合效应
+  \item 在粗略估算中可取$\sigma_n \approx \SI{3e-18}{\centi\meter^2}$, $\sigma_p \approx \SI{7e-18}{\centi\meter^2}$（850 nm, 300 K）作为参考值
+\end{itemize}
+因此，在进行多波长或多温度仿真时，必须更新$\sigma_{n,p}$的值，而不能简单套用室温近红外的数据。
+\end{notebox}
 
 金属的影响更不能简单理解成“再加一点吸收”。一旦模式被上拉到金属附近，不仅损耗增加，模式对称性、偏振选择与远场也会一起变化。因此，在 PCSEL 里，接触层与金属的设计不能后补。它们不是完成电学功能后再通知光学去适应，而是从一开始就应被看作光学边界条件的一部分。
 
@@ -263,6 +296,39 @@ g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}\,g_{\mathrm{mat}}.
 \label{eq:updown_ratio}
 \end{equation}
 其中 $P_{\mathrm{up}}$ 与 $P_{\mathrm{down}}$ 分别是模式向上、向下辐射的功率。\cref{eq:updown_ratio} 属于\textbf{开放光学接口量}。它不会单独决定阈值，但会直接决定“同样一支冷腔候选模”在器件里究竟是更像一个向上可用的面发射模式，还是更多地把能量泄向衬底和下包层。
+
+\section{层厚灵敏度与孔径工艺对比：从可算到可制造}
+到器件设计阶段，读者最常问的是“哪一层最值得优先优化”。对这个问题，最有效的回答不是主观经验，而是一阶灵敏度表。\cref{tab:ch16_thickness_sensitivity} 给出本书 benchmark 层栈的教学型扫参示例（围绕基准值做 $\pm10\%$ 改动，观察关键接口量变化）。它的价值在于排序优先级，而不是提供可直接外推到所有平台的“万能百分比”。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{benchmark 外延层栈的一阶灵敏度示例（参数扰动 $\pm10\%$）。数值用于设计优先级判断，不代表所有材料平台的统一结论。}
+  \label{tab:ch16_thickness_sensitivity}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{0.22\textwidth}p{0.20\textwidth}Y@{}}
+    \toprule
+    扰动参数 & 关键量变化（代表趋势） & 设计含义 \\
+    \midrule
+    上波导厚度 $t_{\mathrm{core}}$ &
+    $\Gamma_{\mathrm{opt}}$ 约变化 $\mp(4\%\text{--}7\%)$；$\eta_{u/d}$ 约变化 $\pm(5\%\text{--}8\%)$ &
+    直接改写量子阱重叠与上下出光平衡，是优先级最高的纵向调参量之一。 \\
+    光子晶体刻蚀深度 $h_{\mathrm{etch}}$ &
+    $\alpha_{\mathrm{rad}}$ 常变化 $\pm(10\%\text{--}20\%)$；候选模排序对深刻蚀更敏感 &
+    主要影响辐射通道与模式分裂，过深刻蚀常带来辐射损耗和工艺粗糙度双重代价。 \\
+    p 包层厚度 $t_{p\mathrm{-clad}}$ &
+    与损耗层重叠变化可导致 $\alpha_{\mathrm{int}}$ 约变化 $\pm(6\%\text{--}12\%)$ &
+    与接触层、掺杂层协同设计；只看电阻不看光学损耗容易把阈值推高。 \\
+    MQW 中心位置偏移 $\Delta z_{\mathrm{QW}}$（$\pm\SI{10}{nm}$） &
+    $\Gamma_{\mathrm{opt}}$ 常变化约 $\pm(3\%\text{--}6\%)$ &
+    在高 $Q$、窄窗口设计中会直接改写净模增益排序，需与生长公差联动评估。 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+除了层厚，电流孔径工艺选择也会显著影响阈值与模式稳定窗口。以 VCSEL 体系的系统比较为例，指数引导氧化限制结构通常可获得更低阈值电流；而质子注入方案及增益引导氧化结构在横模选择性上可表现更优，同时具备更简化的工艺路径\cite{sarzala2010oxideproton}。这一权衡逻辑在 PCSEL 的电流孔径与注入工程中同样成立。
+
+\input{figures/fig_ch16_oxide_vs_proton.tex}
 
 \section{本章真正输出给后面三章的是什么}
 到本章结束时，读者不应只得到一张层栈示意图，而应得到后面三章可直接调用的一组器件变量：目标模的纵向剖面、$\Gamma_{\mathrm{opt}}$、$\Gamma_{\mathrm{loss}}$、上下辐射不对称趋势，以及对层厚、折射率和异质结台阶变化的灵敏度。\cref{ch:qw-gain} 会把这些量与量子阱增益连接起来，\cref{ch:electrical} 会说明为什么这些外延层又决定了电流如何真正进入有源区，\cref{ch:eto-coupling} 则会展示温升如何反过来改写这些光学接口量。

@@ -1,0 +1,41 @@
+% !TEX root = ../main.tex
+% Figure content only: inserted inside an outer figure environment in ch01
+\begin{tikzpicture}[x=0.78cm,y=0.95cm]
+  \tikzset{
+    event/.style={
+      draw,
+      thick,
+      rounded corners,
+      align=center,
+      font=\scriptsize,
+      text width=2.0cm,
+      minimum height=0.95cm
+    }
+  }
+
+  \draw[->,ultra thick] (-0.8,0) -- (16.8,0) node[right] {年份};
+
+  \foreach \year/\x in {2008/0,2010/2,2012/4,2014/6,2016/8,2018/10,2020/12,2022/14,2024/16} {
+    \draw (\x,0.18) -- (\x,-0.18) node[below=4pt] {\scriptsize \year};
+  }
+
+  \node[event,fill=blue!10,draw=blue!70] (e2008) at (0,1.35) {2008\\首演示};
+  \node[event,fill=green!10,draw=green!50!black] (e2014) at (6,2.0) {2014\\高功率\\连续波};
+  \node[event,fill=orange!12,draw=orange!85!black] (e2019) at (10,1.35) {2019\\结构与\\工艺优化};
+  \node[event,fill=purple!10,draw=purple!70] (e2020) at (12,2.0) {2020\\电注入\\推进};
+  \node[event,fill=teal!10,draw=teal!70!black] (e2024) at (15.1,1.35) {2023--2025\\应用拓展};
+
+  \foreach \p/\x in {e2008/0,e2014/6,e2019/10,e2020/12,e2024/15.1} {
+    \draw[->,thick] (\p.south) -- (\x,0.22);
+  }
+
+  \draw[<->,thick,blue!70] (-0.2,-1.2) -- (6.2,-1.2)
+    node[midway,below,font=\scriptsize] {从概念验证到高亮度输出};
+  \draw[<->,thick,orange!80!black] (6.2,-1.2) -- (12.2,-1.2)
+    node[midway,below,font=\scriptsize] {从结构优化到电注入};
+  \draw[<->,thick,teal!70!black] (12.2,-1.2) -- (16.0,-1.2)
+    node[midway,below,font=\scriptsize] {从器件到应用场景};
+
+  \node[font=\scriptsize,align=center] at (2.8,-2.0) {$P_{\rm out}$、亮度与发散角同步提升};
+  \node[font=\scriptsize,align=center] at (11.0,-2.0) {BIC / quasi-BIC 与工程设计结合};
+\end{tikzpicture}

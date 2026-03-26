@@ -1,6 +1,3 @@
-% !TEX root = ../main.tex
-% Figure: Calibration-validation loop for device modeling
-
 \begin{figure}[htbp]
   \centering
   \resizebox{0.98\textwidth}{!}{%
@@ -9,12 +6,12 @@
     step/.style={rectangle, rounded corners, draw, fill=#1!15, minimum width=3.1cm, minimum height=9mm, align=center},
     arr/.style={-Stealth, thick}
   ]
-    \node[step=blue] (m) {Measure\\(geometry, IV, spectra, thermal)};
-    \node[step=teal, right=of m] (e) {Extract\\direct vs inferred parameters};
-    \node[step=orange, below=of e] (c) {Calibrate\\electrical $\rightarrow$ thermal $\rightarrow$ optical};
-    \node[step=green, left=of c] (p) {Predict\\$I_{\mathrm{th}}$, far-field, stability};
-    \node[step=purple, below=of p] (v) {Validate\\with held-out experiments};
-    \node[step=red, right=of v] (u) {Update\\uncertainty budget + interfaces};
+    \node[step=blue] (m) {测量\\（几何、伏安、光谱、热特性）};
+    \node[step=teal, right=of m] (e) {参数提取\\（直接量与反演量分离）};
+    \node[step=orange, below=of e] (c) {分阶段校准\\电学 $\rightarrow$ 热学 $\rightarrow$ 光学};
+    \node[step=green, left=of c] (p) {模型预测\\$I_{\mathrm{th}}$、远场与稳定性};
+    \node[step=purple, below=of p] (v) {留出集验证\\对照独立实验};
+    \node[step=red, right=of v] (u) {模型更新\\不确定度预算与接口修正};
 
     \draw[arr] (m) -- (e);
     \draw[arr] (e) -- (c);
@@ -24,6 +21,6 @@
     \draw[arr] (u) -- (m);
   \end{tikzpicture}
   }
-  \caption{Calibration-validation loop for device-level modeling: measurement to extraction, staged calibration, prediction, held-out validation, and uncertainty update.}
+  \caption{器件级建模的“校准-验证”闭环：从测量和参数提取出发，经分阶段校准与预测，再由留出集验证回写模型不确定度。}
   \label{fig:ch26_calibration_validation_loop}
 \end{figure}

@@ -226,7 +226,7 @@ T_{\max}^{(s)}<T_{\max}^{\mathrm{allow}}
   \end{tabularx}
 \end{table}
 
-若希望把“鲁棒”写成更硬的工程语言，至少应给出一条推荐设计裕量：在名义设计点下，目标模相对首个竞争模的净裕量建议满足 $\Delta G_{\star j}>\SI{5}{\per\centi\meter}$；在容差边界或最坏样本下，仍应保持 $\Delta G_{\star j}>\SI{1}{\per\centi\meter}$。只要这条裕量在统计样本中频繁翻到零以下，就不应再把该结构称为鲁棒设计。
+若希望把“鲁棒”写成更硬的工程语言，至少应给出一条推荐设计裕量：在名义设计点下，目标模相对首个竞争模的净裕量建议满足 $\Delta G_{\star j}>\SI{5}{\per\centi\meter}$；在容差边界或最坏样本下，仍应保持 $\Delta G_{\star j}>\SI{1}{\per\centi\meter}$。这两条门槛在本书中明确标记为\textbf{[本书设计规则]}，用于教学与工程筛选，不应被当作跨平台统一标准。只要这条裕量在统计样本中频繁翻到零以下，就不应再把该结构称为鲁棒设计。
 
 \begin{table}[htbp]
   \centering
@@ -261,6 +261,23 @@ T_{\max}^{(s)}<T_{\max}^{\mathrm{allow}}
 \begin{PitfallBox}
 只给名义参数点，不给通过率、不说首先在哪种误差下失效，这样的“优化结果”通常只适合内部草图，不适合作为器件设计结论。鲁棒性设计的关键不是把均值做高，而是把失效边界说明白。
 \end{PitfallBox}
+
+\section{前沿补充：quasi-BFIC 视角下的鲁棒性}
+近年的 quasi-BFIC（quasi-bound flat bands in the continuum）研究提供了一个值得引入鲁棒性章节的新视角：不是只在单一动量点追求极高 $Q$，而是在更宽角谱内维持较高 $Q$ 与可用耦合。对工艺容差的潜在收益是，当有限阵列和误差导致角谱展宽时，器件性能下降可能更平缓\cite{qin2025quasibfic,koshelev2018quasibic}。  
+但这并不意味着 quasi-BFIC 自动“更优”：若目标是极窄主瓣和单点最大提取效率，传统 $\Gamma$ 点 quasi-BIC 仍可能更合适。鲁棒性评估应把两类路线放在同一指标下比较：通过率、最坏样本模裕量、远场角窗保持率和热漂移后稳定性。更重要的是，quasi-BFIC 的鲁棒性判断必须与有限阵列证据联动，而不能停在无限周期层级\cite{wang2025finitesizepcsel}。
+
+\CrossPlatformTriad
+{quasi-BFIC 机制文献 + 有限尺寸机制文献并用\cite{qin2025quasibfic,wang2025finitesizepcsel}}
+{必须给出有限阵列尺寸、边缘截断、热回写后模排序和远场角窗保持率}
+{不可把动量空间宽角高 $Q$ 直接等价为器件级高通过率；不可忽略边界终止与注入非均匀带来的模式重排}
+
+\begin{CommonPitfallBox}{无限周期高 \texorpdfstring{$Q$}{Q} 结果的误用}
+\textbf{错误理解：}“无限周期模型显示宽角高 $Q$，所以器件鲁棒性已经得到证明。”  
+\textbf{正确做法：}必须在有限阵列与工艺误差样本上验证：主模排序是否保持、远场是否维持在角窗内、最坏样本净裕量是否仍为正。  
+\textbf{结论边界：}无限周期结果只能证明“候选机制可行”，不能替代器件级容差统计。
+\end{CommonPitfallBox}
+
+\FiniteSizeReportTemplate
 
 \section{把鲁棒性设计接回工作流与失败模式}
 现在可以把本章放回全书主线。\cref{ch:single-mode-design} 说明了为什么单模设计不能只盯名义值；本章进一步说明，即便名义值设计已经跨过单胞、有限阵列和器件工作点三层关口，仍然必须检查它对工艺误差是否稳健。\cref{ch:workflow} 中的工作流，则应在“名义结构通过电热光验证”之后显式加入 tolerance analysis 阶段，而不是把它留到最后当成可有可无的附加项。\cref{ch:failure-modes} 中的许多失败模式，其实正是在鲁棒性分析缺席时才暴露得最晚、代价也最高。

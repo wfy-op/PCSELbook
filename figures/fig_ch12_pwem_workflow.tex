@@ -41,7 +41,7 @@
     \draw[arrow] (iterate) |- (matrix);
     
     % Post-processing
-    \node[block=pink] (postproc) at (3,2) {后处理\\群速度$v_g=d\omega/dk$\\态密度 DOS};
+    \node[block=pink] (postproc) at (3,2) {后处理\\群速度$v_g=d\omega/dk$\\态密度谱};
     \draw[arrow] (solver) -| node[pos=0.3,above] {是} (postproc);
     
     % Output
@@ -56,7 +56,7 @@
     \node[align=left, font=\footnotesize, anchor=south west] at (4.5,0.5) {
       \textbf{实用建议}:\\
       $\bullet$ $N_{\mathrm{pw}} \geq 441$ ($21\times21$) 保证收敛\\
-      $\bullet$ 使用 ARPACK 迭代求解器加速\\
+      $\bullet$ 使用迭代本征求解器加速\\
       $\bullet$ 对称性简化可减少 8 倍计算量
     };
   \end{tikzpicture}%

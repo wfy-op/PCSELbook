@@ -31,7 +31,7 @@
 J_\perp = \frac{V_{\mathrm{metal}}-V_s}{\rho_c},
 \label{eq:ohmic_contact_bc}
 \end{equation}
-其中 $V_s$ 是半导体表面电势，$\rho_c$ 为接触比电阻。这里的单位应是 $\Omega\cdot\mathrm{m}^2$，而不是常见误写的 $\Omega/\mathrm{m}^2$。教材级量纲感可先记成：典型 GaAs 器件中，$p$ 侧欧姆接触的 $\rho_c$ 常落在 $10^{-6}$--$10^{-5}\,\Omega\cdot\mathrm{cm}^2$，$n$ 侧常在 $10^{-6}\,\Omega\cdot\mathrm{cm}^2$ 量级。\cref{eq:ohmic_contact_bc} 属于\textbf{电学边界模型}。它提醒我们：即便“欧姆”接触已经成立，接触仍然会通过有限的 $\rho_c$ 引入额外压降和非均匀注入。
+其中 $V_s$ 是半导体表面电势，$\rho_c$ 为接触比电阻。这里的单位应是 $\Omega\cdot\mathrm{m}^2$，而不是常见误写的 $\Omega/\mathrm{m}^2$。教材级量纲感可先记成：\textbf{[文献值]} 在 GaAs 器件中，$p$ 侧欧姆接触的 $\rho_c$ 常见于 $10^{-6}$--$10^{-5}\,\Omega\cdot\mathrm{cm}^2$，$n$ 侧常在 $10^{-6}\,\Omega\cdot\mathrm{cm}^2$ 量级\cite{coldren2012}。\cref{eq:ohmic_contact_bc} 属于\textbf{电学边界模型}。它提醒我们：即便“欧姆”接触已经成立，接触仍然会通过有限的 $\rho_c$ 引入额外压降和非均匀注入。
 
 肖特基接触（Schottky contact）则对应明显的势垒和整流行为。其更贴近物理的边界模型通常写成热发射形式
 \begin{equation}
@@ -89,17 +89,17 @@ R_{\square}=\frac{1}{\sigma_s t_s},
     \draw[fill=yellow!22] (0,2.15) rectangle (8.4,2.8);
     \draw[fill=green!15] (0,0.9) rectangle (8.4,2.15);
     \draw[fill=blue!10] (0,0) rectangle (8.4,0.9);
-    \node at (4.2,3.8) {Metal contact};
-    \node at (4.2,3.15) {Current spreading layer};
-    \node at (4.2,2.47) {p-cladding / upper SCH};
-    \node at (4.2,1.52) {MQW + lower SCH};
-    \node at (4.2,0.45) {n-side / substrate};
+    \node at (4.2,3.8) {金属接触};
+    \node at (4.2,3.15) {横向扩展层};
+    \node at (4.2,2.47) {p包层/上限制层};
+    \node at (4.2,1.52) {多量子阱+下限制层};
+    \node at (4.2,0.45) {n侧/衬底};
     \foreach \x/\h in {1.2/1.25,2.0/1.45,2.8/1.55,3.6/1.65,4.4/1.55,5.2/1.35,6.0/1.05,6.8/0.8} {
       \draw[-{Latex[length=2.5mm,width=1.4mm]},thick,cyan!70!black] (\x,3.3) -- ++(0,-\h);
     }
-    \draw[decorate,decoration={brace,amplitude=5pt},thick] (0.25,3.5) -- node[left=5pt] {$R_{\square}$ controls spreading} (0.25,2.8);
+    \draw[decorate,decoration={brace,amplitude=5pt},thick] (0.25,3.5) -- node[left=5pt] {$R_{\square}$ 决定扩展范围} (0.25,2.8);
   \end{tikzpicture}
-  \caption{current spreading layer 与注入非均匀性的关系示意。即使总电流足够，只要横向扩展能力不足，量子阱中的有效载流子分布也不会自动均匀。}
+  \caption{横向扩展层与注入非均匀性的关系示意。即使总电流足够，只要横向扩展能力不足，量子阱中的有效载流子分布也不会自动均匀。}
   \label{fig:current-spreading}
 \end{figure}
 
@@ -113,7 +113,7 @@ R_{\square}=\frac{1}{\sigma_s t_s},
 \nabla_\parallel^2 V_s-\frac{V_s-V_{\mathrm{cont}}}{L_s^2}=0,
 \label{eq:current_spreading_sheet}
 \end{equation}
-其中 $V_{\mathrm{cont}}$ 是接触电位，$L_s$ 是电流扩展长度。典型GaN基PCSEL中，p-GaN 层的片电阻约为$10^3$-$10^4~\Omega/\square$，对应的电流扩展长度$L_s$在几微米到十几微米量级。\cref{eq:current_spreading_sheet}当然不能替代完整漂移--扩散求解，但它在教学上非常有价值：只要$L_s$明显小于器件横向尺寸（例如器件直径~100 μm），均匀注入就不再是默认可信假设。
+其中 $V_{\mathrm{cont}}$ 是接触电位，$L_s$ 是电流扩展长度。\textbf{[工程经验]} 对 GaN 基面发射结构，p-GaN 片电阻常见在 $10^3$--$10^4~\Omega/\square$ 量级，对应 $L_s$ 可落在“几微米到十几微米”的窗口；但该窗口强依赖掺杂、透明导电层和接触工艺，不应跨平台直接套用。\cref{eq:current_spreading_sheet} 不能替代完整漂移--扩散求解，但它在教学上有价值：只要 $L_s$ 明显小于器件横向尺寸（例如器件直径约 $100\,\mu\mathrm{m}$），均匀注入就不再是默认可信假设。
 
 \section{漂移-扩散方程组：器件模型的骨架}
 把上面的直觉写成可求解模型，基础框架仍是 Poisson 方程、电子和空穴的漂移-扩散与连续性方程。首先是 Poisson 方程
@@ -196,7 +196,7 @@ I_{\mathrm{th}}
 I_{\mathrm{leak}},
 \label{eq:ith_from_nth}
 \end{equation}
-其中 $\eta_{\mathrm{inj}}$ 是有效注入效率，$I_{\mathrm{leak}}$ 汇总漏电和旁路电流。对典型 PCSEL 结构，$\eta_{\mathrm{inj}}$ 常可先按 $0.6$--$0.9$ 的量级做敏感度分析，再由更具体的结深、阻挡层和 spreading layer 设计收紧。\cref{eq:ith_from_nth} 的核心意义不是给出高保真数值，而是把“同一个 $N_{\mathrm{th}}$ 为何会对应完全不同的 $I_{\mathrm{th}}$”写成公式：只要复合通道更强、注入效率更低或漏电更大，阈值电流就会明显抬升。
+其中 $\eta_{\mathrm{inj}}$ 是有效注入效率，$I_{\mathrm{leak}}$ 汇总漏电和旁路电流。对典型 PCSEL 结构，$\eta_{\mathrm{inj}}$ 常先按 $0.6$--$0.9$ 做\textbf{[本书算例]}敏感度扫描，再由具体结深、阻挡层和 spreading layer 设计收紧。\cref{eq:ith_from_nth} 的核心意义不是给出单一高保真数值，而是把“同一个 $N_{\mathrm{th}}$ 为何会对应完全不同的 $I_{\mathrm{th}}$”写成公式：只要复合通道更强、注入效率更低或漏电更大，阈值电流就会明显抬升。
 
 \section{把局域载流子分布重新接回模增益：模式竞争在这里被重写}
 当前面所有电学求解完成后，本章真正要输出给光学的不是一个总电流值，而是量子阱中的局域载流子分布 $N(x,y,z)$。对于候选模式 $m$，更一般的有效模增益应写成
@@ -212,7 +212,7 @@ I_{\mathrm{leak}},
 \cref{eq:gmod_with_injection} 属于\textbf{电学-光学耦合模型}。它说明了为什么注入分布会直接反馈到模式竞争：不同模式采样的是不同的空间权重，因而对同一组 $N(\rvec)$ 的“感受”不同。
 
 这条式子也清楚地解释了为什么大面积 PCSEL 绝不可能把均匀增益当作默认现实。只要接触有限、片电阻有限、孔径有限或热效应存在，$N(\rvec)$ 就必然不是常数，模式竞争排序也就不会等同于冷腔排序。
-\cref{fig:ch18_current_crowding}展示了方形p-接触电极下方的二维电流密度分布。注意边缘处的电流密度可达中心的 3-5 倍，这会引发局部效率下降和热点形成。
+\cref{fig:ch18_current_crowding}展示了方形 p-接触电极下方的二维电流密度分布。边缘处电流密度高于中心是常见现象；“可达中心的 3--5 倍”在本书中按\textbf{[教学示意]}处理，用于提示电流拥挤风险而非给出普适系数。
 
 \begin{figure}[htbp]
   \centering

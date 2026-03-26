@@ -1,92 +1,56 @@
 % !TEX root = ../main.tex
-% Figure: Surface emission mechanisms in PCSEL
-% Chapter: ch06 - In-plane Feedback and Surface Emission
-% Description: Comparison of different surface emission mechanisms
-
+% PCSEL 面发射机制对比
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
-    % Subplot (a): Second-order grating diffraction
-    \begin{scope}[shift={(-5,0)}]
-      % Grating structure
-      \foreach \x in {-2,-1,...,2} {
-        \fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.4,0.3);
-      }
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+    % (a) 二级衍射
+    \begin{scope}[shift={(-5.1,0)}]
+      \node[font=\bfseries] at (0,2.55) {(a) 二级光栅衍射};
       \draw[thick] (-2.2,0) -- (2.2,0);
-      
-      % Incident guided mode
-      \draw[->, very thick, red] (-1.5,0.5) -- (-0.5,0.5) node[midway, above] {\scriptsize 导模};
-      
-      % Diffracted beams
-      \draw[->, very thick, green!60!black] (0,0) -- (0,2) node[right] {垂直辐射};
-      \draw[->, thick, blue] (-1,0) -- (-1.5,0) node[left] {\scriptsize 反向传播};
-      \draw[->, thick, blue] (1,0) -- (1.5,0) node[right] {\scriptsize 正向传播};
-      
-      \node[above, font=\bfseries] at (0,2.3) {(a) 二级光栅衍射};
-      \node[below, align=center, font=\small] at (0,-0.8) {$\Lambda = \lambda_B/n_{\mathrm{eff}}$\\布拉格条件满足};
-      
-      % Angles
-      \draw[dotted] (0,0) -- (30:2);
-      \node[right] at (30:2.2) {\scriptsize $\theta_m$};
+      \foreach \x in {-2,-1,...,2} {\fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.42,0.3);}
+      \draw[->,very thick,red] (-1.6,0.55) -- (-0.5,0.55) node[midway,above] {导模};
+      \draw[->,very thick,green!60!black] (0.1,0) -- (0.1,1.9) node[right] {垂直辐射};
+      \draw[->,thick,blue] (0.9,0) -- (1.6,0) node[right] {\scriptsize 正向反馈};
+      \draw[->,thick,blue] (-0.9,0) -- (-1.6,0) node[left] {\scriptsize 反向反馈};
+      \node[align=center] at (0,-0.95) {$\Lambda\approx\lambda_B/n_{\mathrm{eff}}$\\布拉格条件};
     \end{scope}
-    
-    % Subplot (b): Photonic crystal band-edge resonance
+
+    % (b) 带边共振
     \begin{scope}[shift={(0,0)}]
-      % 2D PC holes
+      \node[font=\bfseries] at (0,2.55) {(b) 光子晶体带边共振};
+      \draw[thick] (-2.2,0) -- (2.2,0);
       \foreach \x in {-2,-1,...,2} {
         \foreach \y in {0,1,2} {
-          \fill[gray!30] (\x*0.6,\y*0.6-0.3) circle (0.15);
+          \fill[gray!30] (\x*0.7,\y*0.55-0.3) circle (0.14);
         }
       }
-      \draw[thick] (-2.2,-0.3) -- (2.2,-0.3);
-      
-      % Standing wave pattern
-      \draw[very thick, red, domain=-2:2, samples=50] 
-        plot(\x,{0.3*sin(deg(3*\x))*exp(-\x*\x/2)});
-      
-      % Vertical radiation from each hole
-      \foreach \x in {-1.5,-0.75,...,1.5} {
-        \draw[->, green!60!black] (\x,0) -- (\x,1.5);
-      }
-      
-      \node[above, font=\bfseries] at (0,2.3) {(b) 光子晶体带边共振};
-      \node[below, align=center, font=\small] at (0,-0.8) {驻波相干叠加\\$\Gamma$点无限大有效质量};
-      
-      % Phase matching indication
-      \draw[<->, thick] (-1.5,0.8) -- (-0.75,0.8);
-      \node[above] at (-1.125,0.9) {\scriptsize 同相位};
+      \draw[very thick,red,domain=-2:2,samples=80] plot (\x,{0.22*sin(deg(2.8*\x))});
+      \foreach \x in {-1.5,-0.9,...,1.5} {\draw[->,green!60!black] (\x,0.15) -- (\x,1.45);}
+      \draw[<->,thick] (-1.4,0.72) -- (-0.85,0.72);
+      \node[above] at (-1.12,0.78) {\scriptsize 同相位};
+      \node[align=center] at (0,-0.95) {$\Gamma$ 点相干耦出\\群速度趋缓};
     \end{scope}
-    
-    % Subplot (c): Defect-assisted scattering
-    \begin{scope}[shift={(5,0)}]
-      % Perfect grating with defect
-      \foreach \x in {-2,-1,1,2} {
-        \fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.4,0.3);
-      }
-      % Missing tooth (defect)
-      \fill[red!20] (0,-0.3) rectangle ++(0.4,0.3);
-      \draw[dashed, red] (0,-0.3) rectangle ++(0.4,0.3);
-      \node[above, red] at (0.2,0.1) {\scriptsize 缺陷};
-      
+
+    % (c) 缺陷散射
+    \begin{scope}[shift={(5.1,0)}]
+      \node[font=\bfseries] at (0,2.55) {(c) 缺陷辅助散射};
       \draw[thick] (-2.2,0) -- (2.2,0);
-      
-      % Guided mode approaching defect
-      \draw[->, very thick, blue] (-1.5,0.5) -- (-0.3,0.5);
-      
-      % Scattered radiation (omnidirectional)
-      \foreach \angle in {30,60,90,120,150} {
-        \draw[->, orange] (0.2,0) -- (\angle:1.5);
-      }
-      
-      \node[above, font=\bfseries] at (0,2.3) {(c) 缺陷辅助散射};
-      \node[below, align=center, font=\small] at (0,-0.8) {无序导致\\非相干辐射};
+      \foreach \x in {-2,-1,1,2} {\fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.42,0.3);}
+      \fill[red!20] (0,-0.3) rectangle ++(0.42,0.3);
+      \draw[dashed,red] (0,-0.3) rectangle ++(0.42,0.3);
+      \node[red,above] at (0.2,0.12) {\scriptsize 缺陷};
+      \draw[->,very thick,blue] (-1.6,0.55) -- (-0.2,0.55);
+      \foreach \ang in {30,60,90,120,150} {\draw[->,orange!90!black] (0.2,0) -- (\ang:1.55);}
+      \node[align=center] at (0,-0.95) {无序增强散射\\非相干辐射};
     \end{scope}
-    
-    % Unified equation at bottom
-    \node[draw, align=center, font=\small] at (0,-1.8) {统一描述：耦合模方程\\
-      $\frac{\partial A}{\partial z} + \frac{1}{v_g}\frac{\partial A}{\partial t} = i\kappa B + i\chi_{\mathrm{rad}}E_{\mathrm{out}}$\\
-      其中$\kappa$: DFB 耦合系数，$\chi_{\mathrm{rad}}$: 辐射耦合系数};
-  \end{tikzpicture}
-  \caption{PCSEL 中表面发射的三种主要机制对比。(a) 二级光栅衍射：周期性结构的 Bragg 散射将面内传播的导模耦合到垂直方向的自由空间辐射，同时提供双向 DFB 反馈。当光栅周期满足$\Lambda = \lambda_B/n_{\mathrm{eff}}$时，一级衍射沿法向输出。(b) 光子晶体带边共振：在二维 PhC 的$\Gamma$点形成扩展的驻波模式，所有单元的同相振荡产生相干的垂直辐射。这种情况下有效群速度趋于零（平坦能带），增强了光与物质的相互作用。(c) 缺陷辅助散射：结构无序性或故意引入的缺陷会破坏理想周期性，导致非相干的 omnidirectional 散射——这通常是不利的，会降低光束质量和斜率效率。底部的耦合模方程提供了统一的理论框架：振幅演化由三部分驱动——传播项、DFB 耦合项（$\kappa$）、辐射损耗项（$\chi_{\mathrm{rad}}$）。优化设计的核心在于平衡这三个过程的相对强度。}
+
+    \node[draw,align=center,text width=11.8cm] at (0,-2.15) {统一包络方程：
+    $\dfrac{\partial A}{\partial z}+\dfrac{1}{v_g}\dfrac{\partial A}{\partial t}
+    = i\kappa B + i\chi_{\mathrm{rad}}E_{\mathrm{out}}$。\\
+    其中 $\kappa$ 为分布反馈耦合系数，$\chi_{\mathrm{rad}}$ 为辐射耦合系数。};
+  \end{tikzpicture}%
+  }
+  \caption{光子晶体面发射激光器中三类主要面发射机制对比：二级衍射、带边相干辐射与缺陷辅助散射。}
   \label{fig:ch06_surface_emission_mechanisms}
 \end{figure}

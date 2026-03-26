@@ -73,6 +73,21 @@ R_x & S_x & R_y & S_y
   \item 只有完全对称的亮模额外耦合到垂直辐射通道，这一辐射损耗记为 $\gamma_r$。
 \end{enumerate}
 
+\begin{ModelAssumptionBox}[辐射矩阵的均匀性假设]
+式~\eqref{eq:worked-toy-h}中的辐射矩阵采用了一个简化假设：四个基本波以相同强度耦合到垂直辐射通道，即辐射矩阵元全部相等 ($\zeta_{ij}=\gamma_r/4$)。这对应于理想方格晶格且孔径远大于波长的极限情况。
+
+更一般地，辐射矩阵可写为
+\begin{equation}
+\bm{\Gamma}_{\mathrm{rad}} = 
+\begin{bmatrix}
+\zeta_{RR} & \zeta_{RS_x} & \zeta_{RS_y} & \cdots \\
+\zeta_{S_xR} & \zeta_{S_xS_x} & \cdots & \cdots \\
+\vdots & & \ddots & \\
+\end{bmatrix},
+\end{equation}
+其中矩阵元 $\zeta_{ij}$ 依赖于晶格形状、占空比和辐射方向图。对非理想结构（如椭圆孔、矩形孔或存在倾斜入射），辐射矩阵元可能不再均匀，导致暗模也获得有限的辐射损耗，甚至出现模式间的辐射耦合。本例题采用均匀辐射矩阵是为了突出对称性保护的物理图像，实际器件建模需通过严格电磁仿真提取辐射矩阵。
+\end{ModelAssumptionBox}
+
 在这些假设下，最小非厄米有效矩阵可以写成
 \begin{equation}
 \tilde{H}
@@ -180,14 +195,19 @@ R_x & S_x & R_y & S_y
 \lambda_j = g_{\mathrm{mod},j}-\gamma_j,
 \label{eq:worked-lambda}
 \end{equation}
-其中 $\gamma_j=-\operatorname{Im}(\tilde{\omega}_j)$，则亮模与其它模的光学线性阈值分别为
+其中 $\gamma_j=-\operatorname{Im}(\tilde{\omega}_j)$，则亮模的光学线性阈值为
 \begin{equation}
-g_{\mathrm{th,B}}=\gamma_i+\gamma_r,
-\qquad
-g_{\mathrm{th,X}}=g_{\mathrm{th,Y}}=g_{\mathrm{th,D}}=\gamma_i.
-\label{eq:worked-thresholds}
+g_{\mathrm{th,B}}=\gamma_i+\gamma_r.
+\label{eq:worked-thresholds-bright}
 \end{equation}
-这一步就是本例题最值得读者记住的第一结论：\textbf{面发射最亮的模，不一定是最先跨过线性阈值的模}。若垂直辐射耦合太强，亮模反而会因为额外辐射损耗而比暗模需要更高的阈值增益。
+暗模（$X/Y/D$）的总损耗仅为 $\gamma_i$，但它们\textbf{垂直辐射耦合为零}（$\gamma_{r,\mathrm{dark}}=0$），因此无法作为表面发射器件激射。它们代表边发射通道，只能通过腔体边缘耦合输出。
+
+这一步就是本例题最值得读者记住的第一结论：\textbf{面发射最亮的模，不一定是最先跨过线性阈值的模}。若垂直辐射耦合太强，亮模反而会因为额外辐射损耗而需要更高的阈值增益。对表面发射 PCSEL 而言，正确的品质因数不是最小阈值，而是\textbf{最大斜率效率}：
+\begin{equation}
+\eta_{\text{slope}} \propto \frac{\gamma_r}{\gamma_i+\gamma_r}.
+\label{eq:worked-slope-efficiency}
+\end{equation}
+暗模虽然表观阈值更低，但由于 $\gamma_r=0$，其表面发射斜率效率为零，因此不会在表面发射中竞争胜出。
 
 \subsection{第三步：在简并子空间中加入一个最小对称性破缺}
 完美方格晶格下，$\bm{u}_{\mathrm{Y}}$ 与 $\bm{u}_{\mathrm{D}}$ 保持简并。但真实器件里，轻微矩形畸变、双晶格位移或工艺各向异性都可能把这对简并打破。教材里最干净的写法，是直接在 $\{\bm{u}_{\mathrm{Y}},\bm{u}_{\mathrm{D}}\}$ 这个二维子空间内写一个微扰矩阵：
@@ -283,21 +303,21 @@ z_{\mathrm{QW}}\approx 0.
 \begin{table}[htbp]
   \centering
   \footnotesize
-  \caption{例题 B 的名义参数。所有数值仅用于教材推演，不应被视为某一已校准器件的真实数据库。}
+  \caption{例题 B 的名义参数。所有数值仅用于教材推演，不应被视为某一已校准器件的真实数据库。为避免误读，表中新增“来源/用途”列。}
   \label{tab:worked-params}
   \setlength{\tabcolsep}{4pt}
-  \begin{tabularx}{\textwidth}{@{}p{2.2cm}p{2.5cm}Y@{}}
+  \begin{tabularx}{\textwidth}{@{}p{2.0cm}p{2.2cm}p{2.8cm}Y@{}}
     \toprule
-    参数 & 名义值 & 在例题中的作用 \\
+    参数 & 名义值 & 来源/用途 & 在例题中的作用 \\
     \midrule
-    晶格常数 $a$ & \SI{280}{nm} & 设定平面周期和归一化频率标尺 \\
-    孔半径 $r$ & $0.22a$ & 控制单胞傅里叶分量、耦合和辐射趋势 \\
-    PC 层厚度 $t_{\mathrm{pc}}$ & \SI{160}{nm} & 影响面内散射和纵向剖面 \\
-    波导总厚度 $t_{\mathrm{wg}}$ & \SI{260}{nm} & 决定纵向模与量子阱重叠 \\
-    上/下包层厚度 $t_u,t_d$ & \SI{1.2}{\micro\meter}, \SI{1.5}{\micro\meter} & 决定上下辐射不对称与导模背景 \\
-    阵列尺寸 $N_x\times N_y$ & $31\times31$ & 给出有限阵列验证的起点尺寸 \\
-    量子阱位置 $z_{\mathrm{QW}}$ & 波导中心附近 & 使目标纵向模与有源区尽量重合 \\
-    电极/掺杂设置 & 上 p、下 n、接触层重掺杂 & 为后续电流扩展与热源建模提供最小器件背景 \\
+    晶格常数 $a$ & \SI{280}{nm} & \textbf{[本书算例]}教学名义点 & 设定平面周期和归一化频率标尺 \\
+    孔半径 $r$ & $0.22a$ & \textbf{[本书算例]}教学名义点 & 控制单胞傅里叶分量、耦合和辐射趋势 \\
+    PC 层厚度 $t_{\mathrm{pc}}$ & \SI{160}{nm} & \textbf{[本书算例]}教学名义点 & 影响面内散射和纵向剖面 \\
+    波导总厚度 $t_{\mathrm{wg}}$ & \SI{260}{nm} & \textbf{[本书算例]}教学名义点 & 决定纵向模与量子阱重叠 \\
+    上/下包层厚度 $t_u,t_d$ & \SI{1.2}{\micro\meter}, \SI{1.5}{\micro\meter} & \textbf{[本书算例]}教学名义点 & 决定上下辐射不对称与导模背景 \\
+    阵列尺寸 $N_x\times N_y$ & $31\times31$ & \textbf{[本书算例]}起始尺寸（需收敛复核） & 给出有限阵列验证的起点尺寸 \\
+    量子阱位置 $z_{\mathrm{QW}}$ & 波导中心附近 & \textbf{[设计意图]}提升重叠 & 使目标纵向模与有源区尽量重合 \\
+    电极/掺杂设置 & 上 p、下 n、接触层重掺杂 & \textbf{[工程经验]}最小器件背景 & 为后续电流扩展与热源建模提供最小器件背景 \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -368,7 +388,9 @@ z_{\mathrm{QW}}\approx 0.
 \paragraph{题目} 把单胞里通过初筛的候选模放进有限器件里，检查边缘是否改写模式排序和远场。
 
 \paragraph{应建的最小模型}
-Lumerical 路径中最自然的是三维 FDTD；COMSOL 路径中最自然的是三维 Wave Optics 频域或本征频率研究，并辅以 PML。教学起点可取 $31\times31$ 阵列，但必须至少对邻近尺寸做一次收敛与边缘敏感性检查。
+Lumerical 路径中最自然的是三维 FDTD；COMSOL 路径中最自然的是三维 Wave Optics 频域或本征频率研究，并辅以 PML。$31\times31$ 阵列在本章是\textbf{[本书算例]}起点，不是通用最优尺寸；必须至少对邻近尺寸做一次收敛与边缘敏感性检查。
+
+\FiniteSizeReportTemplate
 
 \paragraph{应得到的输出}
 \begin{enumerate}
@@ -414,6 +436,17 @@ Lumerical 路径中，用 CHARGE 解简化漂移-扩散与泊松问题、用 HEA
 \subsection{给例题 B 补一页真正可核对的“实算结果页”}
 前面各步已经说明了“应该产出什么”。为了让本章不只像执行模板，而更像可跟做的教材例题，这里把\textbf{本题已经固定下来的教学值、脚本实算值和验收窗口}集中成一张结果页。需要强调，下面的数字分三类：一类来自本项目已附带的 PWEM 脚本实算；一类来自本章名义层栈下的教学代理值；还有一类是有限阵列与电热回写阶段的验收窗口，而不是高保真器件终值。
 
+\begin{ReportingStandardBox}
+\textbf{本章算例 provenance（可复核元数据）}
+\begin{itemize}
+  \item \textbf{脚本路径：}\path{code/pwem_square_hole/run_pwem_square_hole.py}
+  \item \textbf{输入参数来源：}脚本内 \path{PARAMS} 字典（$r/a=0.30$, $\varepsilon_b=3.4^2$, cutoff=2, bands=6, points\_per\_segment=16）
+  \item \textbf{输出文件：}\path{code/pwem_square_hole/output/pwem_square_hole_summary.json} 与 \path{.../pwem_square_hole_hz_bands.csv}
+  \item \textbf{文件哈希（SHA256）：}脚本 \texttt{31515F62...30FF7}；summary \texttt{1045867A...7A266}；csv \texttt{4836CB7E...A38D2}
+  \item \textbf{口径说明：}本章实算值属于\textbf{[本书算例]}，用于教学复核与数量级锚定；若脚本或参数改动，需同步更新哈希与结果页窗口。
+\end{itemize}
+\end{ReportingStandardBox}
+
 \begin{table}[htbp]
   \centering
   \footnotesize
@@ -422,11 +455,11 @@ Lumerical 路径中，用 CHARGE 解简化漂移-扩散与泊松问题、用 HEA
   \setlength{\tabcolsep}{4pt}
   \begin{tabularx}{\textwidth}{@{}p{2.6cm}p{2.7cm}p{2.4cm}Y@{}}
     \toprule
-    中间量 & 本题采用/得到的数值 & 身份 & 读者应如何使用 \\
+    中间量 & 本题采用/得到的数值 & 来源/身份 & 读者应如何使用 \\
     \midrule
     $n_{\mathrm{eff}}$ & $\approx 3.15$--$3.25$ & 纵向模教学代理窗口 & 若远低于 3 或高到接近衬底折射率，应先怀疑层栈或边界定义 \\
-    $\Gamma_{\mathrm{QW}}$ & $\approx 0.03$--$0.05$ & 名义 MQW 层栈的教学代理窗口 & 若小于 0.01，通常说明有源区放置或纵向舞台明显不合理 \\
-    $\Gamma_{\mathrm{loss}}$ & $\approx 0.005$--$0.02$ & 名义损耗层重叠的教学代理窗口 & 若与 $\Gamma_{\mathrm{QW}}$ 同量级甚至更大，后续器件阈值通常会明显吃亏 \\
+    $\Gamma_{\mathrm{QW}}$ & $\approx 0.03$--$0.05$ & \textbf{[本书算例]}名义 MQW 教学窗口 & 若小于 0.01，通常说明有源区放置或纵向舞台明显不合理 \\
+    $\Gamma_{\mathrm{loss}}$ & $\approx 0.005$--$0.02$ & \textbf{[本书算例]}名义损耗重叠窗口 & 若与 $\Gamma_{\mathrm{QW}}$ 同量级甚至更大，后续器件阈值通常会明显吃亏 \\
     $\Omega_{\Gamma}^{(2,3,4,5)}$ & \shortstack[c]{$0.3402,\ 0.4074,$\\$0.4074,\ 0.4611$} & PWEM 脚本实算值 & 用于锁定单胞筛选频窗，并核对高对称点简并是否正确 \\
     单胞候选频窗 & $\Omega\approx 0.34$--$0.46$ & 由 PWEM 实算反推的 RCWA 频窗 & 不再盲扫全频段，而是围绕候选模族做开放单胞精修 \\
     有限阵列起始尺寸 & $31\times31$ & 本题显式给定 & 至少再与相邻尺寸做一次主模排序与远场收敛比较 \\

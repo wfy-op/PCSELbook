@@ -1,0 +1,72 @@
+% !TEX root = ../main.tex
+% Figure: Threshold current-density chain (Sankey-style)
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=0.74cm,y=1cm,>=Latex,font=\small]
+    % Stage x positions
+    \def\xA{0.0}
+    \def\xB{3.0}
+    \def\xC{6.0}
+    \def\xD{9.0}
+    \def\xE{12.0}
+
+    % Main node frames
+    \draw[rounded corners,thick,fill=blue!8] (\xA,0) rectangle (\xA+1.8,4.4);
+    \draw[rounded corners,thick,fill=cyan!8] (\xB,0) rectangle (\xB+1.8,4.4);
+    \draw[rounded corners,thick,fill=green!8] (\xC,0) rectangle (\xC+1.8,4.4);
+    \draw[rounded corners,thick,fill=orange!10] (\xD,0) rectangle (\xD+1.8,4.4);
+    \draw[rounded corners,thick,fill=red!10] (\xE,0) rectangle (\xE+1.8,4.4);
+
+    \node[align=center] at (\xA+0.9,4.7) {注入电流密度\\$J_{\mathrm{inj}}$};
+    \node[align=center] at (\xB+0.9,4.7) {有源区复合\\$R_{\mathrm{act}}$};
+    \node[align=center] at (\xC+0.9,4.7) {材料增益\\$g_{\mathrm{mat}}$};
+    \node[align=center] at (\xD+0.9,4.7) {模增益\\$g_{\mathrm{mod}}$};
+    \node[align=center] at (\xE+0.9,4.7) {阈值条件\\$g_{\mathrm{th}}$};
+
+    % Flow bars (height indicates relative contribution)
+    % 1) Injection split
+    \fill[blue!55] (\xA+0.2,0.2) rectangle (\xA+1.6,3.6);   % effective
+    \fill[gray!45] (\xA+0.2,3.6) rectangle (\xA+1.6,4.2);   % spreading/contact loss
+    \node[white] at (\xA+0.9,1.9) {85\%};
+    \node[black] at (\xA+0.9,3.9) {15\%};
+
+    % 2) Recombination split
+    \fill[cyan!55] (\xB+0.2,0.2) rectangle (\xB+1.6,2.4);   % radiative
+    \fill[gray!45] (\xB+0.2,2.4) rectangle (\xB+1.6,3.6);   % non-rad
+    \node[white] at (\xB+0.9,1.3) {55\%};
+    \node[black] at (\xB+0.9,3.0) {30\%};
+
+    % 3) gain usable split
+    \fill[green!65!black] (\xC+0.2,0.2) rectangle (\xC+1.6,1.7); % spectral overlap
+    \fill[gray!45] (\xC+0.2,1.7) rectangle (\xC+1.6,2.4);        % detuning
+    \node[white] at (\xC+0.9,0.95) {40\%};
+    \node[black] at (\xC+0.9,2.05) {15\%};
+
+    % 4) confinement split
+    \fill[orange!80] (\xD+0.2,0.2) rectangle (\xD+1.6,1.4); % overlap to modal gain
+    \fill[gray!45] (\xD+0.2,1.4) rectangle (\xD+1.6,1.7);   % leakage
+    \node[white] at (\xD+0.9,0.8) {32\%};
+    \node[black] at (\xD+0.9,1.55) {8\%};
+
+    % 5) threshold margin block
+    \fill[red!70] (\xE+0.2,0.2) rectangle (\xE+1.6,1.4);
+    \node[white] at (\xE+0.9,0.8) {达到阈值};
+
+    % Connecting arrows
+    \draw[->,very thick,blue!60!black] (\xA+1.85,1.9) -- (\xB-0.05,1.9);
+    \draw[->,very thick,cyan!60!black] (\xB+1.85,1.3) -- (\xC-0.05,1.3);
+    \draw[->,very thick,green!55!black] (\xC+1.85,0.95) -- (\xD-0.05,0.95);
+    \draw[->,very thick,orange!70!black] (\xD+1.85,0.8) -- (\xE-0.05,0.8);
+
+    % Loss branches
+    \draw[->,thick,gray!65] (\xA+1.6,3.9) .. controls (\xA+2.3,4.5) and (\xB-0.2,4.6) .. (\xB+0.2,3.0);
+    \draw[->,thick,gray!65] (\xB+1.6,3.0) .. controls (\xB+2.2,4.2) and (\xC-0.2,4.2) .. (\xC+0.2,2.05);
+    \draw[->,thick,gray!65] (\xC+1.6,2.05) .. controls (\xC+2.2,3.2) and (\xD-0.2,3.1) .. (\xD+0.2,1.55);
+
+    % Annotation
+    \node[align=left,text width=11.8cm,anchor=west] at (0,-0.8) {\footnotesize 注：比例为教学型阈值链示例（用于说明“电流到阈值”的逐级折算），不同外延与注入方案会改变每一级分配。};
+  \end{tikzpicture}
+  \caption{阈值电流密度链路的 Sankey 风格示意。从注入电流到阈值条件并非一步映射，而是经历注入效率、辐射复合效率、增益谱匹配和模场重叠的逐级折算。图中灰色支路表示在各环节被“损耗/失配”消耗的份额。}
+  \label{fig:ch07_threshold_current_sankey}
+\end{figure}

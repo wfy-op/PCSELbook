@@ -42,6 +42,16 @@ Q_{\mathrm{nr}} \propto R_{\mathrm{nr}}\,\Delta E,
 \end{equation}
 其中 $\Delta E$ 表示相关能量释放尺度。它同样属于\textbf{耦合模型中的热源项}。
 
+\begin{notebox}
+\textbf{非辐射复合热的微观来源。}式\cref{eq:q_nr}中的$R_{\mathrm{nr}}$包含多种复合机制：
+\begin{itemize}
+  \item \textbf{Shockley-Read-Hall (SRH) 复合：}通过缺陷态的非辐射复合，$R_{\mathrm{SRH}} \propto np - n_i^2$
+  \item \textbf{Auger 复合：}三粒子过程，$R_{\mathrm{Auger}} = C_n n^2 p + C_p n p^2$，在高载流子浓度下主导
+  \item \textbf{表面复合：}在刻蚀侧壁和界面处，$R_{\mathrm{surf}} = S(n p - n_i^2)$，$S$为表面复合速度
+\end{itemize}
+每次非辐射复合事件释放的能量约为带隙$E_g$，这部分能量最终转化为晶格热能。对 InGaAs/GaAs 量子阱，室温下 Auger 复合和 SRH 复合通常具有可比贡献；在高温或高掺杂区域，Auger 复合可能占主导。
+\end{notebox}
+
 第三类常被低估的热源，是光吸收相关发热，包括自由载流子吸收、金属邻近吸收和向非目标辐射通道泄漏后再被材料吸收的能量。工程上可以把它们合并写成一个有效光学热源 $Q_{\mathrm{opt,abs}}$，并在多物理场求解中由光学模块回写给热学模块。
 
 于是总热源最小可写成
@@ -79,6 +89,33 @@ h\,(T-T_{\mathrm{amb}}),
 \end{equation}
 表示边界通过有限换热系数 $h$ 与环境交换热量。前者更像强制热沉，后者更像封装、空气侧或有限导热胶层的等效模型。
 
+\textbf{完整的热传导方程。}若考虑瞬态过程，三维非稳态热传导方程为
+\begin{equation}
+\rho C_p \frac{\partial T}{\partial t}
+-
+\nabla\cdot\left(\kappa_T\nabla T\right)
+=
+Q_{\mathrm{tot}}(\rvec,t),
+\label{eq:heat_transient}
+\end{equation}
+其中 $\rho$ 是材料密度，$C_p$ 是定压比热容。稳态近似下方程退化为
+\begin{equation}
+-\nabla\cdot\left(\kappa_T\nabla T\right)
+=
+Q_{\mathrm{tot}}(\rvec).
+\label{eq:heat_steady}
+\end{equation}
+
+\begin{WarningBox}[瞬态热效应的适用条件]
+稳态近似\ref{eq:heat_steady}在以下情况可能失效：
+\begin{itemize}
+  \item \textbf{脉冲工作模式：} 当脉冲宽度 $\tau_{\mathrm{pulse}} \lesssim \tau_{\mathrm{th}} = R_{\mathrm{th}}C_{\mathrm{th}}$ 时，必须使用瞬态方程\ref{eq:heat_transient}
+  \item \textbf{高速调制：} 调制频率 $f_{\mathrm{mod}} > 1/(2\pi\tau_{\mathrm{th}})$ 时，热场跟不上电信号变化
+  \item \textbf{启动瞬态：} 器件开启后 $t < 3\tau_{\mathrm{th}}$ 期间，温度场处于建立过程
+\end{itemize}
+对 CW 工作的 PCSEL，若热时间常数 $\tau_{\mathrm{th}} \ll$ 观测时间尺度，稳态近似通常足够准确。典型 GaAs 基 PCSEL 的 $\tau_{\mathrm{th}}$ 在 \SIrange{1}{10}{\micro\second}量级 (芯片级快速分量) 至 \SIrange{0.1}{1}{ms} (含封装慢速分量)。
+\end{WarningBox}
+
 若只想先建立热学量纲感，还可以把空间分布压缩成一个集总模型：
 \begin{equation}
 C_{\mathrm{th}}\frac{\dd \Delta T}{\dd t}
@@ -95,7 +132,36 @@ P_{\mathrm{heat}}(t),
 \tau_{\mathrm{th}} = R_{\mathrm{th}}C_{\mathrm{th}}.
 \label{eq:thermal_time_constant}
 \end{equation}
-\cref{eq:lumped_thermal,eq:thermal_time_constant} 当然不能取代三维热场，但它们给了读者一把最基本的尺子：到底是“平均热负载已经过大”，还是“平均温升还行，但空间热斑已经毁掉模式稳定性”。对直径约 $\SIrange{200}{300}{\micro\meter}$、衬底厚度约 $\SI{200}{\micro\meter}$ 的 GaAs 基 PCSEL，$R_{\mathrm{th}}$ 常落在 \SIrange{10}{100}{K/W} 的量级；只要结构、封装或散热路径明显变化，这个范围就会大幅移动，因此它更适合作为设计初筛尺子，而不是默认常数。
+\cref{eq:lumped_thermal,eq:thermal_time_constant} 当然不能取代三维热场，但它们给了读者一把最基本的尺子：到底是“平均热负载已经过大”，还是“平均温升还行，但空间热斑已经毁掉模式稳定性”。对直径约 $\SIrange{200}{300}{\micro\meter}$、衬底厚度约 $\SI{200}{\micro\meter}$ 的 GaAs 基 PCSEL，$R_{\mathrm{th}}$ 常见于 \SIrange{10}{100}{K/W} 的工程窗口；这里按\textbf{[工程经验]}处理，因为该值强依赖键合方式、散热器材料、热源定义和封装路径。实作时必须用结构化热仿真或实测热阻回标替代“默认常数”。
+
+\begin{ExampleBox}
+\textbf{热时间常数的最小估算例子（双时间尺度）}
+
+很多器件会同时出现“快热常数 + 慢热常数”。文献中，半导体激光器已报道约 \SI{5.6}{\micro\second} 与 \SI{7.2}{\micro\second} 的快速热时间常数\cite{esman1986thermal}，VCSEL 的瞬态热成像也测得约 $\tau\approx\SI{9.7}{\micro\second}$ 的快速分量\cite{garcia2016vcselthermal}。这里的 \SIrange{5.6}{9.7}{\micro\second} 应理解为芯片级快速热分量（有源区/芯片内部热扩散），不包含封装与热沉路径的慢时间常数。
+
+对本书 benchmark 量级，可用两级集总模型做估算。热阻估算需注意几何形状：对方形芯片上的局部热源，应使用热扩展电阻公式 $R_{\mathrm{th}}\approx 1/(2\kappa d)$（半球形扩展）或 $R_{\mathrm{th}}\approx L/(\kappa A)$（一维近似）。对 GaAs($\kappa\approx 55\,\mathrm{W/mK}$) 芯片，若热源直径约 $\SI{200}{\micro\meter}$、衬底厚度 $\SI{200}{\micro\meter}$：
+\begin{itemize}
+\item 一维近似：$R_{\mathrm{th,1D}} \approx L/(\kappa A) \approx 200\,\mu\mathrm{m}/(55\,\mathrm{W/mK} \cdot \pi\cdot 100^2\,\mu\mathrm{m}^2) \approx 115\,\mathrm{K/W}$
+\item 半球形扩展：$R_{\mathrm{th,spread}} \approx 1/(2\kappa d) \approx 1/(2\cdot 55\,\mathrm{W/mK} \cdot 200\,\mu\mathrm{m}) \approx 45\,\mathrm{K/W}$
+\end{itemize}
+实际值介于两者之间，取决于热源分布和边界条件。取中间值 $R_{\mathrm{th,chip}}\approx 70\,\mathrm{K/W}$，热容 $C_{\mathrm{th,chip}}\approx 1.2\times10^{-6}\,\mathrm{J/K}$，则：
+\[
+\tau_{\mathrm{chip}} = R_{\mathrm{th,chip}}C_{\mathrm{th,chip}}
+\approx (\SI{70}{K/W})\times(1.2\times10^{-6}\,\mathrm{J/K})
+\approx \SI{84}{\micro\second}.
+\]
+封装级：$R_{\mathrm{th,pkg}}\approx \SI{35}{K/W}$，$C_{\mathrm{th,pkg}}\approx 50\times10^{-6}\,\mathrm{J/K}$，则：
+\[
+\tau_{\mathrm{pkg}} = R_{\mathrm{th,pkg}}C_{\mathrm{th,pkg}}
+\approx (\SI{35}{K/W})\times(50\times10^{-6}\,\mathrm{J/K})
+\approx \SI{1.75}{ms}.
+\]
+这说明"本征有源区升温"和"封装/热沉缓慢回温"通常不在同一时间尺度。若只报告一个热时间常数，往往会把动态漂移和慢热滚降机制混在一起。
+
+\begin{warningbox}
+热阻估算强烈依赖几何假设。一维公式 $R_{\mathrm{th}}=L/(\kappa A)$ 给出上限（约 $\SI{100}{K/W}$ 量级），而扩展电阻公式 $R_{\mathrm{th}}\approx 1/(2\kappa d)$ 给出下限（约 $\SI{40}{K/W}$ 量级）。实际器件必须通过三维热仿真或实测回标确定。本节使用的集总参数仅用于说明双时间尺度概念，不可直接用于器件设计。
+\end{warningbox}
+\end{ExampleBox}
 
 对 PCSEL 而言，平均温升只适合回答非常粗的问题，例如“某个方案是否在总体热负载上明显更差”。但只要你关心阈值附近模式排序、高功率单模稳定性、远场主瓣是否漂移、偏振是否翻转，平均温升就不够了。因为这些现象敏感的是 $T(x,y,z)$ 的梯度和局域峰值，而不是整体平均值。一个局部热斑就足以把模式中心拉偏、把局部增益峰推离目标波长，进而改变模式竞争。
 
@@ -106,6 +172,19 @@ P_{\mathrm{heat}}(t),
 \label{eq:dn_dT}
 \end{equation}
 \cref{eq:dn_dT} 属于\textbf{光学模型的热修正项}。一旦 $T$ 在横向上不均匀，器件内部就会出现热透镜；一旦 $T$ 在纵向上不均匀，模场也会被拖向不同层。于是，\cref{ch:epitaxial-optics} 建立的纵向重叠与上下辐射不对称，到了工作点就不再保持冷腔值。
+
+\begin{MaterialSpecificityBox}[体材料 $dn/dT$ vs. 波导有效折射率 $dn_{\mathrm{eff}}/dT$]
+需特别注意：式~\eqref{eq:dn_dT}中的$\partial n/\partial T$在不同语境下指代不同对象：
+\begin{itemize}
+  \item \textbf{体材料系数} $(dn/dT)_{\mathrm{bulk}}$: 描述块体半导体材料（如 GaAs、InP）的折射率温度依赖性，典型值 $\sim 2\times10^{-4}\,\mathrm{K}^{-1}$
+  \item \textbf{波导有效系数} $(dn_{\mathrm{eff}}/dT)_{\mathrm{wg}}$: 描述波导模式有效折射率的温度依赖性，需考虑模式 confinement 和多层结构影响
+\end{itemize}
+对典型的 PCSEL 波导结构，由于模式部分分布在低折射率包层中，有效热光系数通常略低于体材料值：
+\begin{equation}
+\frac{dn_{\mathrm{eff}}}{dT} \approx \Gamma_{\mathrm{wg}} \left(\frac{dn}{dT}\right)_{\mathrm{active}} + (1-\Gamma_{\mathrm{wg}}) \left(\frac{dn}{dT}\right)_{\mathrm{clad}},
+\end{equation}
+其中 $\Gamma_{\mathrm{wg}}$ 为模式在有源区的 confinement 因子。对 GaAs 基 PCSEL，$(dn_{\mathrm{eff}}/dT)_{\mathrm{wg}} \approx (1.5\text{--}2.0)\times10^{-4}\,\mathrm{K}^{-1}$，略低于体材料 GaAs 的 $(dn/dT)_{\mathrm{bulk}} \approx 2.5\times10^{-4}\,\mathrm{K}^{-1}$。
+\end{MaterialSpecificityBox}
 
 第二条路径是材料增益谱漂移。\cref{ch:qw-gain} 已经把材料增益写成
 \begin{equation}
@@ -135,7 +214,11 @@ g_{\mathrm{mat}}(\omega,N,T),
 \frac{\partial \mu}{\partial T}\Delta T.
 \label{eq:thermal_feedback_mu}
 \end{align}
-\cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把“热会改写光和电”这句口头话，变成真正可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。若只需教材级量纲感，可先记住：GaAs 体系常用 $\partial n/\partial T \sim 2\times10^{-4}\,\mathrm{K}^{-1}$ 作为一阶估算；模增益对温度的等效斜率常表现为负值，量级可粗看成 $-0.1$ 到 $-0.2\,\mathrm{cm}^{-1}\,\mathrm{K}^{-1}$，表示升温会压低净增益裕量。
+\cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把"热会改写光和电"这句口头话，变成真正可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。为避免跨平台误读，本章把定量句统一写成"范围 + 条件 + 引文"：\textbf{[文献值]} 在近红外 GaAs/InP 相关平台，$\partial n/\partial T$ 常见于 $10^{-4}\,\mathrm{K}^{-1}$ 量级（典型约 $2\times10^{-4}\,\mathrm{K}^{-1}$ 到 $3\times10^{-4}\,\mathrm{K}^{-1}$）\cite{dellacorte2000thermooptic}；模增益温度斜率通常为负且依赖工作点，在阈值附近可近似为
+\begin{equation}
+\left.\frac{\partial g_{\mathrm{th}}}{\partial T}\right|_{J=J_{\mathrm{th}}} \approx -\frac{1}{\Gamma_{\mathrm{opt}}}\frac{\partial g_{\mathrm{mat}}}{\partial T}\bigg|_{n=n_{\mathrm{th}}},
+\end{equation}
+其中 $n_{\mathrm{th}}$ 是阈值载流子浓度。作为\textbf{[本书算例]}或\textbf{[工程经验]}参数，可在 $-0.1$ 到 $-0.2\,\mathrm{cm}^{-1}\,\mathrm{K}^{-1}$ 范围内做敏感度扫描，而非固定常数。需注意该斜率强烈依赖于量子阱结构、应变状态和工作载流子浓度。
 
 \begin{NumericalInsightBox}{\texorpdfstring{$dn/dT$}{dn/dT} 回写的数量级估算（benchmark 量级）}
 取 $n_{\mathrm{eff}}\approx 3.5$、$\partial n/\partial T\approx 2.5\times10^{-4}\,\mathrm{K}^{-1}$、$\Delta T=10\,\mathrm{K}$，则
@@ -198,7 +281,7 @@ T(\rvec)
 &\rightarrow
 \bigl(n(\rvec),g_{\mathrm{mat}}(\rvec),\alpha(\rvec),\mu(\rvec)\bigr)
 \rightarrow
-\text{mode, threshold, far field, polarization}.
+\text{模式、阈值、远场、偏振}.
 \end{aligned}
 \label{eq:eto_chain}
 \end{equation}
@@ -228,8 +311,8 @@ T(\rvec)
   \centering
   \begin{tikzpicture}[node distance=1.8cm,>=Stealth]
     \node[draw,rounded corners=3pt,fill=blue!10,minimum width=3.4cm,minimum height=1.7cm,align=center] (e) {电学求解\\[-0.2em]\small $\phi,n,p,\bm J$\\ \small 接触/孔径/串联电阻};
-    \node[draw,rounded corners=3pt,fill=red!10,right=of e,minimum width=3.5cm,minimum height=1.7cm,align=center] (h) {热学求解\\[-0.2em]\small $T(\rvec)$\\ \small $Q_{\mathrm{Joule}},Q_{\mathrm{nr}},Q_{\mathrm{abs}}$};
-    \node[draw,rounded corners=3pt,fill=green!10,right=of h,minimum width=3.6cm,minimum height=1.7cm,align=center] (o) {光学求解\\[-0.2em]\small $\tilde{\omega},Q,\text{far field}$\\ \small $n(\rvec),g(\rvec),\alpha(\rvec)$};
+    \node[draw,rounded corners=3pt,fill=red!10,right=of e,minimum width=3.5cm,minimum height=1.7cm,align=center] (h) {热学求解\\[-0.2em]\small $T(\rvec)$\\ \small $Q_{\text{焦耳}},Q_{\text{非辐射}},Q_{\text{吸收}}$};
+    \node[draw,rounded corners=3pt,fill=green!10,right=of h,minimum width=3.6cm,minimum height=1.7cm,align=center] (o) {光学求解\\[-0.2em]\small $\tilde{\omega},Q,\text{远场}$\\ \small $n(\rvec),g(\rvec),\alpha(\rvec)$};
     \node[draw,ellipse,fill=gray!10,below=1.65cm of h,minimum width=2.8cm,minimum height=1.05cm,align=center] (iter) {迭代至收敛\\[-0.2em]\small $\Delta T,\Delta\tilde{\omega},\Delta g$ 达标};
     \draw[->,very thick,blue!70!black] (e)--node[above,align=center]{\small 电流密度、复合率\\\small 热源分布}(h);
     \draw[->,very thick,red!70!black] (h)--node[above,align=center]{\small $\Delta n,\Delta g,\Delta \alpha,\Delta \mu$}(o);

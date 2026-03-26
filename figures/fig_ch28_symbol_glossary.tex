@@ -1,100 +1,82 @@
-% !TEX root = ../main.tex
-% Figure: Symbol glossary and acronyms organization
-% Chapter: ch28 - Glossary and Symbols Reference
-% Description: Hierarchical classification of notation used throughout the book
-
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=0.92, transform shape,
+  \begin{tikzpicture}[scale=0.84, transform shape,
     category/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3.5cm, minimum height=0.8cm, align=center},
-    subcat/.style={rectangle, draw, dashed, fill=#1!10, minimum width=2.5cm, minimum height=0.6cm, align=center},
+    subcat/.style={rectangle, draw, dashed, fill=#1!10, minimum width=2.6cm, minimum height=0.6cm, align=center},
     arrow/.style={->, >=stealth, thick}
   ]
-    % Top level: Main categories
-    \node[category=blue, minimum height=1cm] (physics) at (-6,6) {物理学符号\\场、波矢、频率};
-    \node[category=green, minimum height=1cm] (materials) at (0,6) {材料与几何\\折射率、尺寸参数};
-    \node[category=orange, minimum height=1cm] (numerics) at (6,6) {数值计算量\\矩阵、算符、误差};
-    
-    % Physics subcategories
-    \node[subcat=blue, below=0.8cm of physics, xshift=-1cm] (fields) {电磁场\\$\mathbf{E},\mathbf{H},\mathbf{D},\mathbf{B}$};
-    \node[subcat=blue, below=0.8cm of physics, xshift=1cm] (waves) {波动参量\\$\mathbf{k},\omega,\lambda,\beta$};
+    \node[category=blue, minimum height=1cm] (physics) at (-6,6) {物理场量符号\\场、波矢、频率};
+    \node[category=green, minimum height=1cm] (materials) at (0,6) {材料与几何参数\\折射率、尺寸、填充};
+    \node[category=orange, minimum height=1cm] (numerics) at (6,6) {数值计算量\\离散步长、算符、本征值};
+
+    \node[subcat=blue, below=1.0cm of physics, xshift=-1cm] (fields) {电磁场\\$\mathbf{E},\mathbf{H},\mathbf{D},\mathbf{B}$};
+    \node[subcat=blue, below=1.0cm of physics, xshift=1cm] (waves) {波动参量\\$\mathbf{k},\omega,\lambda,\beta$};
     \draw[arrow] (physics) -- (fields);
     \draw[arrow] (physics) -- (waves);
-    
-    % Materials subcategories
-    \node[subcat=green, below=0.8cm of materials, xshift=-1cm] (optic_params) {光学常数\\$n,n_g,\varepsilon,\chi^{(3)}$};
-    \node[subcat=green, below=0.8cm of materials, xshift=1cm] (geo_params) {几何尺寸\\$a,h,r,f,w,\Lambda$};
+
+    \node[subcat=green, below=1.0cm of materials, xshift=-1cm] (optic_params) {光学常数\\$n,n_g,\varepsilon,\chi^{(3)}$};
+    \node[subcat=green, below=1.0cm of materials, xshift=1cm] (geo_params) {几何尺寸\\$a,h,r,f,w,\Lambda$};
     \draw[arrow] (materials) -- (optic_params);
     \draw[arrow] (materials) -- (geo_params);
-    
-    % Numerics subcategories
-    \node[subcat=orange, below=0.8cm of numerics, xshift=-1cm] (discrete) {离散化\\$N_x,N_t,\Delta x,\Delta t$};
-    \node[subcat=orange, below=0.8cm of numerics, xshift=1cm] (operators) {算符与本征值\\$\hat{\Theta},\nabla\times,\lambda_n$};
+
+    \node[subcat=orange, below=1.0cm of numerics, xshift=-1cm] (discrete) {离散参数\\$N_x,N_t,\Delta x,\Delta t$};
+    \node[subcat=orange, below=1.0cm of numerics, xshift=1cm] (operators) {算符与谱量\\$\hat{\Theta},\nabla\times,\lambda_n$};
     \draw[arrow] (numerics) -- (discrete);
     \draw[arrow] (numerics) -- (operators);
-    
-    % Detailed examples boxes
-    
-    % Electromagnetic fields detail
-    \node[draw, align=left, font=\footnotesize, anchor=north west] at (-8,3.5) {
+
+    \node[draw, align=left, font=\scriptsize, anchor=north west] at (-8.4,3.2) {
       \textbf{场量约定}:\\
       $\mathbf{E}(\mathbf{r},t)=\mathrm{Re}[\tilde{\mathbf{E}}(\mathbf{r})e^{-i\omega t}]$\\
-      $\tilde{\mathbf{E}}$: 复振幅(phaser)\\
-      SI 单位制:$\mathbf{D}=\varepsilon_0\varepsilon_r\mathbf{E}$
+      $\tilde{\mathbf{E}}$：复振幅（相量）\\
+      国际单位制：$\mathbf{D}=\varepsilon_0\varepsilon_r\mathbf{E}$
     };
-    
-    % Wavevector conventions
-    \node[draw, align=left, font=\footnotesize, anchor=north] at (0,3.5) {
+
+    \node[draw, align=left, font=\scriptsize, anchor=north] at (0,3.2) {
       \textbf{波矢定义}:\\
       $\mathbf{k}=k_x\hat{x}+k_y\hat{y}+k_z\hat{z}$\\
       $|\mathbf{k}|=n\omega/c=k_0 n$\\
-      Bloch:$\mathbf{k}$限于第一 BZ
+      布洛赫波矢限制在第一布里渊区
     };
-    
-    % Material parameters detail
-    \node[draw, align=left, font=\footnotesize, anchor=north east] at (8,3.5) {
+
+    \node[draw, align=left, font=\scriptsize, anchor=north east] at (8.4,3.2) {
       \textbf{折射率类型}:\\
-      $n$: 相折射率\\
-      $n_g=n-\lambda(dn/d\lambda)$: 群折射率\\
-      $n_{\mathrm{eff}}=\beta/k_0$: 模式有效折射率
+      $n$：相折射率\\
+      $n_g=n-\lambda(dn/d\lambda)$：群折射率\\
+      $n_{\mathrm{eff}}=\beta/k_0$：模式有效折射率
     };
-    
-    % Greek letters box
-    \node[draw, align=left, font=\small] at (-4,1) {
+
+    \node[draw, align=left, font=\footnotesize] at (-4.2,0.55) {
       \textbf{常用希腊字母}:\\
-      $\alpha$: 损耗系数 [$\mathrm{cm}^{-1}$]\\
-      $\gamma$:  confinement因子\\
-      $\Gamma$: 光子限制因子\\
-      $\kappa$: 耦合系数 [DFB]\\
-      $\eta$: 效率 (各种下标)\\
-      $\lambda$: 真空波长\\
-      $\omega$: 角频率
+      $\alpha$：损耗系数 [$\mathrm{cm}^{-1}$]\\
+      $\gamma$：约束因子\\
+      $\Gamma$：光学限制因子\\
+      $\kappa$：耦合系数\\
+      $\eta$：效率（不同下标区分定义）\\
+      $\lambda$：真空波长\\
+      $\omega$：角频率
     };
-    
-    % Acronyms box
-    \node[draw, align=left, font=\small] at (4,1) {
-      \textbf{缩写词表}:\\
-      PCSEL: Photonic Crystal Surface Emitting Laser\\
-      PhC: Photonic Crystal\\
-      DFB: Distributed Feedback\\
-      DBR: Distributed Bragg Reflector\\
-      CMT: Coupled Mode Theory\\
-      PWEM: Plane Wave Expansion Method\\
-      FDTD: Finite-Difference Time-Domain\\
-      FEM: Finite Element Method\\
-      RCWA: Rigorous Coupled-Wave Analysis\\
-      QW: Quantum Well\\
-      MQW: Multiple Quantum Well
+
+    \node[draw, align=left, font=\footnotesize] at (4.2,0.55) {
+      \textbf{常见术语对照}:\\
+      光子晶体面发射激光器\\
+      光子晶体\\
+      分布反馈\\
+      分布式布拉格反射镜\\
+      耦合模理论\\
+      平面波展开法\\
+      时域差分法\\
+      有限元法\\
+      严格耦合波法\\
+      量子阱与多量子阱
     };
-    
-    % Dimensional analysis reminder
-    \node[draw, dashed, align=center, font=\small] at (0,-1.5) {
-      \textbf{量纲一致性检验}\\
-      所有物理方程必须满足:\\
-      左侧量纲等于右侧量纲，求和式中每一项量纲相同\\
-      示例:$\nabla\times\mathbf{E}$的单位=$\mathrm{V/m^2}$
+
+    \node[draw, dashed, align=center, font=\footnotesize] at (0,-1.95) {
+      \textbf{量纲一致性检查}\\
+      所有物理方程都应满足\\
+      左右两侧量纲相同、求和项量纲一致\\
+      例：$\nabla\times\mathbf{E}$ 的单位为 $\mathrm{V/m^2}$
     };
   \end{tikzpicture}
-  \caption{本书主要符号、缩略语及其分类索引。图中按电磁场量、材料与几何参数、数值方法变量等类别汇总常见记号，并附上缩略语说明与量纲一致性提醒，便于跨章节查阅。}
+  \caption{本书主要符号与术语的分类索引。图中按场量、材料几何和数值变量三类汇总常见记号，并给出场量约定、波矢约定与量纲一致性提示。}
   \label{fig:ch28_symbol_glossary}
 \end{figure}

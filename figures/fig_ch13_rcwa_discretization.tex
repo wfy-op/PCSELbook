@@ -1,105 +1,74 @@
 % !TEX root = ../main.tex
-% Figure: RCWA unit cell discretization into layers
-% Chapter: ch13 - Rigorous Coupled-Wave Analysis
-% Description: Staircase approximation of arbitrary profiles
-
-\begin{figure}[htbp]
-  \centering
-  \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[scale=1.15]
-    % Original continuous profile (slanted grating)
-    \begin{scope}[shift={(-4,0)}]
-      % Substrate
-      \fill[gray!30] (-2,-1) rectangle (2,0);
-      \draw[thick] (-2,0) -- (2,0);
-      \node[right] at (2.1,-0.5) {衬底$n_s$};
-      
-      % Slanted grating teeth
-      \foreach \x in {-1.5,-0.75,...,1.5} {
-        \fill[blue!20] (\x,0) -- (\x+0.3,0) -- (\x+0.5,1.5) -- (\x+0.2,1.5) -- cycle;
-        \draw[thick, blue] (\x,0) -- (\x+0.3,0) -- (\x+0.5,1.5) -- (\x+0.2,1.5) -- cycle;
-      }
-      
-      % Superstrate (air)
-      \fill[blue!5] (-2,1.5) rectangle (2,2.5);
-      \draw[thick] (-2,1.5) -- (2,1.5);
-      \node[right] at (2.1,2) {超strate$n_0$};
-      
-      % Incident plane wave
-      \draw[->, very thick, red] (-2.5,1) -- (-1.8,1.3);
-      \node[left, red] at (-2.5,1) {入射光};
-      
-      % Period indication
-      \draw[<->, thick] (-1.5,-0.3) -- node[below] {$\Lambda$} (-0.75,-0.3);
-      
-      % Height indication
-      \draw[<->, thick] (2.3,0) -- node[right] {$h$} (2.3,1.5);
-      
-      % Tilt angle
-      \draw[->] (-1.5,0) arc (90:75:0.8);
-      \node[right] at (-1.3,0.6) {\scriptsize $\theta_t$};
-      
-      \node[above, font=\bfseries] at (0,2.8) {(a) 真实倾斜光栅};
-      
-      % Fill factor label
-      \node[align=center, font=\small] at (0,-0.8) {占空比$f=w/\Lambda$\\锥角$\theta_t$};
-    \end{scope}
-    
-    % Discretized staircase approximation
-    \begin{scope}[shift={(2,0)}]
-      % Substrate
-      \fill[gray!30] (-2,-1) rectangle (2,0);
-      \draw[thick] (-2,0) -- (2,0);
-      \node[right] at (2.1,-0.5) {衬底$n_s$};
-      
-      % Staircase layers (10 slices)
-      \foreach \y [count=\i] in {0.15,0.3,...,1.5} {
-        \pgfmathsetmacro{\width}{1.5 - \i*0.1}
-        \fill[green!\i0!blue!20] (-1.5,\y-0.15) rectangle ++(\width,0.15);
-        \draw[dashed, gray] (-2,\y) -- (2,\y);
-      }
-      
-      % Layer numbering
-      \node[left, font=\small] at (-2.1,0.75) {$\ell=1$};
-      \node[left, font=\small] at (-2.1,1.5) {$\ell=N_L$};
-      
-      % Effective index in each layer
-      \node[right, font=\footnotesize] at (1.2,0.5) {$n_{\mathrm{eff}}^{(1)}$};
-      \node[right, font=\footnotesize] at (1.2,1.0) {$n_{\mathrm{eff}}^{(2)}$};
-      \node[right, font=\footnotesize] at (1.2,1.4) {$n_{\mathrm{eff}}^{(N_L)}$};
-      
-      % Superstrate
-      \fill[blue!5] (-2,1.5) rectangle (2,2.5);
-      \draw[thick] (-2,1.5) -- (2,1.5);
-      \node[right] at (2.1,2) {超strate$n_0$};
-      
-      \node[above, font=\bfseries] at (0,2.8) {(b) 阶梯近似分层};
-      
-      % Number of layers
-      \draw[<->, thick] (2.3,0) -- node[right] {$N_L=10$} (2.3,1.5);
-    \end{scope}
-    
-    % Connecting arrow showing approximation concept
-    \draw[->, ultra thick, orange, bend left=15] (-1.5,2.5) to[out=20,in=160] 
-      node[above, align=center, font=\small] {Li 因子化 + 傅里叶谐波展开\\\\tiny 每层内介电常数$\varepsilon(x,y)$分段恒定} (0,2.5);
-    
-    % Bottom: Fourier series representation
-    \node[draw, align=center, font=\small] at (0,-1.5) {
-      第$\ell$层介电函数的傅里叶展开:\\
-      $\varepsilon^{(\ell)}(x) = \sum_{m=-\infty}^{\infty}\hat{\varepsilon}_m^{(\ell)}e^{i m G x}$,\\
-      其中$G=2\pi/\Lambda$,截断至$m=\pm N_h$个谐波\\[4pt]
-      S-matrix 算法保证数值稳定性
-    };
-    
-    % Convergence note
-    \node[align=left, font=\footnotesize, anchor=south west] at (-3.5,-2.5) {
-      \textbf{收敛准则}:\\
-      $\bullet$ 谐波数$N_h\geq 21$保证$<1\%$误差\\
-      $\bullet$ 分层数$N_L$:陡峭侧壁需更细划分\\
-      $\bullet$ Li 规则处理不连续面避免 Gibbs 震荡
-    };
-  \end{tikzpicture}%
+% Figure content only
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \tikzset{
+    layer/.style={draw=black,thick},
+    slice/.style={draw=orange!80!black,thick,densely dashed},
+    note/.style={font=\footnotesize,align=center}
   }
-  \caption{RCWA 中常用的阶梯离散化策略。(a) 上图示意具有倾斜侧壁的真实周期结构；(b) 下图示意将其沿纵向切分为 $N_L$ 个矩形薄层，并在每层内用有限谐波数 $N_h$ 展开介电函数。配合界面连续条件和散射矩阵递推，可得到整体的反射、透射与模式耦合信息。}
-  \label{fig:ch13_rcwa_discretization}
-\end{figure}
+
+  % A
+  \begin{scope}[xshift=-5cm]
+    \node[font=\bfseries] at (0,3.1) {(a) 连续剖面};
+    \fill[gray!20] (-1.8,0) rectangle (1.8,-0.7);
+    \fill[blue!15] (-1.8,0) rectangle (1.8,1.8);
+    \draw[layer] (-1.8,0) -- (1.8,0);
+    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
+    \foreach \x/\h in {-1.0/0.8,0/1.0,1.0/0.7} {
+      \fill[white] (\x,0.2) ellipse (0.33 and \h);
+      \draw[blue!70] (\x,0.2) ellipse (0.33 and \h);
+    }
+    \node[note] at (0,-1.15) {真实结构在 $z$ 方向连续变化};
+  \end{scope}
+
+  % B
+  \begin{scope}[xshift=0cm]
+    \node[font=\bfseries] at (0,3.1) {(b) 分层近似};
+    \fill[gray!20] (-1.8,0) rectangle (1.8,-0.7);
+    \foreach \y/\c in {0/15,0.36/20,0.72/25,1.08/30,1.44/35} {
+      \fill[blue!\c] (-1.8,\y) rectangle (1.8,\y+0.36);
+    }
+    \draw[layer] (-1.8,0) -- (1.8,0);
+    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
+    \foreach \y in {0.36,0.72,1.08,1.44} {
+      \draw[slice] (-1.8,\y) -- (1.8,\y);
+    }
+    \draw[<->,orange!80!black,thick] (2.15,0.36) -- (2.15,0.72)
+      node[midway,right,font=\footnotesize] {$\Delta z$};
+    \node[note] at (0,-1.15) {每一层内只保留平面内周期变化};
+  \end{scope}
+
+  % C
+  \begin{scope}[xshift=5cm]
+    \node[font=\bfseries] at (0,3.1) {(c) 层内傅里叶展开};
+    \fill[blue!15] (-1.8,0) rectangle (1.8,1.8);
+    \draw[layer] (-1.8,0) -- (1.8,0);
+    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
+    \node[align=center,font=\small] at (0,1.0) {
+      $\displaystyle \epsilon^{(j)}(x)=\sum_m \tilde{\epsilon}^{(j)}_m \ee^{\ii m Gx}$\\[6pt]
+      截断到 $m=-M,\ldots,M$
+    };
+    \draw[red!70,thick,domain=-1.5:1.5,samples=120]
+      plot(\x,{0.28*sin(\x*360)+0.45});
+    \draw[orange!85!black,thick,domain=-1.5:1.5,samples=120]
+      plot(\x,{0.16*sin(\x*720)+0.95});
+    \node[red!70,font=\footnotesize] at (1.0,0.8) {$m=1$};
+    \node[orange!85!black,font=\footnotesize] at (1.0,1.25) {$m=2$};
+    \node[note] at (0,-1.15) {每层变成有限维谐波耦合问题};
+  \end{scope}
+
+  % D
+  \begin{scope}[yshift=-3.8cm]
+    \node[font=\bfseries] at (0,0.9) {(d) S 矩阵级联};
+    \foreach \x/\lab in {-3.6/{\mathbf{S}^{(1)}},-1.2/{\mathbf{S}^{(2)}},1.2/{\mathbf{S}^{(3)}},3.6/{\mathbf{S}^{(N)}}} {
+      \draw[draw=blue!70,thick,rounded corners,fill=blue!10] (\x-0.75,-0.25) rectangle (\x+0.75,0.65);
+      \node at (\x,0.2) {$\lab$};
+    }
+    \draw[->,thick,orange!80!black] (-2.85,0.2) -- (-1.95,0.2);
+    \draw[->,thick,orange!80!black] (-0.45,0.2) -- (0.45,0.2);
+    \draw[->,thick,orange!80!black] (1.95,0.2) -- (2.85,0.2);
+    \node[draw=green!60!black,thick,rounded corners,fill=green!12] at (6.2,0.2) {$\mathbf{S}^{\rm total}$};
+    \draw[->,thick,orange!80!black] (4.45,0.2) -- (5.2,0.2);
+    \node[note] at (0,-0.95) {$\mathbf{S}^{\rm total}=\mathbf{S}^{(1)}\star\mathbf{S}^{(2)}\star\cdots\star\mathbf{S}^{(N)}$};
+  \end{scope}
+\end{tikzpicture}

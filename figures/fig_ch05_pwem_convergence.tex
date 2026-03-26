@@ -1,0 +1,42 @@
+% !TEX root = ../main.tex
+% Figure: PWEM truncation convergence example for Chapter 5
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=0.9\textwidth,
+      height=0.52\textwidth,
+      xlabel={$N_{\mathrm{PW}}$（平面波基函数个数）},
+      ylabel={$X$ 点带隙代理 $\Delta\Omega_{23}$},
+      xmin=0, xmax=235,
+      ymin=0.155, ymax=0.24,
+      xtick={9,25,49,81,121,169,225},
+      ytick={0.16,0.18,0.20,0.22},
+      grid=major,
+      grid style={dashed,gray!30},
+      tick label style={font=\small},
+      label style={font=\small},
+      legend style={at={(0.02,0.98)},anchor=north west,font=\small,draw=none,fill=white},
+      every axis plot/.append style={line width=1.1pt}
+    ]
+      \addplot[color=blue!70!black,mark=*,mark size=2.2pt]
+      coordinates {
+        (9,0.2335718)
+        (25,0.1698199)
+        (49,0.1628981)
+        (81,0.1622959)
+        (121,0.1616302)
+        (169,0.1614303)
+        (225,0.1612376)
+      };
+      \addlegendentry{$\Delta\Omega_{23}(X)$}
+
+      \addplot[color=red!65!black,dashed]
+      coordinates {(0,0.1612376) (235,0.1612376)};
+      \addlegendentry{高截断参考值（$N_{\mathrm{PW}}=225$）}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{PWEM 截断收敛示例（本书附带脚本计算）。横轴为截断后平面波个数 $N_{\mathrm{PW}}=(2N+1)^2$，纵轴为正方晶格圆孔教学模型在 $X$ 点的带隙代理 $\Delta\Omega_{23}$（第 3 带与第 2 带频率差）。当 $N_{\mathrm{PW}}$ 从 25 提升到 121 后，曲线已进入平台区，说明“先做收敛检查再读带隙趋势”是必要步骤。}
+  \label{fig:ch05_pwem_convergence}
+\end{figure}

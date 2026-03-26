@@ -54,10 +54,10 @@
       
       % Heat sink (boundary)
       \draw[therm_style, fill=blue!20] (5.5, 0.5) rectangle (6.5, 1.5);
-      \node[align=center] at (6, 1) {热沉\\$T_{\mathrm{ambient}}$};
+      \node[align=center] at (6, 1) {热沉\\$T_{\text{环境}}$};
       
       % Temperature difference arrow
-      \draw[<->, thick, red] (1.0, 1.7) -- (6.0, 1.7) node[midway, above] {$\Delta T = T_{\mathrm{junction}} - T_{\mathrm{ambient}}$};
+      \draw[<->, thick, red] (1.0, 1.7) -- (6.0, 1.7) node[midway, above] {$\Delta T = T_{\text{结}} - T_{\text{环境}}$};
       
       % Fourier's law box
       \draw[rounded corners, fill=red!15] (7.2, 2.5) rectangle (10.5, 3.8);
@@ -81,11 +81,11 @@
         \begin{tabular}{ll@{\hspace{2em}}ll}
           \textbf{电学量} & \textbf{热学量} & \textbf{单位} \\
           \hline
-          电压$V$ & 温差$\Delta T$ & V vs. K \\
-          电流$I$ & 热流$P$ & A vs. W \\
-          电阻$R$ & 热阻$R_{\mathrm{th}}$ & $\Omega$ vs. K/W \\
-          电导率$\sigma$ & 热导率$\kappa$ & S/m vs. W/(m·K) \\
-          电容$C$ & 热容$C_{\mathrm{th}}$ & F vs. J/K \\
+          电压$V$ & 温差$\Delta T$ & 伏特 与 开尔文 \\
+          电流$I$ & 热流$P$ & 安培 与 瓦特 \\
+          电阻$R$ & 热阻$R_{\mathrm{th}}$ & 欧姆 与 开尔文每瓦 \\
+          电导率$\sigma$ & 热导率$\kappa$ & 西门子每米 与 瓦特每米每开尔文 \\
+          电容$C$ & 热容$C_{\mathrm{th}}$ & 法拉 与 焦耳每开尔文 \\
         \end{tabular}
       };
       
@@ -102,7 +102,7 @@
       
       % Typical values
       \node[anchor=west, font=\small] at (9, -2.4) {
-        \textbf{典型值参考:} GaAs $\kappa \approx 46\,\mathrm{W/(m\cdot K)}$, InP $\kappa \approx 68\,\mathrm{W/(m\cdot K)}$
+        \textbf{典型值参考:} 砷化镓 $\kappa \approx 46\,\mathrm{W/(m\cdot K)}$，磷化铟 $\kappa \approx 68\,\mathrm{W/(m\cdot K)}$
       };
     \end{scope}
     
@@ -110,13 +110,13 @@
     \begin{scope}[shift={(0,-5)}]
       \draw[rounded corners, fill=yellow!15] (-0.5,-1.8) rectangle (18.5, 0.3);
       \node[anchor=west, font=\small] at (-0.3, -0.2) {
-        \textbf{PCSEL中的应用示例}: 假设有源区功耗$P_{\mathrm{heat}} = 0.5\,\mathrm{W}$，外延层总热阻$R_{\mathrm{th}} = 80\,\mathrm{K/W}$，则温升
+        \textbf{光子晶体面发射激光器中的应用示例}: 假设有源区功耗$P_{\mathrm{heat}} = 0.5\,\mathrm{W}$，外延层总热阻$R_{\mathrm{th}} = 80\,\mathrm{K/W}$，则温升
       };
       \node[anchor=west, font=\normalsize] at (-0.3, -0.9) {
         $\displaystyle \Delta T = P_{\mathrm{heat}} \cdot R_{\mathrm{th}} = 0.5 \times 80 = 40\,\mathrm{K}$
       };
       \node[anchor=west, font=\small] at (-0.3, -1.5) {
-        这意味着结温$junction temperature$比热沉温度高$40^\circ\mathrm{C}$。若环境温度$25^\circ\mathrm{C}$，则结温达$65^\circ\mathrm{C}$，需要考虑温度对增益和折射率的影响。
+        这意味着结温比热沉温度高$40^\circ\mathrm{C}$。若环境温度$25^\circ\mathrm{C}$，则结温达$65^\circ\mathrm{C}$，需要考虑温度对增益和折射率的影响。
       };
     \end{scope}
     

@@ -15,7 +15,14 @@
 \section*{本章路线图}
 \ChapterModelLevel{L1→L4（层级接口总览）}
 本章不追求推导复杂结果，而是为全书搭一套共同语言。先统一坐标和频域约定，再建立晶格与倒格矢记号，随后说明模型层级与术语边界，最后给出阅读全书时必须守住的几条“红线”。
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch02_knowledge_map.tex}
+  \caption{全书知识依赖关系思维导图。根节点为 Maxwell方程+Bloch定理两大理论基础；第一层分支包括能带理论、反馈机制、阈值条件三大核心模块；第二层涵盖 CWT、BIC、CMT 等进阶工具；第三层延伸至器件建模、动态学、热 - 电 - 光耦合等应用场景。每章标注了难度等级（★为基础，★★★为进阶）和预计学习时间，帮助学生规划阅读路径。}
+  \label{fig:ch02_knowledge_map}
+\end{figure}
 
+\cref{fig:ch02_knowledge_map}给出了全书的知识依赖关系图，帮助学生建立整体认知框架并合理规划学习路径。
 \section{为什么在第二章先停下来统一语言}
 初学者读 PCSEL 文献时，最先遇到的困难往往不是公式本身，而是同一个词在不同上下文里意思变了。比如“阈值”这个词，在某些地方指的是阈值增益，在另一些地方指的是阈值电流；“模式”有时指无限周期的 Bloch 模，有时又指有限器件里的实际振荡模；“TE 模”在二维教材里是严格分类，在 slab 结构里却经常只是近似称呼。如果这些边界不先理顺，后面每读一章都会不断绊倒。
 
@@ -37,7 +44,7 @@
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch02_benchmark_device}
-  \caption{本书统一 benchmark 器件示意。(a) 俯视图给出方格孔阵和几何参数 $a,r$；(b) 侧视图给出层栈与常用纵向参数（$t_{\mathrm{pc}},t_{\mathrm{core}},t_{\mathrm{sub}}$ 等）。后续章节若未特别声明，默认都以此结构作为教学对象。}
+  \caption{本书统一教学器件示意。(a) 俯视图给出方格孔阵和几何参数 $a,r$；(b) 侧视图给出层栈与常用纵向参数（$t_{\mathrm{pc}},t_{\mathrm{core}},t_{\mathrm{sub}}$ 等）。后续章节若未特别声明，默认都以此结构作为教学对象。}
   \label{fig:ch02_benchmark_device}
 \end{figure}
 
@@ -49,7 +56,7 @@
 \begin{table}[htbp]
   \centering
   \scriptsize
-  \caption{全书最高频核心符号的前置工具页。}
+  \caption{全书最高频核心符号的前置工具页。表中“典型量级”用于\textbf{[教学示意]}与\textbf{[本书算例]}对齐，跨平台定量比较需回到各章文献值与边界条件。}
   \label{tab:core_symbols_toolpage}
   \setlength{\tabcolsep}{3pt}
   \begin{tabularx}{\textwidth}{@{}p{1.95cm}p{1.95cm}p{2.2cm}Y@{}}
@@ -288,9 +295,9 @@ I_{\mathrm{th},m}.
   \centering
   \begin{tikzpicture}[node distance=1.25cm and 1.6cm,>=Latex,
     block/.style={draw,rounded corners,align=center,minimum width=3.1cm,minimum height=0.95cm,fill=blue!6}]
-    \node[block] (a) {第3--5章\\Maxwell, Bloch, 能带};
-    \node[block,below=of a] (b) {第6--10章\\面发射, 阈值, 偏振/BIC, CWT};
-    \node[block,below=of b] (c) {第11--16章\\CMT/PWEM/RCWA/FDTD/FEM/互证};
+    \node[block] (a) {第3--5章\\麦克斯韦方程, 布洛赫, 能带};
+    \node[block,below=of a] (b) {第6--10章\\面发射, 阈值, 偏振/连续谱束缚态, 耦合波};
+    \node[block,below=of b] (c) {第11--16章\\耦合模/平面波展开/严格耦合波/时域差分/有限元/互证};
     \node[block,below=of c] (d) {第17--20章\\外延, 有源区, 电注入, 热耦合};
     \node[block,below=of d] (e) {第21--27章\\单模设计, 鲁棒性, 动态/性能, 工作流, 例题, 失败模式};
     \draw[->,thick] (a)-- node[right,font=\footnotesize]{候选模与对称性标签} (b);
@@ -340,5 +347,4 @@ I_{\mathrm{th},m}.
 
   \item 建议将本书的符号表与本章一起对照阅读，随时检查各符号所属的模型层级。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
 \end{itemize}
-
 

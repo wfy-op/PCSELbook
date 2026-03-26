@@ -9,29 +9,29 @@
     \textbf{层级} & \textbf{核心问题} & \textbf{输入参数} & \textbf{输出结果} & \textbf{典型求解器} \\
     \midrule
     \textbf{L1: 被动电磁} & 有哪些候选模？哪些能辐射？ & 
-    \begin{itemize}[nosep,leftmargin=*]\item 晶格常数$a$\item 填充因子FF\item 刻蚀深度$h$\item 折射率$n(x,y,z)$\end{itemize} & 
+    \begin{itemize}[nosep,leftmargin=*]\item 晶格常数$a$\item 填充因子$f_{\mathrm{fill}}$\item 刻蚀深度$h$\item 折射率$n(x,y,z)$\end{itemize} & 
     \begin{itemize}[nosep,leftmargin=*]\item 复频率$\tilde{\omega}_n$\item 品质因子$Q_n$\item 辐射损耗$\alpha_{\mathrm{rad}}$\item 远场图案$E(\theta,\phi)$\end{itemize} & 
-    PWEM (能带), RCWA (辐射), FDTD (瞬态), FEM (本征模) \\
+    平面波展开法（能带）、严格耦合波法（辐射）、时域有限差分法（瞬态）、有限元法（本征模） \\
     \midrule
     \textbf{L2: 有源光学} & 哪个模阈值最低？ & 
     \begin{itemize}[nosep,leftmargin=*]\item L1 输出的$Q_n$\item 内部损耗$\alpha_{\mathrm{int}}$\item 增益谱$g(\lambda, N)$\item 光学限制因子$\Gamma$\end{itemize} & 
     \begin{itemize}[nosep,leftmargin=*]\item 阈值增益$g_{\mathrm{th}}$\item 模增益排序\item 模式竞争结果\item 偏振选择比\end{itemize} & 
-    CWT (耦合波), 重叠积分模型，速率方程稳态解 \\
+    耦合波法、重叠积分模型、速率方程稳态解 \\
     \midrule
     \textbf{L3: 电注入器件} & 需要多大电流？ & 
     \begin{itemize}[nosep,leftmargin=*]\item L2输出的$g_{\mathrm{th}}$\item 外延掺杂分布\item 电极几何形状\item 迁移率模型$\mu(N,T)$\end{itemize} & 
     \begin{itemize}[nosep,leftmargin=*]\item 阈值电流$I_{\mathrm{th}}$\item 载流子分布$N(x,y,z)$\item 电流密度$J(x,y)$\item 串联电阻$R_s$\end{itemize} & 
-    Poisson + 漂移扩散(CHARGE, Semiconductor Module) \\
+    泊松方程 + 漂移扩散方程（电荷输运与半导体模块） \\
     \midrule
     \textbf{L4: 热 - 电 - 光耦合} & 能否稳定工作？ & 
-    \begin{itemize}[nosep,leftmargin=*]\item L3输出的$P_{\mathrm{heat}}$\item 热导率$\kappa(T)$\item 热边界条件\item dn/dT, dEg/dT\end{itemize} & 
+    \begin{itemize}[nosep,leftmargin=*]\item L3输出的$P_{\mathrm{heat}}$\item 热导率$\kappa(T)$\item 热边界条件\item 折射率温度系数、带隙温度系数\end{itemize} & 
     \begin{itemize}[nosep,leftmargin=*]\item 温度场$T(x,y,z)$\item 热阻$R_{\mathrm{th}}$\item 温升$\Delta T$\item 模式排序变化\end{itemize} & 
-    热传导方程(HEAT Module) + 光学回写迭代 \\
+    热传导方程（热传导模块） + 光学回写迭代 \\
     \bottomrule
 \end{tabularx}
 
 \vspace{0.5em}
 \parbox{\linewidth}{
   \footnotesize
-  \textbf{注}: 实际工作流程中，L1→L2→L3→L4 是单向传递，但 L4 产生的温升会通过折射率温度系数($dn/dT \approx 2\times10^{-4}\,\mathrm{K}^{-1}$ for GaAs) 和带隙温度系数($dE_g/dT \approx -0.4\,\mathrm{meV/K}$) 回写到 L1 和 L2，形成闭环耦合。当 $\Delta T > 30\,\mathrm{K}$ 时，这种反馈不可忽略。
+  \textbf{注}: 实际工作流程中，L1→L2→L3→L4 是单向传递，但 L4 产生的温升会通过折射率温度系数($dn/dT \approx 2\times10^{-4}\,\mathrm{K}^{-1}$，以砷化镓为例) 和带隙温度系数($dE_g/dT \approx -0.4\,\mathrm{meV/K}$) 回写到 L1 和 L2，形成闭环耦合。当 $\Delta T > 30\,\mathrm{K}$ 时，这种反馈不可忽略。
 }

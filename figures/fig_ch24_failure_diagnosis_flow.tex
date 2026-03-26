@@ -1,6 +1,3 @@
-% !TEX root = ../main.tex
-% Figure: Failure diagnosis flow for PCSEL modeling
-
 \begin{figure}[htbp]
   \centering
   \resizebox{0.98\textwidth}{!}{%
@@ -10,27 +7,27 @@
     d/.style={diamond, draw, fill=yellow!15, aspect=2.0, align=center, inner sep=1.5pt},
     arr/.style={-Stealth, thick}
   ]
-    \node[s=blue] (start) {Observed anomaly};
+    \node[s=blue] (start) {观测到异常现象};
 
-    \node[d, below=of start] (lcheck) {Claim level\\matched?};
-    \node[s=teal, below left=12mm and 26mm of lcheck] (fix1) {Downgrade claim\\L4 $\rightarrow$ L2/L1};
-    \node[d, below right=12mm and 26mm of lcheck] (pcheck) {Physics model\\consistent?};
+    \node[d, below=of start] (lcheck) {结论层级\\是否匹配？};
+    \node[s=teal, below left=12mm and 26mm of lcheck] (fix1) {下调结论层级\\第四层 $\rightarrow$ 第二/第一层};
+    \node[d, below right=12mm and 26mm of lcheck] (pcheck) {物理模型\\是否自洽？};
 
-    \node[s=orange, below left=12mm and 26mm of pcheck] (fix2) {Fix geometry / BC / interfaces};
-    \node[d, below right=12mm and 26mm of pcheck] (ncheck) {Numerics\\converged?};
+    \node[s=orange, below left=12mm and 26mm of pcheck] (fix2) {修正几何、边界\\与接口定义};
+    \node[d, below right=12mm and 26mm of pcheck] (ncheck) {数值离散\\是否收敛？};
 
-    \node[s=purple, below left=12mm and 26mm of ncheck] (fix3) {Refine mesh / PML / truncation};
-    \node[s=green, below right=12mm and 26mm of ncheck] (ok) {Rebuild evidence chain\\and report confidence};
+    \node[s=purple, below left=12mm and 26mm of ncheck] (fix3) {细化网格、吸收边界\\与截断参数};
+    \node[s=green, below right=12mm and 26mm of ncheck] (ok) {重建证据链\\并给出置信说明};
 
     \draw[arr] (start) -- (lcheck);
-    \draw[arr] (lcheck) -- node[left, font=\small]{No} (fix1);
-    \draw[arr] (lcheck) -- node[above, font=\small]{Yes} (pcheck);
-    \draw[arr] (pcheck) -- node[left, font=\small]{No} (fix2);
-    \draw[arr] (pcheck) -- node[above, font=\small]{Yes} (ncheck);
-    \draw[arr] (ncheck) -- node[left, font=\small]{No} (fix3);
-    \draw[arr] (ncheck) -- node[above, font=\small]{Yes} (ok);
+    \draw[arr] (lcheck) -- node[left, font=\small]{否} (fix1);
+    \draw[arr] (lcheck) -- node[above, font=\small]{是} (pcheck);
+    \draw[arr] (pcheck) -- node[left, font=\small]{否} (fix2);
+    \draw[arr] (pcheck) -- node[above, font=\small]{是} (ncheck);
+    \draw[arr] (ncheck) -- node[left, font=\small]{否} (fix3);
+    \draw[arr] (ncheck) -- node[above, font=\small]{是} (ok);
   \end{tikzpicture}
   }
-  \caption{Failure diagnosis flow aligned with this chapter: debug in the order of claim level, physics consistency, then numerical convergence.}
+  \caption{本章建模排错流程：按“结论层级匹配 $\rightarrow$ 物理自洽 $\rightarrow$ 数值收敛”顺序逐级定位问题。}
   \label{fig:ch24_failure_diagnosis_flow}
 \end{figure}

@@ -1,99 +1,66 @@
 % !TEX root = ../main.tex
-% Figure: FDTD simulation domain setup for PCSEL
-% Chapter: ch14 - FDTD and FEM Methods for PCSEL Simulation
-% Description: Schematic of a typical 3D FDTD simulation setup
+% Figure content only
+\begin{tikzpicture}[x=1cm,y=1cm]
+  % Domain and PML
+  \draw[thick,blue!70] (-3.2,-2.1) rectangle (3.2,2.6);
+  \fill[blue!5] (-3.2,-2.1) rectangle (3.2,2.6);
+  \draw[line width=2.5mm,gray!45] (-3.45,-2.35) rectangle (3.45,2.85);
+  \node[blue!70!black,anchor=south west] at (-3.1,2.55) {计算区域};
+  \node[gray!70,anchor=west] at (3.55,2.1) {PML};
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[scale=1.2]
-    % Main simulation volume (air box)
-    \draw[thick, blue!60!white] (-3,-2) rectangle (3,3);
-    \fill[blue!5] (-3,-2) rectangle (3,3);
-    \node[above right, blue] at (-3,3) {FDTD 计算区域};
-    
-    % PML absorbing boundaries
-    \draw[line width=3mm, gray!50] (-3.15,-2.15) rectangle (3.15,3.15);
-    \node[right, gray] at (3.2,2.5) {PML 吸收层};
-    \node[font=\small, gray] at (3.8,2.5) {\scriptsize 12--20 层};
-    
-    % PCSEL device structure
-    \fill[green!20] (-2,-1.5) rectangle (2,-0.5);
-    \draw[thick] (-2,-1.5) -- (2,-1.5);
-    \draw[thick] (-2,-0.5) -- (2,-0.5);
-    \node[right] at (2.1,-1) {PCSEL 有源层};
-    
-    % Photonic crystal holes
-    \foreach \x in {-1.5,-0.75,...,1.5} {
-      \foreach \y in {-1.25,-0.75} {
-        \fill[white] (\x,\y) circle (0.15);
-        \draw[thick] (\x,\y) circle (0.15);
-      }
+  % Device
+  \fill[green!18] (-2.1,-1.35) rectangle (2.1,-0.45);
+  \draw[thick] (-2.1,-1.35) -- (2.1,-1.35);
+  \draw[thick] (-2.1,-0.45) -- (2.1,-0.45);
+  \node[font=\footnotesize] at (0,-0.15) {PCSEL 有源层与光子晶体层};
+  \foreach \x in {-1.5,-0.75,0,0.75,1.5} {
+    \foreach \y in {-1.1,-0.7} {
+      \fill[white] (\x,\y) circle (0.14);
+      \draw[thick] (\x,\y) circle (0.14);
     }
-    \node[above] at (0,-0.5) {PhC 孔洞阵列};
-    
-    % Dipole source inside active region
-    \fill[red] (0,-1) circle (3pt);
-    \draw[->, very thick, orange] (-0.3,-1) -- (0.3,-1);
-    \node[below, orange] at (0,-1.3) {偶极子源};
-    \node[font=\small, orange] at (0,-1.55) {\scriptsize $\mathbf{J}(t)=\mathbf{J}_0 e^{-i\omega t}$};
-    
-    % Field monitors
-    \draw[dashed, purple, thick] (-1.5,-2) -- (-1.5,3);
-    \node[purple, rotate=90] at (-1.6,0) {时间监视器};
-    
-    \draw[dashed, magenta, thick] (-3,0) -- (3,0);
-    \node[magenta] at (2.5,0.3) {频谱监视器};
-    
-    % Near-field to far-field transformation surface
-    \draw[dashed, cyan, thick] (-2.5,-1.8) rectangle (2.5,2.5);
-    \node[cyan] at (0,2.7) {近远场变换面};
-    
-    % Mesh grid overlay
-    \foreach \x in {-2.5,-2,...,2.5} {
-      \draw[gray!20, very thin] (\x,-2) -- (\x,3);
-    }
-    \foreach \y in {-1.5,-1,...,2.5} {
-      \draw[gray!20, very thin] (-3,\y) -- (3,\y);
-    }
-    \node[below right, gray] at (-3,-2) {Yee 网格};
-    
-    % Time evolution inset
-    \begin{scope}[shift={(4.5,1)}, scale=0.8]
-      \draw[->] (0,0) -- (3.5,0) node[right] {$t$};
-      \draw[->] (0,0) -- (0,2.5) node[above] {$E_z$};
-      
-      % Pulse excitation
-      \draw[thick, red, domain=0:3, samples=100] 
-        plot(\x,{1.5*exp(-(\x-1)*(\x-1)/0.1)*sin(deg(20*\x))});
-      
-      \node[above, font=\small] at (1.5,2.7) {脉冲激励};
-      \node[below, align=center, font=\footnotesize] at (1.5,-0.3) {宽带覆盖\\$\Delta\lambda \sim 100\,\mathrm{nm}$};
-    \end{scope}
-    
-    \begin{scope}[shift={(4.5,-1)}, scale=0.8]
-      \draw[->] (0,0) -- (3.5,0) node[right] {$t$};
-      \draw[->] (0,0) -- (0,2.5) node[above] {$|E|^2$};
-      
-      % Ring-down decay
-      \draw[thick, blue, domain=0:3.2, samples=100] 
-        plot(\x,{2*exp(-\x/0.8)*(1+0.3*sin(deg(15*\x)))});
-      
-      \node[above, font=\small] at (1.5,2.7) {指数衰减};
-      \node[below, align=center, font=\footnotesize] at (1.5,-0.3) {拟合得$Q$值\\$\tau = Q/\omega_0$};
-    \end{scope}
-    
-    % Annotations
-    \draw[<->, thick] (-3.5,-2) -- node[left] {$L_z$} (-3.5,3);
-    \draw[<->, thick] (-3,-2.5) -- node[below] {$L_x$} (3,-2.5);
-    
-    % Legend
-    \node[align=left, font=\small, anchor=north west] at (-3,-2.3) {
-      \textbf{典型设置}:\\
-      $\bullet$ 网格尺寸:$\Delta x < \lambda/(10n)$\\
-      $\bullet$ 时间步长:CFL 条件$\Delta t < \Delta x/(c\sqrt{3})$\\
-      $\bullet$ 总时长：数万个时间步直至充分衰减
-    };
-  \end{tikzpicture}
-  \caption{三维 FDTD 仿真的典型配置示意图。蓝色方框为主计算区域（通常为空气背景），外围灰色厚边框代表完美匹配层 (PML)——一种人工吸收边界，用于模拟开放空间并抑制虚假反射。绿色矩形为 PCSEL 的外延层截面，其上刻蚀有周期性排列的空气孔（白色圆圈）。红色圆点表示放置在有源区中心的偶极子脉冲源$\mathbf{J}(t)$，其宽带频谱可以同时激发多个谐振模式。紫色竖线和品红色横线分别代表时域和频域监视器，用于记录指定位置的场随时间的演化和稳态频谱响应。青色虚线框为近远场变换 (Jordan-Balakrishnan) 的闭合表面积分面，通过记录该面上的切向场分量可以重建任意远处的辐射方向图。灰色的 Yee 网格展示了 FDTD 的空间离散方案——电场和磁场分量交错布置在每个元胞的棱边和面上，保证了 Maxwell 方程的守恒性质。右上角插图显示了典型的脉冲激励波形（高斯包络正弦波）和随后的指数衰减尾迹，从中可以提取品质因子$Q=\omega_0\tau/2$。左下角总结了经验法则：为保证数值色散可忽略，网格尺寸应小于介质中波长的 1/10；时间步长受 CFL 稳定性条件限制。}
-  \label{fig:ch14_fdtd_setup}
-\end{figure}
+  }
+
+  % Source
+  \fill[red] (0,-0.9) circle (0.07);
+  \draw[->,ultra thick,orange] (-0.3,-0.9) -- (0.3,-0.9);
+  \node[orange!90!black,font=\footnotesize,below] at (0,-1.22) {偶极子激励源};
+
+  % Monitors
+  \draw[dashed,purple,thick] (-1.8,-2.1) -- (-1.8,2.6);
+  \node[purple,rotate=90,font=\footnotesize] at (-2.0,0.25) {时间监视器};
+  \draw[dashed,magenta,thick] (-3.2,0.1) -- (3.2,0.1);
+  \node[magenta,font=\footnotesize] at (2.25,0.35) {频谱监视器};
+  \draw[dashed,cyan!70!black,thick] (-2.7,-1.7) rectangle (2.7,2.15);
+  \node[cyan!70!black,font=\footnotesize] at (0,2.35) {近远场变换面};
+
+  % Mesh hint
+  \foreach \x in {-3,-2.4,...,3} {
+    \draw[gray!20,very thin] (\x,-2.1) -- (\x,2.6);
+  }
+  \foreach \y in {-1.8,-1.2,...,2.4} {
+    \draw[gray!20,very thin] (-3.2,\y) -- (3.2,\y);
+  }
+  \node[gray!70,font=\footnotesize,anchor=north west] at (-3.15,-2.15) {Yee 网格};
+
+  % Inset pulse
+  \begin{scope}[xshift=5.0cm,yshift=1.0cm,scale=0.78]
+    \draw[->] (0,0) -- (3.5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,2.2) node[above] {$E$};
+    \draw[thick,red!70,domain=0:3,samples=120]
+      plot(\x,{1.4*exp(-(\x-1.0)^2/0.12)*sin(deg(18*\x))});
+    \node[font=\footnotesize] at (1.6,2.45) {宽带脉冲激励};
+  \end{scope}
+
+  % Inset decay
+  \begin{scope}[xshift=5.0cm,yshift=-1.1cm,scale=0.78]
+    \draw[->] (0,0) -- (3.5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,2.2) node[above] {$|E|^2$};
+    \draw[thick,blue!70,domain=0:3.2,samples=120]
+      plot(\x,{1.9*exp(-\x/0.8)*(1+0.2*sin(deg(14*\x)))});
+    \node[font=\footnotesize] at (1.55,2.45) {ring-down 提取 $Q$};
+  \end{scope}
+
+  % Size arrows
+  \draw[<->,thick] (-3.7,-2.1) -- (-3.7,2.6) node[midway,left] {$L_z$};
+  \draw[<->,thick] (-3.2,-2.6) -- (3.2,-2.6) node[midway,below] {$L_x$};
+\end{tikzpicture}

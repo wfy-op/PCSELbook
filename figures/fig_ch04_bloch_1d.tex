@@ -1,0 +1,56 @@
+% !TEX root = ../main.tex
+% Figure content only: inserted inside an outer figure environment in ch04
+\begin{tikzpicture}[x=0.92cm,y=0.92cm]
+  \tikzset{
+    paneltitle/.style={font=\bfseries},
+    infobox/.style={draw,rounded corners,thick,fill=blue!5,align=center}
+  }
+
+  \begin{scope}[xshift=-4.7cm]
+    \node[paneltitle] at (0,2.1) {(a) 周期系数};
+    \draw[->,thick] (-2.8,0) -- (2.8,0) node[right] {$x$};
+    \draw[->,thick] (-2.8,-1.0) -- (-2.8,1.8) node[above] {$V(x)$};
+    \draw[blue!70,thick,domain=-2.6:2.6,samples=140] plot(\x,{0.8+0.55*cos(\x r*2)});
+    \draw[dashed,gray] (-1.57,0) -- (-1.57,1.5);
+    \draw[dashed,gray] (1.57,0) -- (1.57,1.5);
+    \draw[<->,thick] (-1.57,1.35) -- (1.57,1.35) node[midway,above,font=\scriptsize] {$a$};
+    \node[font=\scriptsize,blue!70] at (1.2,0.45) {$V(x+a)=V(x)$};
+  \end{scope}
+
+  \begin{scope}[xshift=0cm]
+    \node[paneltitle] at (0,2.1) {(b) Bloch 形式};
+    \draw[->,thick] (-2.8,0) -- (2.8,0) node[right] {$x$};
+    \draw[->,thick] (-2.8,-1.6) -- (-2.8,1.8) node[above] {$\psi_k(x)$};
+    \draw[blue!70,dashed,thick,domain=-2.6:2.6,samples=140] plot(\x,{0.65*cos(\x r)});
+    \draw[red!70,dotted,thick,domain=-2.6:2.6,samples=180] plot(\x,{0.30*sin(3*\x r)});
+    \draw[green!50!black,thick,domain=-2.6:2.6,samples=180] plot(\x,{0.52*cos(\x r)+0.18*sin(3*\x r)});
+    \node[font=\scriptsize,blue!70] at (-1.2,1.0) {$u_k(x)$};
+    \node[font=\scriptsize,red!70] at (1.1,-1.0) {$\ee^{\ii kx}$};
+    \node[font=\scriptsize,green!50!black,align=center] at (1.0,1.35) {$\psi_k=u_k\,\ee^{\ii kx}$};
+  \end{scope}
+
+  \begin{scope}[xshift=4.8cm]
+    \node[paneltitle] at (0,2.1) {(c) 与光子晶体类比};
+    \draw[thick] (-2.2,1.4) rectangle (2.2,-1.3);
+    \draw[thick] (0,1.4) -- (0,-1.3);
+    \draw[thick] (-2.2,0.7) -- (2.2,0.7);
+    \draw[thick] (-2.2,-0.1) -- (2.2,-0.1);
+    \node[font=\scriptsize] at (-1.1,1.05) {系统};
+    \node[font=\scriptsize] at (1.1,1.05) {控制方程};
+    \node[font=\scriptsize] at (-1.1,0.30) {电子};
+    \node[font=\tiny,align=center,text width=1.9cm] at (1.1,0.30)
+      {$[-\nabla^2+V]\psi=E\psi$};
+    \node[font=\scriptsize] at (-1.1,-0.50) {光子};
+    \node[font=\tiny,align=center,text width=1.9cm] at (1.1,-0.50)
+      {$[\nabla\times\nabla\times-\frac{\omega^2}{c^2}\epsilon]\mathbf{H}=0$};
+    \node[font=\scriptsize,align=center,text width=3.8cm] at (0,-0.95)
+      {共同点：周期系数、平移对称、均满足 Bloch 定理};
+  \end{scope}
+
+  \node[infobox,font=\small,text width=12.2cm] at (0,-3.2) {
+    \textbf{Bloch 定理：}
+    周期系统中的本征解可写为
+    $\psi_{\bm{k}}(\bm{r}) = u_{\bm{k}}(\bm{r})\,\ee^{\ii \bm{k}\cdot \bm{r}}$，
+    其中 $u_{\bm{k}}(\bm{r}+\bm{R}) = u_{\bm{k}}(\bm{r})$ 与晶格同周期。
+  };
+\end{tikzpicture}

@@ -4,6 +4,7 @@
 \usepackage{siunitx}
 \usepackage{booktabs,longtable,array,multirow}
 \usepackage{graphicx}
+\usepackage{pifont}
 \usepackage{tikz,pgfplots}
 \usepackage[american]{circuitikz}
 \usepackage{xcolor}
@@ -126,6 +127,7 @@
 \newtcolorbox{RigorousBox}[1][★]{title=严格表述（难度 #1）,fonttitle=\heiti,colframe=red!60!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{ExampleBox}{title=例子,fonttitle=\heiti,colframe=green!40!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{PitfallBox}{title=易错点,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{WarningBox}[1][]{title={#1},fonttitle=\heiti,colframe=orange!90!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{WhatCouldGoWrong}{title=可能出错处,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{NoteBox}[2][]{%
   title=#2,
@@ -286,6 +288,115 @@
 
 \newtcolorbox{DimensionCheckNote}[1][]{colback=gray!3!white,colframe=gray!40!black,sharp corners,size=minimal,enlarge top by=-2mm,enlarge bottom by=-2mm,title=量纲检查：#1,fonttitle=\sffamily\footnotesize}
 
+% Compatibility aliases for legacy box names used in some chapters.
+\newenvironment{notebox}[1][注记]{%
+  \begin{NoteBox}{#1}%
+}{%
+  \end{NoteBox}%
+}
+\newenvironment{warningbox}[1][]{%
+  \begin{WarningBox}[#1]%
+}{%
+  \end{WarningBox}%
+}
+\newenvironment{MaterialPropertyBox}[1][材料参数]{%
+  \begin{NoteBox}{#1}%
+}{%
+  \end{NoteBox}%
+}
+\newenvironment{MaterialSpecificityBox}[1][材料特异性]{%
+  \begin{ConnectionBox}{#1}%
+}{%
+  \end{ConnectionBox}%
+}
+\newenvironment{ModelAssumptionBox}[1][模型假设]{%
+  \begin{AssumptionAuditBox}{#1}%
+}{%
+  \end{AssumptionAuditBox}%
+}
+\newenvironment{ReciprocityConditionBox}[1][互易性条件]{%
+  \begin{MathematicalFoundationBox}{#1}%
+}{%
+  \end{MathematicalFoundationBox}%
+}
+
+% ============================================================
+% NEW: Three pedagogical box environments for Round 2 improvements
+% ============================================================
+\newtcolorbox{MinRunnableBox}[1]{%
+  title=最小可计算例子：#1,
+  fonttitle=\heiti,
+  colframe=green!60!black,
+  colback=green!5!white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=green!70!black,colback=green!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{CommonPitfallBox}[1]{%
+  title=常见错误：#1,
+  fonttitle=\heiti,
+  colframe=red!70!black,
+  colback=red!5!white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=red!80!black,colback=red!70!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newtcolorbox{EngineeringIntuitionBox}[1]{%
+  title=工程直觉：#1,
+  fonttitle=\heiti,
+  colframe=blue!60!black,
+  colback=blue!5!white,
+  enhanced,
+  breakable,
+  sharp corners,
+  boxrule=0.8pt,
+  titlerule=0.6pt,
+  title filled=true,
+  coltitle=white,
+  attach boxed title to top center={yshift=-2mm},
+  boxed title style={colframe=blue!70!black,colback=blue!60!black,sharp corners,size=small},
+  fontupper=\normalsize
+}
+
+\newcommand{\CrossPlatformTriad}[3]{%
+\begin{ReportingStandardBox}
+\textbf{跨平台外推三元注释}
+\begin{itemize}
+  \item \textbf{外推来源：}#1
+  \item \textbf{边界条件：}#2
+  \item \textbf{不可迁移项：}#3
+\end{itemize}
+\end{ReportingStandardBox}
+}
+
+\newcommand{\FiniteSizeReportTemplate}{%
+\begin{ReportingStandardBox}
+\textbf{无限周期结果转有限阵列时的最小报告四要素}
+\begin{enumerate}
+  \item \textbf{阵列尺寸}：至少报告 3 个横向尺寸样本，并明确主模/竞争模排序是否翻转。
+  \item \textbf{边界模型}：明确边缘截断方案、PML/端口设置与粗糙/无序代理模型。
+  \item \textbf{收敛曲线}：至少给出 1 组关键量（如 $Q$、主瓣角、$\Delta G_{\star j}$）随尺寸或网格的收敛趋势。
+  \item \textbf{误差样本}：给出最坏样本或通过率统计，而不只给名义参数点。
+\end{enumerate}
+\end{ReportingStandardBox}
+}
+
 % Helper command for NoteBox titles with special characters (optional usage only)
 % Usage: \notetitle[PDF-friendly-text]{Visible Title}
 
@@ -300,6 +411,7 @@
 \newcommand{\D}{\bm{D}}
 \newcommand{\B}{\bm{B}}
 \newcommand{\J}{\bm{J}}
+\newcommand{\Jf}{\bm{J}}
 \newcommand{\p}{\partial}
 \newcommand{\ii}{\mathrm{i}}
 \newcommand{\ee}{\mathrm{e}}

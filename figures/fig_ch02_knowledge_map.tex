@@ -1,0 +1,60 @@
+% !TEX root = ../main.tex
+% Figure content only: inserted inside an outer figure environment in ch02
+\begin{tikzpicture}[x=0.86cm,y=0.90cm]
+  \tikzset{
+    core/.style={draw=blue!70,thick,circle,fill=blue!20,minimum size=1.7cm,align=center,font=\bfseries},
+    l1/.style={draw=red!70,thick,rounded corners,fill=red!10,align=center,font=\small,text width=2.0cm},
+    l2/.style={draw=orange!85!black,thick,rounded corners,fill=orange!10,align=center,font=\small,text width=2.0cm},
+    l3/.style={draw=green!50!black,thick,rounded corners,fill=green!10,align=center,font=\small,text width=1.8cm},
+    l4/.style={draw=blue!70,thick,rounded corners,fill=blue!10,align=center,font=\small,text width=1.8cm}
+  }
+
+  \node[core] (center) at (0,0) {PCSEL\\理论体系};
+
+  \node[l1] (maxwell) at (-5.3,3.7) {Maxwell 方程\\与边界条件};
+  \node[l1] (bloch) at (-1.8,3.7) {Bloch 定理\\周期介质};
+  \node[l1] (symmetry) at (1.8,3.7) {对称性\\与群论};
+  \node[l1] (semicond) at (5.3,3.7) {半导体物理\\与增益模型};
+
+  \node[l2] (band) at (-5.3,1.0) {光子能带\\与 $\Gamma$ 点};
+  \node[l2] (feedback) at (-1.8,1.0) {面内反馈\\与光栅条件};
+  \node[l2] (cwt) at (1.8,1.0) {耦合波理论\\CWT / TCMT};
+  \node[l2] (bic) at (5.3,1.0) {BIC /\\quasi-BIC};
+
+  \node[l3] (pwem) at (-6.2,-1.8) {PWEM\\能带计算};
+  \node[l3] (rcwa) at (-3.3,-1.8) {RCWA\\散射矩阵};
+  \node[l3] (fdtd) at (-0.4,-1.8) {FDTD\\时域全波};
+  \node[l3] (fem) at (2.5,-1.8) {FEM\\有限元};
+  \node[l3] (device) at (5.7,-1.8) {器件模型\\电-热-光};
+
+  \node[l4] (design) at (-4.6,-4.2) {偏振控制};
+  \node[l4] (singlemode) at (-1.2,-4.2) {单模设计};
+  \node[l4] (highpower) at (2.2,-4.2) {高功率};
+  \node[l4] (integration) at (5.6,-4.2) {系统集成};
+
+  \draw[->,thick,blue!65!black] (maxwell) -- (band);
+  \draw[->,thick,blue!65!black] (bloch) -- (band);
+  \draw[->,thick,blue!65!black] (bloch) -- (feedback);
+  \draw[->,thick,blue!65!black] (symmetry) -- (bic);
+  \draw[->,thick,blue!65!black] (semicond) -- (device);
+  \draw[->,thick,blue!65!black] (band) -- (pwem);
+  \draw[->,thick,blue!65!black] (feedback) -- (rcwa);
+  \draw[->,thick,blue!65!black] (cwt) -- (fdtd);
+  \draw[->,thick,blue!65!black] (bic) -- (fem);
+  \draw[->,thick,blue!65!black] (device) -- (fem);
+  \draw[->,thick,blue!65!black] (pwem) -- (design);
+  \draw[->,thick,blue!65!black] (rcwa) -- (singlemode);
+  \draw[->,thick,blue!65!black] (fdtd) -- (highpower);
+  \draw[->,thick,blue!65!black] (fem) -- (integration);
+  \draw[->,thick,blue!65!black] (device) -- (integration);
+
+  \node[font=\scriptsize,gray] at (-7.4,3.2) {ch03};
+  \node[font=\scriptsize,gray] at (-3.8,3.2) {ch04};
+  \node[font=\scriptsize,gray] at (-0.1,3.2) {ch08};
+  \node[font=\scriptsize,gray] at (3.7,3.2) {ch17};
+
+  \node[font=\scriptsize,gray] at (-7.4,0.3) {4 h};
+  \node[font=\scriptsize,gray] at (-3.8,0.3) {5 h};
+  \node[font=\scriptsize,gray] at (-0.1,0.3) {6 h};
+  \node[font=\scriptsize,gray] at (3.7,0.3) {4 h};
+\end{tikzpicture}

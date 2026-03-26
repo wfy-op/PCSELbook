@@ -29,51 +29,51 @@
         (30:\r) -- cycle;
     }
     
-    % PWEM polygon (blue)
+    % Plane-wave expansion polygon (blue)
     \fill[blue!20, opacity=0.6] 
       (90:2.8) -- (150:1.5) -- (210:2.5) -- (270:1) -- (330:0.8) -- (30:2) -- cycle;
     \draw[very thick, blue] 
       (90:2.8) -- (150:1.5) -- (210:2.5) -- (270:1) -- (330:0.8) -- (30:2) -- cycle;
-    \node[blue, font=\bfseries] at (90:3.5) {PWEM};
+    \node[blue, font=\bfseries] at (90:3.5) {平面波展开};
     
-    % FDTD polygon (red)
+    % Time-domain finite difference polygon (red)
     \fill[red!20, opacity=0.5] 
       (90:2.5) -- (150:2.8) -- (210:1.5) -- (270:2.5) -- (330:2.8) -- (30:1.8) -- cycle;
     \draw[very thick, red] 
       (90:2.5) -- (150:2.8) -- (210:1.5) -- (270:2.5) -- (330:2.8) -- (30:1.8) -- cycle;
-    \node[red, font=\bfseries] at (150:3.5) {FDTD};
+    \node[red, font=\bfseries] at (150:3.5) {时域差分};
     
-    % FEM polygon (green)
+    % Finite-element polygon (green)
     \fill[green!20, opacity=0.5] 
       (90:2.7) -- (150:2.2) -- (210:2) -- (270:2.3) -- (330:2.5) -- (30:2.5) -- cycle;
     \draw[very thick, green!60!black] 
       (90:2.7) -- (150:2.2) -- (210:2) -- (270:2.3) -- (330:2.5) -- (30:2.5) -- cycle;
-    \node[green!60!black, font=\bfseries] at (270:3.5) {FEM};
+    \node[green!60!black, font=\bfseries] at (270:3.5) {有限元};
     
-    % CMT polygon (purple, simplified model)
+    % Coupled-mode polygon (purple, simplified model)
     \fill[purple!20, opacity=0.4] 
       (90:1.5) -- (150:0.8) -- (210:1) -- (270:1.2) -- (330:1.5) -- (30:3) -- cycle;
     \draw[very thick, purple, dashed] 
       (90:1.5) -- (150:0.8) -- (210:1) -- (270:1.2) -- (330:1.5) -- (30:3) -- cycle;
-    \node[purple, font=\bfseries] at (30:3.5) {CMT};
+    \node[purple, font=\bfseries] at (30:3.5) {耦合模};
     
     % Legend with detailed info
     \node[draw, align=left, font=\small, anchor=north west] at (-5,-4.5) {
       \textbf{方法特点总结}:\\[2pt]
-      {\color{blue}\rule{8pt}{2pt}} PWEM:频域本征值，适合能带\\
-      {\color{red}\rule{8pt}{2pt}} FDTD:时域差分，全波瞬态\\
-      {\color{green}\rule{8pt}{2pt}} FEM:自适应网格，复杂几何\\
-      {\color{purple}\rule{8pt}{2pt}} CMT:解析近似，快速优化
+      {\color{blue}\rule{8pt}{2pt}} 平面波展开:频域本征值，适合能带\\
+      {\color{red}\rule{8pt}{2pt}} 时域差分:时域推进，全波瞬态\\
+      {\color{green}\rule{8pt}{2pt}} 有限元:自适应网格，复杂几何\\
+      {\color{purple}\rule{8pt}{2pt}} 耦合模:解析近似，快速优化
     };
     
     % Application recommendations
     \node[draw, dashed, align=left, font=\footnotesize, anchor=south east] at (5,-4.5) {
       \textbf{选型建议}:\\
-      $\bullet$ 初步设计:CMT + PWEM组合\\
-      $\bullet$ 精细优化:FEM/FDTD验证\\
-      $\bullet$ 大规模阵列：降阶模型 ROM
+      $\bullet$ 初步设计:耦合模 + 平面波展开\\
+      $\bullet$ 精细优化:有限元/时域差分验证\\
+      $\bullet$ 大规模阵列：降阶模型
     };
   \end{tikzpicture}
-  \caption{四种主流 PCSEL 数值模拟方法的性能对比雷达图。六个评估维度分别为：(1) \textbf{精度}：指离散误差和截断误差的综合表现，PWEM 凭借严格的傅里叶展开和高阶收敛性在此项领先，但对于复杂几何形状会出现 Gibbs 震荡;(2) \textbf{计算速度}：FDTD 由于显式时间推进和无需求解大型矩阵而最快，但需要数万步才能达到稳态,FEM 借助商业软件的高效求解器也能达到分钟级;(3) \textbf{内存效率}：PWEM 和 CMT 的参数化表达最节省存储，而 FDTD 的三维全场记录和 FEM 的稀疏矩阵组装都需要 GB 级 RAM;(4) \textbf{几何灵活性}：FEM 的非结构化三角/四面体网格可以精确贴合任意曲面边界，此项最优,PWEM 的 staircasing 近似最差;(5) \textbf{非线性支持}：FDTD 天然适合处理 Kerr 效应、双光子吸收等非线性过程，而频域方法需要迭代自洽求解;(6) \textbf{开源生态}：MPB(Meep)、MEEP(FDTD)、COMSOL 脚本等资源丰富程度。图中蓝色区域代表 PWEM——它在精度和周期性结构分析方面无可匹敌，但在处理非均匀性和瞬态动力学时受限。红色区域为 FDTD——它以通用性强著称，几乎可以模拟任何时空演化问题，但数值色散和 CFL 稳定性条件要求较细的网格。绿色区域对应 FEM——它结合了前两者的优点，特别适合多物理场耦合和商业软件开发，但学习曲线较陡。紫色虚线框出的 CMT(耦合模理论) 虽然精度有限，但其解析特性使其成为快速扫描参数空间和物理直觉培养的理想工具。实际工程中推荐采用分层策略：先用 CMT/PWEM 进行概念设计和敏感度分析，确定大致工作区间后再用 FEM/FDTD 做最后的验证和优化。底部两个注释框分别总结了各方法的核心特点和选型指南。}
+  \caption{四种常用方法在“精度、速度、内存效率、几何灵活性、非线性支持、生态”六个维度上的\textbf{[教学示意]}分工图。该图用于说明方法取舍方向，不构成发布级 benchmark 分数；定量比较需另给硬件、求解器版本、几何/边界与误差门槛。}
   \label{fig:ch15_method_comparison_radar}
 \end{figure}

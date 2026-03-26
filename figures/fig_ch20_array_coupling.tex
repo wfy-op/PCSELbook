@@ -43,7 +43,7 @@
     
     % Boundary conditions
     \draw[double distance=2pt, thick] (-5.5,-5.5) rectangle (5.5,5.5);
-    \node[below, font=\small] at (0,-5.8) {金属包覆边界或 DBR反射镜};
+    \node[below, font=\small] at (0,-5.8) {金属包覆边界或分布布拉格反射镜};
     
     % Zoom-in inset: Unit cell detail
     \begin{scope}[shift={(7,3)}, scale=2]
@@ -61,7 +61,7 @@
         plot({0.2*cos(\x)*(1 + 0.12*cos(2*\x))},{0.2*sin(\x)*(1 + 0.12*cos(2*\x))});
       
       \node[above, font=\small] at (0,0.8) {单胞放大};
-      \node[below, align=center, font=\footnotesize] at (0,-0.8) {基模$\mathrm{LP}_{01}$\\近场高斯型};
+      \node[below, align=center, font=\footnotesize] at (0,-0.8) {基模\\近场高斯型};
     \end{scope}
     
     % Coherence area illustration

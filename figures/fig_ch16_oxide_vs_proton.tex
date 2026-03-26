@@ -1,0 +1,49 @@
+% !TEX root = ../main.tex
+% Figure: Oxide aperture vs proton implantation comparison
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=0.72cm,y=1cm,>=Latex,font=\small]
+    % Left: oxide aperture
+    \draw[rounded corners,thick,fill=blue!6] (0,0) rectangle (6.2,5.0);
+    \node[font=\bfseries] at (3.1,4.65) {(a) 氧化限制层孔径（Oxide aperture）};
+    \draw[fill=gray!20] (0.7,0.7) rectangle (5.5,1.6);
+    \draw[fill=green!18] (0.7,1.6) rectangle (5.5,2.7);
+    \draw[fill=orange!18] (0.7,2.7) rectangle (5.5,3.4);
+    \draw[fill=red!20] (0.7,3.4) rectangle (5.5,4.2);
+    \draw[fill=black!45] (0.7,4.2) rectangle (5.5,4.4);
+
+    % Oxide ring
+    \fill[blue!55,opacity=0.75] (3.1,3.05) circle (1.05);
+    \fill[white] (3.1,3.05) circle (0.58);
+    \node[blue!60!black] at (3.1,1.15) {电流孔径与光学孔径强绑定};
+    \draw[->,thick,blue!65!black] (4.45,2.95) -- (5.8,2.95) node[right,align=left] {侧向氧化绝缘\\高电流限制能力};
+    \draw[->,thick,green!50!black] (1.2,3.9) -- (0.2,4.6) node[left,align=right] {阈值电流较低\\指数引导明显};
+
+    % Right: proton implant
+    \draw[rounded corners,thick,fill=orange!6] (7.0,0) rectangle (13.2,5.0);
+    \node[font=\bfseries] at (10.1,4.65) {(b) 质子注入孔径（Proton implant）};
+    \draw[fill=gray!20] (7.7,0.7) rectangle (12.5,1.6);
+    \draw[fill=green!18] (7.7,1.6) rectangle (12.5,2.7);
+    \draw[fill=orange!18] (7.7,2.7) rectangle (12.5,3.4);
+    \draw[fill=red!20] (7.7,3.4) rectangle (12.5,4.2);
+    \draw[fill=black!45] (7.7,4.2) rectangle (12.5,4.4);
+
+    % Implant annulus
+    \draw[very thick,purple!70!black,dashed] (10.1,3.05) circle (1.05);
+    \draw[very thick,purple!70!black,dashed] (10.1,3.05) circle (0.58);
+    \foreach \ang in {20,45,...,340}{
+      \draw[purple!60!black] (10.1,3.05) ++(\ang:0.78) -- ++(\ang:0.22);
+    }
+    \node[purple!70!black] at (10.1,1.15) {注入区可独立定义，便于增益引导设计};
+    \draw[->,thick,purple!70!black] (11.45,3.4) -- (13.0,3.95) node[right,align=left] {工艺温度低\\兼容后段工艺};
+    \draw[->,thick,orange!80!black] (8.05,3.75) -- (6.6,4.45) node[left,align=right] {模式选择可增强\\阈值与电阻需协同优化};
+
+    % Bottom compare strip
+    \draw[rounded corners,thick,fill=yellow!12] (0.3,-1.2) rectangle (12.9,-0.2);
+    \node[align=center,text width=11.5cm] at (6.6,-0.7)
+      {\small 对比结论：指数引导氧化孔径常用于降低阈值；质子注入与增益引导方案在模式选择和工艺简化上有优势，具体取舍取决于阈值、热阻与工艺窗口。};
+  \end{tikzpicture}
+  \caption{氧化限制层与质子注入电流孔径方案对比。}
+  \label{fig:ch16_oxide_vs_proton}
+\end{figure}

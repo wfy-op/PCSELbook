@@ -57,9 +57,9 @@
     % Mitigation strategies box
     \node[draw, dashed, align=left, font=\footnotesize, anchor=north east] at (5,4) {
       \textbf{散热优化策略}:\\
-      $\bullet$ 倒装焊 flip-chip bonding\\
+      $\bullet$ 倒装焊高导热键合\\
       $\bullet$ 金刚石热沉 ($\kappa > 1000\,\mathrm{W/mK}$)\\
-      $\bullet$ 热电制冷 TEC 控温\\
+      $\bullet$ 热电制冷控温\\
       $\bullet$ 降低串联电阻设计
     };
     
@@ -72,6 +72,6 @@
     };
     
     % Annotation on thermooptic coefficient
-    \node[align=center, font=\scriptsize, draw, rounded corners, fill=white] at (0.5,1.5) {$\frac{dn}{dT}\approx 2\times10^{-4}/\mathrm{K}$\\(GaAs@300K)};
+    \node[align=center, font=\scriptsize, draw, rounded corners, fill=white] at (0.5,1.5) {$\frac{dn}{dT}\approx 2\times10^{-4}/\mathrm{K}$\\（砷化镓，$300\,\mathrm{K}$）};
   \end{tikzpicture}
-  \caption{PCSEL 中热效应的多物理场耦合路径图。中心节点为有源区温度升高$\Delta T$（由非辐射复合、欧姆损耗和光吸收引起），它通过四种主要途径影响器件性能：(1) \textbf{光学通道}（上方）：半导体材料的折射率温度系数$dn/dT>0$（ GaAs 约$2\times10^{-4}$/K）导致谐振腔模式波长红移；同时禁带宽度随温度收缩$E_g(T)$遵循 Varshni 公式，使增益峰也向长波移动——但两者的漂移速率不同（~0.1 nm/K vs ~0.3 nm/K），可能引发 mode mismatch 从而恶化斜率效率。(2) \textbf{电学通道}（左侧）：高温下载流子迁移率因声子散射增强而下降，导致串联电阻增大和填充因子劣化；这会进一步推高焦耳热功率$I^2R(T)$形成恶性循环。(3) \textbf{力学通道}（右下）：异质外延层间的热膨胀系数失配会在降温过程中积累残余应力，极端情况下诱发裂纹或界面分层。(4) \textbf{正反馈回路}（左下虚线框）：上述效应的协同作用可能触发热逃逸 (thermal runaway)——特别是当热阻过大或散热不良时，局部热点会迅速扩散并最终烧毁器件。因此高效的热管理（如倒装焊、金刚石热沉、主动温控）是实现高功率连续波工作的先决条件。图中还标出了两个经验拟合参数$T_0$和$T_1$的定义式，它们定量描述了阈值和微分效率的温度敏感性。}
+  \caption{PCSEL 中热效应的多物理场耦合路径图。中心节点为有源区温度升高$\Delta T$（由非辐射复合、欧姆损耗和光吸收引起），它通过四种主要途径影响器件性能：(1) \textbf{光学通道}（上方）：半导体材料的折射率温度系数$dn/dT>0$（砷化镓约$2\times10^{-4}$/K）导致谐振腔模式波长红移；同时禁带宽度随温度收缩$E_g(T)$遵循瓦什尼公式，使增益峰也向长波移动，但两者漂移速率不同（约 0.1 nm/K 与 0.3 nm/K），可能引发模式失配并恶化斜率效率。(2) \textbf{电学通道}（左侧）：高温下载流子迁移率因声子散射增强而下降，导致串联电阻增大和填充因子劣化；这会进一步推高焦耳热功率$I^2R(T)$形成恶性循环。(3) \textbf{力学通道}（右下）：异质外延层间的热膨胀系数失配会在降温过程中积累残余应力，极端情况下诱发裂纹或界面分层。(4) \textbf{正反馈回路}（左下虚线框）：上述效应的协同作用可能触发热失控，特别是当热阻过大或散热不良时，局部热点会迅速扩散并最终烧毁器件。因此高效热管理（如倒装焊、金刚石热沉、主动温控）是实现高功率连续波工作的先决条件。图中还标出了两个经验拟合参数$T_0$和$T_1$的定义式，它们定量描述阈值与微分效率的温度敏感性。}

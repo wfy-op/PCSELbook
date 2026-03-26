@@ -1,0 +1,133 @@
+% !TEX root = ../main.tex
+% Figure: Light cone condition visualization for Chapter 6
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    % Define styles
+    \tikzstyle{axis}=[->,>=Stealth,thick]
+    \tikzstyle{lightcone}=[blue!70,thick]
+    \tikzstyle{guided}=[green!60!black,fill=green!20]
+    \tikzstyle{radiative}=[red!70,fill=red!20]
+    \tikzstyle{bic}=[orange!80!black,thick,dashed]
+    
+    % === 3D Light Cone ===
+    \begin{scope}[yshift=5cm,xshift=-3cm]
+      \node[font=\bfseries] at (0,2.5) {(a) 三维光锥};
+      
+      % Axes
+      \draw[axis] (0,0,0)--(2.5,0,0) node[right] {$k_x$};
+      \draw[axis] (0,0,0)--(0,2.5,0) node[above] {$k_y$};
+      \draw[axis] (0,0,0)--(0,0,2.5) node[above] {$k_z$};
+      
+      % Light cone surface
+      \draw[lightcone] (0,0,0)--(1.5,0,1.5);
+      \draw[lightcone] (0,0,0)--(0,1.5,1.5);
+      \draw[lightcone] (0,0,0)--(-1.5,0,1.5);
+      \draw[lightcone] (0,0,0)--(0,-1.5,1.5);
+      \draw[lightcone] (1.5,0,1.5) arc (0:360:1.5 and 0.4);
+      
+      % Inside/outside labels
+      \node[green!60!black,font=\footnotesize] at (0,0,1.8) {导模区};
+      \node[red!70,font=\footnotesize] at (1.8,0,0.8) {辐射区};
+      
+      % Dispersion relation
+      \node[align=center,font=\footnotesize] at (0,-1.5,0) {
+        光锥条件:\\
+        $\omega = c|\bm{k}|$
+      };
+    \end{scope}
+    
+    % === 2D Projection (kx-ky plane) ===
+    \begin{scope}[yshift=3cm,xshift=3cm]
+      \node[font=\bfseries] at (0,2.5) {(b) 俯视图：$k_x$-$k_y$平面};
+      
+      % Axes
+      \draw[axis] (-2.5,0)--(2.5,0) node[right] {$k_x$};
+      \draw[axis] (0,-2.5)--(0,2.5) node[above] {$k_y$};
+      
+      % Light cone boundary (circle)
+      \draw[lightcone] (0,0) circle (1.5);
+      \fill[radiative] (0,0) circle (1.5);
+      \node[red!70,font=\footnotesize] at (0.8,0.8) {辐射区};
+      
+      % Guided mode region (outside light cone)
+      \clip (-2.3,-2.3) rectangle (2.3,2.3);
+      \fill[guided,even odd rule] (-2.3,-2.3) rectangle (2.3,2.3) (0,0) circle (1.5);
+      \node[green!60!black,font=\footnotesize] at (1.8,0) {导模区};
+      
+      % Gamma point
+      \fill[black] (0,0) circle (0.08) node[below right] {$\Gamma$};
+      
+      % Reciprocal lattice points
+      \foreach \mx/\my in {1/0,-1/0,0/1,0/-1,1/1,-1/1,1/-1,-1/-1} {
+        \fill[blue!70] (\mx*1.8,\my*1.8) circle (0.06);
+      }
+      \node[blue!70,font=\footnotesize] at (2,2) {$\bm{G}$};
+      
+      % BIC candidate (at Gamma point, inside light cone but symmetry-protected)
+      \draw[bic] (0,0) circle (0.3);
+      \node[orange!80!black,font=\footnotesize,align=center] at (0.5,-0.8) {BIC 候选\\(对称性保护)};
+    \end{scope}
+    
+    % === Band Diagram with Light Line ===
+    \begin{scope}[yshift=-1cm,xshift=0cm]
+      \node[font=\bfseries] at (0,2.5) {(c)能带图中的光锥};
+      
+      % Axes
+      \draw[axis] (-2.5,0)--(2.5,0) node[right] {$k_{||}$ (平面波矢)};
+      \draw[axis] (0,0)--(0,3.5) node[above] {$\omega$ (频率)};
+      
+      % Light line
+      \draw[lightcone,domain=-2.3:2.3,samples=100] 
+        plot(\x,{0.8*abs(\x)+0.3});
+      \node[blue!70,font=\footnotesize,align=center] at (1.8,2.2) {光锥边界\\$\omega=c k_{||}$};
+      
+      % Fill regions
+      \fill[radiative,domain=-2.3:2.3] plot(\x,{max(0.8*abs(\x)+0.3,0)}) |- (-2.3,0);
+      \node[red!70,font=\footnotesize] at (1.8,1) {辐射连续谱};
+      
+      \fill[guided,domain=-2.3:2.3] plot(\x,{0.8*abs(\x)+0.3}) |- (2.3,3.3);
+      \node[green!60!black,font=\footnotesize] at (0,2.8) {导模区};
+      
+      % Example guided mode (below light line)
+      \draw[green!60!black,thick,domain=-2.3:2.3,samples=100]
+        plot(\x,{0.5*sqrt(4+\x*\x)+0.5});
+      \node[green!60!black,font=\footnotesize] at (1.5,1.8) {导模色散};
+      
+      % Example radiative mode (above light line)
+      \draw[red!70,thick,domain=-2.3:2.3,samples=100]
+        plot(\x,{0.9*abs(\x)+0.6});
+      \node[red!70,font=\footnotesize] at (1.5,2.6) {辐射模色散};
+      
+      % Gamma point indication
+      \draw[dashed,gray] (0,0)--(0,3.3);
+      \node[font=\footnotesize] at (0.3,-0.3) {$\Gamma$点};
+    \end{scope}
+    
+    % === Physical Explanation ===
+    \begin{scope}[yshift=-1cm,xshift=5.5cm]
+      \node[draw=blue!70,thick,rectangle,rounded corners,fill=blue!5,
+            align=left,font=\footnotesize,text width=4.5cm] {
+        \textbf{光锥的物理意义：}\\
+        \begin{itemize}
+          \item \textbf{内部} ($|\bm{k}_{||}| < \omega/c$): 
+                可以辐射到自由空间
+          \item \textbf{外部} ($|\bm{k}_{||}| > \omega/c$): 
+                倏逝波，无法辐射
+          \item \textbf{边界} ($|\bm{k}_{||}| = \omega/c$): 
+                临界耦合
+        \end{itemize}
+        
+        \textbf{PCSEL设计启示：}\\
+        $\Gamma$点附近模通常位于光锥内，
+        需要通过 BIC机制或对称性保护
+        来抑制辐射损耗。
+      };
+    \end{scope}
+  \end{tikzpicture}
+  \caption{光锥条件的可视化。(a) 三维光锥：频率-波矢空间中的圆锥面$\omega=c|\bm{k}|$，
+  区分导模区和辐射区；(b) 俯视图：$k_x$-$k_y$平面中光锥投影为圆形区域，圆内为辐射区，圆外为导模区，
+  $\Gamma$点处的BIC候选模虽位于辐射区内但因对称性保护而不辐射；(c)能带图表示：光锥边界为直线$\omega=c k_{||}$，
+  导模色散曲线位于光锥下方，辐射模位于上方。PCSEL 的$\Gamma$点工作模通常位于光锥内，需要通过BIC机制抑制辐射。}
+  \label{fig:ch06_light_cone}
+\end{figure}

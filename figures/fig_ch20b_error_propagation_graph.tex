@@ -1,6 +1,3 @@
-% !TEX root = ../main.tex
-% Figure: Error propagation graph from process variation to device metrics
-
 \begin{figure}[htbp]
   \centering
   \resizebox{0.98\textwidth}{!}{%
@@ -11,23 +8,20 @@
     dst/.style={rectangle, rounded corners, draw, align=center, fill=green!12, minimum width=2.6cm, minimum height=8mm},
     arr/.style={-Stealth, thick}
   ]
-    % Sources
-    \node[src] (s1) {hole radius / lattice shift};
-    \node[src, below=of s1] (s2) {etch depth / sidewall angle};
-    \node[src, below=of s2] (s3) {metal/aperture misalignment};
-    \node[src, below=of s3] (s4) {edge truncation / roughness};
+    \node[src] (s1) {孔半径偏差 / 晶格位移};
+    \node[src, below=of s1] (s2) {刻蚀深度偏差 / 侧壁角变化};
+    \node[src, below=of s2] (s3) {金属与孔阵错位};
+    \node[src, below=of s3] (s4) {边缘截断 / 粗糙度};
 
-    % Mechanisms
-    \node[mid, right=18mm of s1] (m1) {phase-network detuning};
-    \node[mid, right=18mm of s2] (m2) {channel redistribution};
-    \node[mid, right=18mm of s3] (m3) {injection nonuniformity};
-    \node[mid, right=18mm of s4] (m4) {thermal hotspot relocation};
+    \node[mid, right=18mm of s1] (m1) {相位网络失谐};
+    \node[mid, right=18mm of s2] (m2) {辐射通道再分配};
+    \node[mid, right=18mm of s3] (m3) {注入不均匀};
+    \node[mid, right=18mm of s4] (m4) {热热点迁移};
 
-    % Metrics
     \node[dst, right=19mm of m1] (d1) {$\Delta G_{\star j}$};
-    \node[dst, below=of d1] (d2) {$Q$ and far-field};
-    \node[dst, below=of d2] (d3) {polarization purity};
-    \node[dst, below=of d3] (d4) {$T_{\max}$ and pass rate};
+    \node[dst, below=of d1] (d2) {品质因子与远场};
+    \node[dst, below=of d2] (d3) {偏振纯度};
+    \node[dst, below=of d3] (d4) {$T_{\max}$ 与良率};
 
     \draw[arr] (s1) -- (m1);
     \draw[arr] (s1) -- (m2);
@@ -46,6 +40,6 @@
     \draw[arr] (m4) -- (d4);
   \end{tikzpicture}
   }
-  \caption{Error propagation graph for tolerance analysis: process variations map to physical mechanisms, then to observable device metrics.}
+  \caption{容差分析中的误差传播图：工艺偏差先映射为物理机制变化，再传递到可观测器件指标。}
   \label{fig:ch20b_error_propagation_graph}
 \end{figure}

@@ -164,6 +164,21 @@ q\mu_p p\bigl(-\nabla\phi\bigr)
 \label{eq:heat_device_appendix}
 \end{align}
 
+其中光学热源 $Q_{\mathrm{opt}}$ 包含多种物理机制:
+\begin{equation}
+Q_{\mathrm{opt}}
+=
+\underbrace{\alpha_{\mathrm{FCA}}(N,T)\,I_{\mathrm{opt}}}_{\text{自由载流子吸收}}
++
+\underbrace{\alpha_{\mathrm{interband}}\,I_{\mathrm{opt}}}_{\text{带间吸收}}
++
+\underbrace{\alpha_{\mathrm{metal}}\,I_{\mathrm{opt}}}_{\text{金属邻近吸收}}
++
+\underbrace{\alpha_{\mathrm{scatter}}\,I_{\mathrm{opt}}}_{\text{散射吸收}}.
+\label{eq:optical_heat_source_expanded}
+\end{equation}
+这里 $I_{\mathrm{opt}}$ 是局域光强，$\alpha_{\mathrm{FCA}}$ 由第\ref{ch:epitaxial-optics}章的自由载流子吸收公式给出，$\alpha_{\mathrm{interband}}$ 在光子能量超过带隙时显著，$\alpha_{\mathrm{metal}}$ 描述金属接触或等离子体增强结构导致的吸收，$\alpha_{\mathrm{scatter}}$ 则来自粗糙侧壁和缺陷引起的散射损耗。在典型 PCSEL 工作条件下，自由载流子吸收通常是主导项，但在特定结构（如表面等离激元增强或超薄膜器件）中，金属吸收和带间吸收可能不可忽略。
+
 为了避免概念混乱，必须立刻说明这些方程的类别。
 
 \cref{eq:poisson_device_appendix,eq:electron_continuity_appendix,eq:hole_continuity_appendix,eq:jn_device_appendix,eq:jp_device_appendix} 属于\textbf{电学输运模型}。它们回答的是电势、载流子和电流怎样在器件中分布。
@@ -268,6 +283,23 @@ h\,(T-T_\infty),
 
 \begin{PitfallBox}
 重要提示：表中数值若只是室温、低掺杂、名义结构下的参考量级，就必须直说。尤其是折射率温度系数、热导率和增益参数，通常都随温度、掺杂和应变明显变化。把它们当成无条件常数，是器件附录里最容易埋下的后续失真源。
+
+\begin{MaterialPropertyBox}[热导率的温度依赖性]
+半导体材料的热导率$\kappa(T)$ 强烈依赖温度。对 GaAs、InP 等 III-V 化合物，在室温及以上温区可采用以下经验公式~\cite{glassbrenner1964thermal,adachi1985gaas}:
+\begin{equation}
+\kappa_{\mathrm{GaAs}}(T) \approx \kappa_{300} \left(\frac{T}{300\,\mathrm{K}}\right)^{-\alpha},
+\qquad
+\kappa_{\mathrm{InP}}(T) \approx \kappa_{300} \left(\frac{T}{300\,\mathrm{K}}\right)^{-\beta},
+\label{eq:kappa_temp_dependence}
+\end{equation}
+其中$\kappa_{300}$ 是 300 K 时的热导率，指数$\alpha \approx 1.2\text{--}1.3$ (GaAs), $\beta \approx 1.0\text{--}1.1$ (InP)。这说明：
+\begin{itemize}
+  \item 温度从 300 K 升至 400 K 时，GaAs 热导率下降约 25\%--30\%
+  \item 温度从 300 K 降至 200 K 时，GaAs 热导率上升约 40\%--50\%
+  \item 重掺杂会进一步降低热导率 (声子 - 杂质散射),典型退化因子 0.5--0.8
+\end{itemize}
+对高精度热仿真，建议在材料参数表中明确$\kappa(T)$ 的函数形式而非单一常数。若只使用室温值$\kappa_{300}$，需评估由此引入的误差：对$\Delta T \approx 50\,\mathrm{K}$ 的温升，忽略温度依赖性会导致热阻低估约 10\%--15\%。
+\end{MaterialPropertyBox}
 \end{PitfallBox}
 
 \begin{ExampleBox}

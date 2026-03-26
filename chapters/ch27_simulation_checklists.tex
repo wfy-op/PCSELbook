@@ -160,7 +160,7 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
     \node (a) [below=of s] {版本、单位、几何是否一致};
     \node (b) [below left=1.0cm and 1.3cm of a, text width=3.3cm] {否\\先修正输入账本};
     \node (c) [below right=1.0cm and 1.3cm of a, text width=3.3cm] {是\\继续检查边界};
-    \node (d) [below=of c] {开放边界、端口、PML、周期条件是否正确};
+    \node (d) [below=of c] {开放边界、端口、完美匹配层、周期条件是否正确};
     \node (e) [below=of d] {网格、时间窗、傅里叶阶数或单元阶次是否收敛};
     \node (f) [below=of e] {不同激励或第二种方法下趋势是否一致};
     \node (g) [below=of f] {若仍异常，再讨论模型边界或新物理};
@@ -238,16 +238,16 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
   \item 速率方程阈值：$\delta_3 \approx 5\%$（载流子输运模型）
   \item 热回写迭代：$\delta_4 \approx 2\%$（温度依赖折射率）
 \end{itemize}
-按 RSS 合成，总不确定度约为$\delta_{\text{total}} \approx \sqrt{0.5^2+3^2+5^2+2^2}\% \approx 6.2\%$。这意味着即使每一步都已"收敛"，最终的阈值电流预测仍有约 6\%的本征不确定度。因此，声称"仿真阈值为 150 mA"不如写成"仿真阈值为$150 \pm 10\,$mA"更诚实。
+按 RSS 合成，总不确定度约为$\delta_{\text{total}} \approx \sqrt{0.5^2+3^2+5^2+2^2}\% \approx 6.2\%$。这里应明确该结果属于\textbf{[本书算例]}，不应直接外推到任意器件。它提醒我们：即使每一步都已“收敛”，最终阈值电流预测仍可能存在数个百分点级别的不确定度。因此，声称“仿真阈值为 150 mA”不如写成“仿真阈值为 $150 \pm 10\,$mA”更符合报告规范。
 \end{NumericalErrorBox}
 
 \subsection{交叉验证的可接受偏差范围}
-当使用两种独立方法进行交叉验证时（如 FDTD vs FEM），需要事先定义什么是"一致"。表~\ref{tab:xval-tolerance}给出了基于文献经验和工程实践的建议容差。
+当使用两种独立方法进行交叉验证时（如 FDTD vs FEM），需要事先定义什么是"一致"。表~\ref{tab:xval-tolerance}给出的阈值是\textbf{[本书建议门槛]}，用于教学和工程筛查，不代表社区统一标准。
 
 \begin{table}[htbp]
   \centering
   \footnotesize
-  \caption{跨方法交叉验证的可接受偏差范围。}
+  \caption{跨方法交叉验证的可接受偏差范围（\textbf{[本书建议门槛]}，可按项目重定义）。}
   \label{tab:xval-tolerance}
   \setlength{\tabcolsep}{3pt}
   \begin{tabularx}{\textwidth}{@{}p{2.8cm}p{3.2cm}X@{}}
@@ -255,7 +255,7 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
     待比较量 & 宽松容差 (探索级) & 严格容差 (发布级) \\
     \midrule
     共振波长/频率 & $< 5\,$nm 或 $< 3\%$ & $< 1\,$nm 或 $< 0.5\%$ \\
-    $Q$值 & 同数量级即可 & 相对偏差 $< 20\%$ \\
+    $Q$值 & 同数量级即可（\textbf{[探索级]}） & 相对偏差 $< 20\%$（\textbf{[发布级]}） \\
     远场主瓣角度 & $< 5^\circ$ & $< 2^\circ$ \\
     近场重叠积分 & $> 0.8$ & $> 0.9$ \\
     阈值增益 & $< 10\%$ & $< 3\%$ \\
@@ -264,8 +264,10 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
   \end{tabularx}
 \end{table}
 
+这些门槛的来源可追溯到 RCWA/FDTD/FEM 的经典收敛文献与有限尺寸敏感性讨论\cite{li1996,moharam1995stablercwa,wang2025finitesizepcsel}；但具体项目应按器件波段、几何复杂度和实验误差预算重定义后再用于发布级结论。
+
 \begin{WhatCouldGoWrong}
-一个常见误区是用"宽松容差"级别的吻合去支撑"发布级"的强结论。例如，若两种方法的$Q$值只是在同一个数量级（如$10^4$vs$2\times 10^4$），就只能说"定性趋势一致"，而不能宣称"定量预测可靠"。正确的做法是根据所用容差等级，谨慎限定结论的强度。
+一个常见误区是用“宽松容差”级别的吻合去支撑“发布级”强结论。例如，若两种方法的 $Q$ 值只在同一数量级（如 $10^4$ vs $2\times10^4$），就只能归类为\textbf{[工程经验]/探索级}一致，而不能宣称\textbf{[文献值]/发布级}定量可靠。正确做法是先声明采用的容差等级，再限定结论强度。
 \end{WhatCouldGoWrong}
 
 \subsection{可重复性报告的最小信息集}

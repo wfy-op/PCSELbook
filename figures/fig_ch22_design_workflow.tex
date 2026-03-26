@@ -1,74 +1,49 @@
-% !TEX root = ../main.tex
-% Figure: Complete PCSEL design workflow from specs to fabrication
-% Chapter: ch22 - Practical Simulation Workflow and Design Guide
-% Description: Step-by-step flowchart covering entire development cycle
-
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=0.78, transform shape,
-    step/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3.5cm, minimum height=1cm, align=center},
-    decision/.style={diamond, draw, aspect=1.8, fill=#1!20, minimum width=3cm, align=center},
+  \begin{tikzpicture}[scale=0.74, transform shape,
+    step/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3.7cm, minimum height=1cm, align=center},
+    decision/.style={diamond, draw, aspect=1.8, fill=#1!20, minimum width=3.1cm, align=center},
     arrow/.style={->, >=stealth, thick},
     feedback/.style={->, >=stealth, thick, dashed}
   ]
-    % Stage 1: Requirements
-    \node[step=blue, minimum height=1.2cm] (specs) at (0,10) {Step 1: 明确技术指标\\波长$\lambda$, 功率$P$, 光束质量$M^2$, 工作温度};
-    
-    % Stage 2: Initial design
-    \node[step=green, below=1cm of specs] (initial) {Step 2: 初始结构设计\\外延堆栈、PhC 晶格类型、预估$d_{etch}$};
+    \node[step=blue, minimum height=1.2cm] (specs) at (0,10) {第一步：明确技术指标\\目标波长$\lambda$、输出功率$P$、光束质量$M^2$、工作温度范围};
+
+    \node[step=green, below=1cm of specs] (initial) {第二步：初始结构设计\\外延层栈、晶格类型、初始刻蚀深度$d_{\mathrm{etch}}$};
     \draw[arrow] (specs) -- (initial);
-    
-    % Stage 3: Band structure calc
-    \node[step=yellow, below=1cm of initial] (pwem) {Step 3: PWEM 能带计算\\寻找$\Gamma$点 flat band, 确定$a/\lambda$};
+
+    \node[step=yellow, below=1cm of initial] (pwem) {第三步：能带与候选模筛选\\定位$\Gamma$点与平带趋势，确定$a/\lambda$初值};
     \draw[arrow] (initial) -- (pwem);
-    
-    % Decision: Single mode?
-    \node[decision=orange, below=1.5cm of pwem] (singlemode) {单模条件满足？\\$\Delta\nu > $增益线宽};
+
+    \node[decision=orange, below=1.5cm of pwem] (singlemode) {是否满足单模间隔？\\$\Delta \nu >$ 增益线宽};
     \draw[arrow] (pwem) -- (singlemode);
-    \draw[feedback] (singlemode.west) -- ++(-2,0) |- node[pos=0.7,left,align=center] {否\\调整$f$或$d_{etch}$} (initial.west);
-    
-    % Stage 4: Threshold analysis
-    \node[step=cyan, below=1.5cm of singlemode] (threshold) {Step 4: 阈值增益分析\\CMT/FDTD 提取$\kappa$, 计算$g_{th}$};
+    \draw[feedback] (singlemode.west) -- ++(-2,0) |- node[pos=0.72,left,align=center] {否\\回调占空比\\与刻蚀深度} (initial.west);
+
+    \node[step=cyan, below=1.5cm of singlemode] (threshold) {第四步：阈值增益评估\\提取耦合系数$\kappa$并估算$g_{\mathrm{th}}$};
     \draw[arrow] (singlemode) -- node[right,pos=0.5] {是} (threshold);
-    
-    % Decision: g_th achievable?
-    \node[decision=purple, below=1.5cm of threshold] (gaincheck) {$g_{th} < g_{max}$?\\材料增益能力验证};
+
+    \node[decision=purple, below=1.5cm of threshold] (gaincheck) {材料增益能否覆盖阈值？\\$g_{\mathrm{th}} < g_{\max}$};
     \draw[arrow] (threshold) -- (gaincheck);
-    \draw[feedback] (gaincheck.east) -- ++(2,0) |- node[pos=0.7,right,align=center] {否\\增强限制或减损耗} (initial.east);
-    
-    % Stage 5: Far-field optimization
-    \node[step=pink, below=1.5cm of gaincheck] (farfield) {Step 5: 远场优化\\调节 Apodization, 抑制旁瓣};
+    \draw[feedback] (gaincheck.east) -- ++(2,0) |- node[pos=0.72,right,align=center] {否\\降低损耗或\\增强限制因子} (initial.east);
+
+    \node[step=pink, below=1.5cm of gaincheck] (farfield) {第五步：远场与偏振优化\\优化孔形/包络以抑制旁瓣与偏振串扰};
     \draw[arrow] (gaincheck) -- node[left,pos=0.5] {是} (farfield);
-    
-    % Stage 6: Thermal check
-    \node[step=red, below=1cm of farfield] (thermal) {Step 6: 热分析\\估算$R_{th}$, 确保$\Delta T < 50\,\mathrm{K}$};
+
+    \node[step=red, below=1cm of farfield] (thermal) {第六步：热学校核\\估算热阻$R_{\mathrm{th}}$并约束$\Delta T$};
     \draw[arrow] (farfield) -- (thermal);
-    
-    % Stage 7: Fabrication tolerance
-    \node[step=brown, below=1cm of thermal] (tolerance) {Step 7: 工艺容差分析\\Monte Carlo 模拟$\pm 5\,\mathrm{nm}$偏差};
+
+    \node[step=brown, below=1cm of thermal] (tolerance) {第七步：工艺容差分析\\统计几何偏差对模式与阈值的影响};
     \draw[arrow] (thermal) -- (tolerance);
-    
-    % Final output
-    \node[step=blue, minimum height=1.2cm, below=1cm of tolerance] (output) {Step 8: 输出 GDSII 版图\\准备流片文档};
+
+    \node[step=blue, minimum height=1.2cm, below=1cm of tolerance] (output) {第八步：版图与交付\\输出版图文件并整理仿真与工艺文档};
     \draw[arrow] (tolerance) -- (output);
-    
-    % Side notes: Tools recommendation
-    \node[draw, dashed, align=left, font=\footnotesize, anchor=north east] at (6,9) {
-      \textbf{推荐工具链}:\\
-      $\bullet$ 能带:MPB/MITPhotonic Bands\\
-      $\bullet$ 模式:Lumerical MODE/FIMMWAVE\\
-      $\bullet$ 时域:MEEP/Lumerical FDTD\\
-      $\bullet$ 多物理:COMSOL/ANSYS
-    };
-    
-    % Timeline estimate
-    \node[align=center, font=\small, anchor=south west] at (-5,0) {
+
+    \node[align=center, font=\small, anchor=south west] at (-5.2,0.2) {
       \textbf{典型开发周期}:\\
-      设计迭代:2--4 周\\
-      流片 + 测试:8--12 周\\
-      总计:3--4 个月
+      参数迭代：2--4 周\\
+      流片与测试：8--12 周\\
+      全流程：约 3--4 个月
     };
   \end{tikzpicture}
-  \caption{PCSEL 从指标设定、初始结构设计、PWEM 选模、阈值分析、远场与热优化，到工艺容差评估和版图输出的完整工程流程。图中同时标出关键决策节点、典型回溯路径以及各阶段常用的仿真工具链。}
+  \caption{光子晶体面发射激光器从指标定义、结构初设、候选模筛选、阈值评估、远场与热优化，到容差分析和版图交付的完整工程流程。图中“温升约束”和“几何容差”仅作为\textbf{[本书算例]}示例门槛，需按目标波段、散热边界和工艺统计重标定\cite{zhou2024nside1550pcsel,miao2024modeimpactpcsel}。}
   \label{fig:ch22_design_workflow}
 \end{figure}

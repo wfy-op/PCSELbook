@@ -80,10 +80,19 @@ Q_\star(N_a),\qquad
 \begin{RigorousBox}
 \textbf{有限阵列尺寸收敛判据。}
 
-若用最小辐射衰减长度近似，阵列半径至少应满足 $R_{\mathrm{array}}\gtrsim 3L_{\mathrm{rad}}$，其中 $L_{\mathrm{rad}}\approx 1/(2\alpha_{\mathrm{rad}})$。这不是严格定理，但足以提醒读者：高 $Q$、低辐射损耗模往往需要远大于直觉的横向尺寸才能显露“接近无限周期”的行为。对亮模或中等 $Q$ 模，三维全波仍可能可行；对极高 $Q$ 的 quasi-BIC 候选模，所需阵列尺寸会很快超出直接三维 FDTD 的现实能力，此时应转向 RCWA 单胞加横向包络或边缘修正的混合策略。
-\end{RigorousBox}
+若用最小辐射衰减长度近似，阵列半径可先按 \textbf{[工程经验]} 启发式写成 $R_{\mathrm{array}}\gtrsim 3L_{\mathrm{rad}}$，其中 $L_{\mathrm{rad}}\approx 1/(2\alpha_{\mathrm{rad}})$。这不是严格定理，必须配合尺寸扫描验证\cite{wang2025finitesizepcsel}。它的作用是提醒读者：高 $Q$、低辐射损耗模往往需要远大于直觉的横向尺寸才能显露“接近无限周期”的行为。对亮模或中等 $Q$ 模，三维全波仍可能可行；对极高 $Q$ 的 quasi-BIC 候选模，所需阵列尺寸会很快超出直接三维 FDTD 的现实能力，此时应转向 RCWA 单胞加横向包络或边缘修正的混合策略。
+对 2D 圆阵列，更严格的处理需使用 Bessel 函数展开~\cite{kogelnik1979distributed}。辐射场的径向分布满足
+\begin{equation}
+E(r) \propto J_0(k_r r) e^{-\alpha_{\mathrm{rad}} r},
+\end{equation}
+其中$k_r$ 是横向波矢，$\alpha_{\mathrm{rad}}$ 是辐射衰减常数。此时收敛判据应修正为
+\begin{equation}
+R_{\mathrm{array}} \gtrsim \frac{2.5}{\alpha_{\mathrm{rad}}},
+\label{eq:2d_array_convergence}
+\end{equation}
+其中系数 2.5 对应第一类零阶 Bessel 函数第一个零点的位置 ($j_{0,1}\approx 2.405$)。这说明对辐射衰减常数较小的模式 (如$\alpha_{\mathrm{rad}} \approx 10\,\mathrm{cm}^{-1}$),所需阵列半径可达$R_{\mathrm{array}} \gtrsim 250\,\mu\mathrm{m}$，远超直觉估计。\end{RigorousBox}
 
-从执行可行性角度，也可以记一个粗窗口：几十微米量级的孔阵通常仍由边缘泄漏主导；进入 \SIrange{100}{300}{\micro\meter} 后，有限阵列全波开始有讨论价值；若再上到数百微米甚至更大并且目标模仍是高 $Q$ 候选，就应把“FDTD 是否仍然可行”当成工作流决策，而不是默认继续堆网格。
+从执行可行性角度，也可以记一个\textbf{[工程经验]}粗窗口：几十微米量级的孔阵通常仍由边缘泄漏主导；进入 \SIrange{100}{300}{\micro\meter} 后，有限阵列全波开始有讨论价值。该窗口必须通过“尺寸-$Q$-远场”三联收敛曲线确认，不能直接当作固定门槛\cite{wang2025finitesizepcsel,yoshida2023}；若再上到数百微米甚至更大且目标模仍是高 $Q$ 候选，就应把“FDTD 是否仍然可行”当成工作流决策，而不是默认继续堆网格。
 
 \section{第六类失败：忽略热漂移，默认冷腔频率就是工作频率}
 热效应之所以在 PCSEL 中危险，不只是因为它会让阈值变高，而是因为它会主动改写模式竞争。折射率上升、增益峰位漂移、自由载流子吸收变化和横向温度梯度，都会把原本在冷腔中占优的模式重新排序。症状通常是：冷腔仿真与低功率实验能对上，但一到连续波或高占空比工作就出现远场偏移、偏振不稳或模式跳变。
@@ -129,7 +138,23 @@ PCSEL由于采用大面积发射结构，理论上可以实现接近衍射极限
   \item \textbf{相位锁定}: 即使近场呈现规则的光子晶体周期调制，如果不同区域之间存在随机相位跳变，也会导致相干性下降和$M^2$恶化。
   \item \textbf{热透镜效应}: 温度梯度引起的折射率变化会形成等效的热透镜，改变束腰位置和大小，需要在热电光耦合模型中计入此效应。
 \end{enumerate}
+\begin{WarningBox}[$M^2$ 因子在 PCSEL 中的适用性限制]
+标准的二阶矩$M^2$定义在应用于 PCSEL 时存在固有问题：
+\begin{itemize}
+  \item \textbf{周期性近场结构：}PCSEL 的近场强度分布$I(x,y)$ 包含晶格尺度的周期性调制，这会导致二阶矩宽度$\sigma_x$ 人为偏大，从而使$M^2$ 被高估
+  \item \textbf{旁瓣贡献：} 即使主瓣接近衍射极限，周期性近场的傅里叶变换会在远场产生高阶衍射瓣，这些旁瓣对二阶矩的贡献可能主导$M^2$ 的计算结果
+  \item \textbf{物理意义模糊：} 对 PCSEL 这类周期调制光束，$M^2>1$ 可能反映的是"光束包含周期性结构信息"，而非真正的"光束质量差"
+\end{itemize}
 
+\textbf{推荐的替代表征方法：}
+\begin{enumerate}
+  \item \textbf{围封功率 (Encircled Power):} 计算包含 86.5\% 总功率的圆斑直径，与理想高斯光束比较
+  \item \textbf{Strehl 比：} 定义为主瓣峰值强度与同功率理想高斯光束峰值强度之比，$S > 0.8$ 通常认为接近衍射极限
+  \item \textbf{主瓣发散角：} 仅对中心主瓣 (排除旁瓣) 拟合高斯分布并提取发散角
+  \item \textbf{亮度 (Brightness):} 使用$B = P/(\lambda^2 M_x^2 M_y^2)$ 时需注明$M^2$ 的计算方法和是否滤除旁瓣
+\end{enumerate}
+对 PCSEL，建议同时报告$M^2$ (全光束) 和$M^2$ (主瓣 only)，以区分周期性调制和真正的光束质量退化。
+\end{WarningBox}
 \paragraph{数值计算方法}
 在仿真中获取$M^2$的典型流程如下：
 \begin{enumerate}

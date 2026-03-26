@@ -1,6 +1,3 @@
-% !TEX root = ../main.tex
-% Figure: CWT upgrade map from 2D minimal model to higher-order/3D model
-
 \begin{figure}[htbp]
   \centering
   \resizebox{0.98\textwidth}{!}{%
@@ -10,18 +7,18 @@
     out/.style={rectangle, draw, align=left, minimum width=3.2cm, minimum height=0.9cm, fill=#1!10},
     arr/.style={-Stealth, thick}
   ]
-    \node[box=blue] (base) {2D minimal CWT\\(4-wave + one vertical profile)};
-    \node[box=teal, below=of base] (q1) {Question: where does it fail?};
+    \node[box=blue] (base) {二维最小耦合波模型\\（四波 + 单一纵向剖面）};
+    \node[box=teal, below=of base] (q1) {问题：它在何处失效？};
 
-    \node[box=green, below left=14mm and 24mm of q1] (v) {Recover DOF-1\\Vertical modal basis};
-    \node[box=orange, below=14mm of q1] (r) {Recover DOF-2\\Radiation channels};
-    \node[box=purple, below right=14mm and 24mm of q1] (e) {Recover DOF-3\\Finite-size envelope};
+    \node[box=green, below left=14mm and 24mm of q1] (v) {补回自由度一\\纵向模基};
+    \node[box=orange, below=14mm of q1] (r) {补回自由度二\\辐射通道};
+    \node[box=purple, below right=14mm and 24mm of q1] (e) {补回自由度三\\有限尺寸包络};
 
-    \node[out=green, below=8mm of v] (ov) {$\rightarrow$ Better mode ordering\\$\rightarrow$ Better overlap factors};
-    \node[out=orange, below=8mm of r] (or) {$\rightarrow$ Up/down leakage split\\$\rightarrow$ Better polarization/far field};
-    \node[out=purple, below=8mm of e] (oe) {$\rightarrow$ Edge leakage captured\\$\rightarrow$ Better array-size prediction};
+    \node[out=green, below=8mm of v] (ov) {$\rightarrow$ 模式排序更可靠\\$\rightarrow$ 重叠因子更准确};
+    \node[out=orange, below=8mm of r] (or) {$\rightarrow$ 上下泄漏可分离\\$\rightarrow$ 偏振与远场预测更稳健};
+    \node[out=purple, below=8mm of e] (oe) {$\rightarrow$ 边缘泄漏可计入\\$\rightarrow$ 阵列尺寸预测更可信};
 
-    \node[box=red, below=16mm of r, minimum width=5.7cm] (target) {Higher-order / 3D CWT output\\usable interfaces for RCWA/FEM/FDTD and device models};
+    \node[box=red, below=16mm of r, minimum width=5.7cm] (target) {高阶/三维耦合波输出\\可直接对接严格耦合波、有限元、时域差分与器件模型};
 
     \draw[arr] (base) -- (q1);
     \draw[arr] (q1) -- (v);
@@ -35,6 +32,6 @@
     \draw[arr] (oe.south) |- (target.east);
   \end{tikzpicture}
   }
-  \caption{CWT upgrade map used in this chapter: from minimal 2D CWT to higher-order/3D CWT by explicitly recovering three missing degrees of freedom.}
+  \caption{本章耦合波升级路径：从二维最小模型出发，显式补回三个关键自由度（纵向模基、辐射通道、有限尺寸包络），得到可用于工程接口的高阶/三维模型。}
   \label{fig:ch10_cwt_upgrade_map}
 \end{figure}

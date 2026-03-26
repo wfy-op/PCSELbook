@@ -5,11 +5,11 @@
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
+  \begin{tikzpicture}[scale=0.87]
     % Substrate at bottom
     \fill[gray!40] (-3,-5) rectangle (3,-4);
     \draw[thick] (-3,-4) -- (3,-4);
-    \node[right] at (3.1,-4.5) {GaAs 衬底 ($n$-doped)};
+    \node[right] at (3.1,-4.5) {砷化镓衬底（$n$ 型掺杂）};
     \node[left, gray!60] at (-3,-4.5) {\scriptsize $500\,\mu\mathrm{m}$};
     
     % Lower DBR mirror
@@ -19,14 +19,14 @@
       \draw[thin, gray] (-3,\pgfmathresult) -- (3,\pgfmathresult);
     }
     \draw[thick] (-3,-3.8) -- (3,-3.8);
-    \node[right] at (3.1,-3.5) {$n$-DBR (20--30 对)};
+    \node[right] at (3.1,-3.5) {$n$ 型分布布拉格反射镜（20--30 对）};
     \node[left, blue] at (-3,-3.5) {\scriptsize Al$_{0.9}$Ga$_{0.1}$As/Al$_{0.2}$Ga$_{0.8}$As};
     
     % Lower SCH waveguide
     \fill[green!15] (-3,-3.2) rectangle (3,-2.5);
     \draw[thick] (-3,-3.2) -- (3,-3.2);
     \draw[thick] (-3,-2.5) -- (3,-2.5);
-    \node[right] at (3.1,-2.85) {下 SCH 波导层};
+    \node[right] at (3.1,-2.85) {下独立限制异质波导层};
     \node[left, green!60!black] at (-3,-2.85) {\scriptsize $200\,\mathrm{nm}$};
     
     % Active region (MQW)
@@ -38,14 +38,14 @@
       \draw[dashed, red] (-3,\y) -- (3,\y);
     }
     \draw[thick] (-3,-2.2) -- (3,-2.2);
-    \node[right] at (3.1,-2.35) {有源区 (3--5 阱 MQW)};
+    \node[right] at (3.1,-2.35) {有源区（3--5 阱多量子阱）};
     \node[left, red] at (-3,-2.35) {\scriptsize In$_{0.2}$Ga$_{0.8}$As};
     
     % Upper SCH waveguide
     \fill[green!15] (-3,-2.2) rectangle (3,-1.5);
     \draw[thick] (-3,-2.2) -- (3,-2.2);
     \draw[thick] (-3,-1.5) -- (3,-1.5);
-    \node[right] at (3.1,-1.85) {上 SCH 波导层};
+    \node[right] at (3.1,-1.85) {上独立限制异质波导层};
     \node[left, green!60!black] at (-3,-1.85) {\scriptsize $200\,\mathrm{nm}$};
     
     % Photonic crystal layer
@@ -57,35 +57,35 @@
       \draw[thick] (\x,-1.15) circle (0.15);
     }
     \draw[thick] (-3,-0.8) -- (3,-0.8);
-    \node[right] at (3.1,-1.15) {PhC 光栅层 (刻蚀深度~$150\,\mathrm{nm}$)};
+    \node[right] at (3.1,-1.15) {光子晶体光栅层（刻蚀深度~$150\,\mathrm{nm}$）};
     \node[left, yellow!60!black] at (-3,-1.15) {\scriptsize $\Lambda=260\,\mathrm{nm}$};
     
     % Upper cladding / contact
     \fill[orange!20] (-3,-0.8) rectangle (3,-0.3);
     \draw[thick] (-3,-0.8) -- (3,-0.8);
     \draw[thick] (-3,-0.3) -- (3,-0.3);
-    \node[right] at (3.1,-0.55) {$p$-AlGaAs 包层};
+    \node[right] at (3.1,-0.55) {$p$ 型铝镓砷包层};
     \node[left, orange] at (-3,-0.55) {\scriptsize $500\,\mathrm{nm}$};
     
     % Contact metal
     \fill[gray!60] (-3,-0.3) rectangle (3,0);
     \draw[thick] (-3,-0.3) -- (3,-0.3);
     \draw[thick] (-3,0) -- (3,0);
-    \node[right] at (3.1,-0.15) {$p$-接触电极 (Ti/Pt/Au)};
+    \node[right] at (3.1,-0.15) {$p$ 型接触电极（钛/铂/金）};
     \node[left, gray] at (-3,-0.15) {\scriptsize $200\,\mathrm{nm}$};
     
     % Bonding layer (optional)
     \fill[purple!20] (-3,0) rectangle (3,0.3);
     \draw[thick] (-3,0) -- (3,0);
     \draw[thick] (-3,0.3) -- (3,0.3);
-    \node[right] at (3.1,0.15) {键合层 (Au-Sn/$\mathrm{SiO_2}$)};
+    \node[right] at (3.1,0.15) {键合层（金-锡/$\mathrm{SiO_2}$）};
     \node[left, purple] at (-3,0.15) {\scriptsize 倒装焊可选};
     
     % Heat sink at top
     \fill[cyan!30] (-3,0.3) rectangle (3,1);
     \draw[thick] (-3,0.3) -- (3,0.3);
     \draw[thick] (-3,1) -- (3,1);
-    \node[right] at (3.1,0.65) {热沉 (Cu/W 或金刚石)};
+    \node[right] at (3.1,0.65) {热沉（铜/钨或金刚石）};
     \node[left, cyan!60!black] at (-3,0.65) {\scriptsize 高热导率};
     
     % Current flow arrows
@@ -101,8 +101,8 @@
     % Mode profile overlay (schematic)
     \draw[very thick, blue, opacity=0.5, domain=-3:3, samples=100] 
       plot(\x,{0.3*cos(deg(0.5*\x))*exp(-(\x+0.5)*(\x+0.5)/4)-1.85});
-    \node[blue, align=center] at (2,-1.5) {基模场分布\\$\mathrm{LP}_{01}$};
+    \node[blue, align=center] at (2,-1.5) {基模场分布\\近高斯包络};
   \end{tikzpicture}
-  \caption{典型 PCSEL 外延堆栈的截面示意图（未按比例）。图中依次给出衬底、DBR、上下 SCH 波导层、有源量子阱区、光子晶体层、包层与金属接触，并标出注入电流方向、垂直出光方向以及基模近场包络。右侧括号给出总外延厚度的典型量级。}
+  \caption{典型光子晶体面发射激光器外延堆栈截面示意（未按比例）。图中给出衬底、下反射镜、上下限制层、有源量子阱、光子晶体层、包层与金属接触，并标出注入电流与垂直出光方向。}
   \label{fig:ch16_epitaxial_stack}
 \end{figure}

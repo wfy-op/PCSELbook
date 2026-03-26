@@ -41,7 +41,7 @@
       % Lorentzian lineshape (Schawlow-Townes)
       \draw[thick, blue, domain=-3:3, samples=100] 
         plot(\x,{2/(1+\x*\x)});
-      \node[above, blue] at (0,2.2) {ST 线宽$\Delta\nu_{\mathrm{ST}}$};
+      \node[above, blue] at (0,2.2) {肖洛-汤斯极限线宽$\Delta\nu_{\mathrm{ST}}$};
       
       % Broadened lineshape (Henry factor included)
       \draw[thick, red, dashed, domain=-3:3, samples=100] 
@@ -66,10 +66,10 @@
     
     % Bottom center: Alpha factor definition
     \node[draw, align=center, font=\small] at (0,-2.5) {
-      Henry 线宽增强因子定义:\\
+      亨利线宽增强因子定义:\\
       $\displaystyle\alpha_H = -\frac{4\pi}{\lambda}\frac{dn'/dN}{dg/dN}$\\[6pt]
       物理意义：振幅 - 相位耦合强度\\
-      典型值：体材料$\alpha_H\sim 3$--$6$, QW $\alpha_H\sim 2$--$4$
+      典型值：体材料$\alpha_H\sim 3$--$6$，量子阱$\alpha_H\sim 2$--$4$
     };
     
     % Chirp illustration inset
@@ -99,6 +99,6 @@
       $\bullet$ 传感灵敏度$\propto 1/\sqrt{\Delta\nu}$
     };
   \end{tikzpicture}
-  \caption{Henry 线宽增强因子 $\alpha_H$ 的物理来源及其对 PCSEL 光谱纯度的影响。(a) 左图示意载流子变化同时引起增益和折射率变化，从而产生振幅与相位耦合；(b) 右图示意 $\alpha_H$ 使实际线宽相对 Schawlow-Townes 极限进一步展宽，并在动态调制中引入频率啁啾。}
+  \caption{亨利线宽增强因子 $\alpha_H$ 的物理来源及其对光子晶体面发射激光器光谱纯度的影响。(a) 左图示意载流子变化同时引起增益和折射率变化，从而产生振幅与相位耦合；(b) 右图示意 $\alpha_H$ 使实际线宽相对肖洛-汤斯极限进一步展宽，并在动态调制中引入频率啁啾。}
   \label{fig:ch21_linewidth_enhancement}
 \end{figure}

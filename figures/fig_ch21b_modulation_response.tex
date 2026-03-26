@@ -5,12 +5,12 @@
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
+  \begin{tikzpicture}[scale=0.88]
     % AM frequency response plot
     \begin{scope}
       % Axes
-      \draw[->, thick] (0,0) -- (7,0) node[right] {频率$f$ [GHz]};
-      \draw[->, thick] (0,-4) -- (0,3) node[above] {归一化响应[dB]};
+      \draw[->, thick] (0,0) -- (7,0) node[right] {频率$f$（千兆赫）};
+      \draw[->, thick] (0,-4) -- (0,3) node[above] {归一化响应（分贝）};
       
       % Grid lines
       \foreach \y in {-3,-2,...,2} {
@@ -37,7 +37,7 @@
       
       % -3dB bandwidth indication
       \draw[dashed, thick] (0,-3) -- (5.5,-3);
-      \draw[<->, thick, magenta] (4.2,-3.3) -- node[below] {\scriptsize $f_{-3\mathrm{dB}}$} (5.5,-3.3);
+      \draw[<->, thick, magenta] (4.2,-3.3) -- node[below] {\scriptsize $f_{-3\,\text{分贝}}$} (5.5,-3.3);
       
       % Relaxation oscillation frequency
       \draw[dotted, thick] (2.9,0) -- (2.9,3);
@@ -49,7 +49,7 @@
     % Eye diagram inset
     \begin{scope}[shift={(8,0)}, scale=0.8]
       % Axes
-      \draw[->, thick] (0,0) -- (5,0) node[right] {时间 [UI]};
+      \draw[->, thick] (0,0) -- (5,0) node[right] {时间（单位间隔）};
       \draw[->, thick] (0,-2) -- (0,2.5) node[above] {光功率};
       
       % Ideal eye pattern
@@ -76,12 +76,12 @@
       % Quality metrics
       \node[align=left, font=\footnotesize, anchor=north west] at (-0.5,-2.5) {
         \textbf{信号质量指标}:\\
-        $\bullet$ 消光比 ER: $P_1/P_0 > 8\,\mathrm{dB}$\\
-        $\bullet$ 抖动 Jitter: $<0.1\,\mathrm{UI}$\\
-        $\bullet$ Q 因子:$>6$ (BER<$10^{-9}$)
+        $\bullet$ 消光比: $P_1/P_0 > 8\,\text{分贝}$\\
+        $\bullet$ 抖动: $<0.1\,\text{单位间隔}$\\
+        $\bullet$ Q 因子:$>6$ （误码率$<10^{-9}$）
       };
     \end{scope}
   \end{tikzpicture}
-  \caption{PCSEL 的动态调制响应示意图。(a) 小信号频率响应随偏置电流提升而展宽；(b) 高速数字调制下的眼图及其常用信号质量指标。}
+  \caption{光子晶体面发射激光器动态调制示意：左图为小信号频率响应随偏置电流升高而展宽，右图为高速数字调制下的眼图与主要质量指标。}
   \label{fig:ch21b_modulation_response}
 \end{figure}

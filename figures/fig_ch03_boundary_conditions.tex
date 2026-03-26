@@ -1,0 +1,75 @@
+% !TEX root = ../main.tex
+% Figure: Open boundary conditions for Chapter 3
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \tikzstyle{wave}=[->,>=Stealth,red!70,thick]
+  \tikzstyle{note}=[draw=blue!70,thick,rounded corners,fill=blue!5,align=center,font=\footnotesize]
+
+  % (a) Radiation boundary
+  \begin{scope}[xshift=-4cm]
+    \node[font=\bfseries] at (0,2.5) {(a) 辐射边界};
+    \fill[blue!10] (-1.5,0) rectangle (1.5,-1.5);
+    \draw[thick] (-1.5,0)--(1.5,0);
+    \draw[thick] (-1.5,-1.5)--(1.5,-1.5);
+    \node at (0,-0.75) {PCSEL slab};
+    \foreach \r in {0.8,1.2,1.6} {
+      \draw[red!60,dashed] (0,0) arc (90:-90:\r*0.5 and \r);
+    }
+    \draw[wave] (0.5,-0.3)--++(0.8,-0.4) node[right] {外向波};
+    \node[note] at (0,-2.5) {Sommerfeld 辐射条件\\$\lim\limits_{r\to\infty} r\left(\frac{\partial u}{\partial r}-\ii k u\right)=0$\\只允许外向传播};
+  \end{scope}
+
+  % (b) PML
+  \begin{scope}
+    \node[font=\bfseries] at (0,2.5) {(b) 完全匹配层 PML};
+    \fill[blue!10] (-1.5,0) rectangle (1.5,-2);
+    \draw[thick] (-1.5,0) rectangle (1.5,-2);
+    \fill[pattern=north east lines,pattern color=gray!50] (-1.75,0.2) rectangle (-1.5,-2.2);
+    \fill[pattern=north east lines,pattern color=gray!50] (1.5,0.2) rectangle (1.75,-2.2);
+    \fill[pattern=north east lines,pattern color=gray!50] (-1.75,0.2) rectangle (1.75,0);
+    \fill[pattern=north east lines,pattern color=gray!50] (-1.75,-2) rectangle (1.75,-2.2);
+    \node at (0,-1) {计算区域};
+    \node[gray!70,rotate=90,font=\footnotesize] at (-1.62,-1) {PML};
+    \node[gray!70,rotate=90,font=\footnotesize] at (1.62,-1) {PML};
+    \node[gray!70,font=\footnotesize] at (0,0.1) {PML};
+    \node[gray!70,font=\footnotesize] at (0,-2.1) {PML};
+    \draw[wave] (-0.5,-0.5)--(-1.2,-0.8);
+    \draw[wave,opacity=0.6] (-1.2,-0.8)--(-1.5,-0.95);
+    \draw[wave,opacity=0.3] (-1.5,-0.95)--(-1.65,-1.05);
+    \node[font=\footnotesize,align=center] at (0,-3) {波进入 PML 后指数衰减\\并尽量避免反射};
+  \end{scope}
+
+  % (c) Periodic boundary
+  \begin{scope}[xshift=4cm]
+    \node[font=\bfseries] at (0,2.5) {(c) 周期性边界};
+    \fill[blue!10] (-1.2,0) rectangle (1.2,-1.5);
+    \draw[thick] (-1.2,0)--(1.2,0);
+    \draw[thick] (-1.2,-1.5)--(1.2,-1.5);
+    \draw[thick,dotted] (-1.2,0)--(-1.2,-1.5);
+    \draw[thick,dotted] (1.2,0)--(1.2,-1.5);
+    \draw[fill=white,thick] (0,-0.75) circle (0.4);
+    \draw[<->,blue!70,thick] (-1.3,0)--(-1.3,-1.5) node[midway,left,font=\footnotesize] {$\bm{a}_2$};
+    \draw[<->,blue!70,thick] (-1.2,-1.6)--(1.2,-1.6) node[midway,below,font=\footnotesize] {$\bm{a}_1$};
+    \node[note] at (0,-2.5) {Bloch 周期性边界\\$\mathbf{E}(\bm{r}+\bm{R})=\mathbf{E}(\bm{r})\,\ee^{\ii\bm{k}\cdot\bm{R}}$\\用单胞代表无限周期};
+  \end{scope}
+
+  % (d) Selection guide
+  \begin{scope}[yshift=-4.5cm]
+    \node[font=\bfseries] at (0,0.5) {(d) 边界条件选择指南};
+    \draw (0,0) grid (8,-1.5);
+    \node[align=center,font=\footnotesize] at (1,0.25) {边界类型};
+    \node[align=center,font=\footnotesize] at (4,0.25) {适用场景};
+    \node[align=center,font=\footnotesize] at (7,0.25) {注意事项};
+
+    \node[align=left,font=\footnotesize] at (1,-0.25) {辐射边界};
+    \node[align=left,font=\footnotesize] at (1,-0.75) {PML};
+    \node[align=left,font=\footnotesize] at (1,-1.25) {周期性边界};
+
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (4,-0.25) {解析模型、远场近似};
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (4,-0.75) {FDTD、FEM 全波仿真};
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (4,-1.25) {PWEM、RCWA 单胞问题};
+
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (7,-0.25) {仅适用于外向辐射近似};
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (7,-0.75) {需要足够厚度并做收敛检查};
+    \node[align=left,font=\footnotesize,text width=2.4cm] at (7,-1.25) {不适用于有限尺寸器件};
+  \end{scope}
+\end{tikzpicture}

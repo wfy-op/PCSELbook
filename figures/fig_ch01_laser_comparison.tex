@@ -1,176 +1,93 @@
-% Figure: Comparison of four major semiconductor laser types
-% Chapter: ch01 - Introduction to PCSEL
-% Description: Side-by-side schematic cross-sections showing edge emitter, VCSEL, DFB, and PCSEL
-% Key features: Feedback mechanism, emission direction, and typical dimensions
-
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[
-    scale=0.85,
-    substrate/.style={fill=brown!20},
-    active/.style={fill=red!30},
-    dbr/.style={fill=blue!20},
-    waveguide/.style={fill=green!20},
-    phc/.style={fill=purple!20},
-    electrode/.style={fill=gray!60},
-    arrow_out/.style={->, >=stealth, thick, orange!80!red},
-    feedback/.style={<->, thick, blue!70!black, dashed}
-  ]
-    
-    % ========== Edge Emitter (Left column, top) ==========
-    \begin{scope}[shift={(0,0)}]
-      \node[anchor=south] at (2.5, 3.8) {\textbf{(a)边发射激光器}};
-      
-      % Substrate
-      \draw[substrate] (0,0) rectangle (5, 0.8);
-      \node[right] at (5.2, 0.4) {衬底};
-      
-      % Lower cladding
-      \draw[waveguide] (0,0.8) rectangle (5, 1.4);
-      \node[right] at (5.2, 1.1) {下包层};
-      
-      % Active region (quantum wells)
-      \draw[active] (0,1.4) rectangle (5, 1.6);
-      \node[right] at (5.2, 1.5) {有源区(QW)};
-      
-      % Upper cladding
-      \draw[waveguide] (0,1.6) rectangle (5, 2.2);
-      \node[right] at (5.2, 1.9) {上包层};
-      
-      % Waveguide cavity
-      \draw[feedback] (0.5, 2.5) -- (4.5, 2.5) node[midway, above] {法布里 - 珀罗腔};
-      
-      % Facets (cleaved mirrors)
-      \draw[thick] (0,0) -- (0,2.2);
-      \draw[thick] (5,0) -- (5,2.2);
-      \node[below] at (0, -0.2) {解理面};
-      \node[below] at (5, -0.2) {解理面};
-      
-      % Emission direction (edge emission)
-      \draw[arrow_out] (5.3, 1.5) -- (6.5, 1.5) node[midway, above] {出光};
-      
-      % Current injection
-      \draw[->, thick] (2.5, 2.4) -- (2.5, 2.2);
-      \node[above] at (2.5, 2.4) {$I$};
-    \end{scope}
-    
-    % ========== VCSEL (Right column, top) ==========
-    \begin{scope}[shift={(8,0)}]
-      \node[anchor=south] at (2.5, 3.8) {\textbf{(b) VCSEL}};
-      
-      % Bottom DBR
-      \draw[dbr] (0,0) rectangle (5, 1.2);
-      \foreach \y in {0.1, 0.3, ..., 1.1} {
-        \draw[white, line width=2] (0,\y) -- (5,\y);
+  scale=0.9,
+  sub/.style={fill=brown!20},
+  act/.style={fill=red!28},
+  clad/.style={fill=green!20},
+  mir/.style={fill=blue!20},
+  phc/.style={fill=purple!20},
+  elec/.style={fill=gray!65},
+  outa/.style={->,>=Stealth,thick,orange!85!red},
+  fba/.style={<->,thick,blue!70!black,dashed}
+]
+  \begin{scope}[shift={(0,0)}]
+    \node[font=\bfseries] at (2.4,3.8) {(a) 边发射激光器};
+    \draw[sub] (0,0) rectangle (4.8,0.75);
+    \draw[clad] (0,0.75) rectangle (4.8,1.35);
+    \draw[act] (0,1.35) rectangle (4.8,1.55);
+    \draw[clad] (0,1.55) rectangle (4.8,2.15);
+    \draw[thick] (0,0) -- (0,2.15);
+    \draw[thick] (4.8,0) -- (4.8,2.15);
+    \draw[fba] (0.5,2.45) -- (4.3,2.45) node[midway,above] {法布里-珀罗腔反馈};
+    \draw[outa] (5.1,1.45) -- (6.2,1.45) node[midway,above] {边向出光};
+    \node[below,font=\scriptsize] at (0,-0.2) {解理面};
+    \node[below,font=\scriptsize] at (4.8,-0.2) {解理面};
+    \node[font=\scriptsize] at (2.4,0.38) {衬底};
+    \node[font=\scriptsize] at (2.4,1.05) {下包层};
+    \node[font=\scriptsize] at (2.4,1.45) {有源区};
+    \node[font=\scriptsize] at (2.4,1.85) {上包层};
+  \end{scope}
+
+  \begin{scope}[shift={(7.8,0)}]
+    \node[font=\bfseries] at (2.4,3.8) {(b) 垂直腔面发射激光器};
+    \draw[mir] (0,0) rectangle (4.8,1.1);
+    \foreach \y in {0.12,0.30,...,1.0}{\draw[white,line width=1.5] (0,\y)--(4.8,\y);}
+    \draw[act] (0,1.1) rectangle (4.8,1.45);
+    \draw[mir] (0,1.45) rectangle (4.8,2.55);
+    \foreach \y in {1.58,1.76,...,2.45}{\draw[white,line width=1.5] (0,\y)--(4.8,\y);}
+    \draw[fill=gray!45] (1.8,1.1) rectangle (3.0,1.45);
+    \draw[fba] (2.4,0.2) -- (2.4,2.35);
+    \draw[outa] (2.4,2.7) -- (2.4,3.55) node[midway,right] {法向出光};
+    \node[right,font=\scriptsize] at (4.95,0.55) {下反射镜};
+    \node[right,font=\scriptsize] at (4.95,1.28) {有源区};
+    \node[right,font=\scriptsize] at (4.95,2.0) {上反射镜};
+    \node[font=\scriptsize] at (2.4,1.28) {限流孔};
+    \draw[elec] (-0.25,2.3) rectangle (0,2.55);
+    \draw[elec] (4.8,2.3) rectangle (5.05,2.55);
+  \end{scope}
+
+  \begin{scope}[shift={(0,-4.9)}]
+    \node[font=\bfseries] at (2.4,3.8) {(c) 分布反馈激光器};
+    \draw[sub] (0,0) rectangle (4.8,0.6);
+    \draw[clad] (0,0.6) rectangle (4.8,1.0);
+    \draw[phc] (0,1.0) rectangle (4.8,1.3);
+    \foreach \x in {0.25,0.6,...,4.45}{\draw[fill=white,white] (\x,1.0) rectangle ++(0.16,0.3);}
+    \draw[clad] (0,1.3) rectangle (4.8,1.85);
+    \draw[act] (0,1.85) rectangle (4.8,2.05);
+    \draw[fba] (0.5,2.35) -- (4.3,2.35) node[midway,above] {一维光栅反馈};
+    \draw[out=270,in=90,->,thick,dotted] (2.4,1.3) to (2.4,0.72);
+    \draw[outa] (5.1,1.45) -- (6.2,1.45) node[midway,above] {边向出光};
+    \node[right,font=\scriptsize] at (4.95,0.3) {衬底};
+    \node[right,font=\scriptsize] at (4.95,1.15) {一维光栅};
+    \node[right,font=\scriptsize] at (4.95,1.95) {有源区};
+  \end{scope}
+
+  \begin{scope}[shift={(7.8,-4.9)}]
+    \node[font=\bfseries] at (2.4,3.8) {(d) 光子晶体面发射激光器};
+    \draw[sub] (0,0) rectangle (4.8,0.6);
+    \draw[clad] (0,0.6) rectangle (4.8,1.05);
+    \draw[act] (0,1.05) rectangle (4.8,1.35);
+    \draw[phc] (0,1.35) rectangle (4.8,1.72);
+    \foreach \x in {0.45,0.95,...,4.35}{
+      \foreach \y in {1.42,1.54,1.66}{
+        \draw[fill=white] (\x,\y) circle (0.1);
       }
-      \node[right] at (5.2, 0.6) {n-DBR (20-30对)};
-      
-      % Active region with oxide aperture
-      \draw[active] (0,1.2) rectangle (5, 1.5);
-      \draw[fill=gray!40] (1.8,1.2) rectangle (3.2,1.5);
-      \node[] at (2.5, 1.35) {\scriptsize 氧化孔};
-      \node[right] at (5.2, 1.35) {有源区};
-      
-      % Top DBR
-      \draw[dbr] (0,1.5) rectangle (5, 2.7);
-      \foreach \y in {1.6, 1.8, ..., 2.6} {
-        \draw[white, line width=2] (0,\y) -- (5,\y);
-      }
-      \node[right] at (5.2, 2.1) {p-DBR (20-30 对)};
-      
-      % Vertical cavity resonance
-      \draw[feedback] (2.5, 0.2) -- (2.5, 2.5) node[midway, right] {垂直谐振腔};
-      
-      % Emission direction (surface emission)
-      \draw[arrow_out] (2.5, 2.8) -- (2.5, 3.6) node[midway, right] {出光};
-      
-      % Electrodes
-      \draw[electrode] (-0.3, 2.4) rectangle (0, 2.7);
-      \draw[electrode] (5, 2.4) rectangle (5.3, 2.7);
-    \end{scope}
-    
-    % ========== DFB Laser (Left column, bottom) ==========
-    \begin{scope}[shift={(0,-5)}]
-      \node[anchor=south] at (2.5, 3.8) {\textbf{(c) DFB激光器}};
-      
-      % Substrate
-      \draw[substrate] (0,0) rectangle (5, 0.6);
-      \node[right] at (5.2, 0.3) {衬底};
-      
-      % Lower waveguide
-      \draw[waveguide] (0,0.6) rectangle (5, 1.0);
-      
-      % Grating layer (1D periodic corrugation)
-      \draw[phc] (0,1.0) rectangle (5, 1.3);
-      \foreach \x in {0.3, 0.7, ..., 4.7} {
-        \draw[white, fill=white] (\x, 1.0) rectangle ++(0.2, 0.3);
-      }
-      \node[right] at (5.2, 1.15) {一维光栅};
-      
-      % Upper waveguide / cladding
-      \draw[waveguide] (0,1.3) rectangle (5, 1.9);
-      \node[right] at (5.2, 1.6) {波导};
-      
-      % Active region
-      \draw[active] (0,1.9) rectangle (5, 2.1);
-      \node[right] at (5.2, 2.0) {有源区};
-      
-      % Bragg reflection along waveguide
-      \draw[feedback] (0.5, 2.3) -- (4.5, 2.3) node[midway, above] {布拉格反馈};
-      
-      % Emission (mostly edge emission)
-      \draw[arrow_out] (5.3, 1.5) -- (6.5, 1.5) node[midway, above] {出光};
-      
-      % Optionally surface grating coupler
-      \draw[->, dotted, thick] (2.5, 1.3) -- (2.5, 0.8) node[midway, right] {{\scriptsize 可选表面光栅}};
-    \end{scope}
-    
-    % ========== PCSEL (Right column, bottom) ==========
-    \begin{scope}[shift={(8,-5)}]
-      \node[anchor=south] at (2.5, 3.8) {\textbf{(d) PCSEL}};
-      
-      % Substrate
-      \draw[substrate] (0,0) rectangle (5, 0.6);
-      \node[right] at (5.2, 0.3) {衬底};
-      
-      % Lower cladding
-      \draw[waveguide] (0,0.6) rectangle (5, 1.1);
-      \node[right] at (5.2, 0.85) {下包层};
-      
-      % Active waveguide core
-      \draw[active] (0,1.1) rectangle (5, 1.4);
-      \node[right] at (5.2, 1.25) {有源波导};
-      
-      % Photonic crystal layer (2D periodic holes)
-      \draw[phc] (0,1.4) rectangle (5, 1.7);
-      \foreach \x in {0.5, 1.0, ..., 4.5} {
-        \foreach \y in {1.45, 1.55, 1.65} {
-          \draw[white, fill=white] (\x, \y) circle (0.12);
-        }
-      }
-      \node[right] at (5.2, 1.55) {二维 PhC层};
-      
-      % Upper cladding / contact
-      \draw[waveguide] (0,1.7) rectangle (5, 2.2);
-      \node[right] at (5.2, 1.95) {上包层/接触};
-      
-      % 2D in-plane feedback (bidirectional arrows)
-      \draw[feedback] (1.0, 1.6) -- (4.0, 1.6);
-      \draw[feedback] (2.5, 1.5) -- (2.5, 1.7);
-      \node[above] at (2.5, 1.7) {\scriptsize 面内反馈};
-      
-      % Surface emission (vertical arrow)
-      \draw[arrow_out] (2.5, 1.75) -- (2.5, 2.8) node[midway, right] {面发射};
-      
-      % Current injection
-      \draw[->, thick] (2.5, 2.3) -- (2.5, 2.2);
-      \node[above] at (2.5, 2.3) {$I$};
-    \end{scope}
-    
-    % Legend box at bottom
-    \begin{scope}[shift={(0,-6)}]
-      \draw[rounded corners, fill=gray!10] (-0.5,-0.8) rectangle (13, 0.3);
-      \node[anchor=west] at (-0.3, -0.2) {\small\textbf{图注}: 四种器件的核心差异在于反馈维度（一维vs二维）和出光方向（边发射 vs面发射）。PCSEL 的独特之处在于\textbf{二维面内反馈}与\textbf{法向面发射}的结合。};
-    \end{scope}
-    
+    }
+    \draw[clad] (0,1.72) rectangle (4.8,2.2);
+    \draw[fba] (1.0,1.56) -- (3.8,1.56);
+    \draw[fba] (2.4,1.40) -- (2.4,1.72);
+    \node[font=\scriptsize,above] at (2.4,1.72) {二维面内反馈};
+    \draw[outa] (2.4,1.8) -- (2.4,2.8) node[midway,right] {法向出光};
+    \node[right,font=\scriptsize] at (4.95,0.3) {衬底};
+    \node[right,font=\scriptsize] at (4.95,0.82) {下包层};
+    \node[right,font=\scriptsize] at (4.95,1.2) {有源波导};
+    \node[right,font=\scriptsize] at (4.95,1.54) {二维光子晶体层};
+    \node[right,font=\scriptsize] at (4.95,1.95) {上包层/接触};
+  \end{scope}
+
+  \node[draw,rounded corners,fill=gray!10,align=left,anchor=west,text width=12.5cm]
+    at (-0.3,-7.25) {\small\textbf{图注：}
+    四种器件的核心差异在于反馈维度（一维或二维）与出光方向（边向或法向）。
+    光子晶体面发射激光器的关键是“二维面内反馈 + 法向面发射”的统一实现。};
 \end{tikzpicture}%
 }

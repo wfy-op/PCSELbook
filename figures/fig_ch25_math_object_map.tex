@@ -1,6 +1,3 @@
-% !TEX root = ../main.tex
-% Figure: Map of mathematical objects used across the book
-
 \begin{figure}[htbp]
   \centering
   \resizebox{0.98\textwidth}{!}{%
@@ -9,12 +6,12 @@
     obj/.style={rectangle, rounded corners, draw, fill=#1!14, minimum width=3.1cm, minimum height=9mm, align=center},
     arr/.style={-Stealth, thick}
   ]
-    \node[obj=blue] (space) {Function spaces\\$\mathcal H$, weighted spaces};
-    \node[obj=teal, below left=14mm and 18mm of space] (op) {Operators\\$\hat{\mathcal L}$, adjoint};
-    \node[obj=orange, below right=14mm and 18mm of space] (spec) {Spectra\\Bloch bands / QNM poles};
-    \node[obj=green, below=16mm of op] (mode) {Mode sets\\right/left modes, biorthogonality};
-    \node[obj=purple, right=22mm of mode] (green) {Green tensor\\resolvent / residue expansion};
-    \node[obj=red, below=16mm of mode, minimum width=7.2cm] (use) {Practical outputs: normalization, perturbation formula, parameter sensitivity};
+    \node[obj=blue] (space) {函数空间\\$\mathcal H$、加权空间};
+    \node[obj=teal, below left=14mm and 18mm of space] (op) {算符对象\\$\hat{\mathcal L}$、伴随算符};
+    \node[obj=orange, below right=14mm and 18mm of space] (spec) {谱结构\\布洛赫能带 / 准正则模极点};
+    \node[obj=green, below=16mm of op] (mode) {模态集合\\左右模、双正交关系};
+    \node[obj=purple, right=22mm of mode] (green) {格林张量\\预解式与留数展开};
+    \node[obj=red, below=16mm of mode, minimum width=7.2cm] (use) {可用结论\\归一化、微扰公式、参数灵敏度};
 
     \draw[arr] (space) -- (op);
     \draw[arr] (space) -- (spec);
@@ -26,6 +23,6 @@
     \draw[arr] (green) -- (use);
   \end{tikzpicture}
   }
-  \caption{Math-object map for this appendix: from spaces and operators to spectrum, mode expansions, Green tensor, and finally usable formulas.}
+  \caption{本附录的数学对象关系图：从函数空间与算符出发，连接到谱结构、模态展开与格林张量，最终落到可直接使用的公式。}
   \label{fig:ch25_math_object_map}
 \end{figure}

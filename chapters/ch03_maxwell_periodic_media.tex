@@ -188,22 +188,22 @@ $$\langle \Psi_1, \mathcal{M}\Psi_2 \rangle = \langle \mathcal{M}\Psi_1, \Psi_2 
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}[scale=0.95]
-    \draw[->,thick] (-3.8,0)--(3.8,0) node[right]{$\operatorname{Re}\tilde{\omega}=\omega_r$};
-    \draw[->,thick] (0,-3.2)--(0,1.5) node[above]{$\operatorname{Im}\tilde{\omega}$};
+    \draw[->,thick] (-3.8,0)--(3.8,0) node[right]{实部轴（$\omega_r$）};
+    \draw[->,thick] (0,-3.2)--(0,1.5) node[above]{虚部轴};
     \fill[red!8] (-3.7,0) rectangle (3.7,1.4);
-    \node[red!60,font=\footnotesize] at (2.6,0.85){non-physical (passive)};
+    \node[red!60,font=\footnotesize] at (2.5,0.85){被动外延拓区（非物理解）};
     \draw[dashed,gray] (-3.7,0)--(3.7,0);
-    \fill[blue!70] (1.0,-0.4) circle (0.08) node[right,font=\footnotesize]{high-$Q$};
-    \fill[blue!70] (-1.5,-1.8) circle (0.08) node[right,font=\footnotesize]{low-$Q$};
-    \fill[orange!80!black] (2.5,-0.02) circle (0.08) node[above right,font=\footnotesize]{BIC ($\gamma\to 0$)};
-    \fill[green!60!black] (0.5,-1.0) circle (0.08) node[right,font=\footnotesize]{quasi-BIC};
+    \fill[blue!70] (1.0,-0.4) circle (0.08) node[right,font=\footnotesize]{高品质因子};
+    \fill[blue!70] (-1.5,-1.8) circle (0.08) node[right,font=\footnotesize]{低品质因子};
+    \fill[orange!80!black] (2.5,-0.02) circle (0.08) node[above right,font=\footnotesize]{连续谱束缚态（$\gamma\to 0$）};
+    \fill[green!60!black] (0.5,-1.0) circle (0.08) node[right,font=\footnotesize]{准连续谱束缚态};
     \draw[densely dotted,gray!70] (-3.6,-0.35)--(3.6,-0.35) node[right,font=\scriptsize]{$Q\sim10^3$ 量级};
     \draw[densely dotted,gray!70] (-3.6,-0.06)--(3.6,-0.06) node[right,font=\scriptsize]{$Q\sim10^5$ 量级};
     \draw[<->,thin] (1.15,-0.02)--(1.15,-0.38);
     \draw[<->,thin] (-1.35,-0.02)--(-1.35,-1.78);
-    \node[font=\footnotesize] at (0,-2.8){lower half-plane = open/lossy resonances};
+    \node[font=\footnotesize] at (0,-2.8){下半平面 = 开放/有损共振};
   \end{tikzpicture}
-  \caption{复频率平面示意。被动开放系统的共振模位于下半平面（$\gamma>0$），距实轴越近表示 $Q$ 越高。BIC 理想地处于实轴上（$\gamma=0$），quasi-BIC 则刚刚离开实轴。}
+  \caption{复频率平面示意。被动开放系统的共振模位于下半平面（$\gamma>0$），距实轴越近表示 $Q$ 越高。连续谱束缚态理想地处于实轴上（$\gamma=0$），准连续谱束缚态则刚刚离开实轴。}
   \label{fig:complex-freq-plane}
 \end{figure}
 
@@ -211,7 +211,7 @@ $$\langle \Psi_1, \mathcal{M}\Psi_2 \rangle = \langle \mathcal{M}\Psi_1, \Psi_2 
 \[
 Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}{2Q}
 \]
-可得：$Q=10^3$ 时 $\gamma/\omega_0\approx5\times10^{-4}$，$Q=10^5$ 时 $\gamma/\omega_0\approx5\times10^{-6}$。因此“离实轴多远算 high-$Q$”可以直接用这个比例估算，而不必只靠定性描述。
+可得：$Q=10^3$ 时 $\gamma/\omega_0\approx5\times10^{-4}$，$Q=10^5$ 时 $\gamma/\omega_0\approx5\times10^{-6}$。因此“离实轴多远算高品质因子”可以直接用这个比例估算，而不必只靠定性描述。
 
 \begin{RigorousBox}
 若要把“无损、无色散、封闭边界下 Maxwell 问题可写成自伴形式”说得更正式，最自然的写法其实不是直接把 \cref{eq:maxwell-eigen} 当普通矩阵本征值问题，而是先把它限制在
@@ -368,12 +368,31 @@ r\left(\frac{\partial \psi}{\partial r}-\ii \tilde{k}\psi\right)\xrightarrow[r\t
 
 在数值计算中，我们不可能真正把空间做到无穷大，于是需要用辐射边界条件、端口条件或完全匹配层（perfectly matched layer, PML）来近似它。
 
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch03_boundary_conditions.tex}
+  \caption{开放边界条件的数值实现方式对比。(a)辐射边界条件：在计算域边界施加出射波条件，要求波只能向外传播；(b)完全匹配层（PML）：通过在边界处引入复坐标延拓使外向波指数衰减，理想情况下无反射；(c) 周期性边界条件：利用Bloch 定理将无限周期结构约化到单个原胞；(d) 边界条件选择指南：根据问题类型（本征模、散射、周期结构）选择合适的边界条件组合。注意 PML并非物理实体，而是将无限空间折叠进有限计算域的数学技巧。}
+  \label{fig:ch03_boundary_conditions}
+\end{figure}
+
+\cref{fig:ch03_boundary_conditions}对比了几种常用的开放边界实现方式及其适用场景。
+
 PML 的核心思想值得在这里做一个最小介绍。它在计算域边界处引入一层特殊介质，通过对坐标做复数延拓
 \[
 x \to x + \frac{\ii\sigma(x)}{\omega},
 \]
-使出射波在该层中指数衰减，但由于变换是连续的、在物理--PML 界面上梯度为零，波在进入该层时不产生反射。需要注意的是，$\sigma/\omega$ 显式依赖频率；对 QNM 这类复频率 $\tilde{\omega}$ 问题，取用哪一个 $\omega$ 会影响虚部精度，因此常需做收敛性检查。换句话说，PML 不是一个物理实体，而是一种把无限开放空间折叠进有限计算域的数学技巧。
-
+使出射波在该层中指数衰减，但由于变换是连续的、在物理--PML 界面上梯度为零，波在进入该层时不产生反射。需要注意的是，$\sigma/\omega$ 显式依赖频率；对QNM 这类复频率 $\tilde{\omega}$ 问题，取用哪一个 $\omega$ 会影响虚部精度，因此常需做收敛性检查。换句话说，PML 不是一个物理实体，而是一种把无限开放空间折叠进有限计算域的数学技巧。
+\begin{WarningBox}[PML 参数设置的实践建议]
+PML 的性能强烈依赖于参数选择。以下是经过验证的设置准则：
+\begin{enumerate}
+  \item \textbf{PML 厚度：} 通常取半个到一个工作波长 ($d_{\mathrm{PML}} \approx \lambda_0/2 \text{--} \lambda_0$)。对高$Q$ 腔 ($Q>10^4$)，建议增加到 $1.5\text{--}2\lambda_0$
+  \item \textbf{吸收剖面：} 推荐使用二次或三次渐变剖面 $\sigma(x) = \sigma_{\max}(x/d_{\mathrm{PML}})^m$ ($m=2\text{--}3$)，而非均匀吸收
+  \item \textbf{最大吸收率：} $\sigma_{\max}$ 应满足 $\sigma_{\max} d_{\mathrm{PML}}/c \approx 3\text{--}6$，对应单程衰减 $e^{-3}\approx 5\%$ 到 $e^{-6}\approx 0.25\%$
+  \item \textbf{收敛性检验：} 对高$Q$ 模式，需系统扫描 PML 厚度和$\sigma_{\max}$，直到$\mathrm{Re}(\omega)$和$\mathrm{Im}(\omega)$的变化小于目标精度（如$<0.1\%$）
+  \item \textbf{复频率修正：} 对 QNM 求解，若初始估计频率为$\omega_{\mathrm{est}}$，建议在 PML 中使用$\omega = \mathrm{Re}(\omega_{\mathrm{est}})$ 而非固定实频率，以减少频率失配误差
+\end{enumerate}
+经验法则：若发现$Q$ 值随 PML 厚度振荡或不单调变化，通常表明 PML 参数未优化或存在驻波干涉，需增加厚度或调整吸收剖面。
+\end{WarningBox}
 若想看到“为什么会衰减”的最小代数，可取一维右行波 $E(x)=\ee^{\ii kx}$。代入复坐标延拓后：
 \[
 E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
@@ -393,7 +412,20 @@ E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
 \begin{PitfallBox}
 “复频率的虚部很小，说明数值做得很准”这种说法没有物理意义。虚部大小首先反映的是模式本身的损耗与开放性，只有在收敛和边界条件正确的前提下，才谈得上数值精度。
 \end{PitfallBox}
+\begin{CommonPitfallBox}{开放边界vs 封闭边界}
+\textbf{错误理解：}将PCSEL 当成封闭谐振腔，使用理想导体（PEC）边界条件。
 
+\textbf{正确理解：}PCSEL是开放系统，必须使用辐射边界条件或 PML。
+
+\textbf{后果：}封闭边界会人为产生反射驻波，导致：
+\begin{itemize}
+  \item Q值被严重高估（可能差3-5个数量级）
+  \item 模式频率偏移
+  \item 远场方向图完全错误
+\end{itemize}
+
+\textbf{判别方法：}如果你的仿真得到$Q>10^6$但没有使用BIC 机制，很可能是边界条件错误。
+\end{CommonPitfallBox}
 \section{这一章和后文的关系：为什么先讲 Maxwell，再讲 Bloch}
 到这里，读者应该能看出：本章真正建立的是“问题类型”，而不是“最终解法”。我们已经知道 PCSEL 的被动光学子问题来自开放系统中的 Maxwell 方程，但还没有利用二维周期性。周期性一旦被引入，问题就可以借助 Bloch 定理进行分类和简化，这正是下一章的主题。
 

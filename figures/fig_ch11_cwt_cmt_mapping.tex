@@ -1,0 +1,21 @@
+% !TEX root = ../main.tex
+% Figure content only
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \tikzset{
+    stage/.style={draw=black,thick,rounded corners,minimum width=3.2cm,minimum height=1.6cm,align=center},
+    arrow/.style={->,>=Stealth,very thick}
+  }
+
+  \node[stage,fill=blue!10] (cwt) at (-4,0) {CWT 本征问题\\[3pt]$\left(\ii\bm{\Omega}-\bm{\Gamma}+\bm{G}\right)\bm v=s\bm v$};
+  \node[stage,fill=orange!10] (map) at (0,0) {参数映射\\[3pt]$\omega_0,\gamma_e,\gamma_i,d$};
+  \node[stage,fill=red!10] (cmt) at (4,0) {TCMT 响应\\[3pt]反射/透射/线宽};
+
+  \draw[arrow,blue!70] (cwt) -- node[above,font=\footnotesize] {提取本征频率与损耗} (map);
+  \draw[arrow,red!70] (map) -- node[above,font=\footnotesize] {代入低维散射模型} (cmt);
+
+  \node[draw=gray!70,rounded corners,fill=gray!6,align=left,font=\footnotesize,text width=13.2cm] at (0,-2.6) {
+    \textbf{工作流：}
+    先由 CWT 得到目标模的复频率和模矢量，再把辐射损耗、内部损耗和远场归一化信息压缩成
+    TCMT 参数。这样可以把“微观的耦合矩阵”转成“可直接和线宽、反射谱、耦合强度比较”的解析模型。
+  };
+\end{tikzpicture}

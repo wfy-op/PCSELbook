@@ -1,0 +1,148 @@
+% !TEX root = ../main.tex
+% Figure: MQW energy band diagram for Chapter 17
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    % Define styles
+    \tikzstyle{band}=[thick]
+    \tikzstyle{electron}=[->,>=Stealth,blue!70,thick]
+    \tikzstyle{hole}=[->,>=Stealth,red!70,thick]
+    \tikzstyle{photon}=[wavy,decorate,decoration={snake,segment length=4mm,amplitude=1mm},green!60!black,thick]
+    
+    % === Energy Band Diagram ===
+    \begin{scope}[yshift=4cm]
+      \node[font=\bfseries] at (0,2.8) {(a) MQW能带结构};
+      
+      % Conduction band edge Ec
+      \draw[band,blue!70] (-3,2)--(-2,2);
+      \draw[band,blue!70] (-2,1.5)--(-1,1.5);
+      \draw[band,blue!70] (-1,2)--(0,2);
+      \draw[band,blue!70] (0,1.5)--(1,1.5);
+      \draw[band,blue!70] (1,2)--(2,2);
+      \draw[band,blue!70] (2,1.5)--(3,1.5);
+      
+      % Valence band edge Ev
+      \draw[band,red!70] (-3,0)--(-2,0);
+      \draw[band,red!70] (-2,0.5)--(-1,0.5);
+      \draw[band,red!70] (-1,0)--(0,0);
+      \draw[band,red!70] (0,0.5)--(1,0.5);
+      \draw[band,red!70] (1,0)--(2,0);
+      \draw[band,red!70] (2,0.5)--(3,0.5);
+      
+      % Quantum wells
+      \foreach \x in {-1.5,0.5,2.5} {
+        \fill[yellow!20] (\x-0.5,0.5) rectangle (\x+0.5,1.5);
+      }
+      
+      % Labels
+      \node[blue!70,font=\footnotesize] at (-2.5,2.2) {$E_c$ (导带)};
+      \node[red!70,font=\footnotesize] at (-2.5,0.2) {$E_v$ (价带)};
+      \node[font=\footnotesize] at (-1.5,1) {量子阱};
+      \node[font=\footnotesize] at (-2.5,1.75) {垒层};
+      
+      % Electron wavefunctions in QWs
+      \foreach \x in {-1.5,0.5,2.5} {
+        \draw[blue!70,thick,domain=\x-0.4:\x+0.4,samples=50]
+          plot(\xcoord,{1.0+0.4*cos((\xcoord-\x)*360/0.8)});
+        \node[blue!70,font=\tiny] at (\x,1.5) {$\psi_e$};
+      }
+      
+      % Hole wavefunctions in QWs
+      \foreach \x in {-1.5,0.5,2.5} {
+        \draw[red!70,thick,domain=\x-0.4:\x+0.4,samples=50]
+          plot(\xcoord,{0.5-0.3*cos((\xcoord-\x)*360/0.8)});
+        \node[red!70,font=\tiny] at (\x,0.4) {$\psi_h$};
+      }
+      
+      % Carrier injection
+      \electron (-2.5,2.5)--(-2.5,1.7) node[midway,right] {电子注入};
+      \hole (-2.5,-0.3)--(-2.5,0.3) node[midway,right] {空穴注入};
+      
+      % Radiative recombination
+      \foreach \x in {-1.5,0.5} {
+        \electron (\x,1.3)--(\x,1.0);
+        \hole (\x,0.7)--(\x,1.0);
+        \draw[photon] (\x,1.0)--++(0.5,0.5) node[right,green!60!black] {$\hbar\omega$};
+      }
+      
+      % Bandgap annotation
+      \draw[<->,thick] (3.3,0.5)--(3.3,1.5) 
+        node[midway,right] {$E_g$};
+    \end{scope}
+    
+    % === Carrier Distribution ===
+    \begin{scope}[yshift=0cm,xshift=-3cm]
+      \node[font=\bfseries] at (0,1.8) {(b)载流子分布};
+      
+      % Axes
+      \draw[->,thick] (-2.5,0)--(2.5,0) node[right] {$z$ (生长方向)};
+      \draw[->,thick] (-2.5,-1.5)--(-2.5,1.5) node[above] {$n,p$};
+      
+      % Electron concentration (peaks in QWs)
+      \draw[blue!70,thick,domain=-2.5:2.5,samples=200]
+        plot(\x,{0.3*exp(-(\x+1.5)^2/0.1)+0.3*exp(-(\x-0.5)^2/0.1)+0.3*exp(-(\x-2.5)^2/0.1)+0.1});
+      \node[blue!70,font=\footnotesize] at (1.8,1.2) {$n(z)$ (电子)};
+      
+      % Hole concentration (peaks in QWs)
+      \draw[red!70,thick,domain=-2.5:2.5,samples=200]
+        plot(\x,{0.25*exp(-(\x+1.5)^2/0.1)+0.25*exp(-(\x-0.5)^2/0.1)+0.25*exp(-(\x-2.5)^2/0.1)+0.05});
+      \node[red!70,font=\footnotesize] at (1.8,0.8) {$p(z)$ (空穴)};
+      
+      % QW positions
+      \foreach \x in {-1.5,0.5,2.5} {
+        \draw[dashed,gray] (\x,-1.2)--(\x,1.5);
+      }
+      \node[gray,font=\footnotesize] at (-1.5,-1.4) {QW1};
+      \node[gray,font=\footnotesize] at (0.5,-1.4) {QW2};
+      \node[gray,font=\footnotesize] at (2.5,-1.4) {QW3};
+    \end{scope}
+    
+    % === Gain Spectrum ===
+    \begin{scope}[yshift=0cm,xshift=2.5cm]
+      \node[font=\bfseries] at (0,1.8) {(c) 材料增益谱};
+      
+      % Axes
+      \draw[->,thick] (-2.5,0)--(2.5,0) node[right] {$\lambda$ (波长)};
+      \draw[->,thick] (-2.5,-1.5)--(-2.5,1.5) node[above] {$g$};
+      
+      % Gain spectrum (Lorentzian-like)
+      \draw[green!60!black,thick,domain=-2:2,samples=100]
+        plot(\x,{1.2*exp(-\x*\x)-0.2});
+      \fill[green!20,domain=-2:2] plot(\x,{max(0,1.2*exp(-\x*\x)-0.2)}) |- (2,0);
+      
+      % Peak wavelength
+      \draw[dashed,gray] (0,-1.2)--(0,1.2);
+      \node[font=\footnotesize] at (0.3,-1.4) {$\lambda_0$};
+      
+      % FWHM
+      \draw[<->,thick] (-0.8,0.6)--(0.8,0.6) 
+        node[midway,above,font=\footnotesize] {FWHM};
+      
+      % Transparency point
+      \node[font=\footnotesize] at (-1.8,-0.3) {吸收};
+      \node[font=\footnotesize] at (1.8,0.8) {增益};
+      \draw[thick] (-2.3,-0.2)--(2.3,-0.2) node[right] {$g=0$};
+    </end{scope}
+    
+    % === Overlap Integral ===
+    \begin{scope}[yshift=-3cm]
+      \node[draw=blue!70,thick,rectangle,rounded corners,fill=blue!5,
+            align=left,font=\footnotesize,text width=11cm] at (0,0) {
+        \textbf{光学限制因子（Optical confinement factor）$\Gamma_{\rm opt}$:}\\[5pt]
+        \[
+        \Gamma_{\rm opt} = \frac{\displaystyle\int_{\rm QW} |\mathbf{E}(x,y,z)|^2 \,dx\,dy\,dz}
+        {\displaystyle\int_{\rm all} |\mathbf{E}(x,y,z)|^2 \,dx\,dy\,dz}
+        \]\\[5pt]
+        物理含义：模场与量子阱有源区的空间重叠程度。\\
+        典型值：单阱$\Gamma \sim 1\%$, 多阱$\Gamma \sim 3$--$5\%$。\\
+        设计权衡：$\Gamma$越大越好，但会增加Auger复合和非线性增益压缩。
+      };
+    </end{scope}
+  </end{tikzpicture}
+  \caption{多量子阱（MQW）有源区的能带结构与物理过程。(a)能带图：导带$E_c$和价带$E_v$在量子阱处发生弯曲，
+  形成载流子势阱，蓝色和红色曲线分别为电子和空穴的包络波函数$\psi_e,\psi_h$，箭头表示辐射复合发光；
+  (b)载流子浓度分布$n(z),p(z)$：注入的电子和空穴在量子阱处积累，形成周期性的峰值；
+  (c)材料增益谱$g(\lambda)$：在透明波长$\lambda_0$处增益最大，两侧迅速下降，半高宽（FWHM）通常为30-50 nm。
+  光学限制因子$\Gamma_{\rm opt}$量化了模场与有源区的重叠程度，是决定模增益的关键参数。}
+  \label{fig:ch17_mqw_band}
+</end{figure}
