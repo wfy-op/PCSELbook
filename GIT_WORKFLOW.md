@@ -227,6 +227,15 @@ build/release_notes_<version>.auto.md
 
 ## 9. 项目专用 release 流程
 
+### 9.0 版本号规则（强制）
+
+若用户未显式指定版本号，默认按**发布日期**命名：
+
+- Tag 规则：`vM.DD`
+- 示例：2026-03-26 发布则使用 `v3.26`
+- 本地 PDF 归档规则：`version/pcselbookM.DD.pdf`
+- 若同一天二次发布，使用：`vM.DD.1`、`vM.DD.2`
+
 ### 9.1 编译正式 PDF
 
 ```powershell
@@ -238,21 +247,20 @@ latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=build -jobname=
 每次准备发布新版本时，先把当前 PDF 复制到 `version/`：
 
 ```powershell
-Copy-Item build\pcselbook.pdf version\pcselbook3.19.pdf
+Copy-Item build\pcselbook.pdf version\pcselbook3.26.pdf
 ```
 
 命名规则：
 
-- `version/pcselbook3.19.pdf`
-- `version/pcselbook3.20.pdf`
-- `version/pcselbook3.21.pdf`
+- `version/pcselbook3.26.pdf`
+- `version/pcselbook3.26.1.pdf`
 
 注意：`version/` 不推送到 GitHub。
 
 ### 9.3 生成 release 说明草稿
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Version v3.19 -CurrentRef v3.19 -BaseRef v3.18 -OutputPath build\release_notes_v3.19.auto.md
+powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Version v3.26 -CurrentRef v3.26 -BaseRef v3.22 -OutputPath build\release_notes_v3.26.auto.md
 ```
 
 然后人工整理这份草稿，生成正式说明文本。
@@ -261,33 +269,34 @@ powershell -ExecutionPolicy Bypass -File scripts/generate_release_notes.ps1 -Ver
 
 ```powershell
 git add .
-git commit -m "release: prepare v3.19"
+git commit -m "release: prepare v3.26"
 git push
-git tag -a v3.19 -m "PCSELbook release v3.19"
-git push origin v3.19
+git tag -a v3.26 -m "PCSELbook release v3.26"
+git push origin v3.26
 ```
 
 ### 9.5 创建 GitHub release 并上传 PDF
 
 ```powershell
-gh release create v3.19 build\pcselbook.pdf --title "PCSELbook v3.19" --notes-file build\release_notes_v3.19.txt
+gh release create v3.26 build\pcselbook.pdf --title "PCSELbook v3.26" --notes-file build\release_notes_v3.26.txt
 ```
 
 如果 release 已存在，只更新附件：
 
 ```powershell
-gh release upload v3.19 build\pcselbook.pdf --clobber
+gh release upload v3.26 build\pcselbook.pdf --clobber
 ```
 
-## 10. 当前已发布版本
+## 10. 当前已发布版本（示例）
 
-- `v3.18`
-- `v3.19`
+- `v3.20`
+- `v3.21`
+- `v3.22`
 
 查看命令：
 
 ```powershell
-gh release view v3.19
+gh release view v3.22
 ```
 
 网页地址：
@@ -308,3 +317,4 @@ https://github.com/wfy-op/PCSELbook/releases
 6. 提交、打 tag、创建 GitHub release
 
 如果用户只说“发布新版本”而没有额外说明，默认采用上述流程。
+并且默认版本号按当天日期：例如 3 月 26 日发布则使用 `v3.26`。
