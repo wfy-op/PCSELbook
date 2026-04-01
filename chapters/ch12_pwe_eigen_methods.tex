@@ -51,9 +51,9 @@ PWEM 正是避免这两种误区的第一步。它把 \cref{ch:gamma} 的能带�
 \end{equation}
 在无源条件下，频域 Maxwell 方程可化为
 \begin{align}
--\frac{\partial H_z}{\partial y} &= -\ii\omega\varepsilon_0\varepsilon_r E_x,
+\frac{\partial H_z}{\partial y} &= -\ii\omega\varepsilon_0\varepsilon_r E_x,
 \\
-\frac{\partial H_z}{\partial x} &= -\ii\omega\varepsilon_0\varepsilon_r E_y,
+-\frac{\partial H_z}{\partial x} &= -\ii\omega\varepsilon_0\varepsilon_r E_y,
 \\
 \frac{\partial E_y}{\partial x}-\frac{\partial E_x}{\partial y} &= \ii\omega\mu_0 H_z.
 \end{align}
@@ -86,13 +86,11 @@ PWEM 正是避免这两种误区的第一步。它把 \cref{ch:gamma} 的能带�
 
 若把 $E_z$ 同样写成平面波展开，则会得到另一类矩阵本征问题：
 \begin{equation}
-\sum_{\gvec'}
-\eta_{\gvec-\gvec'}
-\bigl|\kvec+\gvec\bigr|\,
-\bigl|\kvec+\gvec'\bigr|\,
-e(\kvec+\gvec')
+|\kvec+\gvec|^2\,e(\kvec+\gvec)
 =
-\left(\frac{\omega}{c}\right)^2 e(\kvec+\gvec).
+\left(\frac{\omega}{c}\right)^2
+\sum_{\gvec'}
+\varepsilon_{\gvec-\gvec'}\,e(\kvec+\gvec').
 \label{eq:pwem_matrix_ez}
 \end{equation}
 其中 $e(\kvec+\gvec)$ 表示 $E_z$ 分量在平面波基底 $\ee^{\ii(\kvec+\gvec)\cdot \rvec_\parallel}$ 上的傅里叶展开系数。对读者来说，\cref{eq:pwem_matrix_ez} 最值得记住的不是每个下标，而是一个结构事实：$H_z$ 与 $E_z$ 两类标量问题并不共享同一套矩阵，因此高折射率对比结构里“展开 $\varepsilon$ 还是展开 $\varepsilon^{-1}$”会直接影响收敛与带图位置。这也是为什么后面的 RCWA 章节还要专门讨论 Fourier factorization 规则。

@@ -47,7 +47,18 @@ Q_{\mathrm{nr}} \propto R_{\mathrm{nr}}\,\Delta E,
 \begin{itemize}
   \item \textbf{Shockley-Read-Hall (SRH) 复合：}通过缺陷态的非辐射复合，$R_{\mathrm{SRH}} \propto np - n_i^2$
   \item \textbf{Auger 复合：}三粒子过程，$R_{\mathrm{Auger}} = C_n n^2 p + C_p n p^2$，在高载流子浓度下主导
-  \item \textbf{表面复合：}在刻蚀侧壁和界面处，$R_{\mathrm{surf}} = S(n p - n_i^2)$，$S$为表面复合速度
+  \item \textbf{表面复合：}在刻蚀侧壁和界面处，先写面复合通量
+  \[
+  U_{\mathrm{surf}} = S_{\mathrm{surf}}\frac{np-n_i^2}{n+p+2n_i},
+  \qquad
+  [U_{\mathrm{surf}}]=\mathrm{cm}^{-2}\mathrm{s}^{-1},
+  \]
+  再通过有效厚度 $t_{\mathrm{eff}}$ 换算成体复合率
+  \[
+  R_{\mathrm{surf,vol}}=\frac{U_{\mathrm{surf}}}{t_{\mathrm{eff}}},
+  \qquad
+  [R_{\mathrm{surf,vol}}]=\mathrm{cm}^{-3}\mathrm{s}^{-1}.
+  \]
 \end{itemize}
 每次非辐射复合事件释放的能量约为带隙$E_g$，这部分能量最终转化为晶格热能。对 InGaAs/GaAs 量子阱，室温下 Auger 复合和 SRH 复合通常具有可比贡献；在高温或高掺杂区域，Auger 复合可能占主导。
 \end{notebox}
@@ -216,7 +227,10 @@ g_{\mathrm{mat}}(\omega,N,T),
 \end{align}
 \cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把"热会改写光和电"这句口头话，变成真正可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。为避免跨平台误读，本章把定量句统一写成"范围 + 条件 + 引文"：\textbf{[文献值]} 在近红外 GaAs/InP 相关平台，$\partial n/\partial T$ 常见于 $10^{-4}\,\mathrm{K}^{-1}$ 量级（典型约 $2\times10^{-4}\,\mathrm{K}^{-1}$ 到 $3\times10^{-4}\,\mathrm{K}^{-1}$）\cite{dellacorte2000thermooptic}；模增益温度斜率通常为负且依赖工作点，在阈值附近可近似为
 \begin{equation}
-\left.\frac{\partial g_{\mathrm{th}}}{\partial T}\right|_{J=J_{\mathrm{th}}} \approx -\frac{1}{\Gamma_{\mathrm{opt}}}\frac{\partial g_{\mathrm{mat}}}{\partial T}\bigg|_{n=n_{\mathrm{th}}},
+\left.\frac{\partial g_{\mathrm{mod}}}{\partial T}\right|_{n=n_{\mathrm{th}}}
+\approx
+\Gamma_{\mathrm{opt}}
+\left.\frac{\partial g_{\mathrm{mat}}}{\partial T}\right|_{n=n_{\mathrm{th}}},
 \end{equation}
 其中 $n_{\mathrm{th}}$ 是阈值载流子浓度。作为\textbf{[本书算例]}或\textbf{[工程经验]}参数，可在 $-0.1$ 到 $-0.2\,\mathrm{cm}^{-1}\,\mathrm{K}^{-1}$ 范围内做敏感度扫描，而非固定常数。需注意该斜率强烈依赖于量子阱结构、应变状态和工作载流子浓度。
 
@@ -383,5 +397,4 @@ T(\rvec)
 
   \item 若想对照高功率与连续波 PCSEL 中热-电-光约束怎样真正显形，可参考 \cite{hirose2014,yoshida2019,yoshida2023,wang2024}。 这条阅读的重点是补足本章关于热效应、非均匀性与热-电-光闭环 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
-
 

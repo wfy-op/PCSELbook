@@ -48,10 +48,10 @@ CWT 说的是“腔内部到底是怎样由周期散射编织出来的”；TCMT
 
 实际从数值结果提取 TCMT 参数时，最常用的接口是被动反射/透射谱的共振峰拟合。以单端口近似为例，共振附近的反射系数可写成
 \begin{equation}
-r(\omega)\approx C_{11}+\frac{\mathrm{i}d_1^2}{\omega-\omega_0+\mathrm{i}(\gamma_i+\gamma_e)},
+r(\omega)\approx C_{11}+\frac{\mathrm{i}d_1k_1}{\omega-\omega_0+\mathrm{i}(\gamma_i+\gamma_e)},
 \label{eq:tcmt_r_fit}
 \end{equation}
-其中共振峰的半高全宽即 $2(\gamma_i+\gamma_e)$，非共振背景由 $C_{11}$ 给出。通过对 RCWA 或 FDTD 计算的谱线做洛伦兹拟合，可提取 $\gamma_e$（外耦合损耗）与 $\gamma_i$（内部损耗）之和；再结合被动 $Q$（$Q=\omega_0/2(\gamma_i+\gamma_e)$）和上下出光比，可进一步分离 $\gamma_e$ 的上下通道贡献。
+其中极点线宽由 $\gamma_i+\gamma_e$ 决定（无显著背景干涉时对应半高全宽 $2(\gamma_i+\gamma_e)$），非共振背景由 $C_{11}$ 给出。通过对 RCWA 或 FDTD 计算的谱线做拟合，可提取 $\gamma_e$（外耦合损耗）与 $\gamma_i$（内部损耗）之和；再结合被动 $Q$（$Q=\omega_0/2(\gamma_i+\gamma_e)$）和上下出光比，可进一步分离 $\gamma_e$ 的上下通道贡献。
 
 这套式子看起来像纯粹的信号处理，但其物理意义非常清楚。第一式说的是：模幅一方面按自身复频率演化，一方面吸收外部输入的驱动；第二式说的是：输出既包含非共振的直接散射背景，也包含经由共振模再辐射出来的部分。
 
@@ -347,7 +347,7 @@ c\\
 \begin{equation}
 \int_V (\E_1\cdot\Jf_2 - \E_2\cdot\Jf_1)\,\dd V = \oint_S (\E_1\times\Hf_2 - \E_2\times\Hf_1)\cdot\dd\bm{S}.
 \end{equation}
-在封闭系统中，这导致耦合矩阵满足 $\kappa_{12} = \kappa_{21}^\ast$ (厄米性)。
+在无耗散的封闭系统中，这进一步使耦合矩阵满足 $\kappa_{12} = \kappa_{21}^\ast$（厄米性）；互易性本身主要给出转置对称约束。
 
 \textbf{互易性成立的条件：}
 \begin{enumerate}
@@ -356,13 +356,13 @@ c\\
   \item 封闭系统或适当的辐射边界条件
 \end{enumerate}
 
-\textbf{开放系统中的"表观非互易":} 即使介质本身满足互易性，开放系统的辐射通道也可诱导\textbf{有效非互易耦合} $\kappa_{12} \neq \kappa_{21}$。这是因为：
+\textbf{开放系统中的有效非厄米耦合：}即使介质本身满足互易性，开放系统的辐射通道也会诱导有效耗散耦合，使系统矩阵呈现非厄米结构。这是因为：
 \begin{itemize}
   \item 模式通过共同辐射通道发生间接耦合，耦合强度依赖于远场干涉条件
   \item 辐射损耗矩阵 $\bm{\Gamma}_{\mathrm{rad}}$ 一般不是对角的，导致有效哈密顿量非厄米
   \item 在 biorthogonal 基底下，左模与右模不构成简单的复共轭关系
 \end{itemize}
-这种"表观非互易"并不违反 Lorentz 定理，而是反映了开放系统动力学的固有特性：辐射通道充当了"环境"，介入了模式间的有效相互作用。
+这并不等同于破坏 Lorentz 互易性：在互易条件下，散射矩阵仍满足 $\mathbf S=\mathbf S^{\mathsf T}$（并可在合适基底下写作 $\kappa_{12}=\kappa_{21}$）；变化的是“保守厄米”到“开放非厄米”的动力学结构。
 \end{ReciprocityConditionBox}
 
 \cref{eq:two_mode_split} 看上去简单，却几乎浓缩了模式分裂的全部核心。首先，当两模原本简并时，任何非零耦合都可能把它们分开；其次，若 $\tilde\omega_1$ 与 $\tilde\omega_2$ 本身含有不同虚部，那么分裂不再只是“频率上分两条线”，而是“损耗排序也被改写”。这正是前面反复强调的：在 PCSEL 中，分裂往往不是纯粹的谱学现象，而是模式选择的直接前奏。
@@ -446,4 +446,3 @@ TCMT、CWT 与微扰理论是互补的三种语言。CWT 擅长追踪光子晶�
 
   \item 若想进一步打牢开放系统归一化与非厄米微扰，可继续阅读 \cite{leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm}，并与 \cref{ch:math-appendix} 对照。 这条阅读的重点是补足本章关于TCMT、微扰与模式分裂 的标准背景、经典语言和代表性文献接口。
 \end{itemize}
-

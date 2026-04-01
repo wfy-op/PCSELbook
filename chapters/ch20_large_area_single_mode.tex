@@ -43,9 +43,15 @@ PCSEL 之所以受到持续关注，一个核心原因就是它有潜力同时�
 \begin{NoteBox}{模增益的空间积分定义}
 模增益是空间积分量，定义为
 \begin{equation}
-g_{\mathrm{mod},i} = \Gamma_{\mathrm{opt},i} \cdot g_{\mathrm{mat}} = \frac{\int_{V_{\mathrm{act}}} \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V}{\int_{V_{\mathrm{total}}} \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V} \cdot g_{\mathrm{mat}}(n(\rvec), T(\rvec)),
+g_{\mathrm{mod},i}
+\approx
+\Gamma_{\mathrm{opt},i}\,g_{\mathrm{mat}},
+\qquad
+\Gamma_{\mathrm{opt},i}
+=
+\frac{\int_{V_{\mathrm{act}}} \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V}{\int_{V_{\mathrm{total}}} \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V},
 \end{equation}
-其中材料增益 $g_{\mathrm{mat}}$ 本身也依赖于局域载流子浓度 $n(\rvec)$ 和温度 $T(\rvec)$。对大面积 PCSEL，若注入不均匀或存在空间烧孔，$g_{\mathrm{mat}}$ 不能提出积分号，必须逐点计算后积分：
+其中第一式对应“有源区内材料增益近似均匀”的情形。若材料增益随局域载流子浓度与温度变化，即 $g_{\mathrm{mat}}=g_{\mathrm{mat}}(n(\rvec),T(\rvec))$，则不能提出积分号，必须逐点加权：
 \begin{equation}
 g_{\mathrm{mod},i} = \frac{\int_{V_{\mathrm{act}}} g_{\mathrm{mat}}(n(\rvec), T(\rvec)) \cdot \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V}{\int_{V_{\mathrm{total}}} \varepsilon_r(\rvec)|\E_i(\rvec)|^2\,\dd V}.
 \end{equation}

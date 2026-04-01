@@ -39,11 +39,19 @@ RCWA 的名称里虽然有“耦合波”，但它和前面 CWT 的工作方式�
 \end{equation}
 其中 $\bm{f}_\ell$ 是该层选取的场变量向量，$\mathbf{W}_\ell^{\pm}$ 是本征模基底矩阵，$\mathbf{\beta}_\ell$ 给出纵向传播常数，$\bm{a}_\ell^{\pm}$ 分别表示上、下行模振幅。
 \begin{notebox}
-\textbf{纵向传播常数矩阵 $\mathbf{\beta}_\ell$ 的定义。}对第 $\ell$ 层的第 $n$ 个空间谐波，其纵向传播常数为
+\textbf{纵向传播常数矩阵 $\mathbf{\beta}_\ell$ 的定义。}在周期层中，纵向传播常数应由层本征值问题给出：
 \[
-\beta_{\ell,n} = \sqrt{k_0^2\varepsilon_{\ell,n} - |\bm{k}_{\parallel,n}|^2},
+\mathbf{M}_\ell \mathbf{W}_\ell
+=
+\mathbf{W}_\ell \mathbf{\Lambda}_\ell,
+\qquad
+\mathbf{\beta}_\ell \equiv \mathbf{\Lambda}_\ell.
 \]
-其中 $\varepsilon_{\ell,n}$ 是该层第 $n$ 个 Fourier 分量的相对介电常数，$\bm{k}_{\parallel,n} = \bm{k}_{\parallel,0} + \bm{G}_n$ 是第 $n$ 个面内波矢。对所有保留的空间谐波，$\mathbf{\beta}_\ell$ 是一个对角矩阵，其对角元为各个谐波的 $\beta_{\ell,n}$。当 $\beta_{\ell,n}$ 为纯虚数时，对应倏逝波；当为实数时，对应传播波。
+这里 $\mathbf{M}_\ell$ 是由该层 Fourier 卷积矩阵构造的 RCWA 层算子，$\mathbf{W}_\ell$ 为本征模基底矩阵。仅在\textbf{均匀层}（无谐波耦合）时，才可退化为单谐波形式
+\[
+\beta_n = \sqrt{k_0^2\varepsilon_\ell-|\bm{k}_{\parallel,n}|^2}.
+\]
+当 $\beta_n$ 为纯虚数时，对应倏逝波；当为实数时，对应传播波。
 \end{notebox}
 这一步的物理意义非常明确：在每一层里，平面内周期导致的多谐波耦合已经被吸收进层本征模中；而真正的结构复杂性，被转化成"层与层之间如何通过边界条件连接"。于是，复杂三维问题被拆成两部分：层内求模，层间拼接。\cref{fig:ch13_rcwa_discretization}直观展示了如何将连续的倾斜光栅剖面离散化为多层阶梯近似结构，这是RCWA处理任意形状周期结构的核心技巧。
 

@@ -92,14 +92,14 @@
 利用矢量恒等式 $\nabla\cdot(\E\times\Hf^*) = \Hf^*\cdot(\nabla\times\E) - \E\cdot(\nabla\times\Hf^*)$,并将 (\ref{eq:poynting-curl-e})--(\ref{eq:poynting-curl-h}) 代入，经过直接计算可得
 \begin{equation}
 \nabla\cdot\left(\frac{1}{2}\E\times\Hf^*\right)
-= -\frac{\ii\omega}{2}\left(\mu_0\mu_r|\Hf|^2 - \varepsilon_0\varepsilon_r^*|\E|^2\right).
+= \frac{\ii\omega}{2}\left(\mu_0\mu_r|\Hf|^2 - \varepsilon_0\varepsilon_r^*|\E|^2\right).
 \label{eq:poynting-complex}
 \end{equation}
 
 对全空间积分并取实部，得到时间平均功率流：
 \begin{equation}
 P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\cdot\dd\bm{s}
- = \int_V\frac{\omega}{2}\operatorname{Im}(\varepsilon_r)\varepsilon_0|\E|^2\,\dd V.
+ = -\int_V\frac{\omega}{2}\operatorname{Im}(\varepsilon_r)\varepsilon_0|\E|^2\,\dd V.
 \label{eq:poynting-real-power}
 \end{equation}
 
@@ -107,7 +107,7 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
 \begin{itemize}
   \item \textbf{封闭系统：}若边界为理想导体 ($\bm{n}\times\E=0$)，则左侧面积分为零。若无损耗 ($\operatorname{Im}\varepsilon_r=0$),右侧也为零——能量既不能流出也不能耗散，只能永远囚禁在腔内。此时本征频率必为实数。
   
-  \item \textbf{开放系统：}PCSEL 表面没有金属屏蔽，光可以从衍射栅耦合出去。此时 (\ref{eq:poynting-real-power}) 左端不为零，意味着能量持续向外辐射。为了维持稳态振荡，场必须以指数衰减:$e^{-\gamma t}$,这正好对应复频率$\tilde{\omega}=\omega_0-\ii\gamma$中的虚部$\gamma > 0$。
+  \item \textbf{开放系统：}PCSEL 表面没有金属屏蔽，光可以从衍射栅耦合出去。即使材料近似无损（$\operatorname{Im}\varepsilon_r\approx 0$），被动本征频率也应写成 $\tilde{\omega}=\omega_0-\ii\gamma$（$\gamma>0$），场包络按 $e^{-\gamma t}$ 衰减。也就是说，辐射损耗由 $\operatorname{Im}\tilde{\omega}$ 编码，而不是由体损耗项单独给出。
 \end{itemize}
 
 因此，判断一个系统是"封闭"还是"开放",不应只看几何形状，而应看坡印亭矢量的净通量是否为零。这也是为什么我们在本节强调：PCSEL 的本征模分析必须采用开放边界的格林函数或散射矩阵框架。

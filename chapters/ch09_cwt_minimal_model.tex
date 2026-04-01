@@ -316,7 +316,7 @@ A_c
 \begin{ExampleBox}
 对方格晶格圆形空气孔（半径 $r$、晶格常数 $a$、背景折射率 $n_b\approx3.4$），主导倒格矢 $\bm G_x=(2\pi/a,0)$ 对应的截面 Fourier 分量可解析估算为
 \[
-\Delta\varepsilon_{\bm G_x}\approx \frac{2\pi(r/a)}{\pi r^2/a^2} J_1\!\left(\frac{2\pi r}{a}\right) \cdot(n_{\rm air}^2-n_b^2)
+\Delta\varepsilon_{\bm G_x}\approx 2\left(\frac{r}{a}\right) J_1\!\left(\frac{2\pi r}{a}\right) \cdot(n_{\rm air}^2-n_b^2)
 \approx -2\left(\frac{r}{a}\right)J_1\!\left(\frac{2\pi r}{a}\right)\cdot n_b^2,
 \]
 其中 $J_1$ 是一阶 Bessel 函数。对典型占空比 $r/a\approx0.3$，$J_1(2\pi\times0.3)\approx0.40$，因此
@@ -456,7 +456,7 @@ U = \frac{1}{\sqrt{2}}
 \nabla\times\nabla\times \E(\rvec) = k_0^2\tilde{n}^2(\rvec)\E(\rvec),
 \label{eq:3d_cwt_vector_wave}
 \end{equation}
-其中 $k_0=\omega/c$，$\tilde{n}^2(\rvec)=n^2(\rvec)+2\ii k_0 n(\rvec)\tilde{\alpha}(\rvec)$ 包含折射率实部和增益/损耗虚部。TE 极化场 $\E=(E_x,E_y,0)$ 按 Bloch 定理展开为
+其中 $k_0=\omega/c$，$\tilde{n}^2(\rvec)=n^2(\rvec)+2\ii n(\rvec)\tilde{\alpha}(\rvec)/k_0$ 包含折射率实部和增益/损耗虚部。TE 极化场 $\E=(E_x,E_y,0)$ 按 Bloch 定理展开为
 \begin{equation}
 E_i(\rvec) = \sum_{m,n} E_{i,mn}(z)\,\ee^{-\ii(m\beta_0 x + n\beta_0 y)},
 \qquad i=x,y,
@@ -995,17 +995,28 @@ c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
 \paragraph{1. 偏振方位角 (azimuth angle)}
 线偏振主轴相对于 $x$轴的夹角为
 \begin{equation}
-\psi_j = \arctan\!\left(\frac{|c_{y,j}|}{|c_{x,j}|}\right),
+\psi_j
+=
+\frac{1}{2}\operatorname{atan2}\!\left(
+2\,\mathrm{Re}\!\left[c_{x,j}c_{y,j}^{\ast}\right],\;
+|c_{x,j}|^2-|c_{y,j}|^2
+\right),
 \qquad
-\psi_j \in [0, \pi/2].
+\psi_j \in \left(-\frac{\pi}{2},\frac{\pi}{2}\right].
 \label{eq:polarization_azimuth_from_cxy}
 \end{equation}
-特别地，当 $|c_{x,j}|=|c_{y,j}|$且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当$c_{y,j}=0$时,$\psi_j=0^\circ$,对应纯$x$偏振。
+特别地，当相位差接近零时，\cref{eq:polarization_azimuth_from_cxy} 会退化到熟悉的幅值比公式；当 $|c_{x,j}|=|c_{y,j}|$ 且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当 $c_{y,j}=0$ 时，$\psi_j=0^\circ$，对应纯 $x$ 偏振。
 
 \paragraph{2. 椭圆率 (ellipticity)}
-若考虑复振幅的相对相位 $\delta\phi = \arg(c_{y,j}) - \arg(c_{x,j})$，则偏振椭圆的椭圆率为
+若考虑复振幅的相对相位，先定义椭圆角 $\chi_j$：
 \begin{equation}
-e_j = \tan\chi_j = \frac{2|c_{x,j}||c_{y,j}|\sin(\delta\phi)}{|c_{x,j}|^2 + |c_{y,j}|^2},
+\chi_j
+=
+\frac{1}{2}\arcsin\!\left(
+\frac{2\,\mathrm{Im}\!\left[c_{x,j}^{\ast}c_{y,j}\right]}{|c_{x,j}|^2 + |c_{y,j}|^2}
+\right),
+\qquad
+e_j = \tan\chi_j,
 \qquad
 e_j \in [-1, 1],
 \label{eq:polarization_ellipticity_from_cxy}

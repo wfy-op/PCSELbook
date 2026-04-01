@@ -1,0 +1,514 @@
+[
+  {
+    "chapter": "chapters/ch01_introduction.tex",
+    "line_start": 22,
+    "line_end": 27,
+    "label": "fig:ch01_development_timeline",
+    "inputs": [
+      "figures/fig_ch01_timeline.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch01_introduction.tex",
+    "line_start": 116,
+    "line_end": 121,
+    "label": "fig:ch01_laser_comparison",
+    "inputs": [
+      "figures/fig_ch01_laser_comparison"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch01_introduction.tex",
+    "line_start": 143,
+    "line_end": 166,
+    "label": "fig:pcsel-layer",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch01_introduction.tex",
+    "line_start": 329,
+    "line_end": 334,
+    "label": "fig:ch01_three_perspectives_flow",
+    "inputs": [
+      "figures/fig_ch01_three_perspectives_flow"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch02_mathematical_roadmap.tex",
+    "line_start": 18,
+    "line_end": 23,
+    "label": "fig:ch02_knowledge_map",
+    "inputs": [
+      "figures/fig_ch02_knowledge_map.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch02_mathematical_roadmap.tex",
+    "line_start": 44,
+    "line_end": 49,
+    "label": "fig:ch02_benchmark_device",
+    "inputs": [
+      "figures/fig_ch02_benchmark_device"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch02_mathematical_roadmap.tex",
+    "line_start": 170,
+    "line_end": 183,
+    "label": "fig:model_layers",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch02_mathematical_roadmap.tex",
+    "line_start": 294,
+    "line_end": 310,
+    "label": "fig:book_dependency_flow",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch02_mathematical_roadmap.tex",
+    "line_start": 314,
+    "line_end": 319,
+    "label": "fig:ch02_six_redlines",
+    "inputs": [
+      "figures/fig_ch02_six_redlines"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch03_maxwell_periodic_media.tex",
+    "line_start": 188,
+    "line_end": 208,
+    "label": "fig:complex-freq-plane",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch03_maxwell_periodic_media.tex",
+    "line_start": 371,
+    "line_end": 376,
+    "label": "fig:ch03_boundary_conditions",
+    "inputs": [
+      "figures/fig_ch03_boundary_conditions.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 97,
+    "line_end": 102,
+    "label": "fig:ch04_bloch_1d_demo",
+    "inputs": [
+      "figures/fig_ch04_bloch_1d.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 210,
+    "line_end": 215,
+    "label": "fig:ch04_brillouin_zone",
+    "inputs": [
+      "figures/fig_ch04_brillouin_zone"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 255,
+    "line_end": 280,
+    "label": "fig:lattice-reciprocal",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 284,
+    "line_end": 304,
+    "label": "fig:bz_construction_square",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 308,
+    "line_end": 320,
+    "label": "fig:bz-gamma",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch04_bloch_and_2dpc.tex",
+    "line_start": 374,
+    "line_end": 392,
+    "label": "fig:bz-triangular",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
+    "line_start": 234,
+    "line_end": 239,
+    "label": "fig:ch05_gamma_point_physics",
+    "inputs": [
+      "figures/fig_ch05_gamma_point_physics"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
+    "line_start": 364,
+    "line_end": 390,
+    "label": "fig:square_hole_teaching_setup",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
+    "line_start": 418,
+    "line_end": 439,
+    "label": "fig:band_reading_schematic",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch06_inplane_feedback_surface_emission.tex",
+    "line_start": 154,
+    "line_end": 175,
+    "label": "fig:lightcone_coupling",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch06_inplane_feedback_surface_emission.tex",
+    "line_start": 177,
+    "line_end": 197,
+    "label": "fig:lightcone_dispersion",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch08_polarization_symmetry_farfield.tex",
+    "line_start": 391,
+    "line_end": 410,
+    "label": "fig:near-far-symmetry",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch08_polarization_symmetry_farfield.tex",
+    "line_start": 429,
+    "line_end": 434,
+    "label": "fig:ch08_four_mode_triplet",
+    "inputs": [
+      "figures/fig_ch08_four_mode_triplet.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch08b_bic_quasibic.tex",
+    "line_start": 184,
+    "line_end": 189,
+    "label": "fig:ch08b_bic_mechanism",
+    "inputs": [
+      "figures/fig_ch08b_bic_mechanism.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch08b_bic_quasibic.tex",
+    "line_start": 269,
+    "line_end": 288,
+    "label": "fig:bic_polarization_vortex",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch09_cwt_minimal_model.tex",
+    "line_start": 50,
+    "line_end": 82,
+    "label": "fig:cwt_four_wave_map",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch09_cwt_minimal_model.tex",
+    "line_start": 211,
+    "line_end": 216,
+    "label": "fig:ch09_cwt_signal_flow",
+    "inputs": [
+      "figures/fig_ch09_cwt_signal_flow.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch11_cmt_perturbation_splitting.tex",
+    "line_start": 58,
+    "line_end": 79,
+    "label": "fig:tcmt_port_cavity",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch11_cmt_perturbation_splitting.tex",
+    "line_start": 373,
+    "line_end": 378,
+    "label": "fig:ch11_mode_splitting",
+    "inputs": [
+      "figures/fig_ch11_mode_splitting_cmt.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch11_cmt_perturbation_splitting.tex",
+    "line_start": 397,
+    "line_end": 402,
+    "label": "fig:ch11_cwt_cmt_mapping",
+    "inputs": [
+      "figures/fig_ch11_cwt_cmt_mapping.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch12_pwe_eigen_methods.tex",
+    "line_start": 167,
+    "line_end": 205,
+    "label": "fig:pwem_matrix_structure",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch12_pwe_eigen_methods.tex",
+    "line_start": 422,
+    "line_end": 452,
+    "label": "fig:pwem_python_band_result",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch13_rcwa_open_periodic_threshold.tex",
+    "line_start": 58,
+    "line_end": 63,
+    "label": "fig:ch13_rcwa_discretization",
+    "inputs": [
+      "figures/fig_ch13_rcwa_discretization.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch14_fdtd_fem_for_pcsel.tex",
+    "line_start": 51,
+    "line_end": 56,
+    "label": "fig:ch14_fdtd_setup",
+    "inputs": [
+      "figures/fig_ch14_fdtd_setup.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch16_epitaxial_optical_structure.tex",
+    "line_start": 78,
+    "line_end": 101,
+    "label": "fig:sch-band-offset",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch16_epitaxial_optical_structure.tex",
+    "line_start": 123,
+    "line_end": 152,
+    "label": "fig:epi-stack",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch16_epitaxial_optical_structure.tex",
+    "line_start": 246,
+    "line_end": 261,
+    "label": "fig:qw-overlap",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch17_qw_active_gain_models.tex",
+    "line_start": 36,
+    "line_end": 41,
+    "label": "fig:ch17_qw_band_diagram",
+    "inputs": [
+      "figures/fig_ch17_qw_band_diagram.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch17_qw_active_gain_models.tex",
+    "line_start": 94,
+    "line_end": 115,
+    "label": "fig:mqw_barrier_blocking",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch18_electrical_injection_transport.tex",
+    "line_start": 84,
+    "line_end": 104,
+    "label": "fig:current-spreading",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch18_electrical_injection_transport.tex",
+    "line_start": 217,
+    "line_end": 222,
+    "label": "fig:ch18_current_crowding",
+    "inputs": [
+      "figures/fig_ch18_current_crowding"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch19_thermal_electro_optic_coupling.tex",
+    "line_start": 253,
+    "line_end": 258,
+    "label": "fig:ch19_thermal_coupling",
+    "inputs": [
+      "figures/fig_ch19_thermal_coupling_mechanisms.tex"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch19_thermal_electro_optic_coupling.tex",
+    "line_start": 262,
+    "line_end": 267,
+    "label": "fig:ch19_thermal_circuit_analogy",
+    "inputs": [
+      "figures/fig_ch19_thermal_circuit_analogy"
+    ],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch19_thermal_electro_optic_coupling.tex",
+    "line_start": 324,
+    "line_end": 339,
+    "label": "fig:eto-flow",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch22_practical_simulation_workflow.tex",
+    "line_start": 276,
+    "line_end": 301,
+    "label": "fig:workflow-map",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  },
+  {
+    "chapter": "chapters/ch27_simulation_checklists.tex",
+    "line_start": 154,
+    "line_end": 178,
+    "label": "fig:debug-tree-appendix",
+    "inputs": [],
+    "includes": [],
+    "has_centering": true,
+    "placement": "htbp"
+  }
+]

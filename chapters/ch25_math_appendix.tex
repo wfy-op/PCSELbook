@@ -299,7 +299,16 @@ E_n(x) \sim E_0 \ee^{\ii \tilde{k}_n |x|}, \qquad \tilde{k}_n = \frac{\tilde{\om
 \begin{enumerate}
   \item 使用 COMSOL/Lumerical 的 QNM求解器获取前$N$个主导模式的复频率$\tilde{\omega}_n$和场分布$\E_n(\rvec)$
   \item 在同一平台上计算对应的左模$\E_n^{\rm L}$(或通过互易性关系间接获得)
-  \item 验证模态截断误差:$\eta = 1 - \sum_{n=1}^N |\langle L_n|\Psi_{\rm target}\rangle|^2/(N_n\langle\Psi_{\rm target}|\Psi_{\rm target}\rangle)$
+  \item 验证模态截断误差：先计算双正交投影系数
+  \[
+  c_n=\frac{\langle L_n|\Psi_{\rm target}\rangle}{\langle L_n|R_n\rangle},
+  \]
+  再以重构残差定义误差
+  \[
+  \eta=
+  \frac{\left\|\Psi_{\rm target}-\sum_{n=1}^{N} c_n R_n\right\|_{W}}
+  {\|\Psi_{\rm target}\|_{W}}
+  \]
   \item 若$\eta < 1\%$,则认为当前 QNM基组足够用于后续的微扰分析和耦合计算
 \end{enumerate}
 \end{MathematicalFoundationBox}
@@ -422,10 +431,19 @@ F_P(\rvec_0,\hat{\bm{p}},\omega) = \frac{P}{P_0}
 \end{equation}
 这个公式的强大之处在于：它不需要显式地知道任何本征模，只需要计算源点处的 Green 张量即可。当然，如果将~\cref{eq:green_modal_expansion}代入，也能得到用 QNM 展开的形式：
 \begin{equation}
-F_P \propto \sum_n \frac{|\hat{\bm{p}}\cdot\E_n^{\mathrm R}(\rvec_0)|^2}{(\omega-\omega_n)^2+\gamma_n^2},
+F_P(\rvec_0,\hat{\bm p},\omega)
+\approx
+\sum_n \Re\!\left[\frac{A_n}{\omega-\tilde{\omega}_n}\right],
 \label{eq:purcell_modal_sum}
 \end{equation}
-这正是 Lorentzian 峰形的叠加，每个峰的宽度由$\gamma_n$决定，高度由偶极子与该模的耦合强度决定。
+其中
+\[
+A_n=
+\frac{6\pi c}{\omega}\,
+\frac{\bigl(\hat{\bm p}\!\cdot\!\E_n^{\mathrm R}(\rvec_0)\bigr)\bigl(\hat{\bm p}\!\cdot\!\E_n^{\mathrm L}(\rvec_0)\bigr)}
+{2\tilde{\omega}_n\langle \E_n^{\mathrm L},\E_n^{\mathrm R}\rangle}
+\]
+是由左右模重叠与归一化共同决定的复残数。仅在单模、弱重叠、高 $Q$ 近似下，\cref{eq:purcell_modal_sum} 才可进一步退化为 Lorentzian 峰形；一般开放系统可出现非 Lorentz 线形和模间干涉项。
 
 \begin{WhatCouldGoWrong}
 有些初学者在使用~\cref{eq:purcell_modal_sum}时会忘记两点：第一，这个求和通常需要包含足够多的模才能收敛；第二，对强开放模，QNM 的空间增长特性可能导致~\cref{eq:green_modal_expansion}在某些位置不适用。在这些情况下，直接使用全波仿真提取$\Im[\overline{\bm{G}}]$反而更可靠。

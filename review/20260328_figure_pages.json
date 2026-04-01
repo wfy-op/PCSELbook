@@ -1,0 +1,282 @@
+[
+  {
+    "label": "fig:ch01_development_timeline",
+    "page": 3
+  },
+  {
+    "label": "fig:ch01_laser_comparison",
+    "page": 6
+  },
+  {
+    "label": "fig:pcsel-layer",
+    "page": 8
+  },
+  {
+    "label": "fig:ch01_three_perspectives_flow",
+    "page": 13
+  },
+  {
+    "label": "fig:ch02_knowledge_map",
+    "page": 18
+  },
+  {
+    "label": "fig:ch02_benchmark_device",
+    "page": 19
+  },
+  {
+    "label": "fig:model_layers",
+    "page": 23
+  },
+  {
+    "label": "fig:book_dependency_flow",
+    "page": 26
+  },
+  {
+    "label": "fig:ch02_six_redlines",
+    "page": 27
+  },
+  {
+    "label": "fig:complex-freq-plane",
+    "page": 34
+  },
+  {
+    "label": "fig:ch03_boundary_conditions",
+    "page": 38
+  },
+  {
+    "label": "fig:ch04_bloch_1d_demo",
+    "page": 44
+  },
+  {
+    "label": "fig:ch04_brillouin_zone",
+    "page": 48
+  },
+  {
+    "label": "fig:bz-gamma",
+    "page": 49
+  },
+  {
+    "label": "fig:bz_construction_square",
+    "page": 49
+  },
+  {
+    "label": "fig:lattice-reciprocal",
+    "page": 49
+  },
+  {
+    "label": "fig:bz-triangular",
+    "page": 51
+  },
+  {
+    "label": "fig:ch05_gamma_point_physics",
+    "page": 61
+  },
+  {
+    "label": "fig:ch05_pwem_convergence",
+    "page": 62
+  },
+  {
+    "label": "fig:square_hole_teaching_setup",
+    "page": 66
+  },
+  {
+    "label": "fig:band_reading_schematic",
+    "page": 67
+  },
+  {
+    "label": "fig:lightcone_coupling",
+    "page": 79
+  },
+  {
+    "label": "fig:ch06_surface_emission_mechanisms",
+    "page": 80
+  },
+  {
+    "label": "fig:lightcone_dispersion",
+    "page": 80
+  },
+  {
+    "label": "fig:ch07_loss_breakdown_piechart",
+    "page": 89
+  },
+  {
+    "label": "fig:ch07_threshold_gain_breakdown",
+    "page": 93
+  },
+  {
+    "label": "fig:ch07_threshold_current_sankey",
+    "page": 94
+  },
+  {
+    "label": "fig:ch08_farfield_pattern",
+    "page": 106
+  },
+  {
+    "label": "fig:near-far-symmetry",
+    "page": 106
+  },
+  {
+    "label": "fig:ch08_four_mode_triplet",
+    "page": 107
+  },
+  {
+    "label": "fig:ch08_polarization_control",
+    "page": 110
+  },
+  {
+    "label": "fig:ch08b_bic_mechanism",
+    "page": 118
+  },
+  {
+    "label": "fig:bic_polarization_vortex",
+    "page": 121
+  },
+  {
+    "label": "fig:cwt_four_wave_map",
+    "page": 127
+  },
+  {
+    "label": "fig:ch09_cwt_signal_flow",
+    "page": 130
+  },
+  {
+    "label": "fig:ch10_cwt_upgrade_map",
+    "page": 155
+  },
+  {
+    "label": "fig:tcmt_port_cavity",
+    "page": 164
+  },
+  {
+    "label": "fig:ch11_mode_splitting",
+    "page": 171
+  },
+  {
+    "label": "fig:ch11_cwt_cmt_mapping",
+    "page": 172
+  },
+  {
+    "label": "fig:ch12_pwem_workflow",
+    "page": 180
+  },
+  {
+    "label": "fig:pwem_matrix_structure",
+    "page": 181
+  },
+  {
+    "label": "fig:ch12_npw_accuracy_log",
+    "page": 185
+  },
+  {
+    "label": "fig:pwem_python_band_result",
+    "page": 186
+  },
+  {
+    "label": "fig:ch13_rcwa_discretization",
+    "page": 196
+  },
+  {
+    "label": "fig:ch14_fdtd_setup",
+    "page": 207
+  },
+  {
+    "label": "fig:ch15_method_comparison_radar",
+    "page": 217
+  },
+  {
+    "label": "fig:ch16_epitaxial_stack",
+    "page": 232
+  },
+  {
+    "label": "fig:sch-band-offset",
+    "page": 233
+  },
+  {
+    "label": "fig:epi-stack",
+    "page": 234
+  },
+  {
+    "label": "fig:qw-overlap",
+    "page": 237
+  },
+  {
+    "label": "fig:ch16_oxide_vs_proton",
+    "page": 239
+  },
+  {
+    "label": "fig:ch17_qw_band_diagram",
+    "page": 244
+  },
+  {
+    "label": "fig:mqw_barrier_blocking",
+    "page": 246
+  },
+  {
+    "label": "fig:current-spreading",
+    "page": 255
+  },
+  {
+    "label": "fig:ch18_current_crowding",
+    "page": 259
+  },
+  {
+    "label": "fig:ch19_thermal_coupling",
+    "page": 269
+  },
+  {
+    "label": "fig:ch19_thermal_circuit_analogy",
+    "page": 270
+  },
+  {
+    "label": "fig:eto-flow",
+    "page": 272
+  },
+  {
+    "label": "fig:ch20_array_coupling",
+    "page": 276
+  },
+  {
+    "label": "fig:ch20b_error_propagation_graph",
+    "page": 284
+  },
+  {
+    "label": "fig:ch21b_modulation_response",
+    "page": 295
+  },
+  {
+    "label": "fig:ch21_linewidth_enhancement",
+    "page": 307
+  },
+  {
+    "label": "fig:ch22_design_workflow",
+    "page": 317
+  },
+  {
+    "label": "fig:workflow-map",
+    "page": 326
+  },
+  {
+    "label": "fig:ch23_two_layer_example_bridge",
+    "page": 334
+  },
+  {
+    "label": "fig:ch24_failure_diagnosis_flow",
+    "page": 348
+  },
+  {
+    "label": "fig:ch25_math_object_map",
+    "page": 359
+  },
+  {
+    "label": "fig:ch26_calibration_validation_loop",
+    "page": 378
+  },
+  {
+    "label": "fig:debug-tree-appendix",
+    "page": 393
+  },
+  {
+    "label": "fig:ch28_symbol_glossary",
+    "page": 399
+  }
+]

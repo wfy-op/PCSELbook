@@ -76,10 +76,10 @@ MQW 的优势在于可以在相同波导区内堆叠多个阱，从而提高总�
 g_{\mathrm{mat}}(\lambda_m,N,T)
 \approx
 g_{\mathrm{pk}}(N,T)
--\frac{\Delta\lambda^2}{2\sigma_\lambda^2}.
+-a_{\lambda}(N,T)\,\Delta\lambda^2.
 \label{eq:gain_detuning_parabolic}
 \end{equation}
-\cref{eq:gain_detuning_parabolic} 不是通用材料定律，而是教材化的最小代理模型。其适用窗口必须绑定材料平台与工作波段：以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，增益谱半高宽常见于 $20$--$30\,\mathrm{nm}$ 量级，抛物线近似在峰值附近 $|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 常可用于一阶估算\cite{wang2024,zhou2024nside1550pcsel}；对 GaN/深紫外等平台，谱形与展宽机制差异更大，应重新标定窗口而非平移复用该区间\cite{coldren2012,lu2025deepuvpcsel}。它的作用是把“模式波长是否压在增益峰上”这件事，直接写成可计算的阈值链一环。
+\cref{eq:gain_detuning_parabolic} 不是通用材料定律，而是教材化的最小代理模型（其中 $a_{\lambda}$ 的量纲为 $\mathrm{cm}^{-1}\mathrm{nm}^{-2}$，确保量纲与增益一致）。其适用窗口必须绑定材料平台与工作波段：以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，增益谱半高宽常见于 $20$--$30\,\mathrm{nm}$ 量级，抛物线近似在峰值附近 $|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 常可用于一阶估算\cite{wang2024,zhou2024nside1550pcsel}；对 GaN/深紫外等平台，谱形与展宽机制差异更大，应重新标定窗口而非平移复用该区间\cite{coldren2012,lu2025deepuvpcsel}。它的作用是把“模式波长是否压在增益峰上”这件事，直接写成可计算的阈值链一环。
 
 \section{2024--2026 前沿补充：跨材料平台增益窗口不可直接平移}
 最新器件结果进一步强调了“平台绑定”的必要性：可见光 GaN-PCSEL、1.55~$\mu$m InP-PCSEL 与深紫外 PCSEL 的增益谱宽、温漂和可用工作窗口并不共享同一组经验常数\cite{taguchi2024greenpcsel,aoki2024stable1550pcsel,lu2025deepuvpcsel}。因此，本章所有失谐、增益窗口与阈值裕量参数，都应写成“平台 + 温区 + 注入条件”三元条件化形式。
@@ -291,7 +291,13 @@ PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线�
 
 \textbf{两条主线的交汇点：阈值条件}
 \[
-\underbrace{g_{\mathrm{mod}}(N_{\mathrm{th}},T)}_{\text{第 17 章}} = \underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{第 3--8 章}} = \frac{\omega_0}{2Q}
+\underbrace{g_{\mathrm{mod}}(N_{\mathrm{th}},T)}_{\text{第 17 章}}
+=
+\underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{第 3--8 章}}
+=
+\frac{\omega_0}{2Q\,v_{g,m}}
+=
+\frac{n_{g,m}\omega_0}{2Qc}
 \]
 
 这个等式的深刻含义是：\textbf{阈值载流子浓度}$N_\text{th}$\textbf{不是一个孤立的材料参数，而是冷腔品质因数$Q$的函数}。高$Q$模式（如 BIC 或 quasi-BIC）之所以重要，正是因为它们降低了$\alpha_\text{rad}$，从而降低了对$g_\text{mod}$的需求，进而降低了$N_\text{th}$。

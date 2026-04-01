@@ -234,7 +234,7 @@ T_{\text{win}} > \frac{10 Q}{\omega_0},
   \item 增加 PML 层数（典型值：12-16 层）
   \item 使用渐变电导率剖面（polynomial grading）
   \item 将 PML 放置在远离强场区域的位置（至少$\lambda/2$）
-  \item 对倏逝波占主导的情况，改用 periodic boundary + Bloch 条件
+  \item 若问题本身是无限周期单胞，可在横向采用 periodic boundary + Bloch 条件；若是有限器件，应保留开放边界（PML），并通过增大计算域、提高 PML 厚度/阶次与参数扫描抑制伪反射
 \end{itemize}
 
 \begin{CrossValidationBox}
