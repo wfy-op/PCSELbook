@@ -30,7 +30,7 @@ PCSEL 的建模链横跨电磁场、半导体输运和热传导。只要这些�
 因此，本附录的目标不是补充“额外数学”，而是把正文各章默认共享的数学地基显式写出来。只要地基统一，后面的开放系统、耦合波理论、RCWA、FDTD/FEM 提取和器件级回写才可能真正接成一条链。
 
 \begin{IntuitionBox}
-如果把整本书看成一套多物理场模型，那么数学附录的作用就像接口协议。接口协议一旦不统一，上层所有“漂亮结果”都可能只是碰巧连上，而不是严格可复用。
+如果把整本书看成一套多物理场模型，那么数学附录的作用就像接口协议。接口协议一旦不统一，上层结果可能只是数值上偶然一致，而不能视为可复用结论。
 \end{IntuitionBox}
 
 \section{时间因子与频域约定：先把增益和损耗的符号说清楚}
@@ -116,7 +116,7 @@ f_{\gvec}=\frac{1}{A_c}\int_{A_c} f(\rvec_\parallel)\ee^{-\ii\gvec\cdot\rvec_\pa
 \label{eq:bloch_fourier_appendix}
 \end{equation}
 
-真正关键的是乘积项的展开。若介电函数也按同样方式展开，
+关键的是乘积项的展开。若介电函数也按同样方式展开，
 \begin{equation}
 \varepsilon(\rvec_\parallel)
 =
@@ -148,7 +148,7 @@ A(t) = A_0\ee^{-\ii\omega_0 t}\ee^{-\gamma t},\qquad
 于是$\gamma = -\ln(R)/(2\tau_{\rm rt})$。这就是开放腔复频率$\tilde{\omega}=\omega_0-i\gamma$的最简单范例。QNM 理论要做的，就是把这种直观推广到任意形状的开放谐振腔。
 \end{PrerequisiteBox}
 
-在封闭、无损、厄米问题中，我们习惯把本征模视为某个 Hilbert 空间里的正交基。这个直觉极其重要，但它并不能原封不动地搬到 PCSEL 的开放模问题上。根源在于开放系统的共振模满足的是\textbf{纯出射边界条件}，而不是封闭边界条件。对一个复频率模
+在封闭、无损、厄米问题中，我们习惯把本征模视为某个 Hilbert 空间里的正交基。这个直觉很有用，但它并不能原封不动地搬到 PCSEL 的开放模问题上。根源在于开放系统的共振模满足的是\textbf{纯出射边界条件}，而不是封闭边界条件。对一个复频率模
 \begin{equation}
 \tilde{\omega}_n=\omega_n-\ii\gamma_n,
 \qquad \gamma_n>0,
@@ -747,11 +747,11 @@ $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}�
 
 \section*{建议继续阅读}
 \begin{itemize}
-  \item 下一章将把这些数学语法压缩成器件级建模的符号链，特别是从材料增益到阈值电流的映射。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+  \item 下一章将把这些数学语法压缩成器件级建模的符号链，特别是从材料增益到阈值电流的映射。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
 
-  \item 若想进一步打牢开放系统与扰动理论，可对照 \cite{joannopoulos2008,sakoda2005} 中关于周期介质与模式扰动的附录阅读。 这条阅读的重点是补足本章关于开放系统数学、归一化与非厄米微扰 的标准背景、经典语言和代表性文献接口。
+  \item 若想进一步打牢开放系统与扰动理论，可对照 \cite{joannopoulos2008,sakoda2005} 中关于周期介质与模式扰动的附录阅读。 阅读时应重点核对开放系统归一化、QNM 与非厄米微扰的标准假设。
 
-  \item 若想系统补强开放系统归一化、QNM 与非厄米微扰，可继续阅读 \cite{leung1994complete,leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm}。 这条阅读的重点是补足本章关于开放系统数学、归一化与非厄米微扰 的标准背景、经典语言和代表性文献接口。
+  \item 若想系统补强开放系统归一化、QNM 与非厄米微扰，可继续阅读 \cite{leung1994complete,leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm}。 阅读时应重点核对开放系统归一化、QNM 与非厄米微扰的标准假设。
 \end{itemize}
 \begin{table}[htbp]
   \centering
@@ -770,5 +770,4 @@ $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}�
     \bottomrule
   \end{tabular}
 \end{table}
-
 

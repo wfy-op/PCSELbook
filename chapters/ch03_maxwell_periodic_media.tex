@@ -15,10 +15,10 @@
 
 \section*{本章路线图}
 \ChapterModelLevel{L1}
-本章先从最原始的 Maxwell 方程写起，再转入频域形式，随后讨论在何种条件下它成为本征值问题。接着我们解释为什么 PCSEL 从根本上是开放系统，并补上开放问题最关键的数学直觉：共振模为什么不再属于普通平方可积函数空间、QNM / resonant states 最小应如何理解。最后再把这一章和后面的 Bloch 理论、阈值分析接起来。
+本章先从 Maxwell 方程写起，再转入频域形式，随后讨论在何种条件下它成为本征值问题。接着我们解释为什么 PCSEL 从根本上是开放系统，并补上开放问题关键的数学直觉：共振模为什么不再属于普通平方可积函数空间、QNM / resonant states 应如何作最小理解。最后再把这一章和后面的 Bloch 理论、阈值分析接起来。
 
 \section{从时域方程出发：我们到底在求解什么}
-为了避免一上来就落入“把熟悉公式往下抄”的机械状态，我们先明确本章真正的问题：PCSEL 中的光场由什么方程决定？这些方程中的哪些部分来自材料本身，哪些部分来自边界，哪些部分来自我们选择的近似？
+本章先明确所求解的电磁问题：PCSEL 中的光场由什么方程决定？这些方程中的哪些部分来自材料本身，哪些部分来自边界，哪些部分来自我们选择的近似？
 
 在宏观电磁学层面，时域 Maxwell 方程写为
 \begin{align}
@@ -34,7 +34,7 @@
 \D=\varepsilon_0\varepsilon_r(\rvec,\omega)\E,\qquad
 \B=\mu_0\mu_r(\rvec,\omega)\Hf.
 \]
-在大多数半导体光学问题中，磁响应不显著，后文通常取 $\mu_r\approx 1$。这一近似在近红外到可见光频段（约 400 nm--2 $\mu$m）的非磁性半导体（GaAs、InP、GaN 等）中成立，因为轨道磁响应极弱，对应磁化率通常满足 $\chi_m=\mu_r-1\sim 10^{-5}$。对 THz 频段或人工磁响应超材料，此近似不成立；本书讨论的材料体系均满足 $\mu_r\approx 1$。真正复杂的是 $\varepsilon_r$：它既包含空间分布，又可能包含频率色散、材料损耗、载流子注入和温度依赖。也就是说，PCSEL 的全部复杂性，最终都会不同方式写进 $\varepsilon_r(\rvec,\omega)$ 之中。
+在大多数半导体光学问题中，磁响应不显著，后文通常取 $\mu_r\approx 1$。这一近似在近红外到可见光频段（约 400 nm--2 $\mu$m）的非磁性半导体（GaAs、InP、GaN 等）中成立，因为轨道磁响应极弱，对应磁化率通常满足 $\chi_m=\mu_r-1\sim 10^{-5}$。对 THz 频段或人工磁响应超材料，此近似不成立；本书讨论的材料体系均满足 $\mu_r\approx 1$。主要复杂性集中在 $\varepsilon_r$：它既包含空间分布，又可能包含频率色散、材料损耗、载流子注入和温度依赖。也就是说，PCSEL 的全部复杂性，最终都会不同方式写进 $\varepsilon_r(\rvec,\omega)$ 之中。
 
 \section{转到频域：为什么教材几乎总在频域讨论模式}
 若系统在单频附近工作，或者我们要研究本征模与共振，最自然的做法是采用 \cref{ch:roadmap} 中约定的时间因子 $\ee^{-\ii\omega t}$，把场写成
@@ -77,10 +77,10 @@
 \qquad k_0=\frac{\omega}{c}.
 \label{eq:maxwell-eigen}
 \end{equation}
-这就是后文最常出现的频域 Maxwell 方程。形式上它已经非常像一个本征值问题，但真正要把它当作本征值问题，还需要说明两个问题：边界条件是什么？介质是否损耗、是否开放？
+这是后文常用的频域 Maxwell 方程。形式上它已经非常像一个本征值问题，但若要把它当作本征值问题，还需要说明两个问题：边界条件是什么？介质是否损耗、是否开放？
 
 \begin{IntuitionBox}
-\cref{eq:maxwell-eigen} 看起来像一个“求特征值和特征向量”的线性代数问题，但物理上它远比矩阵本征值复杂。真正决定问题性质的，不只是方程本身，还有边界和材料是否允许能量流出。
+\cref{eq:maxwell-eigen} 形式上类似线性代数中的本征值问题，但其物理性质还取决于边界条件、材料损耗以及能量是否允许流出计算域。
 \end{IntuitionBox}
 \begin{ConnectionBox}{从 Maxwell 方程到能量守恒：坡印廷定理的角色}
 理解 PCSEL 中"开放系统"与"封闭系统"区别的关键，在于追踪能量的流向。我们从频域 Maxwell 旋度方程出发：
@@ -183,7 +183,7 @@ $$\langle \Psi_1, \mathcal{M}\Psi_2 \rangle = \langle \mathcal{M}\Psi_1, \Psi_2 
   \end{tabular}
   \end{center}
 
-\noindent\textbf{关键理解：}开放系统的复频率不是数学技巧，而是物理必需。虚部$\gamma$直接对应能量衰减速率，满足$Q=\omega_0/(2\gamma)$。
+\noindent\textbf{关键理解：}开放系统的复频率不是记号选择，而是开放系统能量衰减的表示。虚部$\gamma$直接对应能量衰减速率，满足$Q=\omega_0/(2\gamma)$。
 \end{ComparisonBox}
 \begin{figure}[htbp]
   \centering
@@ -214,7 +214,7 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 可得：$Q=10^3$ 时 $\gamma/\omega_0\approx5\times10^{-4}$，$Q=10^5$ 时 $\gamma/\omega_0\approx5\times10^{-6}$。因此“离实轴多远算高品质因子”可以直接用这个比例估算，而不必只靠定性描述。
 
 \begin{RigorousBox}
-若要把“无损、无色散、封闭边界下 Maxwell 问题可写成自伴形式”说得更正式，最自然的写法其实不是直接把 \cref{eq:maxwell-eigen} 当普通矩阵本征值问题，而是先把它限制在
+若要把“无损、无色散、封闭边界下 Maxwell 问题可写成自伴形式”说得更正式，较自然的写法不是直接把 \cref{eq:maxwell-eigen} 当普通矩阵本征值问题，而是先把它限制在
 \[
 \mathcal X=
 \left\{
@@ -234,7 +234,7 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 \[
 \langle \E_1,\E_2\rangle_\varepsilon=\int_V \varepsilon_r(\rvec)\E_1^\ast\cdot\E_2\,\dd V.
 \]
-这里隐含了两个技术前提。第一，我们已经把问题限制在满足 $\nabla\cdot(\varepsilon\E)=0$ 的物理子空间，从而排除了不满足 Gauss 约束的伪解；第二，若 $\varepsilon$ 空间变化而 $\mu_r\approx 1$，更标准的写法是把 \cref{eq:maxwell-eigen} 看成加权广义本征值问题。下面只抓住对“为什么封闭无损时频率为实数”最关键的一步：旋度项在该加权内积下可通过分部积分变成对称形式。利用向量恒等式 $\nabla\cdot(\bm{A}\times\bm{B})=\bm{B}\cdot(\nabla\times\bm{A})-\bm{A}\cdot(\nabla\times\bm{B})$ 对旋度做分部积分，可以把作用在 $\E_2$ 上的旋度“转移”到 $\E_1$ 上：
+这里隐含了两个技术前提。第一，我们已经把问题限制在满足 $\nabla\cdot(\varepsilon\E)=0$ 的物理子空间，从而排除了不满足 Gauss 约束的伪解；第二，若 $\varepsilon$ 空间变化而 $\mu_r\approx 1$，更标准的写法是把 \cref{eq:maxwell-eigen} 看成加权广义本征值问题。下面只抓住对“为什么封闭无损时频率为实数”关键一步：旋度项在该加权内积下可通过分部积分变成对称形式。利用向量恒等式 $\nabla\cdot(\bm{A}\times\bm{B})=\bm{B}\cdot(\nabla\times\bm{A})-\bm{A}\cdot(\nabla\times\bm{B})$ 对旋度做分部积分，可以把作用在 $\E_2$ 上的旋度“转移”到 $\E_1$ 上：
 \[
 \int_V \E_1^\ast\cdot(\nabla\times\nabla\times \E_2)\,\dd V
 =
@@ -278,7 +278,7 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 这一步必须讲明白，因为它直接解释了为什么开放系统中的归一化、正交性和微扰理论不能直接照搬封闭厄米问题：问题的根源不只是“损耗让本征值变成复数”，而是\textbf{函数空间本身已经换了。}
 
 \begin{IntuitionBox}
-开放腔模更像“散射问题在复频率平面上的极点”，而不是“一个老老实实待在盒子里的驻波”。只要把这个图像建立起来，后面为什么要引入 QNM、伴随模和广义归一化，就不会再显得像是数学炫技。
+开放腔模应理解为散射问题在复频率平面上的极点，而不是封闭盒中的平方可积驻波。由此引入 QNM、伴随模和广义归一化，是开放边界条件的直接后果。
 \end{IntuitionBox}
 
 \section{QNM / resonant states 的最小定义}
@@ -308,7 +308,7 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 QNM 不是“带一点损耗的普通模”这么简单。它的最小数学身份是开放 Maxwell 算子的极点态，因此其归一化、正交性与扰动理论都必须围绕这一点重新建立。更系统的归一化与伴随模框架见 \cref{ch:math-appendix} 中“伴随模、双正交与广义归一化”一节，尤其可对照 \cref{eq:qnm_normalization_appendix} 及其前后说明。
 \end{RigorousBox}
 
-\section{为什么 PCSEL 天然是开放系统}
+\section{为什么 PCSEL 作为开放系统}
 到这里，我们可以回答一个看似简单、实际上极其关键的问题：为什么本书反复强调 PCSEL 是开放系统？
 
 原因很直接。PCSEL 的目标之一就是法向出光。既然要出光，就必须允许电磁能量离开器件进入自由空间。能量能够离开，模式就不可能是理想封闭腔中的永不衰减本征态。于是：
@@ -319,7 +319,7 @@ QNM 不是“带一点损耗的普通模”这么简单。它的最小数学身�
   \item 仿真中边界条件的处理不再是数值细节，而是物理模型的一部分。
 \end{itemize}
 
-这就是为什么，哪怕你暂时只想“先看能带图”，也不能完全忘记开放性。一个在封闭近似下看起来很好的模式，到了开放系统中可能因为辐射耦合太强而损耗很大；反过来，一个能有效法向出射的模式也一定不是完全束缚的。PCSEL 的设计任务从来不是“让模式完全不漏”，而是“让目标模式以合适的方式漏”。
+这就是为什么，即使只进行能带分析，也需要保留开放性的影响范围。一个在封闭近似下看起来很好的模式，到了开放系统中可能因为辐射耦合太强而损耗很大；反过来，一个能有效法向出射的模式也一定不是完全束缚的。PCSEL 的设计任务从来不是“完全抑制泄漏”，而是“控制目标模式的辐射通道和泄漏速率”。
 
 \section{复频率、品质因子与光子寿命}
 设某个被动共振模的复频率为
@@ -350,7 +350,7 @@ Q=\frac{\omega_0}{2\gamma}=\omega_0\tau_p.
 \end{equation}
 这两个式子在后文会不断出现，因为它们把“复频率”这种看似抽象的本征值，转换成了器件工程师更熟悉的时间尺度和损耗尺度。
 
-但这里必须提前说明一点：$Q$ 是被动信息。即便一个模式的 $Q$ 很高，也只能说明该模式在被动结构中的能量衰减慢。真正的阈值还取决于模式是否与有源区充分重叠、内部吸收是否过大、注入分布是否合理。也就是说，\cref{eq:q_def} 是后续阈值分析的输入之一，而不是终点。
+这里需要提前说明一点：$Q$ 是被动信息。即便一个模式的 $Q$ 很高，也只能说明该模式在被动结构中的能量衰减慢。真正的阈值还取决于模式是否与有源区充分重叠、内部吸收是否过大、注入分布是否合理。也就是说，\cref{eq:q_def} 是后续阈值分析的输入之一，而不是终点。
 
 \begin{ExampleBox}
 在数值仿真中，如果用 FDTD 计算一个 PCSEL 冷腔模式的衰减时间常数，再由 \cref{eq:photon_lifetime,eq:q_def} 提取 $Q$，这一步得到的是冷腔品质因子。它可以用于与 RCWA、FEM 做交叉验证，也可以为阈值增益估计提供被动损耗信息，但不能直接当作器件阈值电流。
@@ -366,7 +366,7 @@ r\left(\frac{\partial \psi}{\partial r}-\ii \tilde{k}\psi\right)\xrightarrow[r\t
 \end{equation}
 它表达的是：远处只允许向外跑的波，而不允许从无穷远无源返回的入射波。对矢量 Maxwell 问题，严格形式会更复杂，但物理含义完全相同。边界条件本身，就是开放系统定义的一部分。
 
-在数值计算中，我们不可能真正把空间做到无穷大，于是需要用辐射边界条件、端口条件或完全匹配层（perfectly matched layer, PML）来近似它。
+在数值计算中，数值计算无法把空间做到无穷大，于是需要用辐射边界条件、端口条件或完全匹配层（perfectly matched layer, PML）来近似它。
 
 \begin{figure}[htbp]
   \centering
@@ -407,7 +407,7 @@ E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
   \item 人工吸收过强，把本应存在的模式洗掉，导致错误低估共振质量。
 \end{itemize}
 
-因此，本书在讨论 FDTD、FEM 和 RCWA 时，会一直强调：边界条件不是软件按钮，而是物理模型的一部分。
+因此，本书在讨论 FDTD、FEM 和 RCWA 时，会一直强调：边界条件不是单纯的软件设置，而是物理模型的一部分。
 
 \begin{PitfallBox}
 “复频率的虚部很小，说明数值做得很准”这种说法没有物理意义。虚部大小首先反映的是模式本身的损耗与开放性，只有在收敛和边界条件正确的前提下，才谈得上数值精度。
@@ -427,12 +427,12 @@ E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
 \textbf{判别方法：}如果你的仿真得到$Q>10^6$但没有使用BIC 机制，很可能是边界条件错误。
 \end{CommonPitfallBox}
 \section{这一章和后文的关系：为什么先讲 Maxwell，再讲 Bloch}
-到这里，读者应该能看出：本章真正建立的是“问题类型”，而不是“最终解法”。我们已经知道 PCSEL 的被动光学子问题来自开放系统中的 Maxwell 方程，但还没有利用二维周期性。周期性一旦被引入，问题就可以借助 Bloch 定理进行分类和简化，这正是下一章的主题。
+到这里，读者应该能看出：本章建立的是问题类型，而不是最终解法。我们已经知道 PCSEL 的被动光学子问题来自开放系统中的 Maxwell 方程，但还没有利用二维周期性。周期性一旦被引入，问题就可以借助 Bloch 定理进行分类和简化，这正是下一章的主题。
 
 从逻辑上说，本章回答的是“PCSEL 的电磁问题是什么”；下一章回答的是“在周期性存在时，这个问题如何被组织和分类”；再下一章才会进一步问“在这些被组织好的模式中，哪些最有可能成为 PCSEL 关心的候选模”。
 
 \section*{本章小结}
-本章把 PCSEL 的电磁基础明确成了一个开放、通常非厄米的 Maxwell 本征问题。频域 Maxwell 方程给出模式条件，复频率给出损耗时间尺度，开放边界决定模式是否能正确反映真实面发射结构，而 QNM / resonant states 则给出了开放共振模最小且严格的数学身份。后续所有能带、$\Gamma$ 点、耦合波和阈值分析，都建立在这一本章奠定的框架之上；其中更硬的归一化、伴随模与非厄米微扰公式将在 \cref{ch:cmt,ch:math-appendix} 中继续展开。
+本章把 PCSEL 的电磁基础明确成了一个开放、通常非厄米的 Maxwell 本征问题。频域 Maxwell 方程给出模式条件，复频率给出损耗时间尺度，开放边界决定模式是否能正确反映真实面发射结构，而 QNM / resonant states 则给出了开放共振模最小且严格的数学身份。后续所有能带、$\Gamma$ 点、耦合波和阈值分析，都建立在这一本章奠定的框架之上；其中更严格的归一化、伴随模与非厄米微扰公式将在 \cref{ch:cmt,ch:math-appendix} 中继续展开。
 
 \section*{练习题}
 \begin{enumerate}
@@ -449,11 +449,11 @@ E \to \exp\!\left[\ii k\!\left(x+\frac{\ii\sigma x}{\omega}\right)\right]
 
 \section*{建议继续阅读}
 \begin{itemize}
-  \item \cite{taflove2005} 中关于开放边界与时域电磁计算的章节。 这条阅读的重点是理解本章的开放边界条件怎样在数值求解中被落实。
+  \item \cite{taflove2005} 中关于开放边界与时域电磁计算的章节。 建议重点关注开放边界条件在数值求解中的实现。
 
-  \item 关于开放共振模、QNM 归一化与散射极点视角，可结合 \cite{sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm} 阅读。 这条阅读的重点是补足本章关于开放 Maxwell 问题与复频率模的标准数学语言。
+  \item 关于开放共振模、QNM 归一化与散射极点视角，可结合 \cite{sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm} 阅读。 建议重点关注开放 Maxwell 问题与复频率模的标准数学语言。
 
-  \item 配合 \cref{ch:fdtd-fem,ch:rcwa} 回看本章，可更清楚地理解数值边界为什么不能被当作纯技术细节。 这条阅读的重点是把本章的输出顺着主线接到后续模块，而不是停成孤立知识点。
+  \item 配合 \cref{ch:fdtd-fem,ch:rcwa} 回看本章，可更清楚地理解数值边界为什么不能被当作纯技术细节。 建议重点关注本章输出量如何进入后续模型。
 \end{itemize}
 
 
