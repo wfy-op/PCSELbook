@@ -170,6 +170,27 @@ Noda 等人的 tutorial 对本章最有价值的地方，不是又给出一组�
 这三条规则正好落回 \cref{eq:modal_margin}：高亮度 PCSEL 的优化目标不是单独最小化 $\alpha_{\mathrm{rad}}$、最大化 $Q$，或最大化某一个带边频率差，而是在目标电流和温度窗口内同时保持可提取的目标模辐射、足够大的竞争模净损耗、足够大的频率隔离，以及对热致折射率分布的鲁棒性。
 \end{RigorousBox}
 
+为了避免把这篇 tutorial 读成“高功率结果列表”，\cref{tab:noda2023_scaling_case} 把其中最重要的路线压缩成一个案例矩阵。阅读这张表时要注意，左列给出的是历史上出现的器件或设计阶段，右列给出的是本书真正希望读者带走的设计语言。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{Noda 2023 tutorial 在本书中的案例化读法：从器件里程碑抽取大面积单模设计规则。}
+  \label{tab:noda2023_scaling_case}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{2.5cm}p{2.9cm}Y Y@{}}
+    \toprule
+    阶段 & 关键结构动作 & tutorial 中的证据角色 & 本书中的设计解释 \\ \midrule
+    $\Gamma^{(2)}$ 点初始演示 & 三角晶格或方格晶格支撑区中心带边共振 & 证明二维光子晶体可作为面发射激光腔，并给出偏振与远场的对称性证据\cite{matsubara2008,noda2023tutorial} & 单胞与能带只给候选资格，说明二维相干反馈可形成，但尚未解决高亮度输出窗口 \\
+    非对称单胞 & 用三角孔、直角三角孔等破坏高对称相消 & 瓦级单模与单瓣远场显示，辐射通道可被孔形主动打开\cite{hirose2014} & BIC/quasi-BIC 语言必须服务于可提取辐射；目标不是最高 $Q$，而是目标模辐射与竞争模损耗的相对排序 \\
+    双晶格 & 两组晶格点相对位移约 $\lambda/(4n_{\mathrm{eff}})$ & \SI{500}{\micro\meter} 级器件获得 \SI{10}{W} 级脉冲单模和窄发散输出\cite{yoshida2019,noda2023tutorial} & 通过重排 $180^\circ$ 衍射相位，让基模包络展开，并把高阶模惩罚转移到有限边缘损耗上 \\
+    Hermitian/非 Hermitian 联合调控 & 同时调节面内保守耦合和辐射耗散耦合 & \SI{3}{mm} 级连续波 \SI{50}{W}、极窄发散和约 \SI{1}{GW.cm^{-2}.sr^{-1}} 亮度成为毫米级放大证据\cite{yoshida2023} & 大面积设计的主目标升级为复频率排序、热工作窗口和模式裕量共同稳定，而不是单独压低某一项损耗 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+这张表也给出了本章后续仿真任务的优先级。若目标仍停留在“证明 $\Gamma$ 点候选模存在”，PWE、RCWA 或周期单胞模型就已经能回答许多问题；若目标是复现双晶格的模式裕量，则必须转向有限尺寸 CWT 或有限阵列全波；若目标是判断 \SI{3}{mm} 级连续波工作是否稳定，则必须把热、电和增益空间分布接进 \cref{eq:modal_margin}。同一篇 tutorial 因此在不同章节中承担不同角色：第 \ref{ch:feedback} 章读它的散射网络，第 \ref{ch:cmt} 章读它的复耦合参数，本章读它的尺度放大规则，下一章则读它的性能报告边界。
+
 \section{把设计原则翻译成仿真任务：应该在哪类工具里算什么}
 到了这里，设计原则必须落回可计算任务。最实用的做法，是按“物理问题”而不是“软件名称”来分配求解器，然后再把这些求解器映射到 Lumerical 或 COMSOL 中。\cref{tab:singlemode-toolmap} 给出的是一种实用的、但并非唯一的映射方式。
 
