@@ -5,11 +5,14 @@
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=0.87]
+  \begin{tikzpicture}[
+      scale=0.87,
+      layerlabel/.style={anchor=west, align=left, font=\scriptsize, text width=4.4cm}
+    ]
     % Substrate at bottom
     \fill[gray!40] (-3,-5) rectangle (3,-4);
     \draw[thick] (-3,-4) -- (3,-4);
-    \node[right] at (3.1,-4.5) {砷化镓衬底（$n$ 型掺杂）};
+    \node[layerlabel] at (3.75,-4.55) {砷化镓衬底（$n$ 型掺杂）};
     \node[left, gray!60] at (-3,-4.5) {\scriptsize $500\,\mu\mathrm{m}$};
     
     % Lower DBR mirror
@@ -19,14 +22,14 @@
       \draw[thin, gray] (-3,\pgfmathresult) -- (3,\pgfmathresult);
     }
     \draw[thick] (-3,-3.8) -- (3,-3.8);
-    \node[right] at (3.1,-3.5) {$n$ 型分布布拉格反射镜（20--30 对）};
+    \node[layerlabel] at (3.75,-3.55) {$n$ 型分布布拉格反射镜（20--30 对）};
     \node[left, blue] at (-3,-3.5) {\scriptsize Al$_{0.9}$Ga$_{0.1}$As/Al$_{0.2}$Ga$_{0.8}$As};
     
     % Lower SCH waveguide
     \fill[green!15] (-3,-3.2) rectangle (3,-2.5);
     \draw[thick] (-3,-3.2) -- (3,-3.2);
     \draw[thick] (-3,-2.5) -- (3,-2.5);
-    \node[right] at (3.1,-2.85) {下独立限制异质波导层};
+    \node[layerlabel] at (3.75,-2.95) {下独立限制异质波导层};
     \node[left, green!60!black] at (-3,-2.85) {\scriptsize $200\,\mathrm{nm}$};
     
     % Active region (MQW)
@@ -38,14 +41,14 @@
       \draw[dashed, red] (-3,\y) -- (3,\y);
     }
     \draw[thick] (-3,-2.2) -- (3,-2.2);
-    \node[right] at (3.1,-2.35) {有源区（3--5 阱多量子阱）};
+    \node[layerlabel] at (3.75,-2.35) {有源区（3--5 阱多量子阱）};
     \node[left, red] at (-3,-2.35) {\scriptsize In$_{0.2}$Ga$_{0.8}$As};
     
     % Upper SCH waveguide
     \fill[green!15] (-3,-2.2) rectangle (3,-1.5);
     \draw[thick] (-3,-2.2) -- (3,-2.2);
     \draw[thick] (-3,-1.5) -- (3,-1.5);
-    \node[right] at (3.1,-1.85) {上独立限制异质波导层};
+    \node[layerlabel] at (3.75,-1.75) {上独立限制异质波导层};
     \node[left, green!60!black] at (-3,-1.85) {\scriptsize $200\,\mathrm{nm}$};
     
     % Photonic crystal layer
@@ -57,35 +60,35 @@
       \draw[thick] (\x,-1.15) circle (0.15);
     }
     \draw[thick] (-3,-0.8) -- (3,-0.8);
-    \node[right] at (3.1,-1.15) {光子晶体光栅层（刻蚀深度~$150\,\mathrm{nm}$）};
+    \node[layerlabel] at (3.75,-1.10) {光子晶体光栅层\\刻蚀深度~$150\,\mathrm{nm}$};
     \node[left, yellow!60!black] at (-3,-1.15) {\scriptsize $\Lambda=260\,\mathrm{nm}$};
     
     % Upper cladding / contact
     \fill[orange!20] (-3,-0.8) rectangle (3,-0.3);
     \draw[thick] (-3,-0.8) -- (3,-0.8);
     \draw[thick] (-3,-0.3) -- (3,-0.3);
-    \node[right] at (3.1,-0.55) {$p$ 型铝镓砷包层};
+    \node[layerlabel] at (3.75,-0.62) {$p$ 型铝镓砷包层};
     \node[left, orange] at (-3,-0.55) {\scriptsize $500\,\mathrm{nm}$};
     
     % Contact metal
     \fill[gray!60] (-3,-0.3) rectangle (3,0);
     \draw[thick] (-3,-0.3) -- (3,-0.3);
     \draw[thick] (-3,0) -- (3,0);
-    \node[right] at (3.1,-0.15) {$p$ 型接触电极（钛/铂/金）};
+    \node[layerlabel] at (3.75,-0.20) {$p$ 型接触电极（钛/铂/金）};
     \node[left, gray] at (-3,-0.15) {\scriptsize $200\,\mathrm{nm}$};
     
     % Bonding layer (optional)
     \fill[purple!20] (-3,0) rectangle (3,0.3);
     \draw[thick] (-3,0) -- (3,0);
     \draw[thick] (-3,0.3) -- (3,0.3);
-    \node[right] at (3.1,0.15) {键合层（金-锡/$\mathrm{SiO_2}$）};
+    \node[layerlabel] at (3.75,0.25) {键合层（金-锡/$\mathrm{SiO_2}$）};
     \node[left, purple] at (-3,0.15) {\scriptsize 倒装焊可选};
     
     % Heat sink at top
     \fill[cyan!30] (-3,0.3) rectangle (3,1);
     \draw[thick] (-3,0.3) -- (3,0.3);
     \draw[thick] (-3,1) -- (3,1);
-    \node[right] at (3.1,0.65) {热沉（铜/钨或金刚石）};
+    \node[layerlabel] at (3.75,0.75) {热沉（铜/钨或金刚石）};
     \node[left, cyan!60!black] at (-3,0.65) {\scriptsize 高热导率};
     
     % Current flow arrows
@@ -96,12 +99,12 @@
     \node[right, green!60!black, font=\bfseries] at (0.2,1.2) {激光输出};
     
     % Total thickness bracket
-    \draw[thick] (3.5,-4) -- node[right] {外延总厚~$8$--$12\,\mu\mathrm{m}$} (3.5,0.3);
+    \draw[thick] (3.38,-4) -- node[midway, right, rotate=90, font=\scriptsize, anchor=south] {外延总厚~$8$--$12\,\mu\mathrm{m}$} (3.38,0.3);
     
     % Mode profile overlay (schematic)
     \draw[very thick, blue, opacity=0.5, domain=-3:3, samples=100] 
       plot(\x,{0.3*cos(deg(0.5*\x))*exp(-(\x+0.5)*(\x+0.5)/4)-1.85});
-    \node[blue, align=center] at (2,-1.5) {基模场分布\\近高斯包络};
+    \node[blue, align=center, font=\scriptsize, fill=white, fill opacity=0.82, text opacity=1, inner sep=1pt] at (0.95,-0.95) {基模场分布\\近高斯包络};
   \end{tikzpicture}
   \caption{典型光子晶体面发射激光器外延堆栈截面示意（未按比例）。图中给出衬底、下反射镜、上下限制层、有源量子阱、光子晶体层、包层与金属接触，并标出注入电流与垂直出光方向。}
   \label{fig:ch16_epitaxial_stack}

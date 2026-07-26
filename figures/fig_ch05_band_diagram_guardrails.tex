@@ -1,0 +1,56 @@
+% !TEX root = ../main.tex
+% Content-only figure: what a photonic band diagram can and cannot justify
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    panel/.style={draw=black!60,rounded corners=2pt,fill=white,line width=0.6pt,minimum height=1.05cm,align=center},
+    title/.style={font=\bfseries,align=center},
+    arrow/.style={->,thick},
+    ok/.style={draw=green!45!black,fill=green!7,rounded corners=2pt,align=left,font=\footnotesize},
+    next/.style={draw=blue!55!black,fill=blue!6,rounded corners=2pt,align=left,font=\footnotesize},
+    stop/.style={draw=red!65!black,fill=red!6,rounded corners=2pt,align=left,font=\footnotesize}
+  }
+
+  \node[title] at (2.15,5.05) {能带图本身};
+  \draw[->,thick] (0.4,1.35) -- (4.25,1.35) node[right,font=\scriptsize] {高对称路径};
+  \draw[->,thick] (0.4,1.35) -- (0.4,4.45) node[above,font=\scriptsize] {$\Omega$};
+  \draw[blue!70!black,thick] plot[smooth] coordinates {(0.65,1.85) (1.30,2.20) (2.10,2.32) (2.95,2.18) (3.75,1.88)};
+  \draw[blue!70!black,thick] plot[smooth] coordinates {(0.65,3.00) (1.30,2.84) (2.10,2.78) (2.95,2.88) (3.75,3.12)};
+  \draw[blue!70!black,thick] plot[smooth] coordinates {(0.65,3.58) (1.30,3.72) (2.10,3.78) (2.95,3.70) (3.75,3.55)};
+  \fill[orange!18] (0.58,3.22) rectangle (3.9,3.45);
+  \draw[dashed,gray] (2.10,1.35) -- (2.10,4.2);
+  \node[font=\scriptsize] at (2.10,1.08) {$\Gamma$};
+  \node[font=\scriptsize] at (0.55,1.08) {$\Gamma$};
+  \node[font=\scriptsize] at (3.70,1.08) {$X/M$};
+
+  \node[ok,text width=4.05cm,minimum height=2.7cm,anchor=north] (can) at (6.3,4.85) {
+    \textbf{可以直接读出}\\
+    候选频率窗口\\
+    高对称点与简并\\
+    带边和平坦趋势\\
+    主要 Bloch 波矢标签
+  };
+  \node[next,text width=4.25cm,minimum height=2.7cm,anchor=north] (need) at (11.2,4.85) {
+    \textbf{必须继续计算}\\
+    光锥与开放边界\\
+    辐射损耗与远场\\
+    有源区重叠和内部损耗\\
+    有限阵列边缘泄漏
+  };
+  \node[stop,text width=4.35cm,minimum height=2.7cm,anchor=north] (cannot) at (16.25,4.85) {
+    \textbf{不能直接宣称}\\
+    最低阈值电流\\
+    高功率单模稳定\\
+    热稳定工作窗口\\
+    实验远场一定如此
+  };
+
+  \draw[arrow,green!45!black] (4.35,3.55) -- node[above,font=\scriptsize]{候选目录} (can.west);
+  \draw[arrow,blue!55!black] (can.east) -- node[above,font=\scriptsize]{升级证据} (need.west);
+  \draw[arrow,red!65!black] (need.east) -- node[above,font=\scriptsize]{仍需器件链} (cannot.west);
+
+  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=15.1cm,font=\footnotesize] at (10.55,0.75) {
+    边界句：band diagram 给出“候选资格”，不给出“器件判决”。真正的 PCSEL 结论要把 band、radiation、finite size、gain、injection 和 thermal 放在同一条证据链上。
+  };
+\end{tikzpicture}%
+}

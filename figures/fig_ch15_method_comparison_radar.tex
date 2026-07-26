@@ -1,79 +1,56 @@
 % !TEX root = ../main.tex
-% Figure: Comparison of numerical methods for PCSEL simulation
-% Chapter: ch15 - Method Comparison and Workflow Selection
-% Description: Radar chart comparing strengths of different methods
+% Figure: problem-first method map for PCSEL simulation
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
-    % Define axes for radar chart
-    \def\numaxes{6}
-    \def\maxradius{3}
-    
-    % Axis labels
-    \foreach \i/\labeltext in {1/精度，2/速度，3/内存效率，4/几何灵活性，5/非线性支持，6/开源生态} {
-      \pgfmathsetmacro{\angle}{90 + (\i-1)*360/\numaxes}
-      \coordinate (axis\i) at (\angle:\maxradius);
-      \draw[gray!50] (0,0) -- (axis\i);
-      \node[anchor=south, align=center, font=\small] at (\angle:\maxradius+0.5) {\labeltext};
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+    \tikzset{
+      question/.style={draw=black!60,rounded corners=2pt,fill=gray!6,align=center,minimum width=3.2cm,minimum height=0.78cm,font=\footnotesize},
+      method/.style={draw=blue!55!black,rounded corners=2pt,fill=blue!7,align=center,minimum width=2.75cm,minimum height=0.82cm,font=\bfseries\footnotesize},
+      output/.style={draw=green!45!black,rounded corners=2pt,fill=green!7,align=center,text width=3.15cm,minimum height=1.05cm,font=\footnotesize},
+      caution/.style={draw=red!60!black,rounded corners=2pt,fill=red!6,align=left,text width=4.45cm,font=\footnotesize},
+      flow/.style={->,thick},
+      softflow/.style={->,thick,dashed,gray!75}
     }
-    
-    % Concentric hexagons for scale
-    \foreach \r in {1,2,3} {
-      \draw[gray!30] 
-        (90:\r) -- 
-        (150:\r) -- 
-        (210:\r) -- 
-        (270:\r) -- 
-        (330:\r) -- 
-        (30:\r) -- cycle;
+
+    \node[font=\bfseries] at (7.5,5.25) {先按问题类型选方法，而不是按软件名字倒推结论};
+
+    \node[question] (q1) at (1.8,4.1) {候选频段在哪里?};
+    \node[method] (m1) at (1.8,2.95) {PWEM / 能带};
+    \node[output] (o1) at (1.8,1.55) {频率窗口\\简并关系\\高对称点标签};
+
+    \node[question] (q2) at (5.6,4.1) {主导耦合是谁?};
+    \node[method] (m2) at (5.6,2.95) {CWT / CMT};
+    \node[output] (o2) at (5.6,1.55) {散射通道\\参数灵敏度\\模式分裂方向};
+
+    \node[question] (q3) at (9.4,4.1) {开放单胞如何辐射?};
+    \node[method] (m3) at (9.4,2.95) {RCWA};
+    \node[output] (o3) at (9.4,1.55) {上下出光\\辐射损耗\\偏振趋势};
+
+    \node[question] (q4) at (13.2,4.1) {有限器件是否仍成立?};
+    \node[method] (m4) at (13.2,2.95) {FDTD / FEM};
+    \node[output] (o4) at (13.2,1.55) {有限阵列近远场\\边缘损耗\\真实层栈修正};
+
+    \foreach \a/\b in {q1/m1,m1/o1,q2/m2,m2/o2,q3/m3,m3/o3,q4/m4,m4/o4} {
+      \draw[flow] (\a) -- (\b);
     }
-    
-    % Plane-wave expansion polygon (blue)
-    \fill[blue!20, opacity=0.6] 
-      (90:2.8) -- (150:1.5) -- (210:2.5) -- (270:1) -- (330:0.8) -- (30:2) -- cycle;
-    \draw[very thick, blue] 
-      (90:2.8) -- (150:1.5) -- (210:2.5) -- (270:1) -- (330:0.8) -- (30:2) -- cycle;
-    \node[blue, font=\bfseries] at (90:3.5) {平面波展开};
-    
-    % Time-domain finite difference polygon (red)
-    \fill[red!20, opacity=0.5] 
-      (90:2.5) -- (150:2.8) -- (210:1.5) -- (270:2.5) -- (330:2.8) -- (30:1.8) -- cycle;
-    \draw[very thick, red] 
-      (90:2.5) -- (150:2.8) -- (210:1.5) -- (270:2.5) -- (330:2.8) -- (30:1.8) -- cycle;
-    \node[red, font=\bfseries] at (150:3.5) {时域差分};
-    
-    % Finite-element polygon (green)
-    \fill[green!20, opacity=0.5] 
-      (90:2.7) -- (150:2.2) -- (210:2) -- (270:2.3) -- (330:2.5) -- (30:2.5) -- cycle;
-    \draw[very thick, green!60!black] 
-      (90:2.7) -- (150:2.2) -- (210:2) -- (270:2.3) -- (330:2.5) -- (30:2.5) -- cycle;
-    \node[green!60!black, font=\bfseries] at (270:3.5) {有限元};
-    
-    % Coupled-mode polygon (purple, simplified model)
-    \fill[purple!20, opacity=0.4] 
-      (90:1.5) -- (150:0.8) -- (210:1) -- (270:1.2) -- (330:1.5) -- (30:3) -- cycle;
-    \draw[very thick, purple, dashed] 
-      (90:1.5) -- (150:0.8) -- (210:1) -- (270:1.2) -- (330:1.5) -- (30:3) -- cycle;
-    \node[purple, font=\bfseries] at (30:3.5) {耦合模};
-    
-    % Legend with detailed info
-    \node[draw, align=left, font=\small, anchor=north west] at (-5,-4.5) {
-      \textbf{方法特点总结}:\\[2pt]
-      {\color{blue}\rule{8pt}{2pt}} 平面波展开:频域本征值，适合能带\\
-      {\color{red}\rule{8pt}{2pt}} 时域差分:时域推进，全波瞬态\\
-      {\color{green}\rule{8pt}{2pt}} 有限元:自适应网格，复杂几何\\
-      {\color{purple}\rule{8pt}{2pt}} 耦合模:解析近似，快速优化
+    \foreach \a/\b in {o1/q2,o2/q3,o3/q4} {
+      \draw[softflow] (\a.east) -- ++(0.35,0) |- (\b.west);
+    }
+
+    \node[caution,anchor=north west] at (0.25,0.25) {
+      \textbf{层级边界：}\\
+      PWEM/CWT 不能单独给阈值电流；\\
+      RCWA 不能单独给有限阵列边缘排序；\\
+      冷腔 FDTD/FEM 不能单独给热-电-光工作窗口。
     };
-    
-    % Application recommendations
-    \node[draw, dashed, align=left, font=\footnotesize, anchor=south east] at (5,-4.5) {
-      \textbf{选型建议}:\\
-      $\bullet$ 初步设计:耦合模 + 平面波展开\\
-      $\bullet$ 精细优化:有限元/时域差分验证\\
-      $\bullet$ 大规模阵列：降阶模型
+    \node[draw=black!45,rounded corners=2pt,fill=yellow!10,align=center,text width=8.6cm,font=\footnotesize,anchor=north west] at (5.35,0.25) {
+      最可靠的结论通常来自“同一物理解释链”在多个层级上保持一致：\\
+      候选模身份稳定、对称性标签稳定、参数趋势稳定、损耗来源可追踪。
     };
-  \end{tikzpicture}
-  \caption{四种常用方法在“精度、速度、内存效率、几何灵活性、非线性支持、生态”六个维度上的\textbf{[教学示意]}分工图。该图用于说明方法取舍方向，不构成发布级 benchmark 分数；定量比较需另给硬件、求解器版本、几何/边界与误差门槛。}
+  \end{tikzpicture}%
+  }
+  \caption{PCSEL 数值方法的分工地图。图中强调从问题类型进入：能带/PWEM 给候选目录，CWT/CMT 给机理压缩，RCWA 给开放周期单胞辐射，FDTD/FEM 给有限器件与真实层栈验证。它是教学示意图，不代表跨软件 benchmark 分数。}
   \label{fig:ch15_method_comparison_radar}
 \end{figure}

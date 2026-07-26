@@ -4,53 +4,81 @@
   \centering
   \resizebox{\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
-    % (a) 二级衍射
-    \begin{scope}[shift={(-5.1,0)}]
-      \node[font=\bfseries] at (0,2.55) {(a) 二级光栅衍射};
-      \draw[thick] (-2.2,0) -- (2.2,0);
-      \foreach \x in {-2,-1,...,2} {\fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.42,0.3);}
-      \draw[->,very thick,red] (-1.6,0.55) -- (-0.5,0.55) node[midway,above] {导模};
-      \draw[->,very thick,green!60!black] (0.1,0) -- (0.1,1.9) node[right] {垂直辐射};
-      \draw[->,thick,blue] (0.9,0) -- (1.6,0) node[right] {\scriptsize 正向反馈};
-      \draw[->,thick,blue] (-0.9,0) -- (-1.6,0) node[left] {\scriptsize 反向反馈};
-      \node[align=center] at (0,-0.95) {$\Lambda\approx\lambda_B/n_{\mathrm{eff}}$\\布拉格条件};
+    \tikzset{
+      panel/.style={draw=gray!35,rounded corners=2pt,fill=gray!3},
+      slab/.style={draw=gray!60,fill=gray!16},
+      beam/.style={->,very thick,teal!70!black},
+      guided/.style={->,very thick,blue!75!black},
+      scatter/.style={->,thick,orange!90!black}
+    }
+
+    % (a) second-order Bragg extraction
+    \begin{scope}[shift={(-5.2,0)}]
+      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \node[font=\bfseries] at (0,2.32) {(a) 二阶 Bragg 折叠};
+      \draw[slab] (-2.0,-0.35) rectangle (2.0,0.35);
+      \foreach \x in {-1.55,-1.05,...,1.55} {
+        \fill[white] (\x,0.08) ellipse (0.13 and 0.08);
+        \draw[gray!55] (\x,0.08) ellipse (0.13 and 0.08);
+      }
+      \draw[guided] (-1.85,0.82)--(-0.35,0.82) node[midway,above]{导模};
+      \draw[->,very thick,orange!90!black] (-0.22,0.56)--(0.48,0.56)
+        node[midway,below=2pt]{$\gvec$};
+      \foreach \x in {-0.42,0,0.42} {
+        \draw[beam] (\x,0.35)--(\x,1.78);
+      }
+      \node[teal!65!black] at (0,1.98){法向辐射};
+      \draw[->,thick,blue!60!black] (1.15,-0.72)--(1.85,-0.72);
+      \draw[->,thick,blue!60!black] (-1.15,-0.72)--(-1.85,-0.72);
+      \node[align=center,text width=4.1cm] at (0,-1.16)
+      {倒格矢同时提供反馈与出光动量。};
     \end{scope}
 
-    % (b) 带边共振
-    \begin{scope}[shift={(0,0)}]
-      \node[font=\bfseries] at (0,2.55) {(b) 光子晶体带边共振};
-      \draw[thick] (-2.2,0) -- (2.2,0);
-      \foreach \x in {-2,-1,...,2} {
-        \foreach \y in {0,1,2} {
-          \fill[gray!30] (\x*0.7,\y*0.55-0.3) circle (0.14);
+    % (b) coherent Gamma-point band-edge emission
+    \begin{scope}
+      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \node[font=\bfseries] at (0,2.32) {(b) $\Gamma$ 点带边相干辐射};
+      \draw[slab] (-2.0,-0.38) rectangle (2.0,0.38);
+      \foreach \x in {-1.5,-1.0,...,1.5} {
+        \foreach \y in {-0.15,0.15} {
+          \fill[white] (\x,\y) circle (0.10);
+          \draw[gray!55] (\x,\y) circle (0.10);
         }
       }
-      \draw[very thick,red,domain=-2:2,samples=80] plot (\x,{0.22*sin(deg(2.8*\x))});
-      \foreach \x in {-1.5,-0.9,...,1.5} {\draw[->,green!60!black] (\x,0.15) -- (\x,1.45);}
-      \draw[<->,thick] (-1.4,0.72) -- (-0.85,0.72);
-      \node[above] at (-1.12,0.78) {\scriptsize 同相位};
-      \node[align=center] at (0,-0.95) {$\Gamma$ 点相干耦出\\群速度趋缓};
+      \draw[very thick,red!75!black,domain=-1.7:1.7,samples=80]
+        plot (\x,{0.58+0.16*sin(deg(3.1416*\x))});
+      \foreach \x in {-1.2,-0.8,...,1.2} {
+        \draw[beam] (\x,0.42)--(\x,1.72);
+      }
+      \draw[<->,thick,gray!75] (-0.95,1.30)--(-0.45,1.30);
+      \node[gray!60,fill=white,inner sep=1pt] at (-0.70,1.53){同相};
+      \node[align=center,text width=4.0cm] at (0,-1.16)
+      {带边慢光增强驻波场，远场相位更有序。};
     \end{scope}
 
-    % (c) 缺陷散射
-    \begin{scope}[shift={(5.1,0)}]
-      \node[font=\bfseries] at (0,2.55) {(c) 缺陷辅助散射};
-      \draw[thick] (-2.2,0) -- (2.2,0);
-      \foreach \x in {-2,-1,1,2} {\fill[gray!30] (\x*0.8,-0.3) rectangle ++(0.42,0.3);}
-      \fill[red!20] (0,-0.3) rectangle ++(0.42,0.3);
-      \draw[dashed,red] (0,-0.3) rectangle ++(0.42,0.3);
-      \node[red,above] at (0.2,0.12) {\scriptsize 缺陷};
-      \draw[->,very thick,blue] (-1.6,0.55) -- (-0.2,0.55);
-      \foreach \ang in {30,60,90,120,150} {\draw[->,orange!90!black] (0.2,0) -- (\ang:1.55);}
-      \node[align=center] at (0,-0.95) {无序增强散射\\非相干辐射};
+    % (c) defect or disorder assisted leakage
+    \begin{scope}[shift={(5.2,0)}]
+      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \node[font=\bfseries] at (0,2.32) {(c) 缺陷/无序辅助散射};
+      \draw[slab] (-2.0,-0.35) rectangle (2.0,0.35);
+      \foreach \x in {-1.55,-1.05,-0.55,0.85,1.35} {
+        \fill[white] (\x,0.08) ellipse (0.13 and 0.08);
+        \draw[gray!55] (\x,0.08) ellipse (0.13 and 0.08);
+      }
+      \fill[red!22] (0.05,-0.28) ellipse (0.32 and 0.20);
+      \draw[red!75!black,densely dashed,thick] (0.05,-0.28) ellipse (0.32 and 0.20);
+      \node[red!75!black,fill=white,inner sep=1pt] at (0.28,0.52){局域扰动};
+      \draw[guided] (-1.85,0.82)--(-0.15,0.82);
+      \foreach \ang in {35,65,100,135,160} {
+        \draw[scatter] (0.05,0.02)--++(\ang:1.15);
+      }
+      \node[orange!80!black,align=center,font=\scriptsize,fill=white,inner sep=1pt]
+        at (0,1.62){分散出光\\相干性较弱};
+      \node[align=center,text width=4.1cm] at (0,-1.16)
+      {局域散射可增加出光，但常伴随损耗与远场劣化。};
     \end{scope}
-
-    \node[draw,align=center,text width=11.8cm] at (0,-2.15) {统一包络方程：
-    $\dfrac{\partial A}{\partial z}+\dfrac{1}{v_g}\dfrac{\partial A}{\partial t}
-    = i\kappa B + i\chi_{\mathrm{rad}}E_{\mathrm{out}}$。\\
-    其中 $\kappa$ 为分布反馈耦合系数，$\chi_{\mathrm{rad}}$ 为辐射耦合系数。};
   \end{tikzpicture}%
   }
-  \caption{光子晶体面发射激光器中三类主要面发射机制对比：二级衍射、带边相干辐射与缺陷辅助散射。}
+  \caption{光子晶体面发射激光器中三类主要面发射机制对比：二级衍射、带边相干辐射与缺陷辅助散射。三者都可以理解为周期或局域扰动把面内导模耦合到辐射通道，但相干性、方向性和损耗代价不同。}
   \label{fig:ch06_surface_emission_mechanisms}
 \end{figure}

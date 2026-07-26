@@ -1,0 +1,38 @@
+% !TEX root = ../main.tex
+% Content-only figure: why high Q is only one input to threshold and current
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    box/.style={draw=black!60,rounded corners=2pt,fill=white,minimum width=3.0cm,minimum height=1.1cm,align=center,line width=0.6pt},
+    smallbox/.style={draw=black!55,rounded corners=2pt,fill=gray!5,minimum width=2.75cm,minimum height=0.82cm,align=center,font=\footnotesize},
+    arr/.style={->,thick,blue!65!black},
+    redarr/.style={->,thick,red!70!black},
+    note/.style={draw=orange!70!black,rounded corners=2pt,fill=orange!8,align=left,font=\footnotesize}
+  }
+
+  \node[box,fill=blue!8] (q) at (0,3.0) {被动高 $Q$\\$\alpha_{\mathrm{rad}}$ 较低};
+  \node[box,fill=green!8] (loss) at (4.0,3.0) {总损耗账本\\$\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$};
+  \node[box,fill=yellow!15] (gth) at (8.0,3.0) {光学阈值\\$g_{\mathrm{th}}=\dfrac{\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}}{\Gamma_{\mathrm{opt}}}$};
+  \node[box,fill=purple!8] (ith) at (12.0,3.0) {器件阈值电流\\$I_{\mathrm{th}}$};
+  \node[box,fill=red!7] (win) at (16.0,3.0) {工作窗口\\单模、远场、热稳定};
+
+  \draw[arr] (q) -- (loss);
+  \draw[arr] (loss) -- (gth);
+  \draw[arr] (gth) -- (ith);
+  \draw[arr] (ith) -- (win);
+
+  \node[smallbox] (int) at (4.0,1.45) {掺杂 / 金属 / 粗糙\\改变 $\alpha_{\mathrm{int}}$};
+  \node[smallbox] (gamma) at (8.0,1.45) {QW 与模场重叠\\决定 $\Gamma_{\mathrm{opt}}$};
+  \node[smallbox] (inj) at (12.0,1.45) {注入效率与复合\\决定 $N(\rvec)$};
+  \node[smallbox] (therm) at (16.0,1.45) {温升回写\\改变 $n,g,\alpha$};
+
+  \draw[redarr] (int) -- (loss);
+  \draw[redarr] (gamma) -- (gth);
+  \draw[redarr] (inj) -- (ith);
+  \draw[redarr] (therm) -- (win);
+
+  \node[note,text width=13.8cm,anchor=north west] at (1.25,0.35) {
+    读图规则：高 $Q$ 只降低一个损耗入口；它没有自动说明有源区重叠更好、注入更均匀、热回写后排序不翻转。因此“高 $Q$”只能作为低阈值的有利证据，不能单独升级为低 $I_{\mathrm{th}}$ 或高功率稳定结论。
+  };
+\end{tikzpicture}%
+}

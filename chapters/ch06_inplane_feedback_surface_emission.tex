@@ -2,7 +2,7 @@
 \chapter{面发射机制与面内耦合}
 \label{ch:feedback}
 
-\section*{学习目标}
+\paragraph{读完本章，你应能}
 \begin{itemize}
   \item 从面内导模出发理解 PCSEL 的反馈为何来自二维布拉格散射网络；
   \item 解释同一组周期散射为什么既能提供反馈，又能打开垂直辐射通道；
@@ -10,22 +10,22 @@
   \item 明确本章如何把 \cref{ch:gamma} 的 $\Gamma$ 点候选模推进到后续的阈值、BIC 与 CWT 模块。
 \end{itemize}
 
-\section*{先修知识}
+\paragraph{读前准备}
 \cref{ch:bloch,ch:gamma} 中的 Bloch 模、$\Gamma$ 点、模式分裂与候选激射模概念。
 
-\section*{本章路线图}
+\paragraph{阅读主线}
 \ChapterModelLevel{L1→L2}
 上一章已经回答了“哪些模式值得关注”。本章进一步回答“这些模式靠什么在面内形成反馈，又为什么能够向法向辐射”。我们先从普通 slab 导模出发，再引入二维周期散射，随后建立最小四波图像，最后讨论反馈与提取之间的张力，以及它如何成为后续阈值、偏振、BIC 与 CWT 的共同基础。
 
 \section{先从最朴素的问题开始：如果没有光子晶体，会发生什么}
 想象一个没有二维周期结构的普通有源 slab 波导。若波导中存在横向传播的导模，它们会沿面内传播，并由端面反射、杂散散射或额外设置的反馈结构来形成腔。此时，模式的主要命运是“继续在平面内走”。
 
-PCSEL 的关键变化恰恰在于：我们把一层二维周期折射率调制嵌入了这个面内传播环境。结果不是简单地“多了一点散射”，而是传播图像被根本改写。原本孤立的平面内波分量，开始通过倒格矢连接成网络；某些原本只会在面内传输的导模，也因此获得了向自由空间辐射的机会。
+PCSEL 的关键变化恰恰在于：我们把一层二维周期折射率调制嵌入了这个面内传播环境。结果是传播图像被根本改写，而非简单地“多了一点散射”。原本孤立的平面内波分量，开始通过倒格矢连接成网络；某些原本只会在面内传输的导模，也因此获得了向自由空间辐射的机会。
 
-因此，理解面发射机制的第一步，不是直接去看远场，而是先把面内传播这件事想清楚。PCSEL 的面发射并不是孤立产生的，它来自面内导模在二维周期介质中的重新组织。
+因此，理解面发射机制的第一步，是先把面内传播这件事想清楚，而非直接去看远场。PCSEL 的面发射并非孤立产生的，它来自面内导模在二维周期介质中的重新组织。
 
 \begin{IntuitionBox}
-PCSEL 的“反馈”与“出光”不是先后发生的两件事，而是同一个散射网络的两种后果。对一个给定模式而言，散射既可能把它送回别的面内波分量，也可能把它送进光锥成为辐射。设计 PCSEL，本质上是在管理这两条路径的相对强弱。
+PCSEL 的“反馈”与“出光”是同一个散射网络的两种后果，而非先后发生的两件事。对一个给定模式而言，散射既可能把它送回别的面内波分量，也可能把它送进光锥成为辐射。设计 PCSEL，本质上是在管理这两条路径的相对强弱。
 \end{IntuitionBox}
 
 \section{面内反馈从哪里来：从倒格矢散射看布拉格回路}
@@ -44,7 +44,7 @@ PCSEL 的“反馈”与“出光”不是先后发生的两件事，而是同�
 \end{equation}
 其中 $\kvec_i$ 与 $\kvec_j$ 分别是耦合前后的面内波矢。\cref{eq:pcsel_bragg_general} 给出的正是二维周期结构中的最小 Bragg 条件：只有当两个波分量之差恰好由某个倒格矢补偿时，它们才会被同一个晶格 Fourier 分量有效连接。
 
-这一条式子就是 PCSEL 面内反馈的源头。它说明：周期结构中的反馈不是端面“反弹回来”，而是通过倒格矢把一个传播方向耦合到另一个传播方向，再由这些方向之间的闭合耦合回路形成分布式反馈。
+这一条式子就是 PCSEL 面内反馈的源头。它说明：周期结构中的反馈是通过倒格矢把一个传播方向耦合到另一个传播方向，再由这些方向之间的闭合耦合回路形成分布式反馈，而非端面“反弹回来”。
 
 在方格晶格中，最直观的例子是四个主要平面波分量：
 \[
@@ -75,17 +75,16 @@ PCSEL 的“反馈”与“出光”不是先后发生的两件事，而是同�
 
 一阶布拉格最擅长做的是导模之间的前后向反馈，它确实能形成分布式反射，但通常还不足以把主导波分量直接送进法向出射通道。二阶布拉格或等效的 $\Gamma$ 点折叠则不同：同一组倒格矢既能维持面内反馈网络，又能把部分面内动量压缩到 $k_\parallel\approx 0$，于是法向辐射被打开。对 PCSEL 来说，关键不在“整数阶次”标签本身，而在是否存在同时提供反馈和出射的散射路径。
 \end{ExampleBox}
-\begin{NoteBox}{扩展区方案与简约区方案的对应关系}
+\paragraph{扩展区方案与简约区方案的对应关系}
 一阶布拉格条件 $2\beta_{\mathrm{slab}} = G$ 在\textbf{扩展区方案}中对应导模在 $\pm\beta_{\mathrm{slab}}$ 处的前后向耦合；而在\textbf{简约区方案}中，这两个状态被折叠回第一布里渊区边界 ($k_x = \pi/a$),形成带隙。二阶布拉格 $2\beta_{\mathrm{slab}} = 2G$ 在扩展区中对应 $\beta_{\mathrm{slab}} \approx G$ 的导模经散射后到达 $k_\parallel \approx 0$;在简约区中则表现为 $\Gamma$ 点附近的模式折叠。PCSEL 的法向辐射要求简约区图像中模式位于 $\Gamma$ 点 ($k_\parallel \approx 0$),这对应扩展区中 $\beta_{\mathrm{slab}} \approx G$ 的分量经一次倒格矢散射后到达光锥中心。
-\end{NoteBox}
 如果把 \cref{eq:pcsel_bragg_general} 与 \cref{eq:gamma_folding_condition} 放在一起看，会更容易理解本章后面要不断出现的两件事。第一，面内反馈来自“导模 $\rightarrow$ 导模”的闭合散射回路；第二，法向辐射来自“导模 $\rightarrow$ 光锥内连续谱”的开放散射回路。两条路的区别不在于是否经过周期结构，而在于散射后的终态仍在导模族里，还是已经掉进了辐射连续谱里。
 
 \begin{RigorousBox}
 若只保留若干主导波分量，设其包络组成向量 $\bm{a}$，则最小线性模型可写成
 \[
-\frac{\dd \bm{a}}{\dd t}=\left(\ii\mathbf{\Omega}-\mathbf{\Gamma}+\mathbf{K}\right)\bm{a},
+\frac{\dd \bm{a}}{\dd t}=\left(\ii\bm{\Omega}-\bm{\Gamma}+\mathbf{K}\right)\bm{a},
 \]
-其中 $\mathbf{\Omega}$ 表示未耦合时的本征频率项，$\mathbf{\Gamma}$ 表示总损耗，$\mathbf{K}$ 表示由晶格傅里叶分量引入的耦合矩阵。本章并不要求立即求解这个矩阵，而是先弄清每个矩阵元在物理上对应哪一条散射路径。第 \ref{ch:cwt-min} 章会把这一步系统化。
+其中 $\bm{\Omega}$ 表示未耦合时的本征频率项，$\bm{\Gamma}$ 表示总损耗，$\mathbf{K}$ 表示由晶格傅里叶分量引入的耦合矩阵。本章并不要求立即求解这个矩阵，而是先弄清每个矩阵元在物理上对应哪一条散射路径。第 \ref{ch:cwt-min} 章会把这一步系统化。
 \end{RigorousBox}
 
 \section{为什么说 PCSEL 的反馈不是一维 DFB 的简单二维版}
@@ -105,7 +104,7 @@ Noda 等人的 tutorial 对本章最有教学价值的一点，是把“二维�
 
 第一步是高折射率反差方格或三角晶格：它证明 $\Gamma^{(2)}$ 点附近的多束 Bloch 波可以形成二维相干共振，而不是一维 DFB 的简单并列。第二步是非对称单胞，例如三角孔或直角三角孔：它不再只追求高 $Q$，而是有意改变各带边模的辐射常数和远场干涉，使目标模获得可用的法向出射通道\cite{hirose2014}。第三步是双晶格：两组晶格点的相对位移重排 $180^\circ$ 衍射相位，使基模横向包络展开，同时让高阶横向模更容易在有限边界承担相对更大的损耗\cite{yoshida2019}。第四步是 Hermitian/非 Hermitian 联合调控：面内 $180^\circ/90^\circ$ 衍射不再单独优化，而要和经由辐射波产生的耗散耦合一起调节，使毫米级口径下仍然保留模式裕量\cite{yoshida2023,noda2023tutorial}。
 
-这条路线说明，PCSEL 的“反馈设计”不能只问某个耦合强不强，而要问该耦合在目标模和竞争模之间如何分配、在法向输出和边缘泄漏之间如何分配、在冷腔和热工作点之间是否仍保持同样排序。这正是本书后面用模裕量和工作窗口语言重写高功率 PCSEL 的原因。
+这条路线说明，PCSEL 的“反馈设计”不能只问某个耦合强不强，而要问该耦合在目标模和竞争模之间如何分配、在法向输出和边缘泄漏之间如何分配、在冷腔和热工作点之间是否仍保持同样排序。这也是本书后面用模裕量和工作窗口语言重写高功率 PCSEL 的原因。
 \end{ApplicationBox}
 
 \section{垂直辐射为什么会出现：从光锥条件理解面发射}
@@ -118,7 +117,7 @@ Noda 等人的 tutorial 对本章最有教学价值的一点，是把“二维�
 \end{equation}
 其中 $n_{\mathrm{out}}$ 是目标输出侧外部介质的折射率；若上方为空气，则 $n_{\mathrm{out}}\approx 1$。现实 PCSEL 不只存在一个光锥，而是有上下两个光锥：向上空气侧的光锥较窄，向下衬底侧的光锥更宽。以下方 GaAs 衬底为例，常有 $n_{\mathrm{sub}}\approx 3.5$，因此许多对空气侧来说仍偏“导模”的分量，对衬底侧却已经是允许辐射的波。这也是上下辐射天然不对称的第一原因。满足\cref{eq:light_cone_condition} 的区域称为光锥（light cone）。普通 slab 导模往往位于光锥之外，因此难以直接向自由空间辐射。但周期散射可以改变面内动量：一个原本位于光锥外的导模分量，经由倒格矢散射后，可能被折回到上方或下方光锥内，于是对应的场就能向自由空间泄露。
 
-这就是 PCSEL 面发射的核心机制：面内导模先存在，周期结构再把它的一部分动量“搬运”到可辐射区域。因而面发射不是对原有导模的简单泄漏，而是由晶格动量补偿打开的辐射通道。
+这就是 PCSEL 面发射的核心机制：面内导模先存在，周期结构再把它的一部分动量“搬运”到可辐射区域。因而面发射是由晶格动量补偿打开的辐射通道，而非对原有导模的简单泄漏。
 
 如果把这句话写成更像“可计算判据”的形式，就是：先有 slab 导模色散
 \[
@@ -131,7 +130,7 @@ Noda 等人的 tutorial 对本章最有教学价值的一点，是把“二维�
 \end{equation}
 满足\cref{eq:radiation_after_folding} 的分量就进入辐射连续谱，不满足的分量则继续留在导模家族中。于是，“面内反馈”和“法向耦出”才会成为同一个散射网络的两面。
 
-更进一步，某个具体辐射通道的强弱并不是一句“落入光锥就会辐射”就结束了。若把目标辐射通道记为 $\nu$，其平面内辐射波矢记为 $\kvec_{\parallel,\nu}^{\mathrm{rad}}$，则导模到该通道的耦合振幅在最小投影层级上可写成
+更进一步，某个具体辐射通道的强弱并非一句“落入光锥就会辐射”就结束了。若把目标辐射通道记为 $\nu$，其平面内辐射波矢记为 $\kvec_{\parallel,\nu}^{\mathrm{rad}}$，则导模到该通道的耦合振幅在最小投影层级上可写成
 \begin{equation}
 d_\nu
 \propto
@@ -155,51 +154,93 @@ d_\nu
 \bm{e}_{0}(z)\,\dd z.
 \label{eq:radiation_amplitude_fourier}
 \end{equation}
-这是本章用于估计第一步散射通道的核心公式。它说明某一辐射通道的幅度由两部分共同决定：一是\textbf{恰好匹配该动量转移的结构 Fourier 分量}，二是\textbf{导模与辐射通道在纵向上的场重叠}。因此，面内反馈和法向辐射不是两套无关物理，而是同一套 Fourier 散射网络在不同终态上的投影。
+这是本章用于估计第一步散射通道的核心公式。它说明某一辐射通道的幅度由两部分共同决定：一是\textbf{恰好匹配该动量转移的结构 Fourier 分量}，二是\textbf{导模与辐射通道在纵向上的场重叠}。因此，面内反馈和法向辐射是同一套 Fourier 散射网络在不同终态上的投影，而非两套无关物理。
 \begin{notebox}
 \cref{eq:radiation_amplitude_fourier} 给出的是比例关系而非严格等式。严格的辐射振幅还需要包含纵向波矢失配因子 $1/k_{z,\nu}$ 以及来自模式归一化的前置系数。在定性分析通道选择时，这些因子通常不影响主导物理图像，但在进行定量计算时必须补全。
 \end{notebox}
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
-    \fill[blue!6] (0,0) circle (1.45);
-    \draw[->] (-3.1,0)--(3.1,0) node[right]{$k_x$};
-    \draw[->] (0,-2.2)--(0,2.6) node[above]{$k_y$};
-    \draw[thick,blue!55!black] (0,0) circle (1.45);
-    \node[blue!55!black] at (0,1.78){光锥/辐射连续谱};
-    \fill[blue!75] (2.35,0.82) circle (0.08) node[above right=1pt]{$\kvec_{\parallel}$};
-    \fill[red!75] (0.95,0.82) circle (0.08) node[above left=1pt]{$\kvec_{\parallel}-\gvec$};
-    \draw[->,very thick,orange!90!black] (2.35,0.82)--node[above,sloped]{$-\gvec$}(0.95,0.82);
-    \draw[dashed,gray!70] (0.95,0.82)--(0.95,0);
-    \draw[dashed,gray!70] (2.35,0.82)--(2.35,0);
-    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,1.72);
-    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,-1.72);
-    \node[teal!70!black,right] at (0.95,1.72){上出光通道};
-    \node[teal!70!black,right] at (0.95,-1.72){下出光通道};
-    \node[align=center,anchor=west] at (1.65,-1.25) {原始导模分量在光锥外\\周期散射后折叠进光锥内};
-  \end{tikzpicture}
+  \resizebox{0.9\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+    \begin{scope}
+      \node[font=\bfseries] at (0,2.95) {动量空间};
+      \fill[cyan!8] (0,0) circle (1.52);
+      \draw[->,gray!70] (-3.0,0)--(3.15,0) node[right]{$k_x$};
+      \draw[->,gray!70] (0,-2.15)--(0,2.35) node[above]{$k_y$};
+      \draw[very thick,cyan!60!black] (0,0) circle (1.52);
+      \node[cyan!55!black,fill=white,inner sep=1.5pt] at (0,1.83){光锥内：可辐射};
+      \node[gray!60,align=center] at (-2.15,-1.45){光锥外\\导模区};
+
+      \coordinate (guided) at (2.35,0.86);
+      \coordinate (folded) at (0.88,0.86);
+      \draw[densely dashed,gray!55] (0,0)--(guided);
+      \fill[blue!75!black] (guided) circle (0.085);
+      \node[blue!75!black,anchor=west] at (2.48,0.98){原始导模 $\kvec_\parallel$};
+      \draw[->,very thick,orange!90!black] (guided)--node[above,sloped,fill=white,inner sep=1pt]{$-\gvec$}(folded);
+      \fill[red!80!black] (folded) circle (0.085);
+      \node[red!80!black,anchor=east] at (0.75,1.15){折叠分量};
+      \draw[->,thick,teal!70!black] (folded)--(0.88,2.15);
+      \draw[->,thick,teal!70!black] (folded)--(0.88,-1.55);
+      \node[teal!65!black,anchor=west] at (1.05,2.05){上出光};
+      \node[teal!65!black,anchor=west] at (1.05,-1.45){下出光};
+    \end{scope}
+
+    \begin{scope}[shift={(6.7,0)}]
+      \node[font=\bfseries] at (0,2.95) {实空间对应};
+      \shade[left color=gray!12,right color=gray!5] (-2.65,-0.55) rectangle (2.65,0.45);
+      \draw[thick] (-2.65,0.45)--(2.65,0.45);
+      \foreach \x in {-2.2,-1.55,...,2.2} {
+        \fill[white] (\x,0.18) ellipse (0.16 and 0.10);
+        \draw[gray!55] (\x,0.18) ellipse (0.16 and 0.10);
+      }
+      \draw[->,very thick,blue!75!black] (-2.35,0.9)--(-0.55,0.9)
+        node[midway,above]{面内导模};
+      \draw[->,very thick,orange!90!black] (-0.25,0.72)--(0.35,0.72)
+        node[midway,below=2pt]{$\gvec$};
+      \foreach \x in {-0.7,-0.35,0,0.35,0.7} {
+        \draw[->,thick,teal!70!black] (\x,0.45)--(\x,2.25);
+      }
+      \node[teal!65!black] at (0,2.52){相干面发射};
+      \node[align=center,text width=5.2cm] at (0,-1.25)
+      {周期结构提供倒格矢，把光锥外的面内动量折叠到光锥内。};
+    \end{scope}
+  \end{tikzpicture}%
+  }
   \caption{动量折叠把面内导模分量送入辐射连续谱的示意图。蓝点表示原始导模分量，橙色箭头表示由倒格矢提供的动量转移，红点表示折叠后的分量；一旦落入光锥，便可向上下自由空间通道辐射。}
   \label{fig:lightcone_coupling}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=1.08cm,y=1.08cm]
-    \draw[->] (0,0)--(4.9,0) node[right]{$|\kvec_\parallel|$};
-    \draw[->] (0,0)--(0,3.8) node[above]{$\omega$};
-    \fill[blue!6] (0,0)--(4.35,3.25)--(0,3.25)--cycle;
-    \draw[thick,gray!80] (0,0)--(4.35,3.25) node[above right]{光锥边界};
-    \draw[thick,blue!75] plot[smooth] coordinates {(0.45,2.05) (1.2,2.22) (2.05,2.55) (2.9,3.0) (3.7,3.48)};
-    \draw[thick,red!75,densely dashed] plot[smooth] coordinates {(0.55,3.48) (1.05,3.22) (1.55,2.94) (2.05,2.66) (2.55,2.42)};
-    \draw[dashed,gray!70] (3.05,0)--(3.05,3.25);
-    \draw[dashed,gray!70] (1.55,0)--(1.55,3.25);
-    \draw[->,very thick,orange!90!black] (3.05,3.12)--node[above]{$-\gvec$}(1.55,2.87);
-    \fill[blue!75] (3.05,3.12) circle (0.05);
-    \fill[red!75] (1.55,2.87) circle (0.05);
-    \node[blue!75] at (3.35,2.7){原始导模色散};
-    \node[red!75] at (2.75,2.05){折叠后的等效分支};
-    \node[align=center] at (1.2,0.55){进入光锥后\\可泄漏到自由空间};
-  \end{tikzpicture}
+  \resizebox{0.65\textwidth}{!}{%
+  \begin{tikzpicture}[x=1.12cm,y=1cm,>=Latex,font=\small]
+    \draw[->] (0,0)--(6.1,0) node[right]{$|\kvec_\parallel|$};
+    \draw[->] (0,0)--(0,4.25) node[above]{$\omega$};
+    \fill[cyan!8] (0,0)--(0,3.75)--(5.15,3.75)--cycle;
+    \draw[very thick,gray!75] (0,0)--(5.15,3.75)
+      node[above right,fill=white,inner sep=1pt,font=\scriptsize]{光锥边界};
+    \node[cyan!55!black,align=center,font=\scriptsize] at (1.05,3.25){辐射\\连续谱};
+    \node[gray!60,align=center,font=\scriptsize] at (4.85,1.10){光锥外\\导模区};
+
+    \draw[very thick,blue!75!black]
+      plot[smooth] coordinates {(1.45,1.55) (2.25,1.85) (3.05,2.30) (3.85,2.90) (4.65,3.55)};
+    \node[blue!75!black,fill=white,inner sep=1pt,font=\scriptsize] at (4.38,2.68){原始导模};
+
+    \draw[very thick,red!80!black,densely dashed]
+      plot[smooth] coordinates {(0.55,2.55) (1.25,2.42) (1.95,2.38) (2.65,2.48) (3.35,2.75)};
+    \node[red!80!black,fill=white,inner sep=1pt,font=\scriptsize] at (2.10,2.98){折叠分支};
+
+    \coordinate (p1) at (3.85,2.90);
+    \coordinate (p2) at (1.55,2.40);
+    \draw[densely dashed,gray!60] (p1)--(3.85,0);
+    \draw[densely dashed,gray!60] (p2)--(1.55,0);
+    \draw[->,very thick,orange!90!black] (p1)--node[above,fill=white,inner sep=1pt]{$-\gvec$}(p2);
+    \fill[blue!75!black] (p1) circle (0.065);
+    \fill[red!80!black] (p2) circle (0.065);
+    \draw[->,thick,teal!70!black] (p2)--(1.55,3.28);
+    \node[teal!65!black,anchor=west,font=\scriptsize] at (1.70,3.20){自由空间通道};
+  \end{tikzpicture}%
+  }
   \caption{平板导模色散与光锥边界示意。周期散射并不创造新色散，而是把原本位于光锥外的导模分量平移到光锥内；产生辐射的是折叠后的分支与自由空间连续谱的相交。}
   \label{fig:lightcone_dispersion}
 \end{figure}
@@ -217,9 +258,9 @@ R_x\\S_x\\R_y\\S_y
 \end{bmatrix}
 =
 \left(
-\mathbf{\Omega}
+\bm{\Omega}
 -
-\mathbf{\Gamma}
+\bm{\Gamma}
 +
 \mathbf{K}
 \right)
@@ -228,11 +269,11 @@ R_x\\S_x\\R_y\\S_y
 \end{bmatrix}.
 \label{eq:coupling_basic}
 \end{equation}
-这里 $\mathbf{K}$ 的非对角元代表不同传播方向之间的散射耦合，$\mathbf{\Gamma}$ 中则包含辐射损耗和内部损耗。\cref{fig:ch06_surface_emission_mechanisms}直观展示了三种主要的表面发射机制及其统一描述。
+这里 $\mathbf{K}$ 的非对角元代表不同传播方向之间的散射耦合，$\bm{\Gamma}$ 中则包含辐射损耗和内部损耗。\cref{fig:ch06_surface_emission_mechanisms}直观展示了三种主要的表面发射机制及其统一描述。
 
 \input{figures/fig_ch06_surface_emission_mechanisms}
 
-这里的慢变包络近似并不是一句口头假设，而有明确的尺度条件。若某支基本波写成
+这里的慢变包络近似并非一句口头假设，而有明确的尺度条件。若某支基本波写成
 \[
 E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
 \]
@@ -245,11 +286,9 @@ E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
 \end{equation}
 \cref{eq:svea_condition} 失效时，说明模式已经不再由少数慢变基本波主导，此时应谨慎使用最小四波图像，并考虑更高阶 CWT 或直接转入全波方法。
 
-这个模型之所以有教学价值，不在于它已经足够精确，而在于它第一次把“模式分裂”“偏振选择”“损耗排序”“竞争关系”放进了同一个矩阵里。只要接受这一点，后面的 CWT、RCWA 和 FEM 只是在逐层提高保真度，而不是突然更换物理对象。
+这个模型之所以有教学价值，不在于它已经足够精确，而在于它第一次把“模式分裂”“偏振选择”“损耗排序”“竞争关系”放进了同一个矩阵里。一旦接受这种统一表述，后面的 CWT、RCWA 和 FEM 只是在逐层提高保真度，而不是突然更换物理对象。
 
-\begin{ExampleBox}
 若某个结构改动主要增强了 $R_x \leftrightarrow S_x$ 这条回路，而对 $x$、$y$ 两组分量之间的交叉耦合作用较弱，那么最先被改写的常常是纵横两个主偏振方向的模式分裂。反过来，若某个改动主要打开的是通往光锥的散射分量，那么它更可能优先改写的是辐射损耗、阈值与远场，而不一定先改写偏振。
-\end{ExampleBox}
 
 \section{晶格傅里叶分量为什么如此关键}
 \cref{eq:coupling_basic} 只是最小模型。它通常忽略高阶倒格矢、完整纵向矢量效应、有限尺寸边缘散射和温度依赖。它适合建立主导机制和参数方向判断，不适合在未经校准的情况下直接替代 RCWA/FEM/FDTD 做最终定量结论。
@@ -257,7 +296,7 @@ E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
 但它已经足以说明一个需要注意的事实：孔半径、孔形状、占空比、刻蚀深度等几何参数，并不会“平均地”影响所有物理量，而是通过不同傅里叶分量选择性地改写不同耦合通道。也因此，PC layer 的几何微调不能脱离纵向外延设计单独理解；同一个几何改动，在不同外延层栈下可能对应完全不同的反馈、辐射与损耗后果。
 
 \section{反馈与提取之间的张力：为什么 PCSEL 设计不能只追一个指标}
-到这里可以把本章最重要的工程结论明确写出来：PCSEL 设计不是“让反馈尽可能强”或“让辐射尽可能强”，而是在二者之间寻找可工作的窗口。
+到这里可以把本章最重要的工程结论明确写出来：PCSEL 设计是在二者之间寻找可工作的窗口，而非“让反馈尽可能强”或“让辐射尽可能强”。
 
 若辐射太弱，模式虽然容易积累能量，但输出提取效率差，远场可能不理想；若辐射太强，目标模还未来得及积累足够能量就被泄露掉，光学阈值反而升高。可工作的 PCSEL 设计通常不是单一指标取极值，而是多个指标同时落在可接受范围内：
 \begin{itemize}
@@ -269,9 +308,9 @@ E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
 这也解释了为什么设计讨论里会反复出现 trade-off。这里的 trade-off 来自同一组散射通道对两类过程的同时控制：腔内储能与有用输出。
 
 \section{模式竞争在本章图像下如何理解}
-现在回到上一章的模式选择问题。不同候选模之所以竞争，不是因为它们名字不同，而是因为它们对应不同的耦合网络本征态。即使两个模式频率接近，如果一个模式在耦合矩阵中对应较小的辐射损耗、更好的有源区重叠和更有利的对称性，那么它在净增益排序上就可能明显占优。
+现在回到上一章的模式选择问题。不同候选模之所以竞争，是因为它们对应不同的耦合网络本征态，而非因为它们名字不同。即使两个模式频率接近，如果一个模式在耦合矩阵中对应较小的辐射损耗、更好的有源区重叠和更有利的对称性，那么它在净增益排序上就可能明显占优。
 
-换句话说，模式竞争并不是“后面阈值章节才讨论的事情”，它从耦合网络建立时就已经开始了。本章给出的不是最终阈值答案，但它告诉我们：竞争的根子在哪里。
+换句话说，模式竞争并非“后面阈值章节才讨论的事情”，它从耦合网络建立时就已经开始了。本章给出的不是最终阈值答案，但它告诉我们：竞争的根子在哪里。
 
 \begin{PitfallBox}
 把“面发射”理解成一个独立于反馈之外的附加输出过程，是常见误读。这样一来，读者会在后面把 BIC 看成“纯辐射专题”，把阈值看成“纯增益专题”，再把动态学看成“纯速率方程专题”。对 PCSEL 而言，这三件事其实都在继承本章同一组散射通道。
@@ -296,7 +335,7 @@ E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
   \item 法向辐射耦合足够可控，使输出方向性和远场质量可用于链路；
   \item 动态响应不过度受限于热漂移与寄生效应，使调制窗口可用。
 \end{itemize}
-因此，“把某个被动指标推到极值”通常不是最优策略。更可靠的做法是把反馈-辐射-动态三者放入同一预算：先在单胞层确认耦合方向，再在有限尺寸和器件层检查该方向是否仍保留调制与热稳定窗口。这一点直接连接了本章与后续 \cref{ch:dynamics,ch:workflow} 的工作流闭环。
+因此，“把某个被动指标推到极值”通常不是最优策略。更可靠的做法是把反馈-辐射-动态三者放入同一预算：先在单胞层确认耦合方向，再在有限尺寸和器件层检查该方向是否仍保留调制与热稳定窗口。这种预算关系直接连接了本章与后续 \cref{ch:dynamics,ch:workflow} 的工作流闭环。
 
 \section{与后续章节的关系}
 本章实际上把后续几章的逻辑都搭好了。
@@ -307,10 +346,10 @@ E_m(\rho)=a_m(\rho)\ee^{\ii\beta_m\cdot\rho},
   \item \cref{ch:cwt-min} 则把本章的物理图像系统化成耦合波理论矩阵形式。
 \end{itemize}
 
-因此，本章不是孤立的“现象解释章”，而是从 $\Gamma$ 点候选模过渡到阈值、偏振、BIC 与 CWT 的共同桥梁。更进一步说，本章给出的散射网络并不只决定“能否出光”，还在给后面的动态学预设边界：哪一支模式损耗更低、哪一支模式更容易耦合到法向辐射、哪一支模式更容易受结构扰动改写，都会直接影响 \cref{ch:dynamics} 中的模式竞争、调制响应和线宽来源。
+因此，本章是从 $\Gamma$ 点候选模过渡到阈值、偏振、BIC 与 CWT 的共同桥梁，而非孤立的“现象解释章”。更进一步说，本章给出的散射网络并不只决定“能否出光”，还在给后面的动态学预设边界：哪一支模式损耗更低、哪一支模式更容易耦合到法向辐射、哪一支模式更容易受结构扰动改写，都会直接影响 \cref{ch:dynamics} 中的模式竞争、调制响应和线宽来源。
 
-\section*{本章小结}
-PCSEL 的面发射机制不是“先有腔，再让光漏出来”，而是二维周期散射网络同时承担了反馈与辐射两种功能。理解这一点之后，就能明白为什么晶格傅里叶分量、光锥耦合、模式竞争和提取效率会在后续章节里反复一起出现。对 PCSEL 来说，面发射并不是附加效果，而是腔物理本身的一部分。也正因为如此，本章与后面的两个关键词直接相连：一条线通向 \cref{ch:bic}，在那里同一组辐射通道会被整理为 BIC / quasi-BIC 的辐射工程问题；另一条线通向 \cref{ch:threshold,ch:dynamics}，在那里这些通道又会被重新写成阈值排序、阈上稳定性和噪声问题。若在这里把面发射理解成单纯“漏光”，后续关于 BIC、阈值和动态学的联系就会被切断。
+\section*{回看本章}
+PCSEL 的面发射机制不是“先有腔，再让光漏出来”，而是二维周期散射网络同时承担了反馈与辐射两种功能。理解这种双重功能之后，就能明白为什么晶格傅里叶分量、光锥耦合、模式竞争和提取效率会在后续章节里反复一起出现。对 PCSEL 来说，面发射并非附加效果，而是腔物理本身的一部分。也正因为如此，本章与后面的两个关键词直接相连：一条线通向 \cref{ch:bic}，在那里同一组辐射通道会被整理为 BIC / quasi-BIC 的辐射工程问题；另一条线通向 \cref{ch:threshold,ch:dynamics}，在那里这些通道又会被重新写成阈值排序、阈上稳定性和噪声问题。若在这里把面发射理解成单纯“漏光”，后续关于 BIC、阈值和动态学的联系就会被切断。
 
 \section*{练习题}
 \begin{enumerate}
@@ -323,11 +362,11 @@ PCSEL 的面发射机制不是“先有腔，再让光漏出来”，而是二�
   \item \hardq 试给出一个你认为适合用最小四波模型描述的 PCSEL 场景，并说明原因。
 \end{enumerate}
 
-\section*{建议继续阅读}
+\section*{延伸阅读}
 \begin{itemize}
-  \item \cite{joannopoulos2008,fan2002guided} 中关于周期散射、导模共振与辐射通道的讨论。 建议重点关注面内反馈、光锥耦合与面发射机制的标准表述。
+  \item \cite{joannopoulos2008,fan2002guided} 中关于周期散射、导模共振与辐射通道的讨论。
 
-  \item 读完 \cref{ch:cwt-min} 后回看本章，会更容易把这里的图像和矩阵模型对应起来。 建议重点关注本章输出量如何进入后续模型。
+  \item 读完 \cref{ch:cwt-min} 后回看本章，会更容易把这里的图像和矩阵模型对应起来。
 
-  \item 若想继续追问“哪些法向辐射是可以被对称性关闭的”，应接着读 \cref{ch:bic}；若想追问“这些辐射与损耗排序在阈上如何演化为模式竞争和线宽差异”，则应继续读 \cref{ch:dynamics}。 建议重点关注本章输出量如何进入后续模型。
+  \item 若想继续追问“哪些法向辐射是可以被对称性关闭的”，应接着读 \cref{ch:bic}；若想追问“这些辐射与损耗排序在阈上如何演化为模式竞争和线宽差异”，则应继续读 \cref{ch:dynamics}。
 \end{itemize}

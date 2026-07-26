@@ -2,24 +2,24 @@
 \chapter{术语表与符号总表}
 \label{ch:glossary}
 
-\section*{学习目标}
+\paragraph{读完本章，你应能}
 \begin{itemize}
   \item 把全书中最关键的术语、符号和层级区分压缩成可反复查阅的一份统一对照表。
   \item 避免在阅读 \cref{ch:bic,ch:dynamics,ch:workflow,ch:worked-example,ch:failure-modes} 等跨模块章节时发生语义漂移。
   \item 建立一套适合研究记录、仿真汇报和论文写作的统一命名习惯。
 \end{itemize}
 
-\section*{先修知识}
-建议已通读全书，尤其是 \cref{ch:roadmap,ch:bic,ch:dynamics,ch:workflow,ch:worked-example,ch:failure-modes,ch:math-appendix,ch:device-appendix,ch:sim-appendix}。
+\paragraph{读前准备}
+本章是查阅型索引，没有先修门槛：从任何一章跳转过来查词都可以直接使用，遇到层级可疑的表述时随时翻开即可。
 
-\section*{本章路线图}
+\paragraph{阅读主线}
 \ChapterModelLevel{跨层索引（L1→L4）}
 本章先给出核心术语表，再给出符号总表，随后整理最常见的混淆对照，最后说明本章在工作流、例题与失败模式诊断中的使用位置。
 为了帮助读者快速建立对全书符号体系的整体认知，\cref{fig:ch28_symbol_glossary}以树状图的形式展示了所有关键符号的分类架构。该图将数百个分散在各章的物理量系统地归纳为三大族群：基础物理（蓝色）、材料几何（绿色）和数值计算（橙色），并在每个类别下进一步细分为若干子类，标注出最具代表性的符号实例。建议初次接触本书时先将此图浏览一遍，后续遇到陌生符号时可迅速定位其所属范畴以减少翻阅时间。
 
 \input{figures/fig_ch28_symbol_glossary}
 \begin{IntuitionBox}
-术语表不是为了把词翻译得“直观”，而是为了让证据链不失真。PCSEL 研究跨越开放电磁系统、半导体器件和多物理场建模，同一个词若在不同章节里含义漂移，结论就会在不知不觉中越级。
+术语表是为了让证据链不失真，而非为了把词翻译得“直观”。PCSEL 研究跨越开放电磁系统、半导体器件和多物理场建模，同一个词若在不同章节里含义漂移，结论就会在不知不觉中越级。
 \end{IntuitionBox}
 
 \section{如何使用本章}
@@ -43,7 +43,7 @@ $\Gamma$ 点模 & 布里渊区中心附近的模式家族。它与垂直辐射�
 导模共振（guided resonance） & 本来受波导约束、但因周期扰动耦合到辐射连续谱而可向外泄露的开放模式。 \\
 连续谱束缚态（BIC） & 频率落在辐射连续谱中，却因对称性或干涉机制而不向外泄露的理想束缚态。 \\
 对称性保护 BIC（symmetry-protected BIC） & 由于模式对称性与可辐射通道不匹配，导致耦合严格为零的 BIC。它常出现在 $\Gamma$ 点附近。 \\
-偶然 BIC（accidental BIC） & 不是由严格对称性，而是由不同辐射通道之间的振幅和相位抵消形成的 BIC。 \\
+偶然 BIC（accidental BIC） & 是由不同辐射通道之间的振幅和相位抵消形成的 BIC，而非由严格对称性。 \\
 准 BIC（quasi-BIC） & 当理想 BIC 因有限尺寸、扰动、无序或倾斜激发而获得有限泄露后形成的高 $Q$ 共振。它在真实 PCSEL 中更常见。 \\
 辐射通道（radiation channel） & 模式可以向外界泄露能量的远场通道，包括不同偏振、角度和上下半空间的辐射分量。 \\
 偏振选择 & 结构对不同偏振模式的辐射、损耗或增益施加不对称约束，从而导致某一偏振更容易成为稳定工作模。 \\
@@ -120,13 +120,9 @@ $N$ & 载流子密度、样本数、阵列周期数 & 数值章节和器件章�
 \bottomrule
 \end{longtable}
 
-\begin{ExampleBox}
 \textbf{使用建议。} 遇到多义符号时，先看它第一次出现在哪一章；再看它是否带下标；最后判断它属于电磁、器件、动态学还是工作流语境。对全书最常见的几个多义符号，最稳妥的写法是不要让 $Q$、$\Gamma$、$\beta$、$g$ 脱离上下文孤立出现。
-\end{ExampleBox}
 
-\begin{RigorousBox}
 全书中凡出现“threshold”“stability”“mode selection”这类词，默认都必须带层级。若没有说明它属于被动电磁层级、简化器件代理层级，还是器件级工作点层级，那么表述就是不完整的。
-\end{RigorousBox}
 
 \section{高频混淆对照}
 \begin{longtable}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
@@ -149,9 +145,7 @@ BIC vs 高 $Q$ 共振 & BIC 是理想耦合严格为零的束缚态，高 $Q$ �
 \bottomrule
 \end{longtable}
 
-\begin{ExampleBox}
 合规写法示例：“该结构在被动开放电磁模型下显示出接近准 BIC 的高 $Q$ 候选模，因此在光学层级上具有较低辐射损耗潜力；其器件级阈值电流与线宽仍需结合 \cref{ch:dynamics,ch:device-appendix} 中的动态学、注入与热回写模型评估。”
-\end{ExampleBox}
 
 \begin{PitfallBox}
 把“存在一个高 $Q$ 的 $\Gamma$ 点候选模”直接改写成“器件一定会以单模低阈值工作”，是全书最需要避免的术语越级。类似地，把“调制响应更快”写成“线宽一定更窄”也是把动态学结论和噪声结论混在了一起。
@@ -168,8 +162,8 @@ BIC vs 高 $Q$ 共振 & BIC 是理想耦合严格为零的束缚态，高 $Q$ �
   \item 当你在 \cref{ch:failure-modes} 中排错时，可用本章快速判断自己究竟是符号混用、术语越级，还是模型层级本身已经错位。
 \end{itemize}
 
-\section*{本章小结}
-本章把全书中最容易漂移的术语和符号压缩成一份统一工具表。有效的用法，不是偶尔查一个词，而是在写公式、做工作流、整理例题中间结果和诊断失败模式时，持续用它检查自己是否发生了层级混用、概念越级或符号漂移。
+\section*{回看本章}
+本章把全书中最容易漂移的术语和符号压缩成一份统一工具表。有效的用法，是在写公式、做工作流、整理例题中间结果和诊断失败模式时，持续用它检查自己是否发生了层级混用、概念越级或符号漂移，而非偶尔查一个词。
 
 \section*{练习题}
 \begin{enumerate}
@@ -182,7 +176,7 @@ BIC vs 高 $Q$ 共振 & BIC 是理想耦合严格为零的束缚态，高 $Q$ �
   \item \hardq 说明为什么在实验校准中，回验量不能再反过来参与同一轮参数拟合。
 \end{enumerate}
 
-\section*{建议继续阅读}
+\section*{延伸阅读}
 \begin{itemize}
   \item 若你在整理理论与辐射主线，建议与 \cref{ch:bic,ch:math-appendix} 对照阅读。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
 
@@ -190,5 +184,3 @@ BIC vs 高 $Q$ 共振 & BIC 是理想耦合严格为零的束缚态，高 $Q$ �
 
   \item 若你在整理项目执行链，建议与 \cref{ch:workflow,ch:worked-example,ch:failure-modes,ch:sim-appendix} 对照阅读。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
 \end{itemize}
-
-

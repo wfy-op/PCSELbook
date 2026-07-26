@@ -2,31 +2,30 @@
 \chapter{热效应、非均匀性与热-电-光耦合}
 \label{ch:eto-coupling}
 
-\section*{学习目标}
+\paragraph{读完本章，你应能}
 \begin{itemize}
-  \item 理解为什么热效应在 PCSEL 中不是对冷腔分析的末端修正，而是会主动重写载流子分布、增益谱、损耗和模式排序的主导因素。
+  \item 理解热效应为何会主动重写载流子分布、增益谱、损耗和模式排序，因而不能作为冷腔分析的末端修正。
   \item 掌握 Joule 热、复合热、温度依赖材料参数和多物理场迭代之间的关系，并能判断什么时候简化热模型已经不够。
   \item 对 GaAs、InP、GaN 等主要材料平台在折射率、增益谱、热导、掺杂损耗和工艺难点上的差异形成器件级认识。
 \end{itemize}
 
-\section*{先修知识}
+\paragraph{读前准备}
 建议已掌握 \cref{ch:threshold,ch:qw-gain,ch:electrical} 中关于阈值条件、局域增益分布和电注入输运的内容。
 
-\section*{本章路线图}
+\paragraph{阅读主线}
 \ChapterModelLevel{L4}
 到上一章为止，我们已经知道阈值电流为什么是一个空间分辨的器件问题，但那仍是在等温框架下建立的。真实 PCSEL 一旦开始导通，接触、电流扩展层、阻挡层和有源区就会发热，而温度又会反过来改写迁移率、复合、折射率、材料增益和吸收。于是，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 中看似分别处理的外延层、有源区和输运，会在本章重新闭合成一个热-电-光回路。本章先从热源开始，再讨论温升如何同时回写到光学和电学；随后解释热斑、空间烧孔和模式竞争的关系，最后用一个平台差异小节说明：同一套 PCSEL 理论框架在 GaAs、InP、GaN 上会怎样“变形”。
 
+\paragraph{贯穿案例 B0/R1：热模型只报告算得出的量}
+B0 先以 \SI{940}{nm}、直径 \SI{200}{\micro\meter} 的教学热源建立量级感，输出完整的 $T(x,y,z)$、最大温升位置以及由 $\Delta n(T)$ 和 $\lambda_g(T)$ 导致的失谐。R1 的 \SI{3}{mm}、\SI{50}{W} 连续输出则提供放大后的现实边界\cite{yoshida2023,noda2023tutorial}：它说明热补偿必须进入设计闭环，却不能在缺少封装热阻、耗散功率和电流分布时推出一个“文献器件温升”。本章后续所有数值都据此标明是 B0 教学估算还是 R1 文献指标。
+
 \section{为什么热效应在 PCSEL 中比在许多小面积激光器里更具结构性}
-并不是所有半导体激光器都对热效应同样敏感。PCSEL 的特殊性在于：它一方面追求较大的发光面积和面内相干反馈，另一方面又要求单模、窄远场和稳定偏振。前者让横向热扩散尺度变长、局部热斑更容易出现；后者则意味着任何小范围的折射率、增益或损耗扰动，都可能被模式选择机制放大成宏观输出差异。
+并非所有半导体激光器都对热效应同样敏感。PCSEL 的特殊性在于：它一方面追求较大的发光面积和面内相干反馈，另一方面又要求单模、窄远场和稳定偏振。前者让横向热扩散尺度变长、局部热斑更容易出现；后者则意味着任何小范围的折射率、增益或损耗扰动，都可能被模式选择机制放大成宏观输出差异。
 
-因此，热效应在 PCSEL 中最危险的地方不是“平均温升多了几度”，而是它会把前面章节建立的排序关系重新改写。某个在冷腔中看起来损耗最低的模式，到了真实工作点下可能因为热斑位置、局域折射率抬升或注入退化而不再最优。换句话说，热效应不是在冷腔结果之后附加一个偏移，而是在重写“谁才是那个实际工作的器件模式”。
+因此，热效应在 PCSEL 中最危险之处，是它会改写前面章节建立的排序关系；平均温升只描述了其中一部分。某个在冷腔中看起来损耗最低的模式，到了真实工作点下可能因为热斑位置、局域折射率抬升或注入退化而不再最优。
 
-\begin{IntuitionBox}
-冷腔分析给出初始模排序；热-电-光耦合分析则检查该排序在注入和温升回写后是否保持。对 PCSEL 这类对空间分布高度敏感的器件，后者常决定实际工作模。
-\end{IntuitionBox}
-
-\section{热源不只是一项总功率，而是一张三维分布图}
-热学建模的第一步不是写热方程，而是先承认热源的空间结构。对电注入 PCSEL 来说，最常见的热源至少包括三类。
+\section{热源必须写成三维分布}
+热学建模应先明确热源的空间结构，再写热方程。对电注入 PCSEL 来说，最常见的热源至少包括三类。
 
 第一类是 Joule 热：
 \begin{equation}
@@ -42,8 +41,7 @@ Q_{\mathrm{nr}} \propto R_{\mathrm{nr}}\,\Delta E,
 \end{equation}
 其中 $\Delta E$ 表示相关能量释放尺度。它同样属于\textbf{耦合模型中的热源项}。
 
-\begin{notebox}
-\textbf{非辐射复合热的微观来源。}式\cref{eq:q_nr}中的$R_{\mathrm{nr}}$包含多种复合机制：
+\paragraph{非辐射复合热的微观来源}式\cref{eq:q_nr}中的$R_{\mathrm{nr}}$包含多种复合机制：
 \begin{itemize}
   \item \textbf{Shockley-Read-Hall (SRH) 复合：}通过缺陷态的非辐射复合，$R_{\mathrm{SRH}} \propto np - n_i^2$
   \item \textbf{Auger 复合：}三粒子过程，$R_{\mathrm{Auger}} = C_n n^2 p + C_p n p^2$，在高载流子浓度下主导
@@ -60,8 +58,7 @@ Q_{\mathrm{nr}} \propto R_{\mathrm{nr}}\,\Delta E,
   [R_{\mathrm{surf,vol}}]=\mathrm{cm}^{-3}\mathrm{s}^{-1}.
   \]
 \end{itemize}
-每次非辐射复合事件释放的能量约为带隙$E_g$，这部分能量最终转化为晶格热能。对 InGaAs/GaAs 量子阱，室温下 Auger 复合和 SRH 复合通常具有可比贡献；在高温或高掺杂区域，Auger 复合可能占主导。
-\end{notebox}
+每次非辐射复合事件释放的能量约为带隙 $E_g$，这部分能量最终转化为晶格热能。对 GaAs 基 InGaAs 量子阱，Auger 与 SRH 复合的相对贡献取决于载流子密度、温度、阱结构和缺陷密度；在高载流子浓度或高温区域，Auger 复合的占比可能显著上升。
 
 第三类常被低估的热源，是光吸收相关发热，包括自由载流子吸收、金属邻近吸收和向非目标辐射通道泄漏后再被材料吸收的能量。工程上可以把它们合并写成一个有效光学热源 $Q_{\mathrm{opt,abs}}$，并在多物理场求解中由光学模块回写给热学模块。
 
@@ -74,9 +71,9 @@ Q_{\mathrm{Joule}}+Q_{\mathrm{nr}}+Q_{\mathrm{opt,abs}}.
 \end{equation}
 \cref{eq:q_total} 的作用是把“哪些功率最终变成热”这件事从口头描述变成热方程右端的输入。
 
-这三类热源的分布通常并不重合。Joule 热可能集中在接触附近，复合热主要集中在量子阱附近，光吸收热又可能靠近金属或表面工艺层。于是，PCSEL 的温升不是一个数，而是一张三维热源卷积后的温度分布图。
+这三类热源的分布通常并不重合。Joule 热可能集中在接触附近，复合热主要集中在量子阱附近，光吸收热又可能靠近金属或表面工艺层。
 
-\section{热方程给出的不是平均温升，而是温度场}
+\section{热方程求解的是温度场}
 最基础的稳态热学模型最好写成保守形式
 \begin{equation}
 -\nabla\cdot\!\big[\kappa_T(\rvec)\nabla T(\rvec)\big]
@@ -84,9 +81,9 @@ Q_{\mathrm{Joule}}+Q_{\mathrm{nr}}+Q_{\mathrm{opt,abs}}.
 Q_{\mathrm{tot}}(\rvec),
 \label{eq:heat_eq}
 \end{equation}
-其中 $\kappa_T$ 为热导率，$T(\rvec)$ 为温度场，而 $Q_{\mathrm{tot}}$ 正是 \cref{eq:q_total} 中定义的总热源。\cref{eq:heat_eq} 属于\textbf{热学模型}。这一方程最重要的教学意义，不是提醒你会有“温度升高”，而是提醒你温度升高几乎一定具有空间结构。
+其中 $\kappa_T$ 为热导率，$T(\rvec)$ 为温度场，而 $Q_{\mathrm{tot}}$ 正是 \cref{eq:q_total} 中定义的总热源。\cref{eq:heat_eq} 属于\textbf{热学模型}。这一方程的教学意义在于：温度升高几乎一定具有空间结构。
 
-这时边界条件就不再是实现细节，而是热模型本身的一部分。最常见的两类写法是
+这时边界条件成为热模型本身的一部分，不能降为实现细节。最常见的两类写法是
 \begin{equation}
 T|_{\partial\Omega_D}=T_0,
 \label{eq:thermal_bc_dirichlet}
@@ -109,16 +106,10 @@ h\,(T-T_{\mathrm{amb}}),
 Q_{\mathrm{tot}}(\rvec,t),
 \label{eq:heat_transient}
 \end{equation}
-其中 $\rho$ 是材料密度，$C_p$ 是定压比热容。稳态近似下方程退化为
-\begin{equation}
--\nabla\cdot\left(\kappa_T\nabla T\right)
-=
-Q_{\mathrm{tot}}(\rvec).
-\label{eq:heat_steady}
-\end{equation}
+其中 $\rho$ 是材料密度，$C_p$ 是定压比热容。稳态近似下该方程即退化为前面的 \cref{eq:heat_eq}。
 
 \begin{WarningBox}[瞬态热效应的适用条件]
-稳态近似\ref{eq:heat_steady}在以下情况可能失效：
+稳态近似 \cref{eq:heat_eq} 在以下情况可能失效：
 \begin{itemize}
   \item \textbf{脉冲工作模式：} 当脉冲宽度 $\tau_{\mathrm{pulse}} \lesssim \tau_{\mathrm{th}} = R_{\mathrm{th}}C_{\mathrm{th}}$ 时，必须使用瞬态方程\ref{eq:heat_transient}
   \item \textbf{高速调制：} 调制频率 $f_{\mathrm{mod}} > 1/(2\pi\tau_{\mathrm{th}})$ 时，热场跟不上电信号变化
@@ -145,10 +136,7 @@ P_{\mathrm{heat}}(t),
 \end{equation}
 \cref{eq:lumped_thermal,eq:thermal_time_constant} 当然不能取代三维热场，但它们给了读者一把最基本的尺子：到底是“平均热负载已经过大”，还是“平均温升还行，但空间热斑已经毁掉模式稳定性”。对直径约 $\SIrange{200}{300}{\micro\meter}$、衬底厚度约 $\SI{200}{\micro\meter}$ 的 GaAs 基 PCSEL，$R_{\mathrm{th}}$ 常见于 \SIrange{10}{100}{K/W} 的工程窗口；这里按\textbf{[工程经验]}处理，因为该值强依赖键合方式、散热器材料、热源定义和封装路径。实作时必须用结构化热仿真或实测热阻回标替代“默认常数”。
 
-\begin{ExampleBox}
-\textbf{热时间常数的最小估算例子（双时间尺度）}
-
-很多器件会同时出现“快热常数 + 慢热常数”。文献中，半导体激光器已报道约 \SI{5.6}{\micro\second} 与 \SI{7.2}{\micro\second} 的快速热时间常数\cite{esman1986thermal}，VCSEL 的瞬态热成像也测得约 $\tau\approx\SI{9.7}{\micro\second}$ 的快速分量\cite{garcia2016vcselthermal}。这里的 \SIrange{5.6}{9.7}{\micro\second} 应理解为芯片级快速热分量（有源区/芯片内部热扩散），不包含封装与热沉路径的慢时间常数。
+\paragraph{热时间常数的最小估算例子（双时间尺度）}很多器件会同时出现“快热常数 + 慢热常数”。文献中，半导体激光器已报道约 \SI{5.6}{\micro\second} 与 \SI{7.2}{\micro\second} 的快速热时间常数\cite{esman1986thermal}，VCSEL 的瞬态热成像也测得约 $\tau\approx\SI{9.7}{\micro\second}$ 的快速分量\cite{garcia2016vcselthermal}。这里的 \SIrange{5.6}{9.7}{\micro\second} 应理解为芯片级快速热分量（有源区/芯片内部热扩散），不包含封装与热沉路径的慢时间常数。
 
 对本书 benchmark 量级，可用两级集总模型做估算。热阻估算需注意几何形状：对方形芯片上的局部热源，应使用热扩展电阻公式 $R_{\mathrm{th}}\approx 1/(2\kappa d)$（半球形扩展）或 $R_{\mathrm{th}}\approx L/(\kappa A)$（一维近似）。对 GaAs($\kappa\approx 55\,\mathrm{W/mK}$) 芯片，若热源直径约 $\SI{200}{\micro\meter}$、衬底厚度 $\SI{200}{\micro\meter}$：
 \begin{itemize}
@@ -167,12 +155,7 @@ P_{\mathrm{heat}}(t),
 \approx (\SI{35}{K/W})\times(50\times10^{-6}\,\mathrm{J/K})
 \approx \SI{1.75}{ms}.
 \]
-这说明"本征有源区升温"和"封装/热沉缓慢回温"通常不在同一时间尺度。若只报告一个热时间常数，往往会把动态漂移和慢热滚降机制混在一起。
-
-\begin{warningbox}
-热阻估算强烈依赖几何假设。一维公式 $R_{\mathrm{th}}=L/(\kappa A)$ 给出上限（约 $\SI{100}{K/W}$ 量级），而扩展电阻公式 $R_{\mathrm{th}}\approx 1/(2\kappa d)$ 给出下限（约 $\SI{40}{K/W}$ 量级）。实际器件必须通过三维热仿真或实测回标确定。本节使用的集总参数仅用于说明双时间尺度概念，不可直接用于器件设计。
-\end{warningbox}
-\end{ExampleBox}
+这说明"本征有源区升温"和"封装/热沉缓慢回温"通常不在同一时间尺度。若只报告一个热时间常数，往往会把动态漂移和慢热滚降机制混在一起。本例的集总参数仅用于说明双时间尺度概念，不可直接用于器件设计。
 
 对 PCSEL 而言，平均温升只适合回答非常粗的问题，例如“某个方案是否在总体热负载上明显更差”。但只要你关心阈值附近模式排序、高功率单模稳定性、远场主瓣是否漂移、偏振是否翻转，平均温升就不够了。因为这些现象敏感的是 $T(x,y,z)$ 的梯度和局域峰值，而不是整体平均值。一个局部热斑就足以把模式中心拉偏、把局部增益峰推离目标波长，进而改变模式竞争。
 
@@ -203,7 +186,7 @@ g_{\mathrm{mat}}(\omega,N,T),
 \end{equation}
 这意味着温度一升高，透明载流子密度、增益峰位置和微分增益都可能变化。于是，同一个外加电流在不同温度下未必对应同样的阈值裕量。
 
-第三条路径是内部损耗的热增强。自由载流子吸收、接触邻近损耗和某些材料吸收过程都可能随温度增强。于是，温升往往不是简单地把工作波长平移，而是同时提高损耗并降低增益匹配。对 PCSEL 来说，这三条路径一旦叠加，就足以把冷腔中的高 $Q$ 候选模淘汰掉。
+第三条路径是内部损耗的热增强。自由载流子吸收、接触邻近损耗和某些材料吸收过程都可能随温度增强。于是，温升会同时平移工作波长、提高损耗并降低增益匹配。对 PCSEL 来说，这三条路径一旦叠加，就足以把冷腔中的高 $Q$ 候选模淘汰掉。
 
 把这些热回写写成一组最小线性化关系，就是
 \begin{align}
@@ -274,7 +257,7 @@ g_{\mathrm{mat}}(\omega,N,T),
 \section{热斑、空间烧孔和模式竞争：为什么高功率问题不能只看平均参数}
 当前面三章合并起来时，最值得警惕的工作点现象有三个：热斑、空间烧孔和局域损耗增强。热斑意味着局部折射率更高、材料增益峰更红移；空间烧孔意味着不同区域的载流子被模式消耗得不一样；局域损耗增强则意味着某些区域虽然有模式场，却因温度和掺杂共同作用而变成净负贡献。它们叠加后的结果是：模式竞争不再由单一冷腔损耗或单一模增益决定，而由一个同时随空间和工作点变化的分布系统决定。
 
-这正是为什么本书一再强调：PCSEL 的大面积单模问题，不可能只通过带结构和冷腔 Q 来完成。只要进入真实电注入和高功率工作区，模式稳定性本质上就是一个热-电-光分布稳定性问题。
+因此，进入真实电注入和高功率工作区后，模式稳定性本质上是一个热-电-光分布稳定性问题，而不是带结构和冷腔 $Q$ 能单独回答的问题\RedlineRef{3}。
 
 \begin{ExampleBox}
 设某 PCSEL 在低电流下显示为法向单峰远场，但随驱动升高出现主瓣分裂。最直接的排查思路不应只盯着 \cref{ch:feedback,ch:threshold,ch:polarization,ch:bic} 的平面内耦合系数，而应优先检查：是否中心区域热斑抬高了折射率并拉偏模式，是否边缘区域因注入不足而形成局域负增益，以及这种空间重排是否使原本次优的高阶模式开始获得更大局域模增益。
@@ -299,9 +282,17 @@ T(\rvec)
 \end{aligned}
 \label{eq:eto_chain}
 \end{equation}
-\cref{eq:eto_chain} 不是单个方程，而是本章最核心的\textbf{器件逻辑链}。它告诉读者：\cref{ch:epitaxial-optics} 的纵向模、\cref{ch:qw-gain} 的有源区工程和 \cref{ch:electrical} 的注入分布，从这里开始不再是顺次单向传递，而是构成一个迭代闭环。
+\cref{eq:eto_chain} 表示本章最核心的\textbf{器件逻辑链}，不能按单个方程孤立阅读。它告诉读者：\cref{ch:epitaxial-optics} 的纵向模、\cref{ch:qw-gain} 的有源区工程和 \cref{ch:electrical} 的注入分布，从这里开始由顺次单向传递转为迭代闭环。
 
-因此，可信的器件工作点通常需要分步迭代：先在初始温度下求电学和载流子分布，再由电学和非辐射复合产生热源求热场，再更新折射率、增益、损耗和迁移率，重新解电学和光学，直到阈值、温度峰值和模式分布都收敛。只做一次“冷腔 + 固定均匀增益 + 平均温升修正”的计算，严格地说还不能叫自洽器件求解。
+因此，可信的器件工作点通常需要分步迭代：先在初始温度下求电学和载流子分布，再由电学和非辐射复合产生热源求热场，再更新折射率、增益、损耗和迁移率，重新解电学和光学，直到阈值、温度峰值和模式分布都收敛。只做一次“冷腔 + 固定均匀增益 + 平均温升修正”的计算，严格地说还不能叫自洽器件求解\RedlineRef{4}。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch19_eto_fixed_point_iteration}
+  \caption{热-电-光耦合的固定点迭代图像。电学给出电流、载流子和热源，热学给出空间温度场，光学在回写后的材料参数中重新评估模式和阈值；若温度、波长或阈值裕量未收敛，就必须回到电学与材料参数继续迭代。}
+  \label{fig:ch19_eto_fixed_point_iteration}
+\end{figure}
+
 \begin{ConvergenceCriteria}{典型的收敛判据}
 热 - 电-光迭代可在以下任一判据满足时停止（建议同时监控三个量，并要求连续两轮都满足）：
 \begin{enumerate}
@@ -312,31 +303,13 @@ T(\rvec)
 实践中，通常需要 5--10 轮迭代才能达到稳定收敛。若超过 15 轮仍未收敛，应检查网格分辨率、材料参数的温度依赖性是否过强、或是否存在多稳态竞争。
 \end{ConvergenceCriteria}
 
-\begin{ResourceAlertBox}{三轮耦合的计算成本估算}
-以一个$100\,\mu{\rm m}\times100\,\mu{\rm m}$的 PCSEL 为例：
+\paragraph{三轮耦合的计算成本估算}以一个$100\,\mu{\rm m}\times100\,\mu{\rm m}$的 PCSEL 为例：
 \begin{itemize}
   \item 电学 (CHARGE): ~5 分钟 (稳态漂移 - 扩散方程)
   \item 热学 (HEAT): ~2 分钟 (稳态热传导)
   \item 光学 (FDTD 有限阵列): ~4 小时 (若用 RCWA 单胞则~10 分钟)
 \end{itemize}
-若需要 6 轮迭代达到收敛，总时长可能是 24 小时量级。这就是为什么工作流章节建议先用单胞 RCWA 做快速筛选，再对最终候选结构做全耦合验证。在实际研发中，通常会采用分层策略：先用简化模型排除明显不合理的设计，再对少数候选方案投入全耦合计算资源。
-\end{ResourceAlertBox}
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[node distance=1.8cm,>=Stealth]
-    \node[draw,rounded corners=3pt,fill=blue!10,minimum width=3.4cm,minimum height=1.7cm,align=center] (e) {电学求解\\[-0.2em]\small $\phi,n,p,\bm J$\\ \small 接触/孔径/串联电阻};
-    \node[draw,rounded corners=3pt,fill=red!10,right=of e,minimum width=3.5cm,minimum height=1.7cm,align=center] (h) {热学求解\\[-0.2em]\small $T(\rvec)$\\ \small $Q_{\text{焦耳}},Q_{\text{非辐射}},Q_{\text{吸收}}$};
-    \node[draw,rounded corners=3pt,fill=green!10,right=of h,minimum width=3.6cm,minimum height=1.7cm,align=center] (o) {光学求解\\[-0.2em]\small $\tilde{\omega},Q,\text{远场}$\\ \small $n(\rvec),g(\rvec),\alpha(\rvec)$};
-    \node[draw,ellipse,fill=gray!10,below=1.65cm of h,minimum width=2.8cm,minimum height=1.05cm,align=center] (iter) {迭代至收敛\\[-0.2em]\small $\Delta T,\Delta\tilde{\omega},\Delta g$ 达标};
-    \draw[->,very thick,blue!70!black] (e)--node[above,align=center]{\small 电流密度、复合率\\\small 热源分布}(h);
-    \draw[->,very thick,red!70!black] (h)--node[above,align=center]{\small $\Delta n,\Delta g,\Delta \alpha,\Delta \mu$}(o);
-    \draw[->,very thick,green!60!black] (o) to[bend left=18] node[below,align=center]{\small 模场重排、吸收热\\\small 空间烧孔反馈}(e);
-    \draw[->,thick,gray!75] (o.south) -- ++(0,-0.7) -| (iter.east);
-    \draw[->,thick,gray!75] (iter.west) -| (e.south);
-  \end{tikzpicture}
-  \caption{热-电-光耦合闭环的量传递示意图。器件工作点不是“先算电、再算热、最后算光”的一次性串联结果，而是电流分布、热源、温度场和模场分布反复回写直到收敛后的固定点。}
-  \label{fig:eto-flow}
-\end{figure}
+若需要 6 轮迭代达到收敛，总时长可能是 24 小时量级。因此工作流章节建议采用分层策略：先用单胞 RCWA 等简化模型排除明显不合理的设计，再对少数最终候选方案投入全耦合计算资源。
 
 \section{哪些问题还可以用简化热模型，哪些已经必须做多物理场闭环}
 务实的器件建模不意味着一开始就做最复杂的全三维耦合，而是要根据问题目标选择模型层级。如果你的目标只是比较几个几何方案在低功率、阈值附近的相对热敏感性，那么集中热阻或一维稳态热模型往往足以筛掉明显不合理的方案。如果目标是估算阈值附近温升对材料增益峰和折射率的影响，则二维或简化三维热模型配合 \cref{ch:electrical} 的注入分布，已经是合理的中间层。
@@ -344,7 +317,7 @@ T(\rvec)
 但如果研究目标变成下列任一种，就不应该再停留在简化热模型上：高功率单模稳定性、模式切换边界、远场随驱动的系统漂移、偏振翻转、上下出光比变化、明显不对称接触布局、非均匀孔径或大尺寸器件中心/边缘性能分裂。因为这些问题敏感的是温度和注入的空间重排，而不是平均热阻本身。
 
 \section{不同材料平台如何让同一个 PCSEL 框架发生变形}
-到这里，读者已经具备理解平台差异的正确角度了：GaAs、InP、GaN 的差别，不是“换一套材料参数再套同样模型”这么简单，而是它们会同时改写 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这整条器件链中的几乎每一个接口量。
+到这里，读者已经具备理解平台差异的正确角度了：GaAs、InP、GaN 会同时改写 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 整条器件链中的几乎每一个接口量，远不止替换一套材料参数。
 
 \begin{table}[htbp]
   \centering
@@ -366,17 +339,10 @@ T(\rvec)
 
 这张表强调的是平台差异：同一套 PCSEL 理论框架在不同材料体系中的主要限制并不相同。GaAs 平台外延、刻蚀和接触路线较成熟，适合系统化优化；InP 平台更早受到长波热敏感和内部损耗限制；GaN 平台则常把 spreading layer、p 侧接触和极化场推到设计前台。因此，平台选择不能只看目标波长，还要判断主要复杂度将落在光学、电学、热学或工艺中的哪一段。
 
-\section{为什么平台差异再次证明冷腔结论不能直接变成器件结论}
-到这里，本章终于可以把这四章的主旨再说一遍：冷腔模分析给出的候选模、辐射损耗和耦合关系当然重要，但一旦进入真实材料平台，它们就必须通过外延层、有源区、注入与热反馈重新检验。GaAs、InP、GaN 的差异恰恰证明了这一点。相同的平面内晶格参数、相似的冷腔带结构，放在不同平台上时，可能因为折射率背景不同、热导不同、p 侧导电不同、掺杂损耗不同，而对应完全不同的真实器件工作点。
+相同的平面内晶格参数、相似的冷腔带结构，放在不同平台上时，可能因为折射率背景、热导、p 侧导电和掺杂损耗不同，而对应完全不同的真实器件工作点\RedlineRef{3}。器件级设计的提问方式因此是：“这个平面内方案在某一平台上，是否还能通过 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这条器件链，维持所需的模式重叠、注入均匀性和热稳定性？”
 
-因此，器件级 PCSEL 设计判断不应说“这个单胞的冷腔 Q 很高，所以平台随便换”。更准确的说法应是：“这个平面内方案在某一平台上是否还能通过 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这条器件链，维持所需的模式重叠、注入均匀性和热稳定性？”这才是器件级设计的提问方式。
-
-\begin{PitfallBox}
-把“冷腔 + 固定均匀增益 + 平均温升修正”称为完整器件热-电-光分析，是不严格的。这样的模型最多只能给出带温度修正的光学代理结论，不能代替自洽的器件工作点求解，更无法覆盖不同材料平台的真实差异。
-\end{PitfallBox}
-
-\section*{本章小结}
-热效应在 PCSEL 中不是补充项，而是把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 重新耦合成器件工作点的主导机制。Joule 热、复合热和吸收热共同生成三维热源，热方程给出空间温度场，而温度场又通过折射率、增益谱、吸收、迁移率和接触特性回写到模式与注入分布中。对大面积、单模、高功率 PCSEL 来说，需要分析的是热斑、空间烧孔和模式竞争的耦合，而不是单一平均温升。GaAs、InP、GaN 等材料平台则进一步表明：同一套 PCSEL 光学框架在不同器件材料上会因折射率、热导、掺杂损耗和工艺路径不同而表现出完全不同的工作约束。至此，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 构成了一套器件物理模块：外延层定义纵向模式背景，有源区定义可用增益，注入工程定义局域载流子分布，热反馈决定这个分布和模式是否能在真实工作点下稳定存在。
+\section*{回看本章}
+热效应在 PCSEL 中是把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 重新耦合成器件工作点的主导机制，而非补充项。Joule 热、复合热和吸收热共同生成三维热源，热方程给出空间温度场，而温度场又通过折射率、增益谱、吸收、迁移率和接触特性回写到模式与注入分布中。对大面积、单模、高功率 PCSEL 来说，需要分析的是热斑、空间烧孔和模式竞争的耦合，而不是单一平均温升。GaAs、InP、GaN 等材料平台则进一步表明：同一套 PCSEL 光学框架在不同器件材料上会因折射率、热导、掺杂损耗和工艺路径不同而表现出完全不同的工作约束。至此，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 构成了一套器件物理模块：外延层定义纵向模式背景，有源区定义可用增益，注入工程定义局域载流子分布，热反馈决定这个分布和模式是否能在真实工作点下稳定存在。
 
 \section*{练习题}
 \begin{enumerate}
@@ -389,7 +355,7 @@ T(\rvec)
   \item \hardq 给出一个你认为必须采用空间分辨多物理场求解的 PCSEL 问题，并说明简化热模型为什么在该问题上不够。
 \end{enumerate}
 
-\section*{建议继续阅读}
+\section*{延伸阅读}
 \begin{itemize}
   \item 下一章将把这四章建立的器件链与前面的开放电磁和数值方法重新汇总，进入大面积单模 PCSEL 的综合设计原则。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
 

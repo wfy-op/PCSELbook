@@ -1,0 +1,49 @@
+% !TEX root = ../main.tex
+% Content-only figure: large-area single-mode margin map
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    axislabel/.style={font=\footnotesize,align=center},
+    box/.style={draw=black!55,rounded corners=2pt,fill=white,align=center,font=\footnotesize,minimum height=0.72cm},
+    good/.style={draw=green!45!black,fill=green!7,rounded corners=2pt,align=left,font=\footnotesize,text width=3.65cm},
+    bad/.style={draw=red!60!black,fill=red!6,rounded corners=2pt,align=left,font=\footnotesize,text width=3.65cm},
+    arrow/.style={->,thick}
+  }
+
+  \node[font=\bfseries,align=center,text width=7.7cm] at (4.75,5.15) {大面积单模不是单点最优\\而是目标模净裕量的工作窗口};
+
+  \draw[->,thick] (1.0,0.9) -- (8.4,0.9);
+  \node[axislabel] at (7.1,0.55) {注入电流 $I$};
+  \draw[->,thick] (1.0,0.9) -- (1.0,4.75) node[above,axislabel] {温升 / 热漂移};
+  \fill[green!18] (2.0,1.45) .. controls (3.0,1.15) and (5.7,1.25) .. (6.55,2.05)
+    .. controls (7.05,2.65) and (6.55,3.65) .. (5.15,3.9)
+    .. controls (3.55,4.15) and (2.2,3.35) .. (1.85,2.45)
+    .. controls (1.65,2.05) and (1.72,1.65) .. (2.0,1.45);
+  \draw[green!45!black,thick] (2.0,1.45) .. controls (3.0,1.15) and (5.7,1.25) .. (6.55,2.05)
+    .. controls (7.05,2.65) and (6.55,3.65) .. (5.15,3.9)
+    .. controls (3.55,4.15) and (2.2,3.35) .. (1.85,2.45)
+    .. controls (1.65,2.05) and (1.72,1.65) .. (2.0,1.45);
+  \node[font=\bfseries\footnotesize,green!45!black] at (4.25,2.72) {$\Delta G_{\star j}(I,T)>0$};
+  \node[font=\scriptsize,green!45!black] at (4.25,2.35) {目标模压住竞争模};
+
+  \draw[red!70!black,thick,dashed] (2.0,4.25) -- (7.25,1.35);
+  \draw[blue!65!black,thick,dashed] (1.55,1.5) -- (7.55,3.95);
+
+  \node[good,anchor=west] at (9.05,3.95) {
+    \textbf{进入窗口}\\
+    目标模损耗排序占优\\
+    与 MQW/注入分布重叠更好\\
+    温升后频率仍落在增益有利区
+  };
+  \node[bad,anchor=west] at (9.05,1.55) {
+    \textbf{退出窗口}\\
+    高阶模边缘损耗不够\\
+    局部注入扶起竞争模\\
+    热漂移改写模式排序
+  };
+
+  \draw[arrow,green!45!black] (6.2,3.45) -- (9.0,4.15);
+  \draw[arrow,red!60!black] (6.85,1.85) -- (9.0,1.8);
+
+\end{tikzpicture}%
+}

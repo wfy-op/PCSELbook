@@ -2,7 +2,7 @@
 \chapter{偏振、对称性破缺与远场整形}
 \label{ch:polarization}
 
-\section*{学习目标}
+\paragraph{读完本章，你应能}
 \begin{itemize}
   \item 理解偏振为什么是模式本征属性，而不是输出端附加标签。
   \item 掌握近场对称性、晶格对称性和远场角谱之间的关系。
@@ -10,17 +10,17 @@
   \item 弄清楚对称性破缺如何同时影响偏振选择、模式分裂和远场整形。
 \end{itemize}
 
-\section*{先修知识}
+\paragraph{读前准备}
 \cref{ch:gamma,ch:feedback} 中的 Gamma 点模式、耦合网络、模式分裂与辐射通道概念。
 
-\section*{本章路线图}
+\paragraph{阅读主线}
 \ChapterModelLevel{L1→L2}
 本章先说明偏振为何属于腔内本征场结构，再讨论对称性对偏振和辐射通道的约束。随后引入 $\Gamma$ 点小群与不可约表示，给出方格晶格和三角晶格常用的模式分类表。最后从傅里叶角谱角度连接近场与远场，并讨论对称性破缺、外延不对称和工艺扰动对输出偏振与远场的影响。
 
 \section{偏振不是输出端的装饰，而是模式本身的一部分}
 很多初学者会下意识地把偏振理解成“光出来以后我们看到的方向”。这种想法对自由空间光束并不完全错误，但对 PCSEL 来说远远不够。PCSEL 的偏振首先是模式本征场结构的一部分，只有先在腔内场分布中形成了某种偏振组织，输出端才会看到对应的偏振态。
 
-因此，偏振不是附加在模式之后的标签，而是模式解的组成部分。模式的对称性、主要场分量、与辐射通道的耦合方式，以及与外延不对称的匹配程度，共同决定测得的线偏振、近似双偏振或工作点相关的偏振切换。
+因此，偏振是模式解的组成部分，而非附加在模式之后的标签。模式的对称性、主要场分量、与辐射通道的耦合方式，以及与外延不对称的匹配程度，共同决定测得的线偏振、近似双偏振或工作点相关的偏振切换。
 
 \begin{IntuitionBox}
 对 PCSEL 而言，偏振分析的对象是腔内矢量模的选择，以及该模与可辐射通道的对应关系。
@@ -32,162 +32,6 @@
 在理想完全对称的结构中，两个正交偏振态可能处于严格相同的地位。此时系统本身并没有偏好哪一个方向，实验上就可能表现为偏振不稳定、双偏振共存，或者对极小扰动极其敏感。一旦引入哪怕很小的对称性破缺，这种“平衡”就会被打破，模式分裂随之出现，于是系统开始偏向某一组偏振态。
 
 因此，偏振选择问题可归结为：哪一种扰动打破原有对称平衡，以及该扰动分别如何改变模式频率和损耗。
-
-\section{群论最小引导：在进入 \texorpdfstring{$C_{4v}$}{C4v}/\texorpdfstring{$C_{6v}$}{C6v} 之前，至少要会什么}
-对许多读者而言，困难不在于接受对称性的重要性，而在于理解小群、表示、不可约表示（irreducible representation, irrep）和特征标表各自的作用。这里先给出本书后文所需的最小版本。
-
-第一，\textbf{对称操作群}就是一组把结构变换后又映回自身的操作。例如正方晶格的 $\Gamma$ 点 little group $C_{4v}$ 包括：恒等操作 $E$、$\pm 90^\circ$ 旋转 $C_4,C_4^3$、$180^\circ$ 旋转 $C_2$，以及四条镜面反射 $\sigma_x,\sigma_y,\sigma_d,\sigma_{d'}$。它们在群论里通常按共轭类记成
-\[
-\{E\},\qquad \{2C_4\},\qquad \{C_2\},\qquad \{2\sigma_v\},\qquad \{2\sigma_d\}.
-\]
-
-第二，\textbf{表示}（representation）就是把这些对称操作写成矩阵，描述它们如何作用在某个模态子空间上。若该子空间不能再被拆成更小的不变子空间，这个表示就是不可约表示。对 PCSEL 读者来说，真正重要的用途是：不同 irrep 的模式不能随便混合；二维 irrep 对应受对称性保护的双简并；而辐射选择定则可以直接用 irrep 匹配来表达。
-
-第三，\textbf{特征标表}并不是为了背诵，而是为了快速识别“一个数值模场属于哪一类表示”。对 $C_{4v}$，最常用的最小特征标表为 \cref{tab:c4v-character}。
-
-\begin{table}[htbp]
-  \centering
-  \footnotesize
-  \caption{$C_{4v}$ 的最小特征标表。这里的列不是单个操作，而是共轭类。对 PCSEL 最常用的用途，是判断某个 singlet/doublet 在对称操作下属于哪一种 irrep。}
-  \label{tab:c4v-character}
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{@{}lccccc@{}}
-    \toprule
-    irrep & $E$ & $2C_4$ & $C_2$ & $2\sigma_v$ & $2\sigma_d$ \\
-    \midrule
-    $A_1$ & 1 & 1 & 1 & 1 & 1 \\
-    $A_2$ & 1 & 1 & 1 & $-1$ & $-1$ \\
-    $B_1$ & 1 & $-1$ & 1 & 1 & $-1$ \\
-    $B_2$ & 1 & $-1$ & 1 & $-1$ & 1 \\
-    $E$ & 2 & 0 & $-2$ & 0 & 0 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-表中的列名最好带着几何图像一起记。$E$ 是恒等操作；$2C_4$ 表示 $\pm 90^\circ$ 旋转；$C_2$ 是 $180^\circ$ 旋转；$2\sigma_v$ 指穿过晶格主轴的两条镜面，最常见的就是 $x=0$（$\sigma_{v,x}$）和 $y=0$（$\sigma_{v,y}$）；$2\sigma_d$ 则指两条对角镜面 $y=\pm x$（$\sigma_{d,+}$ 和 $\sigma_{d,-}$）。这里的下标 $v$ 就是主轴（vertical）镜面，$d$ 就是对角线（diagonal）镜面。判断一个模属于哪种 irrep 的简单操作步骤：取模的近场分布图，分别对以上四条镜面做反射，观察场图是否偶对称（特征标 $+1$）或奇对称（特征标 $-1$），与表格各行对比即可确定。
-
-\begin{ExampleBox}
-若某个数值模在 $C_2$ 下基本不变、在 $\sigma_x$ 与 $\sigma_y$ 下都不变、在对角镜面下也不变，那么它最自然地落在 $A_1$。若另一个模与其正交，且两者在 $\pm 90^\circ$ 旋转下彼此交换，那么更合理的做法不是给每一支单独贴 singlet 标签，而是把它们合在一起看成二维 $E$ 双重态。
-\end{ExampleBox}
-
-\begin{RigorousBox}
-本章不把群论展开为独立教材。所需内容限于三点：little group 的定义、irrep 对模式的标注方式，以及辐射选择定则为何可写成表示匹配问题。建立这三点后，偏振、BIC、模式分裂和远场中心亮/暗可在同一套分类工具中讨论。
-\end{RigorousBox}
-
-\begin{SymmetryToolkitBox}{$C_{4v}$ 点群的完整工具箱及其在 PCSEL 中的应用}
-\textbf{生成元与群元素}：$C_{4v}$ 由两个生成元生成：
-\begin{itemize}
-  \item $C_4$: 绕 $z$ 轴旋转 $90^\circ$（逆时针方向为正）
-  \item $\sigma_v$: 关于 $xz$ 平面（即 $y=0$ 平面）的镜面对称
-\end{itemize}
-全部 8 个群元素为：$\{E, C_4, C_4^2=C_2, C_4^3, \sigma_{v,x}, \sigma_{v,y}, \sigma_{d,xy}, \sigma_{d,-xy}\}$。其中：
-\begin{itemize}
-  \item $E$: 恒等操作
-  \item $C_4, C_4^3$: $\pm 90^\circ$ 旋转（这两者属于同一类）
-  \item $C_2=C_4^2$: $180^\circ$ 旋转
-  \item $\sigma_{v,x}, \sigma_{v,y}$: 垂直镜面（分别关于 $yz$ 和 $xz$ 平面）
-  \item $\sigma_{d,xy}, \sigma_{d,-xy}$: 对角镜面（分别关于 $y=x$ 和 $y=-x$ 平面）
-\end{itemize}
-
-\textbf{特征标表回顾与应用}：
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{c|ccccc|c}
-$C_{4v}$ & $E$ & $2C_4$ & $C_2$ & $2\sigma_v$ & $2\sigma_d$ & 典型基函数 \\ \hline
-$A_1$ & 1 & 1 & 1 & 1 & 1 & $z$, $x^2+y^2$, $f(r)$ \\
-$A_2$ & 1 & 1 & 1 & -1 & -1 & $R_z$ \\
-$B_1$ & 1 & -1 & 1 & 1 & -1 & $x^2-y^2$ \\
-$B_2$ & 1 & -1 & 1 & -1 & 1 & $xy$ \\
-$E$ & 2 & 0 & -2 & 0 & 0 & $(x,y)$, $(R_x,R_y)$ \\
-\end{tabular}
-\end{center}
-\renewcommand{\arraystretch}{1.0}
-
-表中每一行的物理含义：当对该 irrep 的基函数施加相应的对称操作时，函数乘以对应的特征标值（$+1$ 保持不变，$-1$ 改变符号）。例如，$A_1$ 表示在所有 8 个操作下都不变——这是"完全对称"的表示；而 $E$ 是二维表示，其特征标为 0 意味着两个基函数在该操作下互相交换或线性组合。
-
-\textbf{PCSEL 中的模式分类实操步骤}：
-\begin{enumerate}
-  \item \textbf{提取近场分布}: 从仿真中获得 $|\mathbf{E}(x,y)|^2$ 或特定分量的实部/虚部
-  \item \textbf{应用对称操作}: 对场分布依次施加 $C_4$ 旋转和四个镜面反射
-  \item \textbf{记录响应}: 每次操作后，判断场是 (a) 不变 (+1)、(b) 反相 (-1)、还是 (c) 变成另一个正交模式（二维表示的特征）
-  \item \textbf{查表比对}: 将得到的特征标序列与特征标表逐行对比，确定归属
-  
-  \textit{快捷技巧}：实际上只需要测试三个关键操作即可唯一确定大多数情况：$C_4$（区分单重态/双重态）、$\sigma_v$（区分 $A/B$ 型）、$\sigma_d$（区分下标 1/2）。
-\end{enumerate}
-
-基于上述流程，PCSEL 模式可分为两类：
-\begin{itemize}
-  \item \textbf{单重态} ($A_1, A_2, B_1, B_2$): 非简并模式，电场具有确定的宇称变换性质。这些模式往往是 BIC 候选（若不与辐射通道 irrep 匹配）。
-  \item \textbf{双重态} ($E$): 二重简并模式，对应一对正交偏振态。在无扰动情况下能量严格相等，是典型的亮模候选。
-\end{itemize}
-
-\textbf{选择规则的群论表述}：考虑任意微扰算符 $\hat{O}$（可以是介电常数扰动、表面形变、电流注入等）诱导的两个模式 $|\psi_i\rangle$ 和 $|\psi_f\rangle$ 之间的耦合矩阵元：
-\begin{equation}
-M_{fi} = \langle\psi_f|\hat{O}|\psi_i\rangle.
-\end{equation}
-该矩阵元非零的\textbf{必要条件}是三者的直积包含全对称表示 $A_1$：
-\begin{equation}
-\Gamma_i \otimes \Gamma_O \otimes \Gamma_f \supset A_1,
-\label{eq:selection_rule_general}
-\end{equation}
-其中 $\Gamma$ 表示所属的 irrep。利用 $C_{4v}$ 的直积表可以快速判断：
-\begin{center}
-\small
-\begin{tabular}{c||cccc|c}
-$\otimes$ & $A_1$ & $A_2$ & $B_1$ & $B_2$ & $E$ \\ \hline\hline
-$A_1$ & $A_1$ & $A_2$ & $B_1$ & $B_2$ & $E$ \\
-$A_2$ &       & $A_1$ & $B_2$ & $B_1$ & $E$ \\
-$B_1$ &       &       & $A_1$ & $A_2$ & $E$ \\
-$B_2$ &       &       &       & $A_1$ & $E$ \\
-$E$   &       &       &       &       & $A_1\oplus A_2\oplus B_1\oplus B_2$ \\
-\end{tabular}
-\end{center}
-
-\textbf{实例分析 1：四极矩辐射的选择规则}\\
-考虑四极矩辐射算符的分量 $Q_{xy} \propto xy$。从特征标表可知 $xy$ 属于 $B_2$ 表示。现在判断几组可能的跃迁：
-\begin{itemize}
-  \item $A_1 \leftrightarrow B_2$ 跃迁：$A_1 \otimes B_2 \otimes B_2 = A_1 \otimes A_1 = A_1$ ✓ （对称性允许）
-  \item $A_1 \leftrightarrow A_1$ 跃迁：$A_1 \otimes B_2 \otimes A_1 = B_2 \not\supset A_1$ ✗ （对称性禁戒）
-  \item $B_1 \leftrightarrow E$ 跃迁：$B_1 \otimes B_2 \otimes E = A_2 \otimes E = E \not\supset A_1$ ✗ （禁戒）
-\end{itemize}
-这解释了为什么某些对称性保护的 BIC 无法向自由空间辐射——不是因为"损耗太小"，而是因为对称性从根本上禁止了这种耦合。
-
-\textbf{实例分析 2：法向辐射通道的 irrep}\\
-在 $\Gamma$ 点，法向辐射对应的是横向均匀平面波，其两支线偏振 $(\hat{x},\hat{y})$ 构成 $E$ 表示的基。因此：
-\begin{itemize}
-  \item 若腔模属于 $E$ 表示，则 $\Gamma_{\rm mode} \otimes \Gamma_{\rm rad} = E \otimes E = A_1 \oplus A_2 \oplus B_1 \oplus B_2 \supset A_1$ ✓ —— 允许辐射（亮模）
-  \item 若腔模属于 $A_1$ 表示，则 $A_1 \otimes E = E \not\supset A_1$ ✗ —— 禁止法向辐射（BIC 候选）
-\end{itemize}
-因此，高阶带边模式（通常是 $E$ 表示）可表面发射，而基模（通常是 $A_1$）可能成为暗模。
-
-\textbf{对称性破缺与不可约表示分解}：当结构发生某种变形或引入各向异性时，对称性会降低。设原始对称群为 $G$，破缺后的子群为 $H \subset G$。此时 $G$ 的每个 irrep 按照一定规则"分解"为 $H$ 的若干个 irrep 的直和。这个过程称为\textbf{分支律}(branching rule)。
-
-对于 PCSEL 常见的 $C_{4v} \to C_{2v}$ 破缺（例如引入椭圆形孔或矩形晶格），分解规则如下：
-\begin{align}
-A_1(C_{4v}) &\to A_1(C_{2v}), \nonumber\\
-A_2(C_{4v}) &\to A_2(C_{2v}), \nonumber\\
-B_1(C_{4v}) &\to A_1(C_{2v}), \nonumber\\
-B_2(C_{4v}) &\to A_2(C_{2v}), \nonumber\\
-E(C_{4v}) &\to B_1(C_{2v}) \oplus B_2(C_{2v}).
-\label{eq:c4v_to_c2v_decomposition}
-\end{align}
-
-关键的物理后果：
-\begin{itemize}
-  \item \textbf{双重态分裂}: $E$ 表示分解为两个不同的单重态 $B_1$ 和 $B_2$。这意味着原本简并的一对模式会发生能量劈裂，劈裂大小正比于对称性破缺强度。
-  
-  \item \textbf{偏振锁定}: 分裂后的两个模式分别继承原 $E$ 表示的两个正交基，对应固定的线偏振方向。这在实验中表现为输出光的偏振方向被"钉扎"在某个晶轴方向。
-  
-  \item \textbf{选择规则放宽}: 由于 $C_{2v}$ 的特征标表更简单（只有 4 个一维 irrep），原来在 $C_{4v}$ 中被禁戒的某些跃迁可能在 $C_{2v}$ 中变得允许。这可以用来解释为何轻微的结构不对称会导致 BIC 泄漏出有限的辐射。
-\end{itemize}
-
-\paragraph{实际应用建议} 在设计 PCSEL 时，可以主动利用对称性工程：
-\begin{enumerate}
-  \item 若要实现稳定的单线偏振输出，故意打破 $C_{4v}$ 对称性（如采用椭圆孔或矩形占空比）
-  \item 若要追求最高品质因子的 BIC，保持完美的 $C_{4v}$ 并确保工作点是 $A_1/A_2/B_1/B_2$ 之一
-  \item 若要实现双波长或双偏振激光器，可以利用接近简并但略微分裂的准-$E$ 态
-\end{enumerate}
-\end{SymmetryToolkitBox}
 
 \section{\texorpdfstring{$\Gamma$}{Gamma} 点小群与不可约表示：最小分类工具}
 如果只停留在“镜面对称、旋转对称、奇偶性”这些词上，读者虽然能听懂很多物理解释，但还没有真正得到一套可操作的分类工具。本节只做三件事：\textbf{先解释小群是什么、再说明 irrep 标签怎么贴、最后给出法向辐射的最小判据}。
@@ -210,9 +54,7 @@ g\in \mathcal{G}\;\middle|\; g\kvec=\kvec+\gvec,\ \gvec\in \text{倒格矢集合
 \end{equation}
 因此，$\Gamma$ 点适合进行对称性标注：此时小群等于完整点群，模式标签和选择规则最明确。
 
-\begin{IntuitionBox}
 把“点群”想成整套对称工具，把“小群”想成“在某个 $\kvec$ 处还能用的那一部分工具”。$\Gamma$ 点不丢任何工具，所以最适合做标准化标签。
-\end{IntuitionBox}
 
 \paragraph{第二步：irrep 标签回答“对称操作作用后场怎样变化”。}
 不可约表示（irreducible representation, irrep）的主要用途不是记忆表格，而是给出三条可操作结论：
@@ -224,16 +66,44 @@ g\in \mathcal{G}\;\middle|\; g\kvec=\kvec+\gvec,\ \gvec\in \text{倒格矢集合
 
 更直观的说法是：对称操作作用到模场上，场要么保持不变（特征标 $+1$）、要么变号（特征标 $-1$）、要么与另一支模式互换（二维表示）。这三个结果已经足够把绝大多数 $\Gamma$ 点模式分到 $A_1/A_2/B_1/B_2/E$ 之中。
 
-\begin{ExampleBox}
-若两支近简并模在 $\pm90^\circ$ 旋转下互相交换，而在某条镜面下分别变号/不变，那么更正确的做法不是给它们各贴一个 singlet 标签，而是把它们合在一起作为二维 $E$ 双重态。
-\end{ExampleBox}
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{$C_{4v}$ 的最小特征标表。这里的列是共轭类，而非单个操作。对 PCSEL 最常用的用途，是判断某个 singlet/doublet 在对称操作下属于哪一种 irrep。}
+  \label{tab:c4v-character}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}lccccc@{}}
+    \toprule
+    irrep & $E$ & $2C_4$ & $C_2$ & $2\sigma_v$ & $2\sigma_d$ \\
+    \midrule
+    $A_1$ & 1 & 1 & 1 & 1 & 1 \\
+    $A_2$ & 1 & 1 & 1 & $-1$ & $-1$ \\
+    $B_1$ & 1 & $-1$ & 1 & 1 & $-1$ \\
+    $B_2$ & 1 & $-1$ & 1 & $-1$ & 1 \\
+    $E$ & 2 & 0 & $-2$ & 0 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+表中的列名最好带着几何图像一起记。$E$ 是恒等操作；$2C_4$ 表示 $\pm 90^\circ$ 旋转；$C_2$ 是 $180^\circ$ 旋转；$2\sigma_v$ 指穿过晶格主轴的两条镜面，最常见的就是 $x=0$（$\sigma_{v,x}$）和 $y=0$（$\sigma_{v,y}$）；$2\sigma_d$ 则指两条对角镜面 $y=\pm x$（$\sigma_{d,+}$ 和 $\sigma_{d,-}$）。这里的下标 $v$ 就是主轴（vertical）镜面，$d$ 就是对角线（diagonal）镜面。判断一个模属于哪种 irrep 的简单操作步骤：取模的近场分布图，分别对以上四条镜面做反射，观察场图是否偶对称（特征标 $+1$）或奇对称（特征标 $-1$），与表格各行对比即可确定。
+
+更完整的生成元列表、直积表、$C_{4v}\to C_{2v}$ 分支律和选择规则实例，已汇总为附录中的“群论工具箱”（\cref{sec:group-theory-toolbox}），需要时查阅即可，不必在此处一次性记住。
+
+若两支近简并模在 $\pm90^\circ$ 旋转下互相交换，而在某条镜面下分别变号/不变，那么更正确的做法是把它们合在一起作为二维 $E$ 双重态，而非给它们各贴一个 singlet 标签。
 
 \paragraph{第三步：法向辐射的最小判据。}
-在 $\Gamma$ 点（$k_\parallel=0$），法向辐射对应的自由空间平面波是横向均匀平面波，其两支线偏振 $(\hat{\bm x},\hat{\bm y})$ 在 $C_{4v}$ 语言中张成二维表示 $E$。因此：\textbf{若腔模的 irrep 与辐射通道的 irrep 不匹配，则法向辐射耦合矩阵元在对称性上必为零。} 这正是 $A_1$、$A_2$、$B_1$、$B_2$ 四类非简并模往往成为 dark/BIC 候选的群论原因，而 $E$ 表示则是典型亮模候选\cite{sakoda2005,joannopoulos2008,hsu2016}。
+在 $\Gamma$ 点（$k_\parallel=0$），法向辐射对应的自由空间平面波是横向均匀平面波，其两支线偏振 $(\hat{\bm x},\hat{\bm y})$ 在 $C_{4v}$ 语言中张成二维表示 $E$。因此：\textbf{若腔模的 irrep 与辐射通道的 irrep 不匹配，则法向辐射耦合矩阵元在对称性上必为零。} 这也是 $A_1$、$A_2$、$B_1$、$B_2$ 四类非简并模往往成为 dark/BIC 候选的群论原因，而 $E$ 表示则是典型亮模候选\cite{sakoda2005,joannopoulos2008,hsu2016}。
 
-\begin{RigorousBox}
 上述判据的正式版本可写成“张量积包含全对称表示”。但在初次使用阶段，只需记住：\textbf{模式 irrep 必须与法向辐射通道 irrep 相容，耦合才可能非零。}
-\end{RigorousBox}
+
+\cref{fig:ch08_irrep_radiation_gate} 给出这条规则的最小工作流。它把“看场图觉得亮或暗”的经验判断，改写成 three-step gate：先确定 little group，再给模式和辐射通道分别贴 irrep，最后检查张量积是否含全对称表示。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch08_irrep_radiation_gate}
+  \caption{Gamma 点模式的 irrep--辐射通道守门流程。in-plane little-group 匹配只决定 direct normal radiation 是否被对称性允许；真正的辐射强度仍需结合三维 slab、纵向奇偶性、层栈不对称和有限尺寸计算。}
+  \label{fig:ch08_irrep_radiation_gate}
+\end{figure}
 
 \begin{PitfallBox}
 必须把一句话反复记住：\textbf{in-plane little-group 匹配只是必要的第一层筛选，不是三维 slab 中法向辐射强度的充分判据。} 一个模式即便在平面内表示上允许 direct normal radiation，真实辐射强度仍会继续受纵向奇偶性、层栈不对称、上下光锥和有限厚度矢量混合的共同影响。
@@ -245,12 +115,12 @@ g\in \mathcal{G}\;\middle|\; g\kvec=\kvec+\gvec,\ \gvec\in \text{倒格矢集合
 \[
 \mathcal{G}_{\Gamma}=C_{4v}.
 \]
-它有四个一维不可约表示 $A_1,A_2,B_1,B_2$ 和一个二维不可约表示 $E$。对 PCSEL 读者来说，最重要的不是把角色表背下来，而是知道这些 irrep 分别意味着什么。一个可反复使用的最小表见 \cref{tab:c4v-irrep}.
+它有四个一维不可约表示 $A_1,A_2,B_1,B_2$ 和一个二维不可约表示 $E$。对 PCSEL 读者来说，最重要的是知道这些 irrep 分别意味着什么，而非把角色表背下来。一个可反复使用的最小表见 \cref{tab:c4v-irrep}.
 
 \begin{table}[htbp]
   \centering
   \footnotesize
-  \caption{$C_{4v}$ 小群在 $\Gamma$ 点的最小模式分类工具。这里的“典型基函数”不是场的完整表达，而是帮助读者建立 irrep 直觉的代表性多项式或向量。}
+  \caption{$C_{4v}$ 小群在 $\Gamma$ 点的最小模式分类工具。这里的“典型基函数”是帮助读者建立 irrep 直觉的代表性多项式或向量，而非场的完整表达。}
   \label{tab:c4v-irrep}
   \setlength{\tabcolsep}{4pt}
   \begin{tabularx}{\textwidth}{@{}p{1.2cm}p{1.0cm}p{2.5cm}Y@{}}
@@ -329,18 +199,16 @@ A_1
 A_1.
 \label{eq:selection_rule_simple}
 \end{equation}
-在本书使用的最小实表示框架中，这通常进一步退化为一条最便于操作的判据：\textbf{模式 irrep 与法向辐射通道 irrep 相同或含有与之兼容的分量时，direct radiation 在对称性上才是允许的。} 这就是为什么前文会把“方格晶格看 $E$，三角晶格看 $E_1$”说成第一性筛选规则，而不只是经验口诀\cite{sakoda2005,hsu2016}。
+在本书使用的最小实表示框架中，这通常进一步退化为一条最便于操作的判据：\textbf{模式 irrep 与法向辐射通道 irrep 相同或含有与之兼容的分量时，direct radiation 在对称性上才是允许的。} 因此前文会把“方格晶格看 $E$，三角晶格看 $E_1$”说成第一性筛选规则，而不只是经验口诀\cite{sakoda2005,hsu2016}。
 
-\begin{RigorousBox}
-\cref{eq:selection_rule_tensor} 给出的只是\emph{对称性允许性}，不是耦合强度大小。也就是说，满足该条件只说明矩阵元可以非零，并不保证它一定很大；而一旦不满足，则在保持对应对称性的前提下矩阵元必须为零。对 PCSEL 而言，这正是“允许法向辐射”和“实际辐射有多强”必须分两步判断的原因。
-\end{RigorousBox}
+\cref{eq:selection_rule_tensor} 给出的只是\emph{对称性允许性}，不是耦合强度大小。也就是说，满足该条件只说明矩阵元可以非零，并不保证它一定很大；而一旦不满足，则在保持对应对称性的前提下矩阵元必须为零。对 PCSEL 而言，这也是“允许法向辐射”和“实际辐射有多强”必须分两步判断的原因。
 
 于是，对 PCSEL 最有用的两句话是：
 \begin{itemize}
   \item 对方格晶格，法向辐射通道最小地属于 $E$；
   \item 对三角晶格，法向辐射通道最小地属于 $E_1$。
 \end{itemize}
-因此，拿到一个新结构后，读者应先问的不是“这模看起来亮不亮”，而是“它在 $\Gamma$ 点属于哪个 irrep，这个 irrep 是否与法向辐射通道匹配”。若不匹配，则 exact $\Gamma$ 点直接法向辐射被对称性禁止；若匹配，则 direct radiation 至少在对称性上是允许的，后面再讨论耦合强弱、损耗大小和器件级阈值。
+因此，拿到一个新结构后，读者应先问的是“它在 $\Gamma$ 点属于哪个 irrep，这个 irrep 是否与法向辐射通道匹配”，而非“这模看起来亮不亮”。若不匹配，则 exact $\Gamma$ 点直接法向辐射被对称性禁止；若匹配，则 direct radiation 至少在对称性上是允许的，后面再讨论耦合强弱、损耗大小和器件级阈值。
 
 \subsection{如何从数值模场中真正给出 irrep 标签}
 教材若只告诉读者“先标 irrep”，但不说数值上怎么标，这套工具就还不够可操作。最小可执行流程如下。
@@ -422,7 +290,7 @@ D_{ij}(g)
 \subsection{损耗分裂路径}
 即使频率几乎不变，扰动也可能让某一偏振态与辐射通道或吸收区耦合更强，从而改变阈值。
 
-对 PCSEL 而言，第二条路径尤其常见，因为偏振与辐射选择规则紧密相关。许多偏振工程并不是单纯改变偏振方向，而是在重新分配不同偏振态与辐射/损耗通道的相对权重。
+对 PCSEL 而言，第二条路径尤其常见，因为偏振与辐射选择规则紧密相关。许多偏振工程并非单纯改变偏振方向，而是在重新分配不同偏振态与辐射/损耗通道的相对权重。
 
 \cref{fig:ch08_four_mode_triplet}给出了四模三重态图像的完整可视化：在弱耦合极限下，正向行波$(1,0)$与反向行波$(-1,0)$形成驻波配对，而侧向行波$(0,\pm1)$由于对称性保持简并，最终形成三支非简并模——两支singlet 加一支doublet。
 
@@ -445,9 +313,7 @@ D_{ij}(g)
 
 最典型的例子是方格晶格圆孔的 $C_{4v}$ 对称被轻微椭圆孔降低到只保留两条镜面的子群。此时原先的 $E$ 双重态会分裂成两支沿椭圆长轴和短轴定向的 singlet，于是“偏振选择”在群论上不再是一句经验话，而是“二维 irrep 被降群后发生分裂”的直接结果。
 
-\begin{ExampleBox}
 若一个理想方格晶格在 $\Gamma$ 点有一对属于 $E$ 的双简并候选模，则在圆孔情况下两者地位完全等价。把圆孔轻微拉成椭圆后，这对 $E$ 双重态会沿扰动主轴方向分裂成两支非简并模。若其中一支仍与法向辐射通道更匹配，另一支则更接近 symmetry-protected dark family，那么实验上就会同时看到偏振钉扎、损耗分裂和远场主瓣方向选择。
-\end{ExampleBox}
 
 \section{拿到一个新结构后，如何自己做 \texorpdfstring{$\Gamma$}{Gamma} 点模标注}
 至此，可以把 $\Gamma$ 点模标注整理为以下最小流程：
@@ -460,9 +326,7 @@ D_{ij}(g)
 \end{enumerate}
 这套流程不能替代全波仿真，但足以在拿到一个新单胞时，先完成“模标注、偏振判断、BIC 初筛”三项前置工作，而不是一开始就进行无约束参数扫描。
 
-\begin{RigorousBox}
 若某一偏振态在二维平面模型中显示出明显优势，但该优势依赖的实际上是上下完全对称的假设，那么一旦放到真实外延层栈中，这种结论可能翻转。偏振设计必须把纵向不对称也纳入模型。
-\end{RigorousBox}
 
 \section{哪些对称性破缺最常见}
 真实 PCSEL 中，对称性破缺几乎不可避免。常见来源包括：
@@ -482,11 +346,9 @@ D_{ij}(g)
 
 第二，上下辐射通道不对称会改变远场的上下功率分布，进而影响总辐射损耗和远场图样。某一平面内看似很“对称”的模式，在真实层栈中可能已经因为上下不对称而发生偏置。
 
-因此，后文讨论外延层和热效应时仍需回到偏振问题。偏振不是在本章即可封闭处理的独立主题，而是贯穿光学与器件设计的变量。
+因此，后文讨论外延层和热效应时仍需回到偏振问题。偏振是贯穿光学与器件设计的变量，而非在本章即可封闭处理的独立主题。
 
-\begin{ExampleBox}
 将圆孔改成轻微椭圆，往往会使两个正交偏振态的耦合系数分离，进而在远场上表现为主瓣沿某一晶格方向更加集中。若此时外延上下不对称又偏向其中一支辐射通道，那么最终实验上看到的偏振纯度会比二维平面对称模型预期的更强，或者方向发生额外旋转。
-\end{ExampleBox}
 \cref{fig:ch08_polarization_control}总结了三种典型的偏振调控策略及其物理机制。
 
 \input{figures/fig_ch08_polarization_control}
@@ -514,9 +376,7 @@ D_{ij}(g)
 
 因此，本章合并讨论偏振和远场，是因为二者对应同一模式问题的两个投影：偏振强调矢量方向，远场强调角域分布。
 
-\begin{PitfallBox}
 只在二维平面模型里判定偏振纯度，或者只在冷腔近场上判断远场稳定性，都会系统性高估真实器件性能。只要外延不对称、电流拥挤或热漂移显著，这种高估几乎必然出现。
-\end{PitfallBox}
 
 \section{通向后续章节：偏振问题为何最终会回到器件问题}
 本章讨论的仍然主要是光学层。但请注意，偏振稳定和远场稳定并不只由几何决定。随着注入升高和温升出现：
@@ -528,8 +388,8 @@ D_{ij}(g)
 
 因此，本章给出的是偏振与远场的光学框架，而不是器件级稳定性判据。某种偏振与远场能否在工作区间内保持稳定，还需在热-电-光耦合章节中判断。
 
-\section*{本章小结}
-PCSEL 的偏振与远场不是输出端的附加现象，而是模式本征结构、对称性和辐射选择规则的结果。可操作的起点是在 $\Gamma$ 点按 little group 的不可约表示分类模式：方格晶格用 $C_{4v}$，三角晶格用 $C_{6v}$；法向辐射通道分别最小地属于 $E$ 和 $E_1$。建立这一标注后，偏振选择、symmetry-protected BIC 判断、双简并分裂和远场工程可归入同一分类工具。对称性破缺既可作为设计手段，也可能成为不可控扰动。偏振与远场工程必须同时考虑平面内晶格、纵向外延、有限尺寸以及工作点变化。
+\section*{回看本章}
+PCSEL 的偏振与远场是模式本征结构、对称性和辐射选择规则的结果，而非输出端的附加现象。可操作的起点是在 $\Gamma$ 点按 little group 的不可约表示分类模式：方格晶格用 $C_{4v}$，三角晶格用 $C_{6v}$；法向辐射通道分别最小地属于 $E$ 和 $E_1$。建立这一标注后，偏振选择、symmetry-protected BIC 判断、双简并分裂和远场工程可归入同一分类工具。对称性破缺既可作为设计手段，也可能成为不可控扰动。偏振与远场工程必须同时考虑平面内晶格、纵向外延、有限尺寸以及工作点变化。
 
 \section*{练习题}
 \begin{enumerate}
@@ -546,7 +406,7 @@ PCSEL 的偏振与远场不是输出端的附加现象，而是模式本征结�
   \item \hardq 设某器件在低电流下单偏振稳定、高电流下出现偏振混合，试给出一条可能的热-电-光机理链。
 \end{enumerate}
 
-\section*{建议继续阅读}
+\section*{延伸阅读}
 \begin{itemize}
   \item 下一章将引入 BIC / quasi-BIC 语言，把本章的 little group、irrep、法向辐射选择规则进一步写成开放系统中的辐射通道问题。
 

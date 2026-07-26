@@ -1,5 +1,7 @@
 # LaTeX build artifacts
 build/
+build_review*/
+build_release*/
 *.aux
 *.bbl
 *.blg
@@ -30,3 +32,19 @@ version/
 # OS noise
 .DS_Store
 Thumbs.db
+
+# Local working artifacts (renders, temp, editor leftovers)
+tmp/
+compile_log.txt
+*.tex.new
+*.tex.backup
+review/figure_pages_png/
+review/pdf_renders/
+review/pdf_renders2/
+review/tmp_render/
+review/tmp_render2/
+review/20260501_figure_layout/
+review/20260501_figure_layout_check/
+review/20260501_figure_layout_synced/
+review/20260618_figure_audit/
+reference/md/
