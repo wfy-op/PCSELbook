@@ -692,6 +692,73 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 
 第五，对强开放候选模，不要只记录 $\omega_r$ 或 $Q$，而应同时记录使用的归一化、是否采用 QNM / PML 框架、以及微扰判断使用的是厄米代理还是非厄米左/右模公式。否则后续章节即便复用了同一个符号，也未必在说同一层数学对象。
 
+\section{从 CWT 本征矢量提取远场偏振：方位角、椭圆率与 Stokes 参量}
+\label{sec:cwt-polarization-extraction}
+本节给出一组可直接写进代码的公式：如何从 \cref{ch:cwt-min,ch:cwt-3d} 的四波 CWT 本征矢量读出远场偏振态。
+在实际器件设计中，除了关心模式的辐射常数和品质因子，还需要直接从 CWT 解中提取远场的偏振特性。设第 $j$ 个超模的本征矢量为
+\begin{equation}
+\bm V_j = 
+\begin{bmatrix}
+c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
+\end{bmatrix}^{\mathsf T},
+\end{equation}
+其中下标 $x,y$ 分别表示沿 $\pm x$ 和 $\pm y$ 方向传播的基本波对。在最小四波模型中，远场主要由前向波 $c_{x,j}$ 和 $c_{y,j}$ 贡献（后向波 $s_{x,j},s_{y,j}$ 主要形成驻波反馈）。因此，远场电场的横向分量可近似写为
+\begin{equation}
+\bm E_{\mathrm{ff}} \approx c_{x,j}\,\hat{\bm x} + c_{y,j}\,\hat{\bm y}.
+\end{equation}
+由此可直接定义三个关键偏振参数：
+
+\paragraph{1. 偏振方位角 (azimuth angle)}
+线偏振主轴相对于 $x$轴的夹角为
+\begin{equation}
+\psi_j
+=
+\frac{1}{2}\operatorname{atan2}\!\left(
+2\,\mathrm{Re}\!\left[c_{x,j}c_{y,j}^{\ast}\right],\;
+|c_{x,j}|^2-|c_{y,j}|^2
+\right),
+\qquad
+\psi_j \in \left(-\frac{\pi}{2},\frac{\pi}{2}\right].
+\label{eq:polarization_azimuth_from_cxy}
+\end{equation}
+特别地，当相位差接近零时，\cref{eq:polarization_azimuth_from_cxy} 会退化到熟悉的幅值比公式；当 $|c_{x,j}|=|c_{y,j}|$ 且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当 $c_{y,j}=0$ 时，$\psi_j=0^\circ$，对应纯 $x$ 偏振。
+
+\paragraph{2. 椭圆率 (ellipticity)}
+若考虑复振幅的相对相位，先定义椭圆角 $\chi_j$：
+\begin{equation}
+\chi_j
+=
+\frac{1}{2}\arcsin\!\left(
+\frac{2\,\mathrm{Im}\!\left[c_{x,j}^{\ast}c_{y,j}\right]}{|c_{x,j}|^2 + |c_{y,j}|^2}
+\right),
+\qquad
+e_j = \tan\chi_j,
+\qquad
+e_j \in [-1, 1],
+\label{eq:polarization_ellipticity_from_cxy}
+\end{equation}
+其中 $e_j=0$ 对应完全线偏振，$|e_j|=1$ 对应圆偏振。
+
+\paragraph{3. 斯托克斯参量 (Stokes parameters)}
+更一般地，可以用归一化斯托克斯参量完整刻画偏振态：
+\begin{align}
+s_0 &= |c_{x,j}|^2 + |c_{y,j}|^2, \notag\\
+s_1 &= \frac{|c_{x,j}|^2 - |c_{y,j}|^2}{s_0}, \notag\\
+s_2 &= \frac{2\mathrm{Re}(c_{x,j}^* c_{y,j})}{s_0}, \notag\\
+s_3 &= \frac{2\mathrm{Im}(c_{x,j}^* c_{y,j})}{s_0}.
+\label{eq:stokes_from_cxy_chapter9}
+\end{align}
+这四个参量满足$s_1^2+s_2^2+s_3^2=1$（完全偏振光），且在庞加莱球上构成一个单位向量。结合 \cref{ch:polarization} 中的对称性分析，可以预测不同模式在不同对称破缺下的轨迹演化。
+
+\begin{NoteBox}[breakable]{实际应用提示}
+在优化算法中，可以直接将 \cref{eq:polarization_azimuth_from_cxy,eq:polarization_ellipticity_from_cxy} 作为目标函数的约束项。例如，若要设计 $45^\circ$线偏振基模，可在损失函数中加入惩罚项
+\begin{equation}
+\mathcal{L}_{\mathrm{pol}} = w_{\psi}\left(\psi_j - \frac{\pi}{4}\right)^2 + w_e |e_j|^2,
+\end{equation}
+其中权重$w_\psi,w_e$控制偏振纯度要求。这种方法比单纯依靠几何猜测更高效，尤其在高阶模抑制和多孔耦合结构中。
+\end{NoteBox}
+
+
 \section{关键量的首次定义位置索引}
 为便于读者在正文各章之间快速定位，本节给出全书最重要的派生量与合成量在何处首次引入或定义的参考索引。注意：基础物理量（如 $\E$、$\omega$、$\kvec$ 等）不列，只列出由多个基础量组合而成、或由特定物理机制引入的派生量。
 
@@ -704,23 +771,23 @@ $\Gamma_{\mathrm{opt}}$ & \cref{ch:threshold}，\cref{eq:gamma_opt_def}：光学
 $\alpha_{\mathrm{rad}},\;\alpha_{\mathrm{int}}$ & \cref{ch:threshold}，\cref{eq:gamma_alpha_map}：辐射损耗与内部损耗的等效空间系数。 \\
 $g_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:gth}：阈值增益，$\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$ 与 $\Gamma_{\mathrm{opt}}$ 之比。 \\
 $\kappa_1,\;\kappa_2$ & \cref{ch:cwt-min}，\cref{eq:cwt_kappa}：CWT 中的耦合系数，来自主导几何 Fourier 分量与纵向模重叠。 \\
-$\bm{C}_{\mathrm{1D}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_C1D_matrix}：一维反馈耦合矩阵。 \\
-$\bm{C}_{\mathrm{rad}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_Crad_matrix}：辐射耦合矩阵，非厄米，来自开放通道。 \\
-$\bm{C}_{\mathrm{2D}}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_C2D_matrix}：二维高阶耦合矩阵。 \\
+$\bm{C}_{\mathrm{1D}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_C1D_matrix}：一维反馈耦合矩阵。 \\
+$\bm{C}_{\mathrm{rad}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_Crad_matrix}：辐射耦合矩阵，非厄米，来自开放通道。 \\
+$\bm{C}_{\mathrm{2D}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_C2D_matrix}：二维高阶耦合矩阵。 \\
 $v_{\mathrm{en}}$ & \cref{ch:threshold}，\cref{eq:energy_velocity_def}：能量速度，将空间增益/损耗映射为时间增长率的参数。 \\
-$\tilde n^2=n^2+2\ii k_0 n\tilde\alpha$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_vector_wave}：含增益/损耗的复折射率。 \\
-$\xi_{m,n}(z)$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_n2_expand}：光子晶体层的 Fourier 系数。 \\
-$\phi_0(z)$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_fundamental_mode}：背景层状波导的基模纵向剖面。 \\
+$\tilde n^2=n^2+2\ii k_0 n\tilde\alpha$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_vector_wave}：含增益/损耗的复折射率。 \\
+$\xi_{m,n}(z)$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_n2_expand}：光子晶体层的 Fourier 系数。 \\
+$\phi_0(z)$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_fundamental_mode}：背景层状波导的基模纵向剖面。 \\
 $\bm{u}_{A_1},\;\bm{u}_{B_1},\;\bm{u}_{E,x/y}$ & \cref{ch:cwt-min}，\cref{eq:cwt_A1_basis,eq:cwt_B1_basis,eq:cwt_E_basis}：四波子空间在 $C_{4v}$ 下的 irrep 基底。 \\
-$G(z,z')$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_green}：辐射波的纵向 Green 函数（近似局域均匀背景）。 \\
-$G_{m,n}(z,z')$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_green_ho}：高阶波在光子晶体层内的倏逝 Green 函数。 \\
-$\delta=\beta-\beta_0$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_eigenvalue}：偏离 Bragg 条件的传播常数偏移。 \\
-$\alpha_{\mathrm{rad},j}$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_alpha_rad}：第 $j$ 模的辐射常数，$\;2\,\mathrm{Im}(\lambda_j)$（亦可写为 $-2\,\mathrm{Im}(\tilde\omega_j)/v_{g,j}$）。 \\
+$G(z,z')$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_green}：辐射波的纵向 Green 函数（近似局域均匀背景）。 \\
+$G_{m,n}(z,z')$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_green_ho}：高阶波在光子晶体层内的倏逝 Green 函数。 \\
+$\delta=\beta-\beta_0$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_eigenvalue}：偏离 Bragg 条件的传播常数偏移。 \\
+$\alpha_{\mathrm{rad},j}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：第 $j$ 模的辐射常数，$\;2\,\mathrm{Im}(\lambda_j)$（亦可写为 $-2\,\mathrm{Im}(\tilde\omega_j)/v_{g,j}$）。 \\
 $\eta_{N_z}$ & \cref{ch:cwt-3d}，\cref{eq:vertical_truncation_ratio}：纵向模截断能量占比。 \\
 $\mathbf{\Sigma}_{\mathrm{rad}}(\omega)$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_selfenergy}：辐射通道引入的自能项。 \\
 $\Gamma_{\mathrm{PC}}$ & \cref{ch:gamma}，\cref{eq:gamma_pc}：光子晶体层的光学限制因子，用于二维等效介电常数修正。 \\
 $\tilde\varepsilon_a,\;\tilde\varepsilon_b$ & \cref{ch:gamma}，\cref{eq:modified_eps}：送入二维 PWEM 的修正等效介电常数。 \\
-$\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\lambda)=-2\,\mathrm{Im}(\tilde\omega)/v_g$ & \cref{ch:cwt-min}，\cref{eq:3d_cwt_alpha_rad}：辐射常数与 CWT 本征值虚部（及复频率虚部）之间的换算关系。 \\
+$\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\lambda)=-2\,\mathrm{Im}(\tilde\omega)/v_g$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：辐射常数与 CWT 本征值虚部（及复频率虚部）之间的换算关系。 \\
 $I_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:threshold_rate}：阈值电流，是器件级电-热-光结果，需经电注入模型换算。 \\
 $\Delta G_{\star j}$ & \cref{ch:threshold}：目标模与第 $j$ 竞争模之间的模鉴别裕量。 \\
 $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_interfaces}：三维 CWT 输出的温度灵敏度导数，用于热耦合接口。 \\
