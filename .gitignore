@@ -1,5 +1,7 @@
 # LaTeX build artifacts
 build/
+build_review*/
+build_release*/
 *.aux
 *.bbl
 *.blg

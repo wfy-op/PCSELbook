@@ -426,3 +426,6 @@
 \tracinglostchars=0
 \hbadness=10000
 \vbadness=10000
+
+% 红线回指：阶段 2 警告去重机制。重复出现的层级警告压缩为对 ch02 六条红线的半句回指。
+\newcommand{\RedlineRef}[1]{{\small （⚠~红线~\##1，见 \cref{sec:six-redlines}）}}
