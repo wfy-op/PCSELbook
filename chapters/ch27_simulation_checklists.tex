@@ -196,6 +196,181 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
 \section{数值不确定度量化与报告规范}
 基于 \cref{ch:method-compare} 中的误差分析理论，本节给出可直接用于项目实践的数值不确定度量化流程和报告模板。
 
+\subsection{各方法的主要误差源}
+\label{sec:numerical-error-per-method}
+多方法互证的另一个关键维度是理解并量化每种方法的数值误差来源。只有清楚地知道每个数字背后的不确定度，才能做出可靠的工程判断。本节系统梳理各类方法的主要误差源、收敛行为和交叉验证策略。
+
+
+\paragraph{先统一本章收敛门槛口径（探索级/本书算例/发布级）}
+为避免把“调参初筛阈值”误读成“发布级硬标准”，本章后续阈值统一按三层门槛解释：探索级用于快速筛查方向；\textbf{[本书算例]}用于本教材 benchmark 对齐；发布级用于论文或项目验收。若项目硬件、几何或误差预算变化，应重新定义门槛，而不是机械照搬。
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{本章收敛门槛的三层口径（方法学文献 + 本书 benchmark 约定）。}
+  \label{tab:method_threshold_tiers}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}p{3.0cm}p{3.1cm}p{3.3cm}Y@{}}
+    \toprule
+    指标 & 探索级（快速筛查） & 本书算例（章节默认） & 发布级（建议） \\
+    \midrule
+    PWEM 频率收敛 & 相邻 $N_G$ 频率漂移 $<1\%$ & 相邻 $N_G$ 频率漂移 $<0.5\%$ & 相邻 $N_G$ 频率漂移 $<0.2\%$ 并给收敛曲线 \\
+    RCWA 共振峰漂移 & 阶数扫描后峰位变化 $<2\,$nm & 峰位变化 $<0.5\,$nm & 峰位变化 $<0.2\,$nm 且功率守恒误差 $<10^{-3}$ \\
+    FDTD/FEM 共振频率一致性 & 同数量级一致 & 相对偏差 $<1\%$ & 相对偏差 $<0.5\%$ 并给网格与时间窗敏感性 \\
+    模式排序一致性 & 目标模不翻转 & 目标模不翻转 + 竞争模次序稳定 & 目标模不翻转并给最坏样本与误差条 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{PWEM 的误差来源与控制}
+PWEM 作为本征模求解器，其主要误差来自三个方面：
+
+\paragraph{平面波截断误差}
+PWEM 将介电常数分布展开为傅里叶级数，截断阶数$N_G$直接影响精度。典型的收敛行为是：随着$N_G$增加，本征频率按幂律收敛。对高对比度结构（如空气孔/半导体界面），需要更高的$N_G$才能达到与低对比度结构相同的精度。
+
+\begin{NumericalErrorBox}
+\textbf{PWEM 收敛性检查清单}
+\begin{itemize}
+  \item \textbf{频率收敛}：目标模式的归一化频率$\omega a/(2\pi c)$随$N_G$的变化应小于$10^{-4}$
+  \item \textbf{带隙位置收敛}：带隙边缘的频率漂移应小于带隙宽度的 1\%
+  \item \textbf{场分布收敛}：连续两次$N_G$增加的场均方根差异应小于 1\%
+  \item \textbf{对称性保持}：简并模的频率分裂应远小于它们与邻近模式的间距
+\end{itemize}
+典型经验值：对空气桥型 PC，$N_G \geq 11\times 11$；对衬底支撑型 PC，$N_G \geq 15\times 15$。
+\end{NumericalErrorBox}
+
+\paragraph{k 空间采样误差}
+对色散曲线的绘制，$\kvec$空间的采样密度会影响带结构的平滑度和极值点的准确性。建议在布里渊区高对称点附近加密采样，以确保带边位置的精度优于$0.5\%$。
+
+\paragraph{有效折射率近似误差}
+二维 PWEM 通常用有效折射率$n_{\text{eff}}$代替真实的三维波导结构。这会引入系统性误差，特别是对垂直损耗和模式体积的计算。定量估计时，应将二维 PWEM 结果与三维 RCWA 或 FEM 进行基准比对，典型偏差范围在$5\%-15\%$之间。
+
+\subsubsection{CWT 的模型降阶误差}
+CWT 通过将无穷维 Maxwell 方程投影到少数主导波上来实现模型降阶。其误差主要来自 truncation 和耦合系数近似。
+
+\paragraph{主导波选择的完备性}
+CWT 的精度取决于所选基底是否能充分描述真实物理。一个实用的检验方法是逐步增加波的数目，观察关键输出（如阈值增益、辐射效率）的相对变化：
+\begin{equation}
+\varepsilon_N = \left|\frac{X_{N+1}-X_N}{X_N}\right|,
+\label{eq:cwt_convergence_metric}
+\end{equation}
+其中$X_N$是用$N$个波计算的目标量。当$\varepsilon_N < 1\%$时可认为收敛。
+
+\paragraph{耦合系数的计算精度}
+CWT 中的耦合系数$\kappa$通常通过对单胞积分获得：
+\begin{equation}
+\kappa = \frac{\omega^2}{2V}\int_V \Delta\varepsilon(\rvec)\,\E_i^*(\rvec)\cdot\E_j(\rvec)\,\dd^3 r.
+\label{eq:cwt_coupling_integral}
+\end{equation}
+数值积分时的网格密度和几何逼近会直接影响$\kappa$的精度。建议做法是：先用高精度全波方法（RCWA/FEM）计算单胞场，再用这些场校准 CWT 的耦合系数。
+
+\begin{CrossValidationBox}
+\textbf{CWT 与 RCWA 的交叉验证协议}
+\begin{enumerate}
+  \item 用相同单胞几何分别运行 CWT 和 RCWA
+  \item 比较两者的共振频率偏差：$|\lambda_{\text{CWT}}-\lambda_{\text{RCWA}}|/\lambda_{\text{RCWA}} < 2\%$
+  \item 比较辐射效率的趋势一致性（不必逐点相同）
+  \item 比较参数扫描的灵敏度符号（如对孔径变化的响应方向）
+\end{enumerate}
+若以上任一条件不满足，应返回检查 CWT 的主导波选择或 RCWA 的傅里叶阶数。
+\end{CrossValidationBox}
+
+\subsubsection{RCWA 的傅里叶收敛与 Gibbs 现象}
+RCWA 的核心是将电磁场和介电函数展开为 Floquet-Bloch 级数。其主要误差源包括：
+
+\paragraph{傅里叶阶数不足导致的 Gibbs 振荡}
+对具有高对比度界面的结构，介电函数的傅里叶级数在不连续处会出现 Gibbs 振荡。这会导致：
+\begin{itemize}
+  \item 共振峰位置的系统性偏移（通常向长波方向）
+  \item 虚假的旁瓣或共振分裂
+  \item 功率守恒 violation（反射 + 透射$\neq 1$）
+\end{itemize}
+
+\begin{NumericalErrorBox}
+\textbf{RCWA 收敛性检查清单}
+\begin{itemize}
+  \item \textbf{傅里叶阶数扫描}：从$N_G=10$开始，每次增加 5，直到共振波长变化$<0.5\,$nm
+  \item \textbf{功率守恒}：$|R+T+A-1| < 10^{-3}$（无源结构）
+  \item \textbf{ reciprocity 检查}：正向和反向入射应给出相同的透射谱
+  \item \textbf{层厚收敛}：对有刻蚀深度的结构，纵向切片数应使得每片厚度$<\lambda/(20 n)$
+\end{itemize}
+对深孔结构（纵横比$>5:1$），可能需要$N_G > 30$才能收敛。
+\end{NumericalErrorBox}
+
+\paragraph{坐标变换技术的必要性}
+对圆柱形空气孔等曲面边界，标准的阶梯近似会引入显著的几何误差。此时应采用因子化规则（factorization rules）或曲线坐标系 RCWA 来提高精度。一个简单的诊断是：若增加$N_G$后共振波长仍在单调漂移（而非震荡收敛），则很可能需要改进几何表述。
+
+\subsubsection{FDTD 的时间域误差累积}
+FDTD 通过在时间和空间上离散 Yee 网格来演化 Maxwell 方程。其误差特性与其他方法显著不同。
+
+\paragraph{数值色散误差}
+Yee 网格中的波传播速度依赖于波长与网格尺寸之比。这会导致：
+\begin{equation}
+v_{\text{num}} = c\left[1 - \frac{1}{24}(k\Delta x)^2 + O((k\Delta x)^4)\right],
+\label{eq:fdfd_numerical_dispersion}
+\end{equation}
+其中$k=2\pi/\lambda$。为将相速度误差控制在 1\%以内，需要$\Delta x < \lambda/(10n)$。对 PCSEL 这种多波长干涉的结构，建议使用更保守的标准：$\Delta x < \lambda/(15n)$。
+
+\paragraph{时间窗长度与 Q 值提取误差}
+从高$Q$谐振器的衰减曲线提取$Q$值时，时间窗长度$T_{\text{win}}$必须满足：
+\begin{equation}
+T_{\text{win}} > \frac{10 Q}{\omega_0},
+\label{eq:fdfd_time_window_requirement}
+\end{equation}
+否则拟合得到的衰减速率会有显著偏差。一个常见的症状是：延长仿真时间后，提取的$Q$值持续增大而不饱和。
+
+\paragraph{PML 反射引起的伪影}
+完美匹配层（PML）的理论反射率为零，但数值实现中会有微小反射。对超高$Q$模式（$Q>10^6$），即使是$10^{-6}$量级的 PML 反射也会污染结果。缓解策略包括：
+\begin{itemize}
+  \item 增加 PML 层数（典型值：12-16 层）
+  \item 使用渐变电导率剖面（polynomial grading）
+  \item 将 PML 放置在远离强场区域的位置（至少$\lambda/2$）
+  \item 若问题本身是无限周期单胞，可在横向采用 periodic boundary + Bloch 条件；若是有限器件，应保留开放边界（PML），并通过增大计算域、提高 PML 厚度/阶次与参数扫描抑制伪反射
+\end{itemize}
+
+\begin{CrossValidationBox}
+\textbf{FDTD 与 FEM 的交叉验证协议}
+\begin{enumerate}
+  \item 在同一有限尺寸器件上分别运行 FDTD（时域）和 FEM（频域）
+  \item 比较共振频率：偏差应$<1\%$
+  \item 比较$Q$值：在对数尺度上一致即可（如两者都在$10^4$量级）
+  \item 比较近场图案的重叠积分：$|\langle E_{\text{FDTD}}|E_{\text{FEM}}\rangle|^2 > 0.9$
+  \item 比较远场主瓣方向和角宽：峰值角度偏差$<2^\circ$
+\end{enumerate}
+注意：由于 FDTD 是宽带激励而 FEM 是单频求解，前者可能激发更多杂散模，因此近场重叠略低是可接受的。
+\end{CrossValidationBox}
+
+\subsubsection{FEM 的网格自适应与弱形式误差}
+FEM 通过变分原理将微分方程转化为线性代数问题。其误差估计最为成熟。
+
+\paragraph{h- refinement 与 p-refinement}
+FEM 提供两种收敛途径：
+\begin{itemize}
+  \item \textbf{h-精化}：减小网格尺寸$\Delta h$，固定单元阶次$p$
+  \item \textbf{p-精化}：提高单元多项式阶次$p$，固定网格
+\end{itemize}
+对光滑解，p-精化的指数收敛速度远超 h-精化。但对具有奇点（如尖锐金属边角）的问题，h-精化更为稳健。
+
+\paragraph{残差型后验误差估计}
+现代 FEM 软件通常提供基于残差的误差指示器：
+\begin{equation}
+\eta_K = \|R(u_h)\|_{L^2(K)} + \|J(u_h)\|_{L^2(\partial K)},
+\label{eq:fem_residual_estimator}
+\end{equation}
+其中$R(u_h)$是单元内部残差，$J(u_h)$是通量跳跃。 adaptive mesh refinement (AMR) 会根据$\eta_K$自动加密高误差区域。
+
+\begin{NumericalErrorBox}
+\textbf{FEM 收敛性检查清单}
+\begin{itemize}
+  \item \textbf{自由度扫描}：绘制目标量 vs 自由度数，确认已进入渐近平台区
+  \item \textbf{单元阶次提升}：从二次单元升到三次单元，目标量变化应$<1\%$
+  \item \textbf{PML 敏感性}：移动 PML 边界或改变 PML 参数，本征频率漂移应$<0.1\%$
+  \item \textbf{能量范数收敛}：$\|u-u_h\|_E/\|u\|_E$应随自由度增加而单调下降
+\end{itemize}
+对本征频率问题，还需额外检查：虚部（损耗）的收敛速度通常慢于实部（频率）。
+\end{NumericalErrorBox}
+
+
 \subsection{最小必要收敛扫描组合}
 对 PCSEL 多方法工作流，不建议对所有参数都做全面扫描（那样成本过高），而是聚焦于对最终结论最敏感的三个维度：
 
@@ -240,6 +415,10 @@ FDTD 的优势在于它直接处理有限阵列、宽带响应和近远场变换
 \end{itemize}
 按 RSS 合成，总不确定度约为$\delta_{\text{total}} \approx \sqrt{0.5^2+3^2+5^2+2^2}\% \approx 6.2\%$。这里应明确该结果属于\textbf{[本书算例]}，不应直接外推到任意器件。它提醒我们：即使每一步都已“收敛”，最终阈值电流预测仍可能存在数个百分点级别的不确定度。因此，声称“仿真阈值为 150 mA”不如写成“仿真阈值为 $150 \pm 10\,$mA”更符合报告规范。
 \end{NumericalErrorBox}
+
+\begin{WhatCouldGoWrong}
+一个常见但危险的误区是：在前几步用较粗糙的网格快速筛选，期望在最后一步用精细网格"纠正"所有误差。这种做法忽略了误差的非线性放大效应——早期阶段的定性误判（如模式排序错误）无法通过后期的高精度计算挽回。正确的策略是：在每一层都确保数值误差不至于改变定性结论。
+\end{WhatCouldGoWrong}
 
 \subsection{交叉验证的可接受偏差范围}
 当使用两种独立方法进行交叉验证时（如 FDTD vs FEM），需要事先定义什么是"一致"。表~\ref{tab:xval-tolerance}给出的阈值是\textbf{[本书建议门槛]}，用于教学和工程筛查，不代表社区统一标准。
