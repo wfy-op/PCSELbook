@@ -109,16 +109,10 @@ h\,(T-T_{\mathrm{amb}}),
 Q_{\mathrm{tot}}(\rvec,t),
 \label{eq:heat_transient}
 \end{equation}
-其中 $\rho$ 是材料密度，$C_p$ 是定压比热容。稳态近似下方程退化为
-\begin{equation}
--\nabla\cdot\left(\kappa_T\nabla T\right)
-=
-Q_{\mathrm{tot}}(\rvec).
-\label{eq:heat_steady}
-\end{equation}
+其中 $\rho$ 是材料密度，$C_p$ 是定压比热容。稳态近似下该方程即退化为前面的 \cref{eq:heat_eq}。
 
 \begin{WarningBox}[瞬态热效应的适用条件]
-稳态近似\ref{eq:heat_steady}在以下情况可能失效：
+稳态近似 \cref{eq:heat_eq} 在以下情况可能失效：
 \begin{itemize}
   \item \textbf{脉冲工作模式：} 当脉冲宽度 $\tau_{\mathrm{pulse}} \lesssim \tau_{\mathrm{th}} = R_{\mathrm{th}}C_{\mathrm{th}}$ 时，必须使用瞬态方程\ref{eq:heat_transient}
   \item \textbf{高速调制：} 调制频率 $f_{\mathrm{mod}} > 1/(2\pi\tau_{\mathrm{th}})$ 时，热场跟不上电信号变化
@@ -329,22 +323,6 @@ T(\rvec)
 \end{itemize}
 若需要 6 轮迭代达到收敛，总时长可能是 24 小时量级。这就是为什么工作流章节建议先用单胞 RCWA 做快速筛选，再对最终候选结构做全耦合验证。在实际研发中，通常会采用分层策略：先用简化模型排除明显不合理的设计，再对少数候选方案投入全耦合计算资源。
 \end{ResourceAlertBox}
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[node distance=1.8cm,>=Stealth]
-    \node[draw,rounded corners=3pt,fill=blue!10,minimum width=3.4cm,minimum height=1.7cm,align=center] (e) {电学求解\\[-0.2em]\small $\phi,n,p,\bm J$\\ \small 接触/孔径/串联电阻};
-    \node[draw,rounded corners=3pt,fill=red!10,right=of e,minimum width=3.5cm,minimum height=1.7cm,align=center] (h) {热学求解\\[-0.2em]\small $T(\rvec)$\\ \small $Q_{\text{焦耳}},Q_{\text{非辐射}},Q_{\text{吸收}}$};
-    \node[draw,rounded corners=3pt,fill=green!10,right=of h,minimum width=3.6cm,minimum height=1.7cm,align=center] (o) {光学求解\\[-0.2em]\small $\tilde{\omega},Q,\text{远场}$\\ \small $n(\rvec),g(\rvec),\alpha(\rvec)$};
-    \node[draw,ellipse,fill=gray!10,below=1.65cm of h,minimum width=2.8cm,minimum height=1.05cm,align=center] (iter) {迭代至收敛\\[-0.2em]\small $\Delta T,\Delta\tilde{\omega},\Delta g$ 达标};
-    \draw[->,very thick,blue!70!black] (e)--node[above,align=center]{\small 电流密度、复合率\\\small 热源分布}(h);
-    \draw[->,very thick,red!70!black] (h)--node[above,align=center]{\small $\Delta n,\Delta g,\Delta \alpha,\Delta \mu$}(o);
-    \draw[->,very thick,green!60!black] (o) to[bend left=18] node[below,align=center]{\small 模场重排、吸收热\\\small 空间烧孔反馈}(e);
-    \draw[->,thick,gray!75] (o.south) -- ++(0,-0.7) -| (iter.east);
-    \draw[->,thick,gray!75] (iter.west) -| (e.south);
-  \end{tikzpicture}
-  \caption{热-电-光耦合闭环的量传递示意图。器件工作点不是“先算电、再算热、最后算光”的一次性串联结果，而是电流分布、热源、温度场和模场分布反复回写直到收敛后的固定点。}
-  \label{fig:eto-flow}
-\end{figure}
 
 \section{哪些问题还可以用简化热模型，哪些已经必须做多物理场闭环}
 务实的器件建模不意味着一开始就做最复杂的全三维耦合，而是要根据问题目标选择模型层级。如果你的目标只是比较几个几何方案在低功率、阈值附近的相对热敏感性，那么集中热阻或一维稳态热模型往往足以筛掉明显不合理的方案。如果目标是估算阈值附近温升对材料增益峰和折射率的影响，则二维或简化三维热模型配合 \cref{ch:electrical} 的注入分布，已经是合理的中间层。

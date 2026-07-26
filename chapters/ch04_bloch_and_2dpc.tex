@@ -109,6 +109,8 @@ Bloch 定理的本质不是经验性地假设“平面波乘周期函数”，�
 \[
 |\lambda(\bm{R})|=1.
 \]
+这个条件的物理意思是：把模式平移一个晶格周期后，只允许它获得相位，而不允许幅值沿晶格方向系统性增长或衰减。若问题改成有限周期链、有损介质或倏逝 Bloch 解，则复 Bloch 波矢同样可能出现；但那已经超出了本章“无限周期模式分类”的任务边界。
+
 \begin{MathematicalFoundationBox}{Bloch 定理的严格数学证明}
 设周期势场满足 $V(\mathbf{r}+\mathbf{R})=V(\mathbf{r})$，其中 $\mathbf{R}$ 为任意晶格矢量。定义平移算符 $T_\mathbf{R}$ 使得 $T_\mathbf{R}f(\mathbf{r}) = f(\mathbf{r}+\mathbf{R})$。
 
@@ -133,7 +135,7 @@ $$T_\mathbf{R}\psi(\mathbf{r}) = e^{i\mathbf{k}\cdot\mathbf{R}}\psi(\mathbf{r}) 
 比较两式立得 $u(\mathbf{r}+\mathbf{R})=u(\mathbf{r})$，即 $u$ 具有晶格周期性。证毕。
 
 \textbf{关键注记}：上述证明中假设了 $|\lambda(\mathbf{R})|=1$，这对应于无损耗的保守系统。若介质存在增益或损耗，或者考虑有限结构的倏逝模，则 Bloch 波矢可以是复数：$\mathbf{k} = \mathbf{k}' + i\mathbf{k}''$。此时 $|c(\mathbf{R})| = e^{-\mathbf{k}''\cdot\mathbf{R}} \neq 1$，但仍满足乘法群同态关系。这正是激光腔中有源区建模时需要推广的理论框架。
-\end{MathematicalFoundationBox}这句话的物理意思是：把模式平移一个晶格周期后，只允许它获得相位，而不允许幅值沿晶格方向系统性增长或衰减。若问题改成有限周期链、有损介质或倏逝 Bloch 解，则复 Bloch 波矢同样可能出现；但那已经超出了本章“无限周期模式分类”的任务边界。
+\end{MathematicalFoundationBox}
 
 \begin{RigorousBox}
 Bloch 定理讨论的是无限周期结构中的模式分类。它告诉我们如何组织候选模，但并不自动告诉我们有限器件中哪个模会激射，也不直接给出阈值电流。
@@ -488,8 +490,8 @@ Bloch 定理把无限周期结构的求解组织成了按波矢分类的问题�
 
 \section*{建议继续阅读}
 \begin{itemize}
-  \item \cite{joannopoulos2008,sakoda2005} 中关于 Bloch 定理与二维光子晶体的基础章节。 建议重点关注 Bloch 定理、布里渊区与模式分类的标准表述。
+  \item \cite{joannopoulos2008,sakoda2005} 中关于 Bloch 定理与二维光子晶体的基础章节。
 
-  \item 读完下一章后再回看本章，通常会更容易理解 $\Gamma$ 点为何成为 PCSEL 模选择的核心位置。 建议重点关注本章输出量如何进入后续模型。
+  \item 读完下一章后再回看本章，通常会更容易理解 $\Gamma$ 点为何成为 PCSEL 模选择的核心位置。
 \end{itemize}
 
