@@ -83,9 +83,9 @@ PCSEL 的“反馈”与“出光”不是先后发生的两件事，而是同�
 \begin{RigorousBox}
 若只保留若干主导波分量，设其包络组成向量 $\bm{a}$，则最小线性模型可写成
 \[
-\frac{\dd \bm{a}}{\dd t}=\left(\ii\mathbf{\Omega}-\mathbf{\Gamma}+\mathbf{K}\right)\bm{a},
+\frac{\dd \bm{a}}{\dd t}=\left(\ii\bm{\Omega}-\bm{\Gamma}+\mathbf{K}\right)\bm{a},
 \]
-其中 $\mathbf{\Omega}$ 表示未耦合时的本征频率项，$\mathbf{\Gamma}$ 表示总损耗，$\mathbf{K}$ 表示由晶格傅里叶分量引入的耦合矩阵。本章并不要求立即求解这个矩阵，而是先弄清每个矩阵元在物理上对应哪一条散射路径。第 \ref{ch:cwt-min} 章会把这一步系统化。
+其中 $\bm{\Omega}$ 表示未耦合时的本征频率项，$\bm{\Gamma}$ 表示总损耗，$\mathbf{K}$ 表示由晶格傅里叶分量引入的耦合矩阵。本章并不要求立即求解这个矩阵，而是先弄清每个矩阵元在物理上对应哪一条散射路径。第 \ref{ch:cwt-min} 章会把这一步系统化。
 \end{RigorousBox}
 
 \section{为什么说 PCSEL 的反馈不是一维 DFB 的简单二维版}
@@ -161,45 +161,87 @@ d_\nu
 \end{notebox}
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
-    \fill[blue!6] (0,0) circle (1.45);
-    \draw[->] (-3.1,0)--(3.1,0) node[right]{$k_x$};
-    \draw[->] (0,-2.2)--(0,2.6) node[above]{$k_y$};
-    \draw[thick,blue!55!black] (0,0) circle (1.45);
-    \node[blue!55!black] at (0,1.78){光锥/辐射连续谱};
-    \fill[blue!75] (2.35,0.82) circle (0.08) node[above right=1pt]{$\kvec_{\parallel}$};
-    \fill[red!75] (0.95,0.82) circle (0.08) node[above left=1pt]{$\kvec_{\parallel}-\gvec$};
-    \draw[->,very thick,orange!90!black] (2.35,0.82)--node[above,sloped]{$-\gvec$}(0.95,0.82);
-    \draw[dashed,gray!70] (0.95,0.82)--(0.95,0);
-    \draw[dashed,gray!70] (2.35,0.82)--(2.35,0);
-    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,1.72);
-    \draw[->,thick,teal!70!black] (0.95,0.82)--(0.95,-1.72);
-    \node[teal!70!black,right] at (0.95,1.72){上出光通道};
-    \node[teal!70!black,right] at (0.95,-1.72){下出光通道};
-    \node[align=center,anchor=west] at (1.65,-1.25) {原始导模分量在光锥外\\周期散射后折叠进光锥内};
-  \end{tikzpicture}
+  \resizebox{0.9\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+    \begin{scope}
+      \node[font=\bfseries] at (0,2.95) {动量空间};
+      \fill[cyan!8] (0,0) circle (1.52);
+      \draw[->,gray!70] (-3.0,0)--(3.15,0) node[right]{$k_x$};
+      \draw[->,gray!70] (0,-2.15)--(0,2.35) node[above]{$k_y$};
+      \draw[very thick,cyan!60!black] (0,0) circle (1.52);
+      \node[cyan!55!black,fill=white,inner sep=1.5pt] at (0,1.83){光锥内：可辐射};
+      \node[gray!60,align=center] at (-2.15,-1.45){光锥外\\导模区};
+
+      \coordinate (guided) at (2.35,0.86);
+      \coordinate (folded) at (0.88,0.86);
+      \draw[densely dashed,gray!55] (0,0)--(guided);
+      \fill[blue!75!black] (guided) circle (0.085);
+      \node[blue!75!black,anchor=west] at (2.48,0.98){原始导模 $\kvec_\parallel$};
+      \draw[->,very thick,orange!90!black] (guided)--node[above,sloped,fill=white,inner sep=1pt]{$-\gvec$}(folded);
+      \fill[red!80!black] (folded) circle (0.085);
+      \node[red!80!black,anchor=east] at (0.75,1.15){折叠分量};
+      \draw[->,thick,teal!70!black] (folded)--(0.88,2.15);
+      \draw[->,thick,teal!70!black] (folded)--(0.88,-1.55);
+      \node[teal!65!black,anchor=west] at (1.05,2.05){上出光};
+      \node[teal!65!black,anchor=west] at (1.05,-1.45){下出光};
+    \end{scope}
+
+    \begin{scope}[shift={(6.7,0)}]
+      \node[font=\bfseries] at (0,2.95) {实空间对应};
+      \shade[left color=gray!12,right color=gray!5] (-2.65,-0.55) rectangle (2.65,0.45);
+      \draw[thick] (-2.65,0.45)--(2.65,0.45);
+      \foreach \x in {-2.2,-1.55,...,2.2} {
+        \fill[white] (\x,0.18) ellipse (0.16 and 0.10);
+        \draw[gray!55] (\x,0.18) ellipse (0.16 and 0.10);
+      }
+      \draw[->,very thick,blue!75!black] (-2.35,0.9)--(-0.55,0.9)
+        node[midway,above]{面内导模};
+      \draw[->,very thick,orange!90!black] (-0.25,0.72)--(0.35,0.72)
+        node[midway,below=2pt]{$\gvec$};
+      \foreach \x in {-0.7,-0.35,0,0.35,0.7} {
+        \draw[->,thick,teal!70!black] (\x,0.45)--(\x,2.25);
+      }
+      \node[teal!65!black] at (0,2.52){相干面发射};
+      \node[align=center,text width=5.2cm] at (0,-1.25)
+      {周期结构提供倒格矢，把光锥外的面内动量折叠到光锥内。};
+    \end{scope}
+  \end{tikzpicture}%
+  }
   \caption{动量折叠把面内导模分量送入辐射连续谱的示意图。蓝点表示原始导模分量，橙色箭头表示由倒格矢提供的动量转移，红点表示折叠后的分量；一旦落入光锥，便可向上下自由空间通道辐射。}
   \label{fig:lightcone_coupling}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=1.08cm,y=1.08cm]
-    \draw[->] (0,0)--(4.9,0) node[right]{$|\kvec_\parallel|$};
-    \draw[->] (0,0)--(0,3.8) node[above]{$\omega$};
-    \fill[blue!6] (0,0)--(4.35,3.25)--(0,3.25)--cycle;
-    \draw[thick,gray!80] (0,0)--(4.35,3.25) node[above right]{光锥边界};
-    \draw[thick,blue!75] plot[smooth] coordinates {(0.45,2.05) (1.2,2.22) (2.05,2.55) (2.9,3.0) (3.7,3.48)};
-    \draw[thick,red!75,densely dashed] plot[smooth] coordinates {(0.55,3.48) (1.05,3.22) (1.55,2.94) (2.05,2.66) (2.55,2.42)};
-    \draw[dashed,gray!70] (3.05,0)--(3.05,3.25);
-    \draw[dashed,gray!70] (1.55,0)--(1.55,3.25);
-    \draw[->,very thick,orange!90!black] (3.05,3.12)--node[above]{$-\gvec$}(1.55,2.87);
-    \fill[blue!75] (3.05,3.12) circle (0.05);
-    \fill[red!75] (1.55,2.87) circle (0.05);
-    \node[blue!75] at (3.35,2.7){原始导模色散};
-    \node[red!75] at (2.75,2.05){折叠后的等效分支};
-    \node[align=center] at (1.2,0.55){进入光锥后\\可泄漏到自由空间};
-  \end{tikzpicture}
+  \resizebox{0.65\textwidth}{!}{%
+  \begin{tikzpicture}[x=1.12cm,y=1cm,>=Latex,font=\small]
+    \draw[->] (0,0)--(6.1,0) node[right]{$|\kvec_\parallel|$};
+    \draw[->] (0,0)--(0,4.25) node[above]{$\omega$};
+    \fill[cyan!8] (0,0)--(0,3.75)--(5.15,3.75)--cycle;
+    \draw[very thick,gray!75] (0,0)--(5.15,3.75)
+      node[above right,fill=white,inner sep=1pt,font=\scriptsize]{光锥边界};
+    \node[cyan!55!black,align=center,font=\scriptsize] at (1.05,3.25){辐射\\连续谱};
+    \node[gray!60,align=center,font=\scriptsize] at (4.85,1.10){光锥外\\导模区};
+
+    \draw[very thick,blue!75!black]
+      plot[smooth] coordinates {(1.45,1.55) (2.25,1.85) (3.05,2.30) (3.85,2.90) (4.65,3.55)};
+    \node[blue!75!black,fill=white,inner sep=1pt,font=\scriptsize] at (4.38,2.68){原始导模};
+
+    \draw[very thick,red!80!black,densely dashed]
+      plot[smooth] coordinates {(0.55,2.55) (1.25,2.42) (1.95,2.38) (2.65,2.48) (3.35,2.75)};
+    \node[red!80!black,fill=white,inner sep=1pt,font=\scriptsize] at (2.10,2.98){折叠分支};
+
+    \coordinate (p1) at (3.85,2.90);
+    \coordinate (p2) at (1.55,2.40);
+    \draw[densely dashed,gray!60] (p1)--(3.85,0);
+    \draw[densely dashed,gray!60] (p2)--(1.55,0);
+    \draw[->,very thick,orange!90!black] (p1)--node[above,fill=white,inner sep=1pt]{$-\gvec$}(p2);
+    \fill[blue!75!black] (p1) circle (0.065);
+    \fill[red!80!black] (p2) circle (0.065);
+    \draw[->,thick,teal!70!black] (p2)--(1.55,3.28);
+    \node[teal!65!black,anchor=west,font=\scriptsize] at (1.70,3.20){自由空间通道};
+  \end{tikzpicture}%
+  }
   \caption{平板导模色散与光锥边界示意。周期散射并不创造新色散，而是把原本位于光锥外的导模分量平移到光锥内；产生辐射的是折叠后的分支与自由空间连续谱的相交。}
   \label{fig:lightcone_dispersion}
 \end{figure}
@@ -217,9 +259,9 @@ R_x\\S_x\\R_y\\S_y
 \end{bmatrix}
 =
 \left(
-\mathbf{\Omega}
+\bm{\Omega}
 -
-\mathbf{\Gamma}
+\bm{\Gamma}
 +
 \mathbf{K}
 \right)
@@ -228,7 +270,7 @@ R_x\\S_x\\R_y\\S_y
 \end{bmatrix}.
 \label{eq:coupling_basic}
 \end{equation}
-这里 $\mathbf{K}$ 的非对角元代表不同传播方向之间的散射耦合，$\mathbf{\Gamma}$ 中则包含辐射损耗和内部损耗。\cref{fig:ch06_surface_emission_mechanisms}直观展示了三种主要的表面发射机制及其统一描述。
+这里 $\mathbf{K}$ 的非对角元代表不同传播方向之间的散射耦合，$\bm{\Gamma}$ 中则包含辐射损耗和内部损耗。\cref{fig:ch06_surface_emission_mechanisms}直观展示了三种主要的表面发射机制及其统一描述。
 
 \input{figures/fig_ch06_surface_emission_mechanisms}
 

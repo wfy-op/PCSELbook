@@ -85,7 +85,7 @@ PCSEL 更常见的是多模或近简并模情形。此时把单个振幅 $a$ 升
 \begin{align}
 \dot{\bm{a}}
 &=
-\left(\ii\mathbf{\Omega}-\mathbf{\Gamma}\right)\bm{a}
+\left(\ii\bm{\Omega}-\bm{\Gamma}\right)\bm{a}
 +
 \mathbf{K}\bm{s}_+,
 \label{eq:tcmt_multi_a}\\
@@ -94,7 +94,7 @@ PCSEL 更常见的是多模或近简并模情形。此时把单个振幅 $a$ 升
 \mathbf{C}\bm{s}_+ + \mathbf{D}\bm{a}.
 \label{eq:tcmt_multi_s}
 \end{align}
-其中 $\mathbf{\Omega}$ 是模间保守耦合矩阵，$\mathbf{\Gamma}$ 是损耗与辐射矩阵。到这里你会发现，这和前两章的 CWT 形式已经非常接近。区别不在数学结构，而在基底和参数来源：
+其中 $\bm{\Omega}$ 是模间保守耦合矩阵，$\bm{\Gamma}$ 是损耗与辐射矩阵。到这里你会发现，这和前两章的 CWT 形式已经非常接近。区别不在数学结构，而在基底和参数来源：
 \begin{itemize}
   \item 在 CWT 中，矩阵索引更偏向内部平面波或“平面波 $\times$ 纵模”基底；
   \item 在 TCMT 中，矩阵索引更偏向已经形成的共振超模以及它们与端口的关系。
@@ -416,7 +416,7 @@ Noda 等人的高功率 PCSEL 路线中经常出现两个参数族：一个是�
 
 在 CWT 语言中，Hermitian 耦合主要来自介电常数 Fourier 分量把四个基本 Bloch 波彼此连接；它决定 $\Gamma$ 点附近模式的保守分裂、群速度曲率和有限尺寸包络。非 Hermitian 耦合则来自同一组 Bloch 波共享上方空气、下方衬底或背面反射器形成的辐射通道；它进入有效矩阵的虚部，改写辐射常数和损耗排序。
 
-在 TCMT 语言中，前者更像共振模之间的内部耦合矩阵 $\mathbf{\Omega}$，后者更像通过共同端口诱导的耗散矩阵 $\mathbf{\Gamma}_{\mathrm{rad}}$。在微扰语言中，双晶格间距、孔径比例、背面 DBR 相位和 p 包层厚度都不是单纯“调频率”的旋钮，而是在同时改变复频率的实部与虚部。若只追踪频率分裂而不追踪辐射常数曲率，就会漏掉大面积单模设计真正依赖的损耗裕量。
+在 TCMT 语言中，前者更像共振模之间的内部耦合矩阵 $\bm{\Omega}$，后者更像通过共同端口诱导的耗散矩阵 $\bm{\Gamma}_{\mathrm{rad}}$。在微扰语言中，双晶格间距、孔径比例、背面 DBR 相位和 p 包层厚度都不是单纯“调频率”的旋钮，而是在同时改变复频率的实部与虚部。若只追踪频率分裂而不追踪辐射常数曲率，就会漏掉大面积单模设计真正依赖的损耗裕量。
 
 因此，本书采用的读法是：Hermitian/非 Hermitian 控制不是另一套独立理论，而是 CWT、TCMT 与开放系统微扰在高功率 PCSEL 上的一次交汇。它的任务是把目标模与竞争模的\textbf{复频率排序}做成可设计量，而不是只把某个被动 $Q$ 或某个耦合系数推到极值。
 \end{ApplicationBox}

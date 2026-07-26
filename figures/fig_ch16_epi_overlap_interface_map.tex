@@ -1,0 +1,52 @@
+% !TEX root = ../main.tex
+% Content-only figure: vertical stack interface variables
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    layer/.style={draw=black!55,line width=0.45pt},
+    tag/.style={draw=black!55,rounded corners=2pt,fill=white,align=center,font=\footnotesize,inner sep=3pt},
+    metric/.style={draw=blue!55!black,rounded corners=2pt,fill=blue!6,align=left,font=\footnotesize,text width=3.8cm},
+    loss/.style={draw=red!60!black,rounded corners=2pt,fill=red!6,align=left,font=\footnotesize,text width=3.8cm},
+    arrow/.style={->,thick}
+  }
+
+  \node[font=\bfseries] at (7.2,5.2) {外延层不是背景板，而是把冷腔模翻译成器件模的接口};
+
+  \fill[layer,gray!20] (0.6,0.5) rectangle (6.5,1.05);
+  \fill[layer,blue!12] (0.6,1.05) rectangle (6.5,1.9);
+  \fill[layer,green!14] (0.6,1.9) rectangle (6.5,2.45);
+  \fill[layer,yellow!32] (0.6,2.45) rectangle (6.5,2.78);
+  \fill[layer,green!14] (0.6,2.78) rectangle (6.5,3.35);
+  \fill[layer,orange!20] (0.6,3.35) rectangle (6.5,4.05);
+  \fill[layer,red!14] (0.6,4.05) rectangle (6.5,4.65);
+
+  \node[anchor=east,font=\scriptsize] at (0.45,0.78) {衬底/下包层};
+  \node[anchor=east,font=\scriptsize] at (0.45,1.48) {下 SCH};
+  \node[anchor=east,font=\scriptsize] at (0.45,2.18) {波导层};
+  \node[anchor=east,font=\scriptsize] at (0.45,2.62) {MQW};
+  \node[anchor=east,font=\scriptsize] at (0.45,3.08) {上 SCH};
+  \node[anchor=east,font=\scriptsize] at (0.45,3.70) {PC 层};
+  \node[anchor=east,font=\scriptsize] at (0.45,4.36) {p 接触/金属邻近};
+
+  \draw[very thick,blue!70!black,smooth] plot coordinates
+    {(0.85,0.8) (1.4,1.25) (2.1,2.05) (3.0,2.55) (3.7,2.75) (4.7,3.05) (5.7,3.55) (6.25,4.15)};
+  \node[tag] at (4.4,4.55) {纵向模场\\$\varepsilon |E(z)|^2$};
+
+  \draw[arrow,green!45!black] (6.75,2.62) -- (7.8,2.62);
+  \node[metric,anchor=west] (gain) at (7.95,3.1) {
+    \textbf{增益接口}\\
+    $\Gamma_{\mathrm{opt}}$\\
+    MQW 与模场重叠\\
+    决定材料增益如何变成模增益
+  };
+  \node[loss,anchor=west] (loss) at (7.95,1.35) {
+    \textbf{损耗接口}\\
+    $\Gamma_{\mathrm{loss}}$\\
+    掺杂层/金属/损伤层重叠\\
+    决定内部损耗是否被放大
+  };
+  \draw[arrow,green!45!black] (6.1,2.62) -- (gain.west);
+  \draw[arrow,red!60!black] (6.2,4.30) -- (loss.west);
+
+\end{tikzpicture}%
+}

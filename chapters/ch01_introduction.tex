@@ -169,6 +169,15 @@ PCSEL 的问题意识不是”如何在光子晶体里做出激光”，而是�
 
 对初学者而言，最容易把 PCSEL 想成”一个有孔的出光面”。这种理解忽略了面内反馈与辐射通道的形成过程。下面我们分步描述 PCSEL 的出光过程，将整条物理链条连贯地呈现出来\cite{noda2023tutorial}。
 
+\cref{fig:ch01_pcsel_light_output_chain} 把这条链条压缩成一张读图用的守门图：左侧是纵向层栈，右侧是从有源增益到真实模式选择的五个关口。它的重点不是给出某个具体器件的几何参数，而是提醒读者每一步需要交付什么证据。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch01_pcsel_light_output_chain}
+  \caption{PCSEL 从有源导模到法向出光的五步证据链。量子阱先提供材料增益，层栈形成面内导模，二维光子晶体在 $\Gamma^{(2)}$ 点建立面内反馈，周期散射打开法向辐射通道，最后由损耗、增益、有限尺寸、注入和热反馈共同决定真实起振模式。}
+  \label{fig:ch01_pcsel_light_output_chain}
+\end{figure}
+
 \subsection{第一步：有源区产生导模}
 电注入使量子阱有源区产生受激辐射。有源层的折射率在整个外延层栈中通常最高，因此辐射的光场以平面导波模式被束缚在以有源层为核心的薄板波导中，沿面内方向传播。光子晶体层紧邻有源层，使得导模场通过倏逝耦合”感受到”周期折射率调制。定义光场在有源层和光子晶体层的约束因子（confinement factor）分别为 $\Gamma_{\mathrm{act}}$ 和 $\Gamma_{\mathrm{pc}}$。PCSEL 的结构允许对活性层–包层折射率差进行较大的调控，因此每个量子阱的 $\Gamma_{\mathrm{act}}$ 通常可达 2\%--3\%，高于 VCSEL 的典型值（约 1\%--1.5\%）\cite{noda2023tutorial}。$\Gamma_{\mathrm{pc}}$ 则决定了面内光学耦合的整体强度。
 

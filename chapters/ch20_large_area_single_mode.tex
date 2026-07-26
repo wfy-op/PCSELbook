@@ -93,6 +93,15 @@ g_{\mathrm{mod},i} = \frac{\int_{V_{\mathrm{act}}} g_{\mathrm{mat}}(n(\rvec), T(
   \end{tabularx}
 \end{table}
 
+\cref{tab:modal_margin_handoff} 把模裕量拆成了不同求解模块，\cref{fig:ch20_modal_margin_map} 则把同一件事放回工作窗口中看：目标模真正需要赢的不是某一个名义点，而是一片对电流、温升和工艺扰动仍然保持正裕量的区域。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch20_modal_margin_map}
+  \caption{大面积单模设计的净模裕量地图。绿色区域表示目标模相对竞争模保持正净增益裕量的工作窗口；边界可能来自热漂移、竞争模增益追上、边缘损耗不足或注入非均匀。}
+  \label{fig:ch20_modal_margin_map}
+\end{figure}
+
 \section{第一尺度：单胞与 Gamma 点物理决定的是候选资格}
 设计的第一尺度是单胞尺度。这里关心的问题是：在无限周期近似下，哪类 Gamma 点模具有较低被动辐射损耗，哪类近场对称性更容易给出期望偏振和远场，哪类对称性破缺或双晶格扰动能把目标模与竞争模分开。这一层上的典型设计变量包括晶格常数 $a$、孔半径 $r$、占空比、刻蚀深度、双晶格位移、单胞形状微扰和上下层折射率对比等。
 

@@ -4,7 +4,7 @@
 % Key insight: Current density peaks near electrode edges due to lateral resistance
 
 \begin{tikzpicture}[
-  scale=1.00,
+  scale=0.92,
   transform shape,
   axis_label/.style={font=\small},
   tick_label/.style={font=\footnotesize}
@@ -31,7 +31,7 @@
       
       % Square p-contact boundary
       \draw[ultra thick, dashed] (1.5,1.5) rectangle (5.5,5.5);
-      \node[anchor=north west] at (5.6, 5.5) {\small $p$型接触边界};
+      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize] at (5.65, 5.72) {$p$型接触边界};
       
       % High current density regions (edges/corners)
       \fill[red!60, opacity=0.5] (1.5,1.5) rectangle (2.0,2.0);
@@ -58,15 +58,17 @@
       }
       
       % Annotation arrows
-      \draw[->, thick, red] (6.5, 5.0) -- (5.8, 5.0) node[midway, above] {\small 边缘电流密集};
-      \draw[->, thick, blue] (6.5, 2.0) -- (4.0, 3.2) node[midway, right] {\small 中心电流稀疏};
+      \draw[->, thick, red] (6.35, 5.20) -- (5.65, 5.15);
+      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize, red] at (6.25,5.45) {边缘电流密集};
+      \draw[->, thick, blue] (6.35, 2.15) -- (4.0, 3.2);
+      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize, blue] at (6.25,2.35) {中心电流稀疏};
       
       % Title
       \node[anchor=south, font=\large\bfseries] at (3.5, 7.8) {(a)电流密度分布 $J(x,y)$};
     \end{scope}
     
     % ========== Colorbar ==========
-    \begin{scope}[shift={(8,2)}]
+    \begin{scope}[shift={(7.8,2.2)}]
       % Gradient bar
       \shade[top color=red, middle color=yellow, bottom color=blue] 
         (0,0) rectangle (0.8, 4);
@@ -84,17 +86,17 @@
       \node[anchor=south, rotate=90, axis_label] at (-0.5, 2) {电流密度 $J$（千安每平方厘米）};
       
       % High/Low markers
-      \node[anchor=west, font=\small, red] at (1.1, 4) {高 $J$};
-      \node[anchor=west, font=\small, blue] at (1.1, 0) {低 $J$};
+      \node[anchor=west, font=\scriptsize, red] at (1.1, 4.15) {高 $J$};
+      \node[anchor=west, font=\scriptsize, blue] at (1.1, -0.15) {低 $J$};
     \end{scope}
     
     % ========== Cross-section plot ==========
-    \begin{scope}[shift={(8,-2)}]
-      \node[anchor=south, font=\large\bfseries] at (2, 3.8) {(b) 截面分布};
+    \begin{scope}[shift={(9.65,0.65)}]
+      \node[anchor=south, font=\large\bfseries] at (2, 3.35) {(b) 截面分布};
       
       % Axes
-      \draw[->, thick] (0,0) -- (4.5,0) node[right, axis_label] {$x$ ($\mu$m)};
-      \draw[->, thick] (0,0) -- (0,3.5) node[above, axis_label] {$J(x)$};
+      \draw[->, thick] (0,0) -- (4.2,0) node[right, axis_label] {$x$ ($\mu$m)};
+      \draw[->, thick] (0,0) -- (0,3.15) node[above, axis_label] {$J(x)$};
       
       % Current density profile (peaks at edges)
       \draw[thick, red, domain=0:4, samples=100] plot (\x, {
@@ -102,8 +104,8 @@
       });
       
       % Contact edges
-      \draw[dashed] (0.5, 0) -- (0.5, 3.2) node[above] {\scriptsize 边缘};
-      \draw[dashed] (3.5, 0) -- (3.5, 3.2) node[above] {\scriptsize 边缘};
+      \draw[dashed] (0.5, 0) -- (0.5, 3.0) node[above] {\scriptsize 边缘};
+      \draw[dashed] (3.5, 0) -- (3.5, 3.0) node[above] {\scriptsize 边缘};
       
       % Peak markers
       \draw[<->, red, thick] (0.5, 2.8) -- (0.5, 3.0);
@@ -120,17 +122,17 @@
     
     % ========== Physics explanation box ==========
     \begin{scope}[shift={(0,-2.5)}]
-      \draw[rounded corners, fill=orange!15] (-0.5,-1.5) rectangle (14.5, 0.5);
-      \node[anchor=west, font=\small] at (-0.3, 0.1) {
+      \draw[rounded corners, fill=orange!15] (-0.5,-1.48) rectangle (14.2, 0.45);
+      \node[anchor=west, font=\footnotesize] at (-0.3, 0.1) {
         \textbf{物理机制}: 电流拥挤效应的成因
       };
-      \node[anchor=west, font=\small] at (-0.3, -0.4) {
+      \node[anchor=west, font=\footnotesize] at (-0.3, -0.35) {
         • 横向电阻：空穴在p 型层中横向流动时遇到电阻，倾向于走最短路径（边缘）
       };
-      \node[anchor=west, font=\small] at (-0.3, -0.9) {
+      \node[anchor=west, font=\footnotesize] at (-0.3, -0.80) {
         • 接触电阻：金属 - 半导体界面的非理想欧姆接触加剧边缘集中
       };
-      \node[anchor=west, font=\small] at (-0.3, -1.4) {
+      \node[anchor=west, font=\footnotesize] at (-0.3, -1.20) {
         \textbf{后果}: 边缘处载流子浓度过高 $\Rightarrow$ 俄歇复合增强 $\Rightarrow$ 效率下降 + 局部发热
       };
     \end{scope}

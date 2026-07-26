@@ -1,59 +1,67 @@
 % !TEX root = ../main.tex
 % Figure content only: inserted inside an outer figure environment in ch08b
-\begin{tikzpicture}[x=0.83cm,y=0.83cm]
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
   \tikzset{
-    paneltitle/.style={font=\bfseries},
-    box/.style={draw,thick,rounded corners,fill=blue!5,minimum width=2.5cm,minimum height=0.9cm,align=center},
-    mode/.style={draw,thick,circle,fill=yellow!18,minimum size=0.9cm},
-    flow/.style={->,>=Stealth,very thick}
+    panel/.style={draw=gray!35,rounded corners=2pt,fill=gray!3},
+    slab/.style={draw=gray!65,fill=gray!14},
+    port/.style={draw=teal!65!black,fill=teal!6,rounded corners=2pt,align=center,font=\scriptsize},
+    mode/.style={draw=gray!60,fill=yellow!15,circle,minimum size=0.62cm,align=center,font=\scriptsize},
+    rad/.style={->,very thick,teal!70!black},
+    leak/.style={->,thick,orange!90!black},
+    note/.style={align=center,font=\scriptsize,text width=3.7cm}
   }
 
-  \begin{scope}[xshift=0cm]
-    \node[paneltitle] at (0,2.4) {(a) 对称保护 BIC};
-    \node[mode] (m) at (0,0.9) {模};
-    \node[box,fill=green!8] (up) at (-1.45,-0.7) {上辐射通道};
-    \node[box,fill=green!8] (dn) at (1.45,-0.7) {下辐射通道};
-    \draw[flow,orange!85!black] (m) -- node[midway,left,font=\scriptsize] {$d_\uparrow$} (up);
-    \draw[flow,orange!85!black] (m) -- node[midway,right,font=\scriptsize] {$d_\downarrow$} (dn);
-    \node[draw=red!70,thick,rounded corners,fill=red!6,align=center,font=\scriptsize,text width=3.0cm] at (0,-2.0)
-      {$d_\uparrow+d_\downarrow=0$\\对称性强制相消};
+  % (a) symmetry-protected BIC
+  \begin{scope}[shift={(-5.2,0)}]
+    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \node[font=\bfseries] at (0,2.12) {(a) 对称性禁耦合};
+    \draw[slab] (-1.8,-0.12) rectangle (1.8,0.22);
+    \foreach \x in {-1.35,-0.9,...,1.35} {
+      \fill[white] (\x,0.05) circle (0.08);
+      \draw[gray!55] (\x,0.05) circle (0.08);
+    }
+    \fill[red!28] (-0.85,0.48) ellipse (0.52 and 0.20);
+    \fill[blue!25] (0.85,0.48) ellipse (0.52 and 0.20);
+    \node[font=\scriptsize] at (0,0.86){奇/暗模};
+    \node[port] at (0,1.45){法向辐射通道};
+    \draw[rad,densely dashed] (-0.45,0.66)--(-0.45,1.20);
+    \draw[rad,densely dashed] (0.45,0.66)--(0.45,1.20);
+    \draw[red!75!black,very thick] (-0.18,1.15)--(0.18,1.51);
+    \draw[red!75!black,very thick] (-0.18,1.51)--(0.18,1.15);
+    \node[note] at (0,-1.22)
+      {模式表示与法向通道不匹配，辐射矩阵元被对称性压成零。};
   \end{scope}
 
-  \begin{scope}[xshift=4.9cm]
-    \node[paneltitle] at (0,2.4) {(b) 干涉型 BIC};
-    \node[mode,fill=orange!20] (m1) at (-0.95,1.0) {模 1};
-    \node[mode,fill=orange!20] (m2) at (0.95,1.0) {模 2};
-    \node[box,fill=cyan!8,minimum width=3.0cm] (cont) at (0,-0.7) {共享辐射连续体};
-    \draw[flow,blue!70!black] (m1) -- (cont);
-    \draw[flow,blue!70!black] (m2) -- (cont);
-    \draw[<->,thick,purple!70] (m1) -- node[above,font=\scriptsize] {耦合} (m2);
-    \node[draw=purple!70,thick,rounded corners,fill=purple!6,align=center,font=\scriptsize,text width=3.0cm] at (0,-2.0)
-      {特定参数下\\某一本征态的辐射分量为零};
+  % (b) Friedrich-Wintgen interference
+  \begin{scope}
+    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \node[font=\bfseries] at (0,2.12) {(b) 干涉型 BIC};
+    \node[mode,fill=orange!18] (m1) at (-0.82,0.82){模 1};
+    \node[mode,fill=orange!18] (m2) at (0.82,0.82){模 2};
+    \node[port,minimum width=2.6cm] (cont) at (0,-0.35){共享辐射连续谱};
+    \draw[leak] (m1)--node[left,font=\scriptsize] {$+$} (cont);
+    \draw[leak] (m2)--node[right,font=\scriptsize] {$-$} (cont);
+    \draw[<->,thick,purple!70!black] (m1)--node[above,font=\scriptsize]{近场耦合}(m2);
+    \node[draw=purple!65!black,fill=purple!6,rounded corners=2pt,font=\scriptsize,align=center]
+      at (0,-1.10) {$d_1+d_2=0$};
+    \node[note] at (0,-1.68)
+      {两个共振模向同一连续谱泄漏，某个本征组合发生相消。};
   \end{scope}
 
-  \begin{scope}[xshift=9.8cm]
-    \node[paneltitle] at (0,2.4) {(c) quasi-BIC 工作区};
-    \draw[->,thick] (-1.4,-1.7) -- (2.1,-1.7) node[right] {$\delta$};
-    \draw[->,thick] (-1.4,-1.7) -- (-1.4,1.5) node[above] {$Q$};
-    \draw[red!75,very thick,domain=-1.0:1.8,samples=120]
-      plot(\x,{1.7*exp(-1.45*(\x+1.0)) - 1.05});
-    \draw[dashed,gray] (-1.0,-1.7) -- (-1.0,1.3);
-    \node[font=\scriptsize,gray,rotate=90] at (-1.18,0.2) {$\delta\to 0$};
-    \draw[green!60!black,thick,densely dashed] (-0.1,-1.1) rectangle (1.2,-0.15);
-    \node[font=\scriptsize,green!50!black,align=center] at (0.55,-0.65) {可用的\\quasi-BIC};
-    \node[font=\scriptsize] at (0.2,-2.05) {$Q\propto \delta^{-2}$};
+  % (c) useful quasi-BIC window
+  \begin{scope}[shift={(5.2,0)}]
+    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \node[font=\bfseries] at (0,2.12) {(c) quasi-BIC 工作区};
+    \draw[->,thick] (-1.55,-1.18)--(1.75,-1.18) node[right]{$\delta$};
+    \draw[->,thick] (-1.55,-1.18)--(-1.55,1.40) node[above]{$Q_{\mathrm{rad}}$};
+    \draw[red!75!black,very thick,domain=-1.18:1.48,samples=120]
+      plot(\x,{1.8*exp(-1.2*(\x+1.18))-0.55});
+    \draw[dashed,gray!65] (-1.18,-1.18)--(-1.18,1.22);
+    \node[font=\scriptsize,gray!70,rotate=90] at (-1.37,0.22){理想 BIC};
+    \draw[green!60!black,thick,densely dashed] (-0.18,-0.90) rectangle (1.05,-0.12);
+    \node[font=\scriptsize,green!45!black,align=center] at (0.43,-0.50)
+      {有限出光\\可控损耗};
+    \draw[rad] (0.70,-0.08)--(0.70,0.62);
+    \node[font=\scriptsize] at (0.32,-1.58){$Q_{\mathrm{rad}}\propto\delta^{-2}$};
   \end{scope}
-
-  \node[
-    draw,
-    rounded corners,
-    fill=gray!6,
-    align=left,
-    font=\scriptsize,
-    text width=9.8cm
-  ] at (4.9,-3.6) {
-    \textbf{读图方式：}
-    左图强调辐射通道因对称性被强制抵消；中图强调两个共振模可通过共享连续体形成相消干涉；
-    右图说明真实 PCSEL 往往工作在 quasi-BIC 区域，通过微小对称破缺打开有限但可控的出射耦合。
-  };
 \end{tikzpicture}

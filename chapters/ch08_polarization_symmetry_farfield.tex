@@ -235,6 +235,15 @@ g\in \mathcal{G}\;\middle|\; g\kvec=\kvec+\gvec,\ \gvec\in \text{倒格矢集合
 上述判据的正式版本可写成“张量积包含全对称表示”。但在初次使用阶段，只需记住：\textbf{模式 irrep 必须与法向辐射通道 irrep 相容，耦合才可能非零。}
 \end{RigorousBox}
 
+\cref{fig:ch08_irrep_radiation_gate} 给出这条规则的最小工作流。它把“看场图觉得亮或暗”的经验判断，改写成 three-step gate：先确定 little group，再给模式和辐射通道分别贴 irrep，最后检查张量积是否含全对称表示。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch08_irrep_radiation_gate}
+  \caption{Gamma 点模式的 irrep--辐射通道守门流程。in-plane little-group 匹配只决定 direct normal radiation 是否被对称性允许；真正的辐射强度仍需结合三维 slab、纵向奇偶性、层栈不对称和有限尺寸计算。}
+  \label{fig:ch08_irrep_radiation_gate}
+\end{figure}
+
 \begin{PitfallBox}
 必须把一句话反复记住：\textbf{in-plane little-group 匹配只是必要的第一层筛选，不是三维 slab 中法向辐射强度的充分判据。} 一个模式即便在平面内表示上允许 direct normal radiation，真实辐射强度仍会继续受纵向奇偶性、层栈不对称、上下光锥和有限厚度矢量混合的共同影响。
 \end{PitfallBox}

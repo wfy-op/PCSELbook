@@ -1,0 +1,31 @@
+% !TEX root = ../main.tex
+% Content-only figure: electro-thermal-optical fixed-point iteration
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    solver/.style={draw=black!60,rounded corners=2pt,fill=white,minimum width=3.8cm,minimum height=1.18cm,align=center,line width=0.6pt},
+    metric/.style={draw=black!50,rounded corners=2pt,fill=gray!6,minimum width=3.5cm,minimum height=0.82cm,align=center,font=\footnotesize},
+    arr/.style={->,thick},
+    loop/.style={->,thick,dashed}
+  }
+
+  \node[solver,fill=blue!8] (elec) at (0,3.1) {电学求解\\$\phi,n,p,\bm J$\\接触与复合};
+  \node[solver,fill=red!8] (heat) at (5.0,3.1) {热学求解\\$T(\rvec)$\\$Q_{\mathrm{Joule}},Q_{\mathrm{nr}},Q_{\mathrm{abs}}$};
+  \node[solver,fill=green!8] (opt) at (10.0,3.1) {光学求解\\$\tilde\omega,Q,\text{远场}$\\$n,g,\alpha$ 回写后更新};
+  \node[solver,fill=yellow!14] (judge) at (15.0,3.1) {固定点判据\\$\Delta T,\Delta\lambda,\Delta I_{\mathrm{th}}$\\连续收敛};
+
+  \draw[arr,blue!70!black] (elec) -- node[above,font=\scriptsize]{电流密度与复合热源} (heat);
+  \draw[arr,red!70!black] (heat) -- node[above,font=\scriptsize]{$\Delta n,\Delta g,\Delta\alpha,\Delta\mu$} (opt);
+  \draw[arr,green!55!black] (opt) -- node[above,font=\scriptsize]{模式排序与吸收热} (judge);
+  \draw[loop,orange!80!black] (judge.south) .. controls (12.4,0.75) and (2.8,0.75) .. node[below,font=\scriptsize]{若未收敛，更新材料参数和工作点再迭代} (elec.south);
+
+  \node[metric] at (0,1.35) {不只输出平均温升\\而是 $T(x,y,z)$};
+  \node[metric] at (5.0,1.35) {不只输出热阻\\而是热源位置};
+  \node[metric] at (10.0,1.35) {不只输出冷腔 $Q$\\而是工作点模排序};
+  \node[metric] at (15.0,1.35) {不只输出一次图\\而是稳定工作窗口};
+
+  \node[draw=orange!70!black,rounded corners=2pt,fill=orange!7,align=center,text width=14.2cm,font=\footnotesize] at (7.5,0.18) {
+    读图规则：热-电-光耦合不是“电学 $\rightarrow$ 热学 $\rightarrow$ 光学”的一次串联，而是一个固定点问题；只有收敛后的模式、温度和阈值裕量才可作为器件工作点证据。
+  };
+\end{tikzpicture}%
+}

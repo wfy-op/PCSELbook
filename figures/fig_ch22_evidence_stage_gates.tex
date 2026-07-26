@@ -1,0 +1,33 @@
+% !TEX root = ../main.tex
+% Content-only figure: evidence gates for PCSEL workflow
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    level/.style={draw=black!60,rounded corners=2pt,minimum width=3.25cm,minimum height=1.1cm,align=center,line width=0.6pt},
+    gate/.style={draw=black!50,rounded corners=2pt,fill=gray!6,minimum width=3.25cm,minimum height=0.78cm,align=center,font=\footnotesize},
+    arr/.style={->,thick,blue!65!black},
+    stop/.style={draw=red!65!black,rounded corners=2pt,fill=red!6,align=left,font=\footnotesize}
+  }
+
+  \node[level,fill=blue!8] (l1) at (0,3.0) {L1 候选模\\能带、irrep、冷腔 $Q$};
+  \node[level,fill=green!8] (l2) at (4.0,3.0) {L2 光学阈值\\损耗、重叠、远场};
+  \node[level,fill=yellow!14] (l3) at (8.0,3.0) {L3 电学映射\\$J,N,I_{\mathrm{th}}$ 来源};
+  \node[level,fill=red!8] (l4) at (12.0,3.0) {L4 工作窗口\\热回写、稳定性、鲁棒性};
+  \node[level,fill=purple!8] (exp) at (16.0,3.0) {实验回验\\校准、预测、盲测};
+
+  \draw[arr] (l1) -- (l2);
+  \draw[arr] (l2) -- (l3);
+  \draw[arr] (l3) -- (l4);
+  \draw[arr] (l4) -- (exp);
+
+  \node[gate] at (0,1.45) {交付：候选目录\\禁止：阈值电流};
+  \node[gate] at (4.0,1.45) {交付：$g_{\mathrm{th}}$ 排序\\禁止：器件稳定};
+  \node[gate] at (8.0,1.45) {交付：注入来源\\禁止：忽略温升};
+  \node[gate] at (12.0,1.45) {交付：工作窗口\\禁止：只报名义值};
+  \node[gate] at (16.0,1.45) {交付：外推能力\\禁止：事后拟合冒充预测};
+
+  \node[stop,text width=15.7cm,anchor=north west] at (-0.2,0.45) {
+    每跨一级，都必须多交一类证据：L1 到 L2 需要损耗与重叠，L2 到 L3 需要注入与复合，L3 到 L4 需要温度场与回写，L4 到实验需要不确定度和独立验证。
+  };
+\end{tikzpicture}%
+}

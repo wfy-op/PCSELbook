@@ -1,0 +1,34 @@
+% !TEX root = ../main.tex
+% Content-only figure: irrep-radiation selection rule workflow
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    stagebox/.style={draw=black!60,rounded corners=2pt,fill=white,minimum width=3.25cm,minimum height=1.05cm,align=center,line width=0.6pt},
+    decision/.style={draw=black!60,diamond,aspect=2.2,inner sep=1pt,fill=yellow!12,align=center,font=\footnotesize},
+    outcome/.style={draw=black!55,rounded corners=2pt,minimum width=3.3cm,minimum height=0.95cm,align=center,font=\footnotesize},
+    arr/.style={->,thick,blue!65!black},
+    dashedarr/.style={->,thick,dashed,gray!70}
+  }
+
+  \node[stagebox,fill=blue!8] (sym) at (0,3.2) {确定 little group\\方格：$C_{4v}$\\三角：$C_{6v}$};
+  \node[stagebox,fill=green!8] (mode) at (4.0,3.2) {给模式贴 irrep\\$A_1,B_1,E,\ldots$\\来自对称操作重叠};
+  \node[stagebox,fill=cyan!8] (rad) at (8.0,3.2) {给辐射通道贴 irrep\\法向平面波\\方格：$E$，三角：$E_1$};
+  \node[decision] (prod) at (12.0,3.2) {$\Gamma_{\mathrm{rad}}\otimes\Gamma_{\mathrm{op}}\otimes\Gamma_{\mathrm{mode}}$\\是否含 $A_1$?};
+  \node[outcome,fill=red!8] (dark) at (15.7,4.25) {否：direct radiation\\被对称性禁戒\\dark / BIC family};
+  \node[outcome,fill=orange!10] (bright) at (15.7,2.05) {是：辐射允许\\但强度仍需全波计算};
+
+  \draw[arr] (sym) -- (mode);
+  \draw[arr] (mode) -- (rad);
+  \draw[arr] (rad) -- (prod);
+  \draw[arr] (prod) -- node[above,font=\scriptsize]{不含} (dark.west);
+  \draw[arr] (prod) -- node[below,font=\scriptsize]{包含} (bright.west);
+
+  \node[stagebox,fill=purple!7,minimum width=4.25cm] (slab) at (10.0,0.72) {三维 slab 复核\\纵向奇偶性、上下不对称\\有限尺寸和层栈损耗};
+  \draw[dashedarr] (dark.south) .. controls (14.4,1.0) and (12.5,0.72) .. (slab.east);
+  \draw[dashedarr] (bright.south) .. controls (14.0,0.35) and (12.5,0.72) .. (slab.east);
+
+  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=8.4cm,font=\footnotesize] at (3.75,0.72) {
+    这张图只给“允许 / 禁戒”的第一层筛选；它不替代辐射常数、远场图和阈值增益计算。
+  };
+\end{tikzpicture}%
+}

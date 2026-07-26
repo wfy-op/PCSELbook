@@ -1,0 +1,81 @@
+% !TEX root = ../main.tex
+% Figure content only: inserted inside an outer figure environment in ch05
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    panel/.style={draw=black!55,rounded corners=2pt,fill=gray!2,line width=0.6pt},
+    title/.style={font=\bfseries},
+    note/.style={draw=black!45,rounded corners=2pt,fill=white,align=left,font=\footnotesize},
+    bandlabel/.style={font=\scriptsize}
+  }
+
+  % Left panel: electronic bands in a semiconductor crystal
+  \begin{scope}[shift={(0,0)}]
+    \node[panel,minimum width=6.1cm,minimum height=5.45cm] at (3.05,2.55) {};
+    \node[title] at (3.05,5.02) {(a) 半导体材料的电子能带};
+
+    \draw[->,thick] (0.72,1.50) -- (5.45,1.50) node[right] {$k$};
+    \draw[->,thick] (0.72,1.50) -- (0.72,4.48) node[above left,font=\scriptsize] {$E$};
+    \node[font=\scriptsize] at (3.05,1.22) {晶体动量};
+
+    \fill[orange!14] (0.92,2.80) rectangle (5.25,3.23);
+    \node[orange!70!black,font=\scriptsize] at (4.78,3.02) {$E_g$};
+
+    \draw[thick,blue!70!black]
+      plot[smooth] coordinates {(1.02,3.88) (1.95,3.55) (3.05,3.45) (4.15,3.55) (5.08,3.88)};
+    \draw[thick,red!75!black]
+      plot[smooth] coordinates {(1.02,2.25) (1.95,2.56) (3.05,2.66) (4.15,2.56) (5.08,2.25)};
+    \node[blue!70!black,bandlabel] at (1.35,4.05) {导带};
+    \node[red!75!black,bandlabel] at (1.35,2.05) {价带};
+
+    \draw[dash dot,purple!75!black,thick] (1.02,3.09) -- (5.08,3.09);
+    \node[purple!75!black,font=\scriptsize,anchor=west] at (5.10,3.09) {$E_F$};
+    \draw[dashed,gray] (3.05,1.50) -- (3.05,4.25);
+    \node[font=\scriptsize] at (3.05,1.02) {$\Gamma$};
+
+    \node[note,text width=5.1cm,anchor=north] at (3.05,0.70) {
+      对象：电子/空穴态 $\psi_{n\kvec}$\\
+      本征值：能量 $E_n(\kvec)$\\
+      角色：带隙、载流子限制、材料增益
+    };
+  \end{scope}
+
+  % Shared Bloch skeleton
+  \node[draw=teal!65!black,rounded corners=2pt,fill=teal!7,align=center,text width=1.55cm,font=\footnotesize]
+    at (6.75,3.15) {共同骨架\\周期算符\\Bloch 波矢\\Bragg 分裂};
+  \draw[->,teal!65!black,thick] (5.98,3.15) -- (5.45,3.15);
+  \draw[->,teal!65!black,thick] (7.52,3.15) -- (8.05,3.15);
+
+  % Right panel: photonic bands in a photonic crystal
+  \begin{scope}[shift={(7.45,0)}]
+    \node[panel,minimum width=6.1cm,minimum height=5.45cm] at (3.05,2.55) {};
+    \node[title] at (3.05,5.02) {(b) 光子晶体的光子能带};
+
+    \draw[->,thick] (0.72,1.50) -- (5.45,1.50) node[right] {$\kvec$};
+    \draw[->,thick] (0.72,1.50) -- (0.72,4.48) node[above left,font=\scriptsize] {$\omega,\Omega$};
+    \node[font=\scriptsize] at (3.05,1.22) {Bloch 波矢};
+
+    \fill[orange!14] (0.92,3.00) rectangle (5.25,3.34);
+    \node[orange!70!black,font=\scriptsize] at (4.70,3.17) {光子带隙};
+
+    \draw[thick,blue!70!black]
+      plot[smooth] coordinates {(1.02,1.85) (1.95,2.13) (3.05,2.24) (4.15,2.13) (5.08,1.85)};
+    \draw[thick,blue!70!black]
+      plot[smooth] coordinates {(1.02,2.62) (1.95,2.76) (3.05,2.82) (4.15,2.76) (5.08,2.62)};
+    \draw[thick,blue!70!black]
+      plot[smooth] coordinates {(1.02,3.56) (1.95,3.75) (3.05,3.83) (4.15,3.75) (5.08,3.56)};
+    \draw[thick,blue!70!black]
+      plot[smooth] coordinates {(1.02,4.02) (1.95,4.18) (3.05,4.24) (4.15,4.18) (5.08,4.02)};
+
+    \draw[dashed,gray] (3.05,1.50) -- (3.05,4.28);
+    \node[font=\scriptsize] at (3.05,1.02) {$\Gamma$};
+    \draw[dashed,green!50!black] (3.05,1.50) -- (5.03,4.35);
+    \draw[dashed,green!50!black] (3.05,1.50) -- (1.07,4.35);
+    \node[green!45!black,font=\scriptsize] at (4.65,4.28) {光锥};
+
+    \node[note,text width=5.1cm,anchor=north] at (3.05,0.70) {
+      对象：电磁场 $\E_{n\kvec},\Hf_{n\kvec}$\\
+      本征值：频率 $\omega_n(\kvec)$\\
+      角色：候选模、反馈、光锥辐射
+    };
+  \end{scope}
+\end{tikzpicture}

@@ -1,0 +1,47 @@
+% !TEX root = ../main.tex
+% Content-only figure: PCSEL light-output chain
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
+  \tikzset{
+    layer/.style={draw=black!55,rounded corners=1.5pt,minimum width=3.25cm,minimum height=0.46cm,align=center},
+    chainstep/.style={draw=black!60,rounded corners=2pt,fill=white,minimum width=2.95cm,minimum height=1.12cm,align=center,line width=0.6pt},
+    gate/.style={draw=black!60,rounded corners=2pt,fill=gray!6,minimum width=2.95cm,minimum height=0.82cm,align=center,font=\footnotesize},
+    arr/.style={->,thick,blue!65!black},
+    warn/.style={draw=orange!75!black,rounded corners=2pt,fill=orange!7,align=left,font=\footnotesize}
+  }
+
+  \begin{scope}[shift={(0,0)}]
+    \node[layer,fill=gray!16]   at (0,0.00) {衬底 / 热沉};
+    \node[layer,fill=blue!10]   at (0,0.53) {下包层};
+    \node[layer,fill=green!13]  at (0,1.06) {量子阱有源区};
+    \node[layer,fill=cyan!12]   at (0,1.59) {导波层};
+    \node[layer,fill=yellow!20] at (0,2.12) {二维光子晶体层};
+    \node[layer,fill=gray!10]   at (0,2.65) {上包层 / 接触};
+    \draw[->,very thick,red!70!black] (0,2.98) -- (0,3.72) node[above]{法向出光};
+    \draw[<->,thick,blue!65!black] (-1.35,2.12) -- (1.35,2.12);
+    \node[blue!65!black,font=\footnotesize] at (0,3.28) {面内反馈};
+  \end{scope}
+
+  \node[chainstep,fill=green!9] (s1) at (4.1,2.55) {\textbf{1 有源增益}\\量子阱提供\\$g_{\mathrm{mat}}(N,T)$};
+  \node[chainstep,fill=cyan!9]  (s2) at (7.6,2.55) {\textbf{2 面内导模}\\由层栈给出\\$n_{\mathrm{eff}},\Gamma_{\mathrm{act}}$};
+  \node[chainstep,fill=yellow!14] (s3) at (11.1,2.55) {\textbf{3 二维反馈}\\$\pm x,\pm y$ 波\\在 $\Gamma^{(2)}$ 重组};
+  \node[chainstep,fill=red!8] (s4) at (14.6,2.55) {\textbf{4 辐射通道}\\倒格矢折回\\$k_\parallel=0$};
+  \node[chainstep,fill=purple!8] (s5) at (18.1,2.55) {\textbf{5 模式选择}\\损耗、增益、热\\共同决定先起振};
+
+  \draw[arr] (s1) -- (s2);
+  \draw[arr] (s2) -- (s3);
+  \draw[arr] (s3) -- (s4);
+  \draw[arr] (s4) -- (s5);
+
+  \node[gate] at (4.1,0.78) {检查：增益峰是否\\覆盖目标频率};
+  \node[gate] at (7.6,0.78) {检查：模场是否\\看见 PhC 与 QW};
+  \node[gate] at (11.1,0.78) {检查：耦合矩阵\\是否给出目标族};
+  \node[gate] at (14.6,0.78) {检查：辐射是否\\足够且方向正确};
+  \node[gate] at (18.1,0.78) {检查：有限尺寸、\\注入和热是否翻转};
+
+  \node[warn,text width=15.2cm,anchor=north west] at (3.0,-0.15) {
+    读图规则：PCSEL 不是“有孔的发光面”，而是一条从材料增益到开放辐射的耦合链。
+    前四步给出候选输出路径，第五步才判断真实器件中哪个模式会占优。
+  };
+\end{tikzpicture}%
+}

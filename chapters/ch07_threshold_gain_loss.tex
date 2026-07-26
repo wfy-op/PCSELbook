@@ -199,6 +199,15 @@ PCSEL 之所以不能只看冷腔模场分布，原因就在这里：只要模�
 “这个模式的被动 $Q$ 比另一个高一倍，所以它的阈值电流一定更低”这类说法是不严谨的。它至少忽略了模式重叠、内部损耗、电流分布和热漂移四件事。
 \end{PitfallBox}
 
+\cref{fig:ch07_q_threshold_decision_chain} 把这个误区拆成一条更稳妥的判断链。高 $Q$ 首先只影响辐射损耗入口；它要经过内部损耗、约束因子、注入效率和热回写之后，才可能变成低阈值电流和稳定工作窗口。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch07_q_threshold_decision_chain}
+  \caption{从被动高 $Q$ 到阈值和工作窗口的层级链。高 $Q$ 有助于降低辐射损耗，但总阈值还要同时检查内部损耗、模场与有源区重叠、注入效率和热回写后的模式排序。}
+  \label{fig:ch07_q_threshold_decision_chain}
+\end{figure}
+
 \section{从速率方程再看一遍阈值}
 若采用单模近似，光子数 $S$ 的最简速率方程可写为
 \begin{equation}
@@ -351,4 +360,3 @@ I_{\mathrm{inj}}\rightarrow N(\rvec)\rightarrow g_{\mathrm{mat}}\rightarrow g_{\
 
   \item 若你想继续追问“辐射损耗本身是怎样被结构对称性重排的”，可接着读 \cref{ch:bic}；若你想追问“达到阈值以后会怎样演化”，则应直接进入 \cref{ch:dynamics}。若你还想知道这条链在更高层有源自洽理论中的位置，可把 \cite{tureci2007salt,tureci2009salt} 作为背景参考，而不必把它当成本书主线的前置条件。 建议重点关注阈值、损耗与器件级阈值边界的标准表述。
 \end{itemize}
-
