@@ -305,6 +305,29 @@ f\,\frac{2J_1(|\gvec|r)}{|\gvec|r}.
 
 若圆孔不在原点，而是位于单胞中的某个位置 $\rvec_c$，则\cref{eq:eta_nonzero_disk} 还要再乘上相位因子 $\ee^{-\ii\gvec\cdot\rvec_c}$。这一点对多孔单胞、双原子单胞或故意引入对称性破缺的结构尤为重要。
 
+\section{从二维教学模型到真实 slab：修正等效介电常数}
+\label{sec:pwem-slab-correction}
+二维 PWEM 假设结构沿 $z$ 方向均匀，不能直接用于有限厚度 slab。为近似三维效应，可先用传递矩阵法计算纵向基模场剖面 $\phi_0(z)$ 及等效折射率 $n_{\rm eff}$，再定义光子晶体层约束因子
+\begin{equation}
+\Gamma_{\rm PC} = \int_{\rm PC\,layer} |\phi_0(z)|^2\,dz,
+\label{eq:gamma_pc}
+\end{equation}
+然后通过联立
+\begin{equation}
+n_{\rm eff}^2 = f\tilde{\varepsilon}_a + (1-f)\tilde{\varepsilon}_b,
+\qquad
+\tilde{\varepsilon}_b - \tilde{\varepsilon}_a = \Gamma_{\rm PC}(\varepsilon_b - \varepsilon_a)
+\label{eq:modified_eps}
+\end{equation}
+确定修正介电常数 $\tilde{\varepsilon}_a,\tilde{\varepsilon}_b$。这两条式子的物理意义值得在本章就说清楚。
+
+第一，$n_{\rm eff}^2 = f\tilde{\varepsilon}_a + (1-f)\tilde{\varepsilon}_b$ 强制二维模型与真实纵向基模共享同一个平均传播常数。也就是说，二维模型不是任意找一对“好看的等效介电常数”，而是先把真实 slab 波导的基模传播常数锁定，再去反推横向周期结构应该看见多大的平均介电环境。
+
+第二，$\tilde{\varepsilon}_b-\tilde{\varepsilon}_a = \Gamma_{\rm PC}(\varepsilon_b-\varepsilon_a)$ 说明真实折射率反差并不会被导模百分之百看见。只有落在光子晶体层中的那一部分场能量，才真正参与横向布拉格散射。因此 $\Gamma_{\rm PC}$ 的作用，不是额外引入一个经验修正因子，而是把“有限厚度刻蚀”和“模场并不完全待在光子晶体层内”这两个三维事实压缩进二维模型。
+
+因此，这个修正后的二维模型更准确的用途是：它能较可靠地给出候选带边、频率排序和高对称点附近的模式家族，但它仍然不能直接给出辐射常数、上下出光比和真实阈值排序。只要问题开始显式依赖法向辐射、外延不对称、复杂孔形或有限尺寸，就必须继续交给 \cref{ch:cwt-min,ch:cwt-3d,ch:rcwa,ch:fdtd-fem}。
+
+
 \section{如何搭建一个最小 PWEM 计算}
 现在把上面的方程压缩成一个初学者可以直接照着执行的基本流程。为了避免把软件界面和物理步骤混为一谈，本节使用 solver-agnostic 的写法，也就是无论你最终用自写代码、MATLAB、Python 还是某个已有求解器，主流程都应当是相同的。
 

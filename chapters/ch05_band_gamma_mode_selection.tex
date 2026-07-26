@@ -169,64 +169,70 @@ a_1\\ a_2
 \end{equation}
 后面二维 PCSEL 的带隙、Gamma 点分裂和耦合波矩阵会包含更多通道，但基本机制相同：原本简并或近简并的平面波分量，被周期结构的傅里叶分量耦合并分裂。
 
-\section{\texorpdfstring{$\Gamma$}{Gamma} 点四带：从 PWEM 矩阵本征问题到 ABCD 模式分类}
+\section{\texorpdfstring{$\Gamma$}{Gamma} 点四带与 ABCD 模式分类}
 
-对 PCSEL 来说，最核心的能带特征出现在布里渊区中心 $\Gamma$ 点。本节基于 Liang 等人的推导框架 \cite{liang2012square}，给出从二维 TE Maxwell 方程到 PWEM 矩阵特征值问题的完整路径，并解释 $\Gamma$ 点处四条带边模（A、B、C、D）的起源与物理含义。
+对 PCSEL 来说，最核心的能带特征出现在布里渊区中心 $\Gamma$ 点。本节解释 $\Gamma$ 点处四条带边模（A、B、C、D）的起源与物理含义 \cite{liang2012square}。完整的 PWEM 矩阵本征问题推导、圆孔傅里叶系数的 Bessel 表达式以及二维等效模型的 slab 修正，统一放在 \cref{ch:pwe}；本章只需要它们的两个输出：$\Gamma$ 点附近的候选带边频率，以及各支带边模由哪四个平面波分量构成。
 
-\subsection{TE 极化下的 PWEM 矩阵方程}
+\begin{SymmetryQuick}
+\textbf{对称性速成：如何用点群快速分类 PCSEL 模式}
 
-在二维周期结构中，TE 极化满足标量方程
-\begin{equation}
-\nabla_{\parallel}\cdot\left[\eta(\rho)\nabla_{\parallel}H_z\right]
-+ \left(\frac{\omega}{c}\right)^2 H_z = 0,
-\label{eq:pwem_hz_ch5}
-\end{equation}
-其中 $\eta(\rho)=1/\varepsilon_r(\rho)$。展开为 Bloch 形式
-\[
-H_z(\rho) = \sum_{\mathbf{G}} H_{\mathbf{G}}\,e^{i(\mathbf{k}+\mathbf{G})\cdot\rho},
-\]
-并将
-\[
-\eta(\rho)=\sum_{\mathbf{G}}\eta_{\mathbf{G}}e^{i\mathbf{G}\cdot\rho}
-\]
-代入，整理后得到标准矩阵本征方程
-\begin{equation}
-\sum_{\mathbf{G}'} \eta_{\mathbf{G}-\mathbf{G}'}\,(\mathbf{k}+\mathbf{G})\cdot(\mathbf{k}+\mathbf{G}')\,H_{\mathbf{G}'}
-= \left(\frac{\omega}{c}\right)^2 H_{\mathbf{G}}.
-\label{eq:pwem_matrix_ch5}
-\end{equation}
-矩阵是厄米的，矩阵元由 $\eta$ 的 Fourier 系数决定。对圆形空气孔，$\eta_{\mathbf{G}}$ 的解析表达式为
-\begin{equation}
-\eta_{\mathbf{G}} =
-\begin{cases}
-f\,\eta_a + (1-f)\,\eta_b, & \mathbf{G}=\mathbf{0}, \\
-(\eta_a-\eta_b)\,\dfrac{2f}{|\mathbf{G}|r_0}\,J_1(|\mathbf{G}|r_0), & \mathbf{G}\neq\mathbf{0},
-\end{cases}
-\label{eq:eta_G_circle}
-\end{equation}
-其中 $\eta_a=1/\varepsilon_a$、$\eta_b=1/\varepsilon_b$，$f=\pi r_0^2/a^2$ 为填充比，$J_1$ 为一阶 Bessel 函数。
+初次接触 $A_1$、$B_1$、$E$ 这些符号时，容易觉得抽象。其实它们的物理含义非常直观，而且可以直接用来预测模式的辐射特性和简并度。下面用最直白的语言解释如何快速上手。
 
-\subsection{真实 slab 结构的修正等效介电常数}
+\paragraph{第一步：认清你的晶格属于哪个点群}
+对方波晶格圆孔或方孔，若晶胞完美正方形且无倾斜变形，则属于 $C_{4v}$ 点群（也叫 4mm 群）。这个群有 8 个对称操作：
+\begin{itemize}
+  \item 恒等操作 $E$（什么都不做）
+  \item 绕中心旋转 $90^\circ$ ($C_4$)、$180^\circ$ ($C_2$)、$270^\circ$ ($C_4^3$)
+  \item 对两个对角线镜面反射 ($\sigma_v$)
+  \item 对两条中线镜面反射 ($\sigma_d$)
+\end{itemize}
+关键是：如果一个模式在经过这些操作后保持某种一致的行为，就可以给它贴上对应的不可约表示（irrep）标签。
 
-二维 PWEM 假设结构沿 $z$ 方向均匀，不能直接用于有限厚度 slab。为近似三维效应，可先用传递矩阵法计算纵向基模场剖面 $\phi_0(z)$ 及等效折射率 $n_{\rm eff}$，再定义光子晶体层约束因子
-\begin{equation}
-\Gamma_{\rm PC} = \int_{\rm PC\,layer} |\phi_0(z)|^2\,dz,
-\label{eq:gamma_pc}
-\end{equation}
-然后通过联立
-\begin{equation}
-n_{\rm eff}^2 = f\tilde{\varepsilon}_a + (1-f)\tilde{\varepsilon}_b,
-\qquad
-\tilde{\varepsilon}_b - \tilde{\varepsilon}_a = \Gamma_{\rm PC}(\varepsilon_b - \varepsilon_a)
-\label{eq:modified_eps}
-\end{equation}
-确定修正介电常数 $\tilde{\varepsilon}_a,\tilde{\varepsilon}_b$。这两条式子的物理意义值得在本章就说清楚。
+\paragraph{第二步：看懂特征标表的三行核心信息}
+$C_{4v}$ 的特征标表有三类重要的不可约表示：
+\begin{center}
+\begin{tabular}{c|ccccc|c}
+  $C_{4v}$ & $E$ & $2C_4$ & $C_2$ & $2\sigma_v$ & $2\sigma_d$ & 典型基函数 \\
+  \hline
+  $A_1$ & 1 & 1 & 1 & 1 & 1 & $z$, $x^2+y^2$ \\
+  $B_1$ & 1 & -1 & 1 & 1 & -1 & $x^2-y^2$ \\
+  $E$   & 2 & 0 & -2 & 0 & 0 & $(x,y)$, $(xz,yz)$ \\
+\end{tabular}
+\end{center}
+表中数字的含义是：当你对该模式施加某个对称操作后，它的场分布会乘以这个数字（特征标）。例如：
+\begin{itemize}
+  \item $A_1$：所有操作都是 +1，说明这个模式对所有对称操作都完全对称。它在数学上类似于 s 轨道，远场通常是圆形主瓣。
+  \item $B_1$：对 $90^\circ$ 旋转变号（-1），但对 $180^\circ$ 又变回 +1。这意味着它具有四叶草形状的近场，相邻象限反相。它在数学上类似于$d_{x^2-y^2}$轨道。
+  \item $E$：这是二维表示（特征是 2 维矩阵而非单个数字），对应一对简并的模式。它们在数学上类似于$(p_x,p_y)$轨道，天然支持定向辐射。
+\end{itemize}
 
-第一，$n_{\rm eff}^2 = f\tilde{\varepsilon}_a + (1-f)\tilde{\varepsilon}_b$ 强制二维模型与真实纵向基模共享同一个平均传播常数。也就是说，二维模型不是任意找一对“好看的等效介电常数”，而是先把真实 slab 波导的基模传播常数锁定，再去反推横向周期结构应该看见多大的平均介电环境。
+\paragraph{第三步：用对称性预测辐射特性}
+一旦你知道某个模式属于哪个 irrep，就能立即回答几个关键问题：
+\begin{enumerate}
+  \item \textbf{是否简并？}一维表示（$A_1$、$B_1$）意味着非简并单模；二维表示（$E$）意味着必然存在一对简并模。这对设计单模激光器至关重要——如果你想避免模式竞争，就要选一维表示的模式。
+  \item \textbf{能否法向辐射？}根据互易定理，只有那些与自由空间平面波具有相同对称性的模式才能有效耦合到法向。$A_1$ 模式因为全对称，原则上可以辐射，但在某些特定结构（如纯二阶光栅）中可能因相位抵消而被抑制。$B_1$ 模式由于四象限反相，exact $\Gamma$点的法向辐射会被对称性严格禁止（这就是 BIC 的来源）。$E$模式天然是亮模。
+  \item \textbf{偏振特性如何？}$A_1$和$B_1$都是一维不可约表示（非简并）；其中$A_1$是全对称表示，$B_1$具有$x^2-y^2$型各向异性。$E$模的两个简并分量可以组合成任意方向的线偏振，满足相位条件时也可形成圆偏振。
+\end{enumerate}
 
-第二，$\tilde{\varepsilon}_b-\tilde{\varepsilon}_a = \Gamma_{\rm PC}(\varepsilon_b-\varepsilon_a)$ 说明真实折射率反差并不会被导模百分之百看见。只有落在光子晶体层中的那一部分场能量，才真正参与横向布拉格散射。因此 $\Gamma_{\rm PC}$ 的作用，不是额外引入一个经验修正因子，而是把“有限厚度刻蚀”和“模场并不完全待在光子晶体层内”这两个三维事实压缩进二维模型。
+\paragraph{第四步：理解对称性破缺的后果}
+实际器件往往不会完美保持$C_{4v}$对称性。常见的对称性降低场景包括：
+\begin{itemize}
+  \item \textbf{椭圆孔}：从$C_{4v}$降到$C_{2v}$，此时$E$双重态会分裂成两个非简并的单重态（通常标记为$A_1$和$B_1$在新群下），这就解释了为什么椭圆化可以实现单模。
+  \item \textbf{矩形晶格}：同样破坏四重旋转对称性，解除$E$模简并。
+  \item \textbf{倾斜入射或非零$k_{\parallel}$}：离开$\Gamma$点后，对称性进一步降低，原本禁戒的辐射通道可能被打开。
+\end{itemize}
+记住一条黄金法则：\textbf{对称性越高，简并越强，选择定则越严；对称性越低，简并解除，原来禁戒的过程可能被允许}。
 
-因此，这个修正后的二维模型更准确的用途是：它能较可靠地给出候选带边、频率排序和高对称点附近的模式家族，但它仍然不能直接给出辐射常数、上下出光比和真实阈值排序。只要问题开始显式依赖法向辐射、外延不对称、复杂孔形或有限尺寸，就必须继续交给 \cref{ch:cwt-min,ch:cwt-3d,ch:rcwa,ch:fdtd-fem}。
+\paragraph{实战技巧}
+在实际读论文或分析仿真结果时，可以用以下方法快速识别模式的 irrep：
+\begin{itemize}
+  \item 看近场：数一下有几个"花瓣"，相邻花瓣是否反相。0 节点圆对称=$A_1$；4 叶片且邻瓣反相=$B_1$；双叶片且有方向性=$E$。
+  \item 看远场：圆形主瓣可能是$A_1$；十字形或四瓣形可能是$B_1$；双瓣定向辐射很可能是$E$。
+  \item 看色散：如果在$\Gamma$点有两支模频率完全重合，那几乎肯定是$E$双重态。
+  \item 做微扰：故意加一点椭圆度，如果某支模立刻分裂成两支，原来的那个就是$E$模。
+\end{itemize}
+最后需要说明：对称性是分类工具，不是器件约束的全部。实际器件总会包含对称性破缺因素；掌握理想分类，有助于判断偏离的来源以及如何利用这种偏离。
+\end{SymmetryQuick}
 
 \subsection{\texorpdfstring{$\Gamma$}{Gamma} 点四带的起源与 ABCD 分类}
 
@@ -297,66 +303,6 @@ irrep 标签，而不是 A/B/C/D 这种文献内排序标签。若某篇文献�
 如果在低截断下就直接比较“哪一条带更平、哪一条带更适合做目标模”，最常见后果是：随着 $N_{\mathrm{PW}}$ 提高，带间距和排序发生可见漂移，前面的设计判断被整体推翻。对 PCSEL 来说，这类错误会沿后续 CWT/RCWA/FDTD 链条被放大，代价远高于多做几轮收敛扫描。
 \end{CommonPitfallBox}
 
-\begin{SymmetryQuick}
-\textbf{对称性速成：如何用点群快速分类 PCSEL 模式}
-
-初次接触 $A_1$、$B_1$、$E$ 这些符号时，容易觉得抽象。其实它们的物理含义非常直观，而且可以直接用来预测模式的辐射特性和简并度。下面用最直白的语言解释如何快速上手。
-
-\paragraph{第一步：认清你的晶格属于哪个点群}
-对方波晶格圆孔或方孔，若晶胞完美正方形且无倾斜变形，则属于 $C_{4v}$ 点群（也叫 4mm 群）。这个群有 8 个对称操作：
-\begin{itemize}
-  \item 恒等操作 $E$（什么都不做）
-  \item 绕中心旋转 $90^\circ$ ($C_4$)、$180^\circ$ ($C_2$)、$270^\circ$ ($C_4^3$)
-  \item 对两个对角线镜面反射 ($\sigma_v$)
-  \item 对两条中线镜面反射 ($\sigma_d$)
-\end{itemize}
-关键是：如果一个模式在经过这些操作后保持某种一致的行为，就可以给它贴上对应的不可约表示（irrep）标签。
-
-\paragraph{第二步：看懂特征标表的三行核心信息}
-$C_{4v}$ 的特征标表有三类重要的不可约表示：
-\begin{center}
-\begin{tabular}{c|ccccc|c}
-  $C_{4v}$ & $E$ & $2C_4$ & $C_2$ & $2\sigma_v$ & $2\sigma_d$ & 典型基函数 \\
-  \hline
-  $A_1$ & 1 & 1 & 1 & 1 & 1 & $z$, $x^2+y^2$ \\
-  $B_1$ & 1 & -1 & 1 & 1 & -1 & $x^2-y^2$ \\
-  $E$   & 2 & 0 & -2 & 0 & 0 & $(x,y)$, $(xz,yz)$ \\
-\end{tabular}
-\end{center}
-表中数字的含义是：当你对该模式施加某个对称操作后，它的场分布会乘以这个数字（特征标）。例如：
-\begin{itemize}
-  \item $A_1$：所有操作都是 +1，说明这个模式对所有对称操作都完全对称。它在数学上类似于 s 轨道，远场通常是圆形主瓣。
-  \item $B_1$：对 $90^\circ$ 旋转变号（-1），但对 $180^\circ$ 又变回 +1。这意味着它具有四叶草形状的近场，相邻象限反相。它在数学上类似于$d_{x^2-y^2}$轨道。
-  \item $E$：这是二维表示（特征是 2 维矩阵而非单个数字），对应一对简并的模式。它们在数学上类似于$(p_x,p_y)$轨道，天然支持定向辐射。
-\end{itemize}
-
-\paragraph{第三步：用对称性预测辐射特性}
-一旦你知道某个模式属于哪个 irrep，就能立即回答几个关键问题：
-\begin{enumerate}
-  \item \textbf{是否简并？}一维表示（$A_1$、$B_1$）意味着非简并单模；二维表示（$E$）意味着必然存在一对简并模。这对设计单模激光器至关重要——如果你想避免模式竞争，就要选一维表示的模式。
-  \item \textbf{能否法向辐射？}根据互易定理，只有那些与自由空间平面波具有相同对称性的模式才能有效耦合到法向。$A_1$ 模式因为全对称，原则上可以辐射，但在某些特定结构（如纯二阶光栅）中可能因相位抵消而被抑制。$B_1$ 模式由于四象限反相，exact $\Gamma$点的法向辐射会被对称性严格禁止（这就是 BIC 的来源）。$E$模式天然是亮模。
-  \item \textbf{偏振特性如何？}$A_1$和$B_1$都是一维不可约表示（非简并）；其中$A_1$是全对称表示，$B_1$具有$x^2-y^2$型各向异性。$E$模的两个简并分量可以组合成任意方向的线偏振，满足相位条件时也可形成圆偏振。
-\end{enumerate}
-
-\paragraph{第四步：理解对称性破缺的后果}
-实际器件往往不会完美保持$C_{4v}$对称性。常见的对称性降低场景包括：
-\begin{itemize}
-  \item \textbf{椭圆孔}：从$C_{4v}$降到$C_{2v}$，此时$E$双重态会分裂成两个非简并的单重态（通常标记为$A_1$和$B_1$在新群下），这就解释了为什么椭圆化可以实现单模。
-  \item \textbf{矩形晶格}：同样破坏四重旋转对称性，解除$E$模简并。
-  \item \textbf{倾斜入射或非零$k_{\parallel}$}：离开$\Gamma$点后，对称性进一步降低，原本禁戒的辐射通道可能被打开。
-\end{itemize}
-记住一条黄金法则：\textbf{对称性越高，简并越强，选择定则越严；对称性越低，简并解除，原来禁戒的过程可能被允许}。
-
-\paragraph{实战技巧}
-在实际读论文或分析仿真结果时，可以用以下方法快速识别模式的 irrep：
-\begin{itemize}
-  \item 看近场：数一下有几个"花瓣"，相邻花瓣是否反相。0 节点圆对称=$A_1$；4 叶片且邻瓣反相=$B_1$；双叶片且有方向性=$E$。
-  \item 看远场：圆形主瓣可能是$A_1$；十字形或四瓣形可能是$B_1$；双瓣定向辐射很可能是$E$。
-  \item 看色散：如果在$\Gamma$点有两支模频率完全重合，那几乎肯定是$E$双重态。
-  \item 做微扰：故意加一点椭圆度，如果某支模立刻分裂成两支，原来的那个就是$E$模。
-\end{itemize}
-最后需要说明：对称性是分类工具，不是器件约束的全部。实际器件总会包含对称性破缺因素；掌握理想分类，有助于判断偏离的来源以及如何利用这种偏离。
-\end{SymmetryQuick}
 \subsection{为什么对称圆孔常给出中心发暗的远场}
 
 即使某一模式确实位于二阶 $\Gamma$ 点附近，也并不意味着它的远场中心一定最亮。对理想方格晶格、圆形孔和完美对称晶胞而言，某些 $\Gamma$ 点带边模式在法向中心会出现严格或近似的相消干涉，因此在有限尺寸器件里常表现为环形或中心发暗的远场图案。
@@ -370,7 +316,7 @@ $C_{4v}$ 的特征标表有三类重要的不可约表示：
 \end{ExampleBox}
 
 \begin{RigorousBox}
-\cref{eq:pwem_matrix_ch5} 是厄米本征问题，本征值为实数，这对应无损、封闭、无限周期情形。真实 PCSEL slab 的开放辐射使本征频率变为复数；在本书 $\ee^{-\ii\omega t}$ 约定下，空间辐射常数应写成 $r = -2\,\mathrm{Im}(\tilde{\omega})/v_g$。该量只能通过包含辐射通道的开放系统模型（3D CWT、RCWA 或 FDTD）给出。\cref{eq:pwem_matrix_ch5} 的贡献是给出频率排序与场型分类，不是给出损耗排序。
+PWEM 矩阵本征方程（\cref{ch:pwe} 的 \cref{eq:pwem_matrix_hz}）是厄米本征问题，本征值为实数，这对应无损、封闭、无限周期情形。真实 PCSEL slab 的开放辐射使本征频率变为复数；在本书 $\ee^{-\ii\omega t}$ 约定下，空间辐射常数应写成 $r = -2\,\mathrm{Im}(\tilde{\omega})/v_g$。该量只能通过包含辐射通道的开放系统模型（3D CWT、RCWA 或 FDTD）给出。PWEM 的贡献是给出频率排序与场型分类，不是给出损耗排序。
 \end{RigorousBox}
 
 \section{一个最小例子：正方晶格圆孔二维光子晶体}
