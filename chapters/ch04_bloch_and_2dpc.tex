@@ -141,6 +141,29 @@ $$T_\mathbf{R}\psi(\mathbf{r}) = e^{i\mathbf{k}\cdot\mathbf{R}}\psi(\mathbf{r}) 
 Bloch 定理讨论的是无限周期结构中的模式分类。它告诉我们如何组织候选模，但并不自动告诉我们有限器件中哪个模会激射，也不直接给出阈值电流。
 \end{RigorousBox}
 
+\section{晶格平移与倒格矢记号}
+若二维晶格的原胞基矢为 $\bm{a}_1,\bm{a}_2$，则倒格矢基矢 $\bm{b}_1,\bm{b}_2$ 定义为
+\begin{equation}
+\bm{a}_i\cdot\bm{b}_j=2\pi\delta_{ij}.
+\label{eq:reciprocal_def}
+\end{equation}
+这里写 $2\pi$ 而不是 $1$，是为了保证任何晶格平移对应的相位因子 $\exp(i\gvec\cdot\bm{R})$ 对所有整数 $m_i,n_i$ 都严格等于 1，从而 Bloch 条件与傅里叶展开可以直接用整数标记。部分固体物理教材采用 $\bm{a}_i\cdot\bm{b}_j=\delta_{ij}$ 的约定，两种写法等价但符号不同，查阅文献时需注意对照。
+任何晶格平移都可写为
+\[
+\bm{R}=m_1\bm{a}_1+m_2\bm{a}_2,\qquad m_1,m_2\in\mathbb{Z},
+\]
+任何倒格矢都可写为
+\[
+\gvec=n_1\bm{b}_1+n_2\bm{b}_2,\qquad n_1,n_2\in\mathbb{Z}.
+\]
+
+之所以在一开始就引入倒格矢，是因为 PCSEL 的许多耦合图像本质上都是“相差一个倒格矢的平面波分量之间发生散射”。如果读者不熟悉倒空间记号，后面讨论 Bloch 波、布里渊区、耦合波理论（CWT）和 RCWA 时会不断中断。
+
+\begin{ExampleBox}
+对于方格晶格，若 $\bm{a}_1=a\hat{\bm{x}}$、$\bm{a}_2=a\hat{\bm{y}}$，则由 \cref{eq:reciprocal_def} 立刻得到 $\bm{b}_1=(2\pi/a)\hat{\bm{x}}$、$\bm{b}_2=(2\pi/a)\hat{\bm{y}}$。这个最简单的例子会在后文多次作为参考系出现。
+\end{ExampleBox}
+
+
 \section{为什么波矢只需取第一布里渊区}
 Bloch 波矢并不是任意二维向量都互不相同。若 $\gvec$ 是倒格矢，则
 \[
@@ -479,6 +502,8 @@ Bloch 定理把无限周期结构的求解组织成了按波矢分类的问题�
 
 \section*{练习题}
 \begin{enumerate}
+  \item \basicq 对方格晶格和三角晶格，分别写出一组可能的实空间基矢与倒格矢基矢。
+
   \item \basicq 从平移算符的角度，重述一次 Bloch 定理的证明思路。
 
   \item \basicq 证明 $\kvec$ 与 $\kvec+\gvec$ 对应相同的 Bloch 相位条件。

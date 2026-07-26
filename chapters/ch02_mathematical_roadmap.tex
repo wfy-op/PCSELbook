@@ -4,7 +4,7 @@
 
 \section*{学习目标}
 \begin{itemize}
-  \item 建立本书统一的坐标系、时间因子、频率和归一化约定。
+  \item 建立本书统一的坐标系、时间因子与频率约定。
   \item 统一“模、Bloch 模、$\Gamma$ 点、带边、被动共振、阈值增益、阈值电流”等术语含义。
   \item 明确本书中不同模型层级的关系，避免跨层误读结论。
 \end{itemize}
@@ -14,15 +14,8 @@
 
 \section*{本章路线图}
 \ChapterModelLevel{L1→L4（层级接口总览）}
-本章不推导新的器件结果，而是固定全书使用的共同语言。先统一坐标和频域约定，再建立晶格与倒格矢记号，随后说明模型层级与术语边界，最后给出阅读全书时必须守住的几条“红线”。
-\begin{figure}[htbp]
-  \centering
-  \input{figures/fig_ch02_knowledge_map.tex}
-  \caption{全书知识依赖关系思维导图。根节点为 Maxwell方程+Bloch定理两大理论基础；第一层分支包括能带理论、反馈机制、阈值条件三大核心模块；第二层涵盖 CWT、BIC、CMT 等进阶工具；第三层延伸至器件建模、动态学、热 - 电 - 光耦合等应用场景。每章标注了难度等级（★为基础，★★★为进阶）和预计学习时间，帮助学生规划阅读路径。}
-  \label{fig:ch02_knowledge_map}
-\end{figure}
+本章不推导新的器件结果，而是固定全书使用的共同语言：先固定 benchmark 教学器件与高频符号工具页，再统一坐标和频域约定，随后说明模型层级与术语边界，最后给出阅读全书时必须守住的六条“红线”。晶格与倒格矢记号在 \cref{ch:bloch} 首用处建立，归一化约定在 \cref{ch:cwt-min} 首用处说明。
 
-\cref{fig:ch02_knowledge_map}给出了全书的知识依赖关系图，帮助学生建立整体认知框架并合理规划学习路径。
 \section{为什么在第二章先停下来统一语言}
 初学者读 PCSEL 文献时，最先遇到的困难往往不是公式本身，而是同一个词在不同上下文里意思变了。比如“阈值”这个词，在某些地方指的是阈值增益，在另一些地方指的是阈值电流；“模式”有时指无限周期的 Bloch 模，有时又指有限器件里的实际振荡模；“TE 模”在二维教材里是严格分类，在 slab 结构里却经常只是近似称呼。若不先限定这些边界，后续公式和结论容易被跨层误读。
 
@@ -89,36 +82,6 @@
 
 这个约定看似简单，但会反复用到。因为对PCSEL而言，纵向与横向承担的是不同物理角色：纵向层栈决定导模约束、外延不对称和吸收层分布；横向周期结构决定Bloch模分类、布拉格耦合与远场工程。后文如果不特别说明，看到"纵向"就默认与外延层栈相关，看到"面内"就默认与二维周期和横向模式选择相关。
 
-\cref{tab:ch02_model_hierarchy_interface}详细总结了四层模型的接口规范。读者在实际建模时应当严格遵循这张表的输入输出定义，确保数据传递的正确性。
-
-\begin{table}[htbp]
-  \centering
-  \caption{PCSEL 四层建模体系的接口规范。以“计算阈值电流”为例说明数据如何在各层之间传递。每一层的输出成为下一层的输入，形成完整的证据链。}
-  \label{tab:ch02_model_hierarchy_interface}
-  \input{figures/tab_ch02_model_hierarchy_interface}
-\end{table}
-
-\subsection{晶格与倒格矢}
-若二维晶格的原胞基矢为 $\bm{a}_1,\bm{a}_2$，则倒格矢基矢 $\bm{b}_1,\bm{b}_2$ 定义为
-\begin{equation}
-\bm{a}_i\cdot\bm{b}_j=2\pi\delta_{ij}.
-\label{eq:reciprocal_def}
-\end{equation}
-这里写 $2\pi$ 而不是 $1$，是为了保证任何晶格平移对应的相位因子 $\exp(i\gvec\cdot\bm{R})$ 对所有整数 $m_i,n_i$ 都严格等于 1，从而 Bloch 条件与傅里叶展开可以直接用整数标记。部分固体物理教材采用 $\bm{a}_i\cdot\bm{b}_j=\delta_{ij}$ 的约定，两种写法等价但符号不同，查阅文献时需注意对照。
-任何晶格平移都可写为
-\[
-\bm{R}=m_1\bm{a}_1+m_2\bm{a}_2,\qquad m_1,m_2\in\mathbb{Z},
-\]
-任何倒格矢都可写为
-\[
-\gvec=n_1\bm{b}_1+n_2\bm{b}_2,\qquad n_1,n_2\in\mathbb{Z}.
-\]
-
-之所以在一开始就引入倒格矢，是因为 PCSEL 的许多耦合图像本质上都是“相差一个倒格矢的平面波分量之间发生散射”。如果读者不熟悉倒空间记号，后面讨论 Bloch 波、布里渊区、耦合波理论（CWT）和 RCWA 时会不断中断。
-
-\begin{ExampleBox}
-对于方格晶格，若 $\bm{a}_1=a\hat{\bm{x}}$、$\bm{a}_2=a\hat{\bm{y}}$，则由 \cref{eq:reciprocal_def} 立刻得到 $\bm{b}_1=(2\pi/a)\hat{\bm{x}}$、$\bm{b}_2=(2\pi/a)\hat{\bm{y}}$。这个最简单的例子会在后文多次作为参考系出现。
-\end{ExampleBox}
 
 \section{时间因子与复频率：为什么符号约定会影响物理解释}
 本书统一采用时间因子
@@ -148,22 +111,6 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 一旦进入开放系统，本征频率通常是复数。复频率虚部不是“数值噪声的副产物”，而是模式辐射或损耗的时间尺度编码。若把开放系统错当成只有实频率的封闭系统，就会直接丢失辐射损耗信息。
 \end{RigorousBox}
 
-\section{单位、归一化与“模式幅度”的含义}
-在解析推导和数值仿真中，读者会频繁看到“场归一化”“模归一化”“包络振幅”这些说法。它们背后对应的并不是唯一标准。
-
-在被动本征问题中，本征场常常只确定到一个乘法常数，因此场幅度本身并不直接对应实际功率；可比较的是频率、损耗率、归一化后的重叠积分等量。在有源问题中，若把模展开代入耦合模方程，包络振幅的定义又取决于采用的是能量归一化、功率归一化还是某种方便解析的尺度。
-
-因此，本书对归一化采取一个务实原则：只要某个公式中出现重叠积分、模增益或耦合系数，就必须在附近说明归一化方式属于哪一类；如果没有说明，就不能把不同章节或不同软件的数值直接拿来比较。
-
-本书后续会频繁使用两种最常见的归一化方式，先在此给出可计算的标准写法：
-\begin{align}
-\text{能量归一化（被动本征模常用）：}
-&&\int_V \varepsilon_r(\rvec)\,|\E_n(\rvec)|^2\,\mathrm{d}V &= 1, \\
-\text{功率归一化（导波/端口问题常用）：}
-&&\frac{1}{2}\int_S \operatorname{Re}(\E_n\times\Hf_n^\ast)\cdot\hat{z}\,\mathrm{d}A &= 1.
-\end{align}
-其中 $S$ 为与传播方向正交的截面；对开放 slab 结构若需统计上下两个辐射通道，应明确 $S$ 是单侧截面还是上下两侧合并截面，以免功率计数出现两倍差异。两种归一化得到的模幅 $a_m$ 单位不同，耦合系数 $\kappa$ 的量纲也随之不同。跨章节或跨软件比较 $\kappa$ 数值时，必须先确认双方使用同一种归一化。
-
 \section{本书的模型层级：为什么同一个问题会有不同答案}
 贯穿全书的一个核心思想是：PCSEL 研究不是单一模型，而是一串层级递进的模型。我们采用四层划分。
 
@@ -182,6 +129,16 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
   \label{fig:model_layers}
 \end{figure}
 
+\cref{tab:ch02_model_hierarchy_interface} 进一步给出四层模型的接口规范：每一层的输出成为下一层的输入。实际建模时应当按这张表核对数据传递。
+
+\begin{table}[htbp]
+  \centering
+  \caption{PCSEL 四层建模体系的接口规范。以“计算阈值电流”为例说明数据如何在各层之间传递。每一层的输出成为下一层的输入，形成完整的证据链。}
+  \label{tab:ch02_model_hierarchy_interface}
+  \input{figures/tab_ch02_model_hierarchy_interface}
+\end{table}
+
+
 这四层的区别，不是“谁更高级”，而是“谁回答的问题不同”。
 
 \begin{itemize}
@@ -190,10 +147,6 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
   \item L3 电学层：回答注入是否均匀、载流子是否能有效进入有源区；
   \item L4 热-电-光层：回答真实器件在工作时会不会因为温升和非均匀性而改变模式排序。
 \end{itemize}
-
-最常见的误读，都是把高层问题拿低层答案来回答。例如，用 L1 的高 $Q$ 直接推断 L4 的低阈值电流，就是错误的；用 L2 的阈值增益直接宣称器件已经可工作，也是不成立的。
-
-读任何一段 PCSEL 分析，都应先问一句：作者当前处在哪一层？如果这一层没有包含电注入和热回写，就不要把它的结论理解成器件最终工作结论。更具体的判断方法如下。
 
 \begin{IntuitionBox}
 判断一个具体分析属于哪一层的最直接方法，是看它回答的问题：
@@ -212,29 +165,14 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 若结论跨越了当前层级（例如用被动 $Q$ 直接报告阈值电流），就是“层级偷换”——这是全书反复提醒的最常见错误。
 \end{IntuitionBox}
 
-\section{几个最容易混淆的术语：必须一次说清}
-下面几个术语会反复出现。如果它们在脑中不清楚，后面读到的每个公式都可能被误解。
-
-\subsection{模（mode）与 Bloch 模（Bloch mode）}
-“模”是最宽泛的词，泛指满足给定方程和边界条件的场分布。这个定义故意保留了开放性，因为有限器件模、Bloch 模、辐射模都属于模。
-
-“Bloch 模”则专指无限周期结构中满足 Bloch 条件的本征场。Bloch 模天然属于 L1 层，它帮助我们分类模式、理解对称性和带结构，但它不是最终器件中的实际振荡场的完整描述。
-
-\subsection{Gamma 点与带边}
-$\Gamma$ 点是布里渊区中心，即 $\kvec=\bm{0}$。带边（band edge）则是色散曲线上群速度趋近于零的点或区域。两者可能重合，但不应混为一谈。对 PCSEL 而言，$\Gamma$ 点之所以重要，不只是因为“群速度小”，更因为它对应法向辐射、对称性标签和多波耦合的特殊位置。
-
-\subsection{被动共振与有源阈值}
-被动共振（passive resonance）指的是在无增益条件下结构支持的共振或准模。它讨论的是模式存在、频率位置和损耗。
-
-有源阈值（active threshold）则讨论：在加入增益后，何时净增益恰好补偿总损耗并允许模式开始自维持振荡。两者的逻辑关系是“被动共振提供候选模，有源阈值决定谁先赢”，不能反过来。
-
-\subsection{阈值增益与阈值电流}
-阈值增益 $g_\mathrm{th}$ 属于 L2 层，是光学意义上的阈值条件；阈值电流 $I_\mathrm{th}$ 属于 L4 层，是器件意义上的工作阈值。二者之间隔着至少两道桥：
-\begin{enumerate}
-  \item 增益来自载流子分布，而载流子分布并非均匀给定；
-  \item 注入产生热，热又会改写折射率、损耗和增益谱。
-\end{enumerate}
-因此，本书会反复提醒：算出了 $g_\mathrm{th}$，只说明完成了光学阈值判断；距离 $I_\mathrm{th}$ 还差电学和热学两层。
+\section{几个最容易混淆的术语：先立边界，细节由首用章展开}
+下面四对术语会反复出现。它们的完整辨析放在各自的首用章节（“模 vs Bloch 模”见 \cref{ch:bloch}，“$\Gamma$ 点 vs 带边”见 \cref{ch:gamma}，“被动共振 vs 有源阈值”与“阈值增益 vs 阈值电流”见 \cref{ch:threshold}），高频混淆对照表统一收在 \cref{ch:glossary}。这里只先立四条最低边界：
+\begin{itemize}
+  \item “模”泛指满足给定方程和边界条件的场分布；“Bloch 模”专指无限周期结构中满足 Bloch 条件的本征场，天然属于 L1 层；
+  \item $\Gamma$ 点是布里渊区中心（$\kvec=\bm{0}$）；带边是群速度趋近于零的位置——两者可能重合，但不是同义词；
+  \item 被动共振提供候选模，有源阈值决定谁先赢，这个顺序不能反过来；
+  \item 阈值增益 $g_\mathrm{th}$ 是 L2 层的光学条件，阈值电流 $I_\mathrm{th}$ 是 L4 层的器件条件，中间隔着电学与热学两层桥。
+\end{itemize}
 
 \begin{PitfallBox}
 “某模式在 RCWA/FEM 中 $Q$ 最高，因此器件阈值电流最低”这句话同时混淆了被动与有源、阈值增益与阈值电流、无限周期与有限器件三个层级。
@@ -291,23 +229,6 @@ I_{\mathrm{th},m}.
   \end{tabularx}
 \end{table}
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[node distance=1.25cm and 1.6cm,>=Latex,
-    block/.style={draw,rounded corners,align=center,minimum width=3.1cm,minimum height=0.95cm,fill=blue!6}]
-    \node[block] (a) {第3--5章\\麦克斯韦方程, 布洛赫, 能带};
-    \node[block,below=of a] (b) {第6--10章\\面发射, 阈值, 偏振/连续谱束缚态, 耦合波};
-    \node[block,below=of b] (c) {第11--16章\\耦合模/平面波展开/严格耦合波/时域差分/有限元/互证};
-    \node[block,below=of c] (d) {第17--20章\\外延, 有源区, 电注入, 热耦合};
-    \node[block,below=of d] (e) {第21--27章\\单模设计, 鲁棒性, 动态/性能, 工作流, 例题, 失败模式};
-    \draw[->,thick] (a)-- node[right,font=\footnotesize]{候选模与对称性标签} (b);
-    \draw[->,thick] (b)-- node[right,font=\footnotesize]{降阶模型与辐射/阈值语言} (c);
-    \draw[->,thick] (c)-- node[right,font=\footnotesize]{开放单胞/有限器件光学输出} (d);
-    \draw[->,thick] (d)-- node[right,font=\footnotesize]{器件工作点与工作窗口} (e);
-  \end{tikzpicture}
-  \caption{全书逻辑依赖图。每个节点不是目录复述，而是“上一段向下一段交什么中间量”的压缩表达。}
-  \label{fig:book_dependency_flow}
-\end{figure}
 
 \section{全书需要反复区分的六类边界}
 到这里，可以把本章压缩成六条阅读边界：
@@ -332,8 +253,6 @@ I_{\mathrm{th},m}.
 
 \section*{练习题}
 \begin{enumerate}
-  \item \basicq 对方格晶格和三角晶格，分别写出一组可能的实空间基矢与倒格矢基矢。
-
   \item \basicq 在本书采用的时间因子约定下，解释为什么 $\tilde{\omega}=\omega_0-\ii\gamma$ 表示衰减。
 
   \item \midq 试着用自己的话区分“Bloch 模”“被动共振模”“激射模”。
