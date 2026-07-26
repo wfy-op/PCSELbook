@@ -108,64 +108,6 @@ R_{\mathrm{array}} \gtrsim \frac{2.5}{\alpha_{\mathrm{rad}}},
 若 Lumerical 的 RCWA 与 COMSOL 的单胞频域模型都显示某个微扰会增强上方辐射并拉开两支偏振模的排序，那么即便两者给出的绝对 $Q$ 不完全相同，这个趋势仍然是有价值的。反过来，若两者对趋势都不一致，就应优先回查几何、边界和材料定义，而不是急着宣布哪个软件“更可信”。
 \end{ExampleBox}
 
-\begin{NoteBox}[breakable]{光束质量因子}
-在评估 PCSEL 的输出光束质量时，不能仅凭远场发散角或光斑形状作定性判断，而应采用国际标准化组织 (ISO) 定义的 $M^2$ 因子进行定量表征。$M^2$描述了实际光束相对于理想高斯光束的可聚焦性退化程度。
-
-对于基模高斯光束，束腰半径$w_0$和远场发散半角$\theta_0$满足
-\begin{equation}
-w_0 \theta_0 = \frac{\lambda}{\pi}.
-\end{equation}
-对于任意实际光束，定义其束腰半径为$W_0$，实测远场发散半角为$\Theta$，则$M^2$因子为
-\begin{equation}
-M^2 = \frac{\pi W_0 \Theta}{\lambda} \geq 1,
-\label{eq:m_squared_definition}
-\end{equation}
-其中等号仅在理想单模高斯光束时成立。$M^2$越大，表明光束中包含的高阶成分越多，可聚焦性越差。
-
-在二阶矩框架下，$M^2$也可以通过空间-空间频率不确定关系表达。设光场强度分布$I(x,y)$的二阶矩宽度分别为$\sigma_x,\sigma_y$，对应的空间频谱二阶矩宽度为$\sigma_{k_x},\sigma_{k_y}$，则有
-\begin{equation}
-M_x^2 = 4\pi \sigma_x \sigma_{k_x} \geq 1,
-\qquad
-M_y^2 = 4\pi \sigma_y \sigma_{k_y} \geq 1.
-\label{eq:m_second_moment}
-\end{equation}
-这一表述的优点是不依赖于具体拟合函数，可直接从近场/远场数值数据计算。
-
-\paragraph{在 PCSEL 中的应用要点}
-PCSEL由于采用大面积发射结构，理论上可以实现接近衍射极限的输出($M^2\approx 1$)。然而在实际建模中需要注意以下几点：
-\begin{enumerate}
-  \item \textbf{模式竞争}: 当多个横模同时起振时，叠加后的远场会出现旁瓣或多峰结构，导致$M^2$显著增大。应在动态学模型中检查边模抑制比(SMSR)是否足够高。
-  \item \textbf{相位锁定}: 即使近场呈现规则的光子晶体周期调制，如果不同区域之间存在随机相位跳变，也会导致相干性下降和$M^2$恶化。
-  \item \textbf{热透镜效应}: 温度梯度引起的折射率变化会形成等效的热透镜，改变束腰位置和大小，需要在热电光耦合模型中计入此效应。
-\end{enumerate}
-\begin{WarningBox}[$M^2$ 因子在 PCSEL 中的适用性限制]
-标准的二阶矩$M^2$定义在应用于 PCSEL 时存在固有问题：
-\begin{itemize}
-  \item \textbf{周期性近场结构：}PCSEL 的近场强度分布$I(x,y)$ 包含晶格尺度的周期性调制，这会导致二阶矩宽度$\sigma_x$ 人为偏大，从而使$M^2$ 被高估
-  \item \textbf{旁瓣贡献：} 即使主瓣接近衍射极限，周期性近场的傅里叶变换会在远场产生高阶衍射瓣，这些旁瓣对二阶矩的贡献可能主导$M^2$ 的计算结果
-  \item \textbf{物理意义模糊：} 对 PCSEL 这类周期调制光束，$M^2>1$ 可能反映的是"光束包含周期性结构信息"，而非实际的"光束质量差"
-\end{itemize}
-
-\textbf{推荐的替代表征方法：}
-\begin{enumerate}
-  \item \textbf{围封功率 (Encircled Power):} 计算包含 86.5\% 总功率的圆斑直径，与理想高斯光束比较
-  \item \textbf{Strehl 比：} 定义为主瓣峰值强度与同功率理想高斯光束峰值强度之比，$S > 0.8$ 通常认为接近衍射极限
-  \item \textbf{主瓣发散角：} 仅对中心主瓣 (排除旁瓣) 拟合高斯分布并提取发散角
-  \item \textbf{亮度 (Brightness):} 使用$B = P/(\lambda^2 M_x^2 M_y^2)$ 时需注明$M^2$ 的计算方法和是否滤除旁瓣
-\end{enumerate}
-对 PCSEL，建议同时报告$M^2$ (全光束) 和$M^2$ (主瓣 only)，以区分周期性调制和实际的光束质量退化。
-\end{WarningBox}
-\paragraph{数值计算方法}
-在仿真中获取$M^2$的典型流程如下：
-\begin{enumerate}
-  \item 在近场监测面记录复振幅分布$E(x,y)$
-  \item 通过傅里叶变换得到远场分布$\tilde{E}(k_x,k_y)$
-  \item 分别计算强度和角谱强度的二阶矩
-  \item 利用 \cref{eq:m_second_moment} 求得$M_x^2,M_y^2$
-\end{enumerate}
-对于非旋转对称的 PCSEL 结构（如椭圆孔、矩形晶格），$M_x^2$和$M_y^2$可能不相等，此时应报告两个方向的独立值而非单一标量。
-\end{NoteBox}
-
 \section{这些失败在 Lumerical 与 COMSOL 中通常长什么样}
 为了让排错更贴近实战，\cref{tab:failure-toolmap} 把常见症状映射到两条常见软件链中最典型的表现形式。注意，这个表的目的不是软件评测，而是帮助你更快定位“这更像是层级错误、物理模型错误，还是数值实现错误”。
 
