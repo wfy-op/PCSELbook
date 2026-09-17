@@ -110,7 +110,7 @@ A_{mn}(\rho)
 
 二维有效折射率近似相当于把 \cref{eq:3dcwt_expansion} 中的纵模索引 $n$ 截断为一个主基底。若单基底近似足够好，这样做是有效的；但当不同候选模在纵向重叠、损耗层接触或辐射出口上差异显著时，只保留一个 $n$ 会把模式选择机制过度平均化。
 
-对第一次真正实现三维 CWT 的读者，还需要一个更可执行的截断判据。最直接的做法，是定义主基底占比
+对第一次真正实现三维 CWT 的读者，还需要一个更可执行的截断判据。先定义保留到 $N_z$ 个纵向基底时的累计权重
 \begin{equation}
 \eta_{N_z}
 =
@@ -118,7 +118,12 @@ A_{mn}(\rho)
 {\sum_{m}\sum_{n=1}^{N_{\max}}|A_{mn}|^2},
 \label{eq:vertical_truncation_ratio}
 \end{equation}
-并要求在把纵向基底数从 $N_z$ 增加到 $N_z+1$ 或 $N_z+2$ 时，目标模频率、辐射损耗和关键重叠因子的变化都已经进入平台区。\cref{eq:vertical_truncation_ratio} 不是唯一标准，但它至少给出一个工程上可执行的问题：到底是“主基底已足够”，还是“你只是还没检查第二、第三纵模对损耗与偏振的改写”。教学上更实用的建议是：若 $\eta_{N_z}<10^{-2}$ 且增广一个到两个纵向基底后关键结论不翻转，可先把该高阶纵模视为次要修正；若问题涉及偏振翻转、上下出光比或近简并模排序，则最好把门槛再收紧到 $\eta_{N_z}<10^{-3}$。
+并把遗漏权重定义为
+\begin{equation}
+\epsilon_{N_z}=1-\eta_{N_z}.
+\label{eq:vertical_truncation_omission}
+\end{equation}
+随着基底增加，$\eta_{N_z}$ 应趋近 1，而 $\epsilon_{N_z}$ 应趋近 0。截断是否可接受，不能只看权重，还要检查把基底从 $N_z$ 增加到 $N_z+1$ 或 $N_z+2$ 后，目标模频率、辐射损耗和关键重叠因子是否进入平台区。若使用开放模或非 Hermitian 投影，$|A_{mn}|^2$ 还依赖归一化，最终应改用双正交投影权重；这里的平方模只作为 Hermitian/弱开放近似下的教学诊断。
 
 \begin{table}[htbp]
   \centering
@@ -129,7 +134,7 @@ A_{mn}(\rho)
     \toprule
     判据类别 & 可丢弃条件 & 物理含义 \\ \midrule
     频率失谐 & 候选纵模与目标模失谐超过目标频率的约 $5\%$--$10\%$（\textbf{[工程经验]}筛选阈值） & 该纵模已远离目标频段，通常只剩高阶修正作用 \\ 
-    能量占比 & $\eta_{N_z}<10^{-2}$；若近简并或强不对称问题取 $10^{-3}$ & 该纵模对目标模的权重已低到只会提供次要修正 \\
+    遗漏权重 & $\epsilon_{N_z}=1-\eta_{N_z}<10^{-2}$；近简并或强不对称问题取更严格门槛 & 未保留纵模的累计权重已较小；仍须与观测量收敛联合判断 \\
     有源区重叠 & $\Gamma_{n_z}<0.01\,\Gamma_1$ & 与有源区或关键损耗层重叠太弱，不足以显著改写阈值链 \\ 
     收敛检验 & 纵模数从 $N_z$ 增至 $N_z+1$ 或 $N_z+2$ 后，目标模频率变化 $<0.5\%$，辐射损耗变化 $<5\%$，关键耦合系数变化 $<1\%$ & 当前截断已足以稳定主导结论 \\ 
     \bottomrule
@@ -264,14 +269,13 @@ $\bm C_{\mathrm{rad}}$ 的主导数量级与参数趋势，而不是每个矩阵
 $G(z,z')$ 升级为由传递矩阵法或层状 Green 张量构造的表达式，再计算
 $\bm C_{\mathrm{rad}}$。
 
-从误差角度做更直接的估计：设光子晶体层厚度为 $d$，层内折射率为 $n_{\rm PC}$，
-相邻层折射率为 $n_{\rm adj}$，则界面 Fresnel 反射系数约为
-$r\sim (n_{\rm PC}-n_{\rm adj})/(n_{\rm PC}+n_{\rm adj})$。
-若 $|r|\lesssim 0.05$（即 $|\Delta n|d/\lambda \lesssim 0.1$，其中 $\lambda$ 为工作波长），
-则界面反射引入的修正通常在 $\bm C_{\mathrm{rad}}$ 的 $5\%$ 以内（\textbf{[工程经验]}阈值），
-该近似可接受；当 $|r|\gtrsim 0.2$（如深刻蚀空气孔与高折射率包层的界面），
-则必须采用层状 Green 张量或 TMM 构造的严格 Green 函数，否则辐射损耗常数
-可能出现系统性偏差。
+从误差角度看，需要分开检查两个无量纲量。单界面 Fresnel 振幅反射
+$r=(n_{\rm PC}-n_{\rm adj})/(n_{\rm PC}+n_{\rm adj})$ 只由界面两侧折射率决定，
+不含层厚 $d$；$|\Delta n|d/\lambda$ 则描述有限厚度层内可能积累的相位扰动，二者
+不是等价判据。任一量较小都不足以单独保证 $\bm C_{\mathrm{rad}}$ 的固定百分比误差。
+实际使用时，应在同一几何、同一 Fourier 截断和同一归一化下，直接比较均匀背景 Green
+近似与层状 Green/TMM 结果；只有目标模的频率、辐射损耗和模式身份都进入预先声明的
+容差，才可保留简化 Green 函数。
 \end{RigorousBox}
 
 利用 Green 函数，辐射波场可直接用基本波振幅表示：
@@ -561,10 +565,13 @@ $\alpha_{\mathrm{rad}}\propto \delta^2$ 与 quasi-BIC 的平方定律。
 
 从 \cref{eq:3d_cwt_eigenvalue_full} 的本征值可直接提取器件最关心的两个量。设第 $j$ 个本征值为 $\lambda_j=\delta_j+\ii\alpha_j$，并定义复传播常数 $\tilde\beta_j=\beta_0+\lambda_j$。若进一步换算到本书统一时间因子 $\ee^{-\ii\omega t}$ 下的复频率记号，则
 \begin{equation}
-\tilde{\omega}_j=\omega_{0,j}-\ii\gamma_j,\qquad \gamma_j=v_{g,j}\alpha_j,
+\tilde{\omega}_j=\omega_{0,j}-\ii\gamma_j,
+\qquad
+\gamma_j=v_{\mathrm{en},j}\alpha_j
+=\frac{v_{\mathrm{en},j}}{2}\alpha_{\mathrm{rad},j},
 \label{eq:3d_cwt_complex_freq}
 \end{equation}
-其中 $v_{g,j}$ 是该模对应的群速度。品质因子由复频率的实部与虚部之比给出：
+其中 $\alpha_j=\operatorname{Im}\lambda_j$ 是空间\textbf{振幅}衰减常数，$\alpha_{\mathrm{rad},j}=2\alpha_j$ 是空间功率损耗系数；$v_{\mathrm{en},j}$ 是与同一归一化匹配的能量速度，不是 exact $\Gamma$ 点为零的 Bloch 群速度。品质因子由复频率的实部与虚部之比给出：
 \begin{equation}
 Q_j = \frac{\mathrm{Re}(\tilde{\omega}_j)}{2|\mathrm{Im}(\tilde{\omega}_j)|}.
 \label{eq:3d_cwt_Q}
@@ -574,8 +581,8 @@ Q_j = \frac{\mathrm{Re}(\tilde{\omega}_j)}{2|\mathrm{Im}(\tilde{\omega}_j)|}.
 \alpha_{\mathrm{rad},j}
 =2\alpha_j
 =2\,\mathrm{Im}(\lambda_j)
-=\frac{2\gamma_j}{v_{g,j}}
-=-\frac{2\,\mathrm{Im}(\tilde{\omega}_j)}{v_{g,j}}.
+=\frac{2\gamma_j}{v_{\mathrm{en},j}}
+=-\frac{2\,\mathrm{Im}(\tilde{\omega}_j)}{v_{\mathrm{en},j}}.
 \label{eq:3d_cwt_alpha_rad}
 \end{equation}
 这个定义的优势在于它不依赖等效折射率的模糊定义——$\lambda_j$ 直接来自本征值，可与 3D FDTD 的衰减率提取结果做无歧义比较 \cite{liang2012square}。
@@ -583,7 +590,7 @@ Q_j = \frac{\mathrm{Re}(\tilde{\omega}_j)}{2|\mathrm{Im}(\tilde{\omega}_j)|}.
 \subsection{非 \texorpdfstring{$\Gamma$}{Gamma} 点扩展：能带结构计算}
 \label{sec:3d-cwt-non-gamma}
 
-前面的推导都限于精确 $\Gamma$ 点（$\kvec=\bm{0}$）。但要计算完整的能带结构，必须把模型扩展到 $\Gamma$ 点附近的有限波矢 $\delta\kvec$。Liang 等人 \cite{liang2012square} 给出了这一扩展的框架。
+前面的推导都限于精确 $\Gamma$ 点（$\kvec=\bm{0}$）。若只关心带边局部曲率和 quasi-BIC 在动量空间中的打开，可把模型扩展到 $\Gamma$ 点\textbf{邻域}的小波矢 $\delta\kvec$。下面的展开是局部模型，不自动覆盖整条布里渊区路径。
 
 基本思路是：当工作点偏离 $\Gamma$ 点一个小波矢 $\delta\kvec=(\delta k_x,\delta k_y)$ 时，四个基本波的传播方向不再严格沿 $\pm x$ 和 $\pm y$，而是各自偏转一个小角度。具体地，四个基本波的波矢变为
 \begin{align}
@@ -600,9 +607,9 @@ Q_j = \frac{\mathrm{Re}(\tilde{\omega}_j)}{2|\mathrm{Im}(\tilde{\omega}_j)|}.
 \end{equation}
 这一修正使得原本在 $\Gamma$ 点严格解耦的 $x$-like 和 $y$-like 偏振在偏离 $\Gamma$ 点后发生混合。
 
-将修正后的波矢和偏振代入耦合方程，本征问题的形式不变，但耦合矩阵 $\bm{C}$ 的每个元素都变成 $\delta\kvec$ 的函数。沿布里渊区高对称路径 $\Gamma\to X\to M\to\Gamma$ 扫描 $\delta\kvec$，即可得到完整的能带结构 $\omega(\kvec)$，包括每条带的辐射常数随波矢的变化。
+将修正后的波矢和偏振代入耦合方程，本征问题的形式不变，但耦合矩阵 $\bm{C}$ 的每个元素都变成 $\delta\kvec$ 的函数。只有当 $|\delta\kvec|$ 足够小、四个基本波仍是受控基底且遗漏通道不改变模式身份时，这个局部展开才可信。若要沿 $\Gamma\to X\to M\to\Gamma$ 得到完整能带，应在各工作点重新构造满足动量匹配的基底，或直接使用 PWEM/FEM 等全布里渊区本征方法。
 
-对方格晶格圆孔（$f=12\%$，$\varepsilon_b=12.7449$，$a=295\,\mathrm{nm}$），三维 CWT 计算的能带结构与 3D FDTD 结果在频率上吻合到 $<1\%$。在精确 $\Gamma$ 点，模式 A 和 B 的辐射常数为零（BIC），而偏离 $\Gamma$ 点后辐射常数迅速增大——这也是 BIC 在动量空间中的特征行为。模式 C 和 D 在 $\Gamma$ 点即有较大辐射常数，偏离后变化相对平缓。整条能带的计算（约 100 个 $\kvec$ 点）在三维 CWT 中仅需约 $2$ 分钟，而等效的 3D FDTD 需要数百小时 \cite{liang2012square}。
+在局部邻域内，理想结构的 A/B 暗模可在 exact $\Gamma$ 点具有零辐射常数，并在偏离 $\Gamma$ 后打开辐射通道；C/D 亮模则可在 $\Gamma$ 点保留有限辐射。具体误差、计算时间和可扫描的 $\delta\kvec$ 范围依赖基底、截断、层状 Green 函数与硬件，必须随复现实例报告，不能把某一论文工况的速度或精度写成通用保证。
 
 \begin{quote}
 对 PCSEL 而言，$\Gamma$ 点是第一优先检查对象，但不是唯一对象。真正可信的候选模筛选，应当同时检查 exact $\Gamma$ 及其邻域一小片倒空间中的近平带分支。

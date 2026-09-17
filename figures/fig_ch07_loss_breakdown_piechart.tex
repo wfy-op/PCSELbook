@@ -17,7 +17,7 @@
     \def\radiationLoss{45}    % Radiation loss (%)
     \def\absorptionLoss{30}   % Free carrier absorption (%)
     \def\scatteringLoss{15}   % Scattering loss (%)
-    \def\leakageLoss{10}      % Current leakage (%)
+    \def\leakageLoss{10}      % Optical leakage (%)
     \pgfmathsetmacro{\angleA}{\radiationLoss/100*360}
     \pgfmathsetmacro{\angleB}{(\radiationLoss+\absorptionLoss)/100*360}
     \pgfmathsetmacro{\angleC}{(\radiationLoss+\absorptionLoss+\scatteringLoss)/100*360}
@@ -39,7 +39,7 @@
     \node[right, align=left, font=\small] at (2.5,-0.5) 
       {\textcolor{scattering}{$\bullet$} 散射损耗\\\footnotesize $\alpha_{\mathrm{scat}}$ (\scatteringLoss\%)};
     \node[right, align=left, font=\small] at (2.5,-1.5) 
-      {\textcolor{leakage}{$\bullet$} 电流泄漏\\\footnotesize $\eta_{\mathrm{inj}}<1$ (\leakageLoss\%)};
+      {\textcolor{leakage}{$\bullet$} 纵向/侧向光泄漏\\\footnotesize $\alpha_{\mathrm{leak}}$ (\leakageLoss\%)};
     
     % Title
     \node[above, font=\bfseries] at (0,2.2) {光子晶体面发射激光器阈值条件下的典型损耗分解};
@@ -47,8 +47,8 @@
     % Add equation annotation
     \node[below, align=center, font=\footnotesize] at (0,-2.5) 
       {$\alpha_{\mathrm{total}} = \alpha_{\mathrm{rad}} + \alpha_{\mathrm{fc}} + \alpha_{\mathrm{scat}} + \cdots$\\
-       $g_{\mathrm{th}} = \alpha_{\mathrm{total}}/\Gamma_{\mathrm{opt}}$};
+       $g_{\mathrm{mod,th}}=\alpha_{\mathrm{total}},\quad g_{\mathrm{mat,th}}=\alpha_{\mathrm{total}}/\Gamma_{\mathrm{opt}}$};
   \end{tikzpicture}
-  \caption{PCSEL 中的损耗机制分解示意图。辐射损耗通常占主导地位（尤其是对于表面发射器件），其次是自由载流子吸收和界面散射损耗。降低总损耗是实现低阈值激射的关键途径之一。注意电流泄漏虽然不直接贡献光学损耗，但会降低注入效率$\eta_{\mathrm{inj}}$，从而间接提高阈值电流密度。}
+  \caption{PCSEL 光学损耗账本的教学示意。图中比例不是特定器件的测量值；真实设计应由辐射功率、材料吸收、粗糙散射及纵向/侧向泄漏分别提取。电流泄漏不属于这张光学损耗饼图，应在阈值电流与注入效率模型中单独核算。}
   \label{fig:ch07_loss_breakdown_piechart}
 \end{figure}

@@ -1,104 +1,46 @@
 % !TEX root = ../main.tex
-% Figure: Linewidth enhancement factor and coherence properties
-% Chapter: ch21 - Linewidth, Coherence, and Brightness Characteristics
-% Description: Henry alpha factor impact on spectral purity
-
+% Three independent panels: carrier coupling, linewidth, and chirp
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=1.0]
-    % Left: Gain and refractive index change vs carrier density
-    \begin{scope}[shift={(-5,0)}]
-      % Axes
-      \draw[->] (0,0) -- (5,0) node[right] {$N$};
-      \draw[->] (0,-2) -- (0,3) node[above] {$g, \Delta n$};
-      
-      % Gain curve (linear increase then saturation)
-      \draw[very thick, blue, domain=0:4.5, samples=50] 
-        plot(\x,{max(0, 0.8*(\x-1)-0.1*(\x-1)^2)});
-      \node[right, blue] at (4.5,1.2) {增益$g(N)$};
-      
-      % Refractive index change (decreasing)
-      \draw[very thick, red, domain=0:4.5, samples=50] 
-        plot(\x,{-0.3*\x-0.05*\x^2});
-      \node[right, red] at (4.5,-2) {折射率变化$\Delta n(N)$};
-      
-      % Transparency point
-      \draw[dashed, gray] (1,-2) -- (1,3);
-      \node[below, gray] at (1,0) {\scriptsize $N_{tr}$};
-      
-      % Slopes indication
-      \draw[<->, blue] (2,0.5) -- (3,0.5);
-      \node[above, blue, font=\small] at (2.5,0.6) {$dg/dN$};
-      
-      \draw[<->, red] (2,-1) -- (3,-1.3);
-      \node[below, red, font=\small] at (2.5,-1.4) {$dn/dN$};
-      
-      \node[above, font=\bfseries] at (2.5,3.2) {(a) 增益与折射率色散};
-    \end{scope}
-    
-    % Right: Linewidth broadening mechanisms
-    \begin{scope}[shift={(2,0)}]
-      % Lorentzian lineshape (Schawlow-Townes)
-      \draw[thick, blue, domain=-3:3, samples=100] 
-        plot(\x,{2/(1+\x*\x)});
-      \node[above, blue] at (0,2.2) {肖洛-汤斯极限线宽$\Delta\nu_{\mathrm{ST}}$};
-      
-      % Broadened lineshape (Henry factor included)
-      \draw[thick, red, dashed, domain=-3:3, samples=100] 
-        plot(\x,{2/(1+(\x/1.5)^2)});
-      \node[above, red, align=center] at (1.5,1.5) {实际线宽\\$\Delta\nu=(1+\alpha_H^2)\Delta\nu_{\mathrm{ST}}$};
-      
-      % Half-width markers
-      \draw[dashed] (-1,0) -- (-1,1);
-      \draw[dashed] (1,0) -- (1,1);
-      \draw[<->] (-1,-0.3) -- (1,-0.3);
-      \node[below] at (0,-0.4) {$\Delta\nu_{\mathrm{ST}}$};
-      
-      \draw[dashed] (-1.5,0) -- (-1.5,0.75);
-      \draw[dashed] (1.5,0) -- (1.5,0.75);
-      \draw[<->] (-1.5,-0.6) -- (1.5,-0.6);
-      \node[below, red] at (0,-0.7) {$(1+\alpha_H^2)^{1/2}\Delta\nu_{\mathrm{ST}}$};
-      
-      % Frequency axis
-      \draw[->] (-3.5,-1) -- (3.5,-1) node[right] {$\nu-\nu_0$};
-      \node[below] at (0,-1.2) {(b) 线宽展宽机制};
-    \end{scope}
-    
-    % Bottom center: Alpha factor definition
-    \node[draw, align=center, font=\small] at (0,-2.5) {
-      亨利线宽增强因子定义:\\
-      $\displaystyle\alpha_H = -\frac{4\pi}{\lambda}\frac{dn'/dN}{dg/dN}$\\[6pt]
-      物理意义：振幅 - 相位耦合强度\\
-      典型值：体材料$\alpha_H\sim 3$--$6$，量子阱$\alpha_H\sim 2$--$4$
-    };
-    
-    % Chirp illustration inset
-    \begin{scope}[shift={(6,1)}, scale=0.8]
-      % Current pulse
-      \draw[->] (0,0) -- (3,0) node[right] {$t$};
-      \draw[->] (0,0) -- (0,2.5) node[above] {$I(t)$};
-      \draw[very thick, blue] (0,0.5) -- (1,0.5) -- (1,2) -- (2,2) -- (2,0.5) -- (3,0.5);
-      \node[above, blue] at (1.5,2.2) {方波调制};
-      
-      % Frequency chirp response
-      \draw[->] (0,-2.5) -- (3,-2.5) node[right] {$t$};
-      \draw[->] (0,-4.5) -- (0,-2) node[above] {$\delta\nu(t)$};
-      \draw[very thick, red] (0,-3) -- (1,-3);
-      \draw[very thick, red] (1,-3) .. controls (1.2,-4) and (1.8,-4) .. (2,-3);
-      \draw[very thick, red] (2,-3) -- (3,-3);
-      \node[below, red] at (1.5,-4.2) {啁啾响应};
-      
-      \node[align=center, font=\small] at (1.5,-1) {动态线宽展宽:\\直接调制引起瞬态频率偏移};
-    \end{scope}
-    
-    % Impact on applications
-    \node[align=left, font=\footnotesize, anchor=south west] at (-6,-4) {
-      \textbf{对应用的影响}:\\
-      $\bullet$ 光谱纯度:$\Delta\lambda = \lambda^2\Delta\nu/c$\\
-      $\bullet$ 相干长度:$L_c = c/(\pi\Delta\nu)$\\
-      $\bullet$ 传感灵敏度$\propto 1/\sqrt{\Delta\nu}$
-    };
-  \end{tikzpicture}
-  \caption{亨利线宽增强因子 $\alpha_H$ 的物理来源及其对光子晶体面发射激光器光谱纯度的影响。(a) 左图示意载流子变化同时引起增益和折射率变化，从而产生振幅与相位耦合；(b) 右图示意 $\alpha_H$ 使实际线宽相对肖洛-汤斯极限进一步展宽，并在动态调制中引入频率啁啾。}
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,font=\small]
+    \tikzset{panel/.style={draw=black!50,rounded corners=2pt,minimum width=4.8cm,minimum height=8.0cm}}
+
+    % Panel a
+    \node[panel] at (-5.2,0) {};
+    \node[font=\small\bfseries,anchor=north west] at (-7.35,2.70) {(a) 载流子耦合};
+    \draw[->] (-6.9,-.55)--(-3.35,-.55) node[right] {$N$};
+    \draw[->] (-6.9,-1.15)--(-6.9,1.55) node[above] {$g,\Delta n$};
+    \draw[very thick,blue!75!black] plot[smooth] coordinates {(-6.75,-.45)(-6.1,-.35)(-5.5,.10)(-4.7,.70)(-3.7,1.05)};
+    \draw[very thick,red!75!black] plot[smooth] coordinates {(-6.75,-.15)(-6.0,-.35)(-5.2,-.65)(-4.3,-.95)(-3.55,-1.05)};
+    \node[blue!75!black,anchor=west] at (-4.65,1.32) {$g(N)$};
+    \node[red!75!black,anchor=west] at (-5.15,-1.32) {$\Delta n(N)$};
+    \node[draw=blue!45!black,rounded corners,fill=blue!5,align=center,font=\footnotesize,text width=3.75cm] at (-5.2,-2.7) {$\displaystyle \alpha_H=-\frac{4\pi}{\lambda}\frac{\partial n/\partial N}{\partial g/\partial N}$\\定义必须与增益和载流子单位一致};
+
+    % Panel b
+    \node[panel] at (0,0) {};
+    \node[font=\small\bfseries,anchor=north west] at (-2.15,2.70) {(b) 线宽放大};
+    \draw[->] (-2.0,-.8)--(2.05,-.8);
+    \node[anchor=east] at (1.95,-1.02) {$\nu-\nu_0$};
+    \draw[->] (-2.0,-.8)--(-2.0,1.55) node[above right] {谱密度};
+    \draw[very thick,blue!75!black,domain=-1.5:1.5,samples=80] plot (\x,{1.25/(1+4*\x*\x)-.65});
+    \draw[very thick,red!75!black,dashed,domain=-1.85:1.85,samples=80] plot (\x,{1.05/(1+1.2*\x*\x)-.65});
+    \node[blue!75!black,anchor=west] at (.35,.75) {基准线形};
+    \node[red!75!black,anchor=west] at (.95,.05) {含 $\alpha_H$};
+    \node[draw=red!45!black,rounded corners,fill=red!4,align=center,font=\footnotesize,text width=3.75cm] at (0,-2.7) {在常用单模、白噪声近似下\\$\Delta\nu\propto(1+\alpha_H^2)$\\不是对所有噪声与观测时间的通式};
+
+    % Panel c
+    \node[panel] at (5.2,0) {};
+    \node[font=\small\bfseries,anchor=north west] at (3.05,2.70) {(c) 调制啁啾};
+    \draw[->] (3.35,.35)--(7.05,.35) node[right] {$t$};
+    \draw[->] (3.35,.35)--(3.35,1.65) node[above] {$I(t)$};
+    \draw[very thick,blue!75!black] (3.45,.6)--(4.25,.6)--(4.25,1.35)--(6.1,1.35)--(6.1,.6)--(6.85,.6);
+    \draw[->] (3.35,-1.45)--(7.05,-1.45) node[right] {$t$};
+    \draw[->] (3.35,-1.45)--(3.35,-.15) node[above] {$\delta\nu(t)$};
+    \draw[very thick,red!75!black] plot[smooth] coordinates {(3.45,-1.1)(4.05,-1.1)(4.28,-.45)(4.65,-.95)(5.75,-.95)(6.08,-1.65)(6.4,-1.1)(6.85,-1.1)};
+    \node[draw=orange!65!black,rounded corners,fill=orange!5,align=center,font=\footnotesize,text width=3.75cm] at (5.2,-2.85) {频率偏移的符号与时间形状取决于载流子动力学、热漂移和调制波形};
+  \end{tikzpicture}%
+  }
+  \caption{Henry 线宽增强因子的三个作用层次：载流子导致的增益/折射率共同变化、在特定单模噪声模型中的线宽放大，以及直接调制下的瞬态啁啾。三者分开绘制，避免把稳态线宽公式误当作全部动态噪声。}
   \label{fig:ch21_linewidth_enhancement}
 \end{figure}

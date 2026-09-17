@@ -13,7 +13,7 @@
 
   % (a) symmetry-protected BIC
   \begin{scope}[shift={(-5.2,0)}]
-    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \draw[panel] (-2.3,-2.5) rectangle (2.3,2.45);
     \node[font=\bfseries] at (0,2.12) {(a) 对称性禁耦合};
     \draw[slab] (-1.8,-0.12) rectangle (1.8,0.22);
     \foreach \x in {-1.35,-0.9,...,1.35} {
@@ -22,35 +22,35 @@
     }
     \fill[red!28] (-0.85,0.48) ellipse (0.52 and 0.20);
     \fill[blue!25] (0.85,0.48) ellipse (0.52 and 0.20);
-    \node[font=\scriptsize] at (0,0.86){奇/暗模};
-    \node[port] at (0,1.45){法向辐射通道};
+    \node[font=\scriptsize] at (1.0,0.92){暗模};
+    \node[port] at (0,1.65){法向辐射通道};
     \draw[rad,densely dashed] (-0.45,0.66)--(-0.45,1.20);
     \draw[rad,densely dashed] (0.45,0.66)--(0.45,1.20);
-    \draw[red!75!black,very thick] (-0.18,1.15)--(0.18,1.51);
-    \draw[red!75!black,very thick] (-0.18,1.51)--(0.18,1.15);
+    \draw[red!75!black,very thick] (-0.18,1.05)--(0.18,1.35);
+    \draw[red!75!black,very thick] (-0.18,1.35)--(0.18,1.05);
     \node[note] at (0,-1.22)
       {模式表示与法向通道不匹配，辐射矩阵元被对称性压成零。};
   \end{scope}
 
   % (b) Friedrich-Wintgen interference
   \begin{scope}
-    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \draw[panel] (-2.3,-2.5) rectangle (2.3,2.45);
     \node[font=\bfseries] at (0,2.12) {(b) 干涉型 BIC};
     \node[mode,fill=orange!18] (m1) at (-0.82,0.82){模 1};
     \node[mode,fill=orange!18] (m2) at (0.82,0.82){模 2};
     \node[port,minimum width=2.6cm] (cont) at (0,-0.35){共享辐射连续谱};
     \draw[leak] (m1)--node[left,font=\scriptsize] {$+$} (cont);
     \draw[leak] (m2)--node[right,font=\scriptsize] {$-$} (cont);
-    \draw[<->,thick,purple!70!black] (m1)--node[above,font=\scriptsize]{近场耦合}(m2);
+    \draw[<->,thick,purple!70!black] (m1)--node[above=10pt,font=\scriptsize]{近场耦合}(m2);
     \node[draw=purple!65!black,fill=purple!6,rounded corners=2pt,font=\scriptsize,align=center]
       at (0,-1.10) {$d_1+d_2=0$};
-    \node[note] at (0,-1.68)
+    \node[note] at (0,-1.85)
       {两个共振模向同一连续谱泄漏，某个本征组合发生相消。};
   \end{scope}
 
   % (c) useful quasi-BIC window
   \begin{scope}[shift={(5.2,0)}]
-    \draw[panel] (-2.3,-2.05) rectangle (2.3,2.45);
+    \draw[panel] (-2.3,-2.5) rectangle (2.3,2.45);
     \node[font=\bfseries] at (0,2.12) {(c) quasi-BIC 工作区};
     \draw[->,thick] (-1.55,-1.18)--(1.75,-1.18) node[right]{$\delta$};
     \draw[->,thick] (-1.55,-1.18)--(-1.55,1.40) node[above]{$Q_{\mathrm{rad}}$};
@@ -58,9 +58,9 @@
       plot(\x,{1.8*exp(-1.2*(\x+1.18))-0.55});
     \draw[dashed,gray!65] (-1.18,-1.18)--(-1.18,1.22);
     \node[font=\scriptsize,gray!70,rotate=90] at (-1.37,0.22){理想 BIC};
-    \draw[green!60!black,thick,densely dashed] (-0.18,-0.90) rectangle (1.05,-0.12);
-    \node[font=\scriptsize,green!45!black,align=center] at (0.43,-0.50)
-      {有限出光\\可控损耗};
+    \draw[green!60!black,thick,densely dashed] (-0.6,-1.0) rectangle (1.4,-0.62);
+    \node[font=\scriptsize,green!45!black,align=center] at (0.40,-0.82)
+      {有限出光};
     \draw[rad] (0.70,-0.08)--(0.70,0.62);
     \node[font=\scriptsize] at (0.32,-1.58){$Q_{\mathrm{rad}}\propto\delta^{-2}$};
   \end{scope}

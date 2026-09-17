@@ -1,54 +1,57 @@
-% 正方晶格实空间与倒空间示意
+% 正方晶格实空间与倒空间示意；信息按“几何—路径—对偶关系”分层。
 \resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
-  % 左：实空间
-  \begin{scope}[shift={(-4.8,0.2)}]
-    \node[font=\bfseries] at (0,2.95) {(a) 实空间正方晶格};
+  \tikzset{
+    panel/.style={draw=gray!45,rounded corners=3pt,fill=gray!2},
+    pointlabel/.style={font=\footnotesize,fill=white,inner sep=1.5pt}
+  }
+
+  \begin{scope}[shift={(-4.2,0.35)}]
+    \draw[panel] (-3.0,-2.65) rectangle (3.0,2.75);
+    \node[font=\bfseries,anchor=west] at (-2.75,2.4) {(a) 实空间正方晶格};
     \foreach \x in {-2,-1,0,1,2} {
       \foreach \y in {-2,-1,0,1,2} {\fill (\x,\y) circle (2pt);}
     }
-    \draw[thick,dashed] (0,0) rectangle (2,2);
-    \draw[green!60!black,thick] (-1,-1) rectangle (1,1);
-    \node[green!50!black,below] at (0,-1.1) {维格纳-赛茨原胞};
-    \node[above right] at (0,0) {原胞};
-    \draw[->,very thick,blue] (0,0) -- (2,0) node[midway,below] {$\mathbf{a}_1=a\hat{x}$};
-    \draw[->,very thick,red] (0,0) -- (0,2) node[midway,left] {$\mathbf{a}_2=a\hat{y}$};
-    \draw[<->] (2.35,-1) -- (2.35,1) node[midway,right] {$a$};
+    \draw[green!60!black,very thick] (-0.5,-0.5) rectangle (0.5,0.5);
+    \node[green!45!black,anchor=north] at (0,-2.95) {Wigner--Seitz 原胞};
+    \draw[->,very thick,blue] (0,0) -- (1.45,0)
+      node[at end,below=8pt] {$\mathbf a_1=a\hat{\mathbf x}$};
+    \draw[->,very thick,red] (0,0) -- (0,1.45)
+      node[midway,left=3pt] {$\mathbf a_2=a\hat{\mathbf y}$};
+    \draw[<->,thick] (2.35,-0.5) -- (2.35,0.5) node[midway,right] {$a$};
   \end{scope}
 
-  % 右：倒空间
-  \begin{scope}[shift={(4.2,0.2)}]
-    \node[font=\bfseries] at (0,3.35) {(b) 倒空间与第一布里渊区};
-    \fill[blue!10] (-1.8,-1.8) rectangle (1.8,1.8);
-    \draw[thick,blue] (-1.8,-1.8) rectangle (1.8,1.8);
-    \draw[dashed,gray] (-3,-3) rectangle (3,3);
-    \node[gray] at (2.2,2.35) {第二布里渊区};
+  \begin{scope}[shift={(4.15,0.35)}]
+    \draw[panel] (-3.35,-2.65) rectangle (3.35,2.75);
+    \node[font=\bfseries,anchor=west] at (-3.1,2.4) {(b) 第一布里渊区与高对称路径};
+    \fill[blue!9] (-1.45,-1.45) rectangle (1.45,1.45);
+    \draw[very thick,blue!70] (-1.45,-1.45) rectangle (1.45,1.45);
+    \draw[->,thick] (-2.05,0) -- (2.65,0) node[right] {$k_x$};
+    \draw[->,thick] (0,-2.0) -- (0,1.65) node[left] {$k_y$};
 
-    \fill (0,0) circle (2pt) node[below right] {$\Gamma(0,0)$};
-    \fill (1.8,0) circle (2pt) node[below] {$X(\pi/a,0)$};
-    \fill (1.8,1.8) circle (2pt) node[above right] {$M(\pi/a,\pi/a)$};
-    \fill (0,1.8) circle (2pt) node[left] {$Y(0,\pi/a)$};
+    \fill (0,0) circle (2.2pt);
+    \fill (1.45,0) circle (2.2pt);
+    \fill (1.45,1.45) circle (2.2pt);
+    \node[pointlabel,anchor=north east] at (-0.05,-0.06) {$\Gamma(0,0)$};
+    \node[pointlabel,anchor=north west] at (1.60,-0.10) {$X$};
+    \node[pointlabel,anchor=south west] at (1.55,1.52) {$M$};
 
-    \draw[very thick,red,->] (0,0) -- (1.8,0);
-    \draw[very thick,red,->] (1.8,0) -- (1.8,1.8);
-    \draw[very thick,red,->] (1.8,1.8) -- (0,0);
-    \node[red,above] at (0.9,0.05) {$\Gamma\!\to\!X$};
-    \node[red,right] at (1.85,0.9) {$X\!\to\!M$};
-    \node[red,left] at (0.9,0.95) {$M\!\to\!\Gamma$};
+    \draw[very thick,red!75!black,->] (0.12,0) -- (1.28,0);
+    \draw[very thick,red!75!black,->] (1.45,0.14) -- (1.45,1.27);
+    \draw[very thick,red!75!black,->] (1.34,1.34) -- (0.12,0.12);
+    \node[red!70!black,font=\footnotesize,anchor=north] at (.9,-.65) {$\Gamma\to X$};
+    \node[red!70!black,font=\footnotesize,anchor=west] at (1.68,0.72) {$X\to M$};
+    \node[red!70!black,font=\footnotesize,fill=white,inner sep=1pt] at (-.60,1.15) {$M\to\Gamma$};
 
-    \draw[->,thick] (0,0) -- (3.2,0) node[right] {$\mathbf{b}_1=\dfrac{2\pi}{a}\hat{x}$};
-    \draw[->,thick] (0,0) -- (0,3.0) node[left] {$\mathbf{b}_2=\dfrac{2\pi}{a}\hat{y}$};
-
-    \draw[->] (-1.8,-2.45) -- (2.35,-2.45) node[right] {$|\mathbf{k}|$};
-    \draw (-1.8,-2.55) -- (-1.8,-2.35) node[below] {$\Gamma$};
-    \draw (-0.4,-2.55) -- (-0.4,-2.35) node[below] {$X$};
-    \draw (0.95,-2.55) -- (0.95,-2.35) node[below] {$M$};
-    \draw (2.05,-2.55) -- (2.05,-2.35) node[below] {$\Gamma$};
-    \node[above] at (0.1,-2.35) {\scriptsize 常用能带路径};
+    \node[font=\footnotesize,anchor=south] at (0,-2.35)
+      {常用能带路径：$\Gamma\rightarrow X\rightarrow M\rightarrow\Gamma$};
   \end{scope}
 
-  \draw[->,very thick,purple,bend left=22] (-2.7,3.65) to node[above] {傅里叶变换} (2.2,3.65);
-  \node[draw,align=center] at (0,-3.9) {$\mathbf{b}_i\!\cdot\!\mathbf{a}_j = 2\pi\delta_{ij}$\\
-  对正方晶格：$|\mathbf{b}_1|=|\mathbf{b}_2|=\dfrac{2\pi}{a}$};
+  \draw[->,very thick,purple!70!black] (-1.1,3.35) -- (1.1,3.35)
+    node[midway,above] {傅里叶变换};
+  \node[draw=gray!55,rounded corners,fill=white,align=center] at (0,-3.8)
+    {$\mathbf b_i\!\cdot\!\mathbf a_j=2\pi\delta_{ij}$\qquad
+     $\mathbf b_1=\dfrac{2\pi}{a}\hat{\mathbf x}$\qquad
+     $\mathbf b_2=\dfrac{2\pi}{a}\hat{\mathbf y}$};
 \end{tikzpicture}%
 }

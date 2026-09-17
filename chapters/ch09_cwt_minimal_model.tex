@@ -43,30 +43,29 @@ CWT 的作用正是在此处引入。它不替代 Maxwell 方程，也不否定�
   \centering
   \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
     \begin{scope}
-      \draw[fill=blue!8,rounded corners] (-1.6,-1.2) rectangle (1.6,1.2);
+      \draw[fill=blue!8,rounded corners] (-2,-1.55) rectangle (2,1.55);
       \draw[->,thick] (0,0)--(1.15,0) node[right] {$R_x$};
       \draw[->,thick] (0,0)--(-1.15,0) node[left] {$S_x$};
       \draw[->,thick] (0,0)--(0,0.95) node[above] {$R_y$};
       \draw[->,thick] (0,0)--(0,-0.95) node[below] {$S_y$};
-      \node at (0,-1.7){实空间/面内传播图像};
+      \node at (0,-2.15){实空间/面内传播图像};
     \end{scope}
     \begin{scope}[xshift=7.2cm]
       \draw[->] (-1.8,0)--(1.8,0) node[right] {$k_x$};
       \draw[->] (0,-1.8)--(0,1.8) node[above] {$k_y$};
-      \fill[blue!70] (1.2,0) circle (0.07) node[below] {$+\beta\hat{\bm x}$};
-      \fill[blue!70] (-1.2,0) circle (0.07) node[below] {$-\beta\hat{\bm x}$};
-      \fill[blue!70] (0,1.2) circle (0.07) node[right] {$+\beta\hat{\bm y}$};
-      \fill[blue!70] (0,-1.2) circle (0.07) node[right] {$-\beta\hat{\bm y}$};
+      \fill[blue!70] (1.2,0) circle (0.07) node[below right=5pt] {$+\beta\hat{\bm x}$};
+      \fill[blue!70] (-1.2,0) circle (0.07) node[below left=5pt] {$-\beta\hat{\bm x}$};
+      \fill[blue!70] (0,1.2) circle (0.07) node[above right=5pt] {$+\beta\hat{\bm y}$};
+      \fill[blue!70] (0,-1.2) circle (0.07) node[below right=5pt] {$-\beta\hat{\bm y}$};
       \draw[<->,red!75,thick] (1.2,0)--(-1.2,0);
       \draw[<->,red!75,thick] (0,1.2)--(0,-1.2);
       \draw[<->,orange!80!black,thick] (1.2,0)--(0,1.2);
       \draw[<->,orange!80!black,thick] (1.2,0)--(0,-1.2);
       \draw[<->,orange!80!black,thick] (-1.2,0)--(0,1.2);
       \draw[<->,orange!80!black,thick] (-1.2,0)--(0,-1.2);
-      \node[red!75] at (0,0.23) {$\kappa_1:\,\bm G_x$};
-      \node[orange!80!black] at (0.86,0.78) {$\kappa_2:\,\bm G_x\!\pm\!\bm G_y$};
-      \node[fill=white,inner sep=1pt] at (0,-0.55) {$A_1,\;B_1,\;E$};
-      \node at (0,-2.0){倒空间中的四波与主导散射路径};
+      \node[red!75] at (0,3.0) {$\kappa_1$：反向波耦合};
+      \node[orange!80!black] at (0,-2.3) {$\kappa_2$：转角耦合};
+      \node at (0,-2.9){倒空间中的四波与主导散射路径};
     \end{scope}
   \end{tikzpicture}
   \caption{最小四波 CWT 图像。左图强调四支基本波在面内传播；右图强调它们在倒空间中如何通过主导倒格矢散射彼此连接。对 PCSEL 而言，后续的偏振、BIC 与阈值排序都建立在这类最小闭合散射网络之上。}
@@ -203,7 +202,7 @@ R_x & S_x & R_y & S_y
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch09_cwt_signal_flow.tex}
-  \caption{CWT信号流与耦合网络。(a)四波ansatz的实空间图像：正向行波$R_x$、反向行波$S_x$、侧向行波$R_y$和$S_y$在面内传播；(b)倒空间中的耦合路径：红色双向箭头表示由倒格矢$\gvec_x$驱动的反向散射（耦合强度$\kappa_1$），橙色双向箭头表示由$\gvec_x\pm\gvec_y$驱动的90°转角散射（耦合强度$\kappa_2$）；(c)完整的信号流图：每个节点代表一个行波基底的复振幅，边上的标记表示对应的耦合机制（DFB反馈、转角散射、辐射泄漏、材料增益），闭环增益条件要求绕任意闭合回路一周的总增益等于总损耗。}
+  \caption{四波 CWT 的耦合网络与矩阵表示。(a) $R_x,S_x,R_y,S_y$ 是四个面内传播基底；红色边表示正反向反馈耦合 $\kappa_1$，橙色边表示二维转角耦合 $\kappa_2$，虚线箭头表示开放通道。(b) 同一网络写成线性振幅方程后，保守耦合、损耗与增益分别进入 $\bm\Omega$、$\bm\Gamma$ 与 $\bm G$。阈值由完整矩阵本征值判定。}
   \label{fig:ch09_cwt_signal_flow}
 \end{figure}
 
@@ -276,11 +275,12 @@ $g_{\mathrm{mat}}(N,T,\hbar\omega)$；
 
 第三，如果某个耦合系数同时参与面内反馈和垂直辐射，那么它天然就对应设计中的权衡。因为增强它，可能一边在提升反馈，另一边也在提升辐射损耗。
 
-把 \cref{eq:cwt_kappa} 和前面的选择定则结合起来，还能直接读出 $\kappa_1,\kappa_2$ 为什么恰好由少数 Fourier 分量给定。对最小四波模型而言，沿 $\pm x$ 的前后向耦合主要由
+把 \cref{eq:cwt_kappa} 和前面的选择定则结合起来，还能直接读出 $\kappa_1,\kappa_2$ 为什么恰好由少数 Fourier 分量给定。PCSEL 的二阶 $\Gamma$ 点 Bragg 条件对应基本波大小 $\beta_0\approx2\pi/a$。因此沿 $\pm x$ 的两支基本波之差为
 \[
-\bm\beta_1-\bm\beta_2\approx \left(\frac{2\pi}{a},0\right)
+\bm\beta_1-\bm\beta_2\approx \left(\frac{4\pi}{a},0\right)=2\bm G_x,
+\qquad \bm G_x=\left(\frac{2\pi}{a},0\right),
 \]
-对应的一族 Fourier 分量控制；沿 $x/y$ 两组波之间的交叉耦合则主要由
+前后向耦合由二阶 Fourier 分量 $\Delta\varepsilon_{2\bm G_x}$ 控制，而不是一阶 $\Delta\varepsilon_{\bm G_x}$。沿 $x/y$ 两组波之间的交叉耦合则主要由
 \[
 \bm\beta_1-\bm\beta_3,\quad
 \bm\beta_1-\bm\beta_4
@@ -291,7 +291,7 @@ $g_{\mathrm{mat}}(N,T,\hbar\omega)$；
 \[
 \bm G_x=\left(\frac{2\pi}{a},0\right),
 \]
-并关注沿 $\pm x$ 传播的两支基本波之间的耦合，即 $\bm\beta_1=(\beta,0)$ 与 $\bm\beta_2=(-\beta,0)$。把周期扰动展开为
+并关注沿 $\pm x$ 传播的两支基本波之间的耦合，即 $\bm\beta_1=(\beta_0,0)$ 与 $\bm\beta_2=(-\beta_0,0)$，其中 $\beta_0\approx2\pi/a$。把周期扰动展开为
 \[
 \Delta\varepsilon(\rho,z)=\sum_{\gvec}\Delta\varepsilon_{\gvec}(z)\ee^{\ii\gvec\cdot\rho},
 \]
@@ -308,30 +308,34 @@ $g_{\mathrm{mat}}(N,T,\hbar\omega)$；
 \sum_{\gvec}
 \int \Delta\varepsilon_{\gvec}(z)\big|\bm e_0(z)\big|^2\,\dd z
 \int_{A_c}
-\ee^{\ii[\gvec-(2\beta,0)]\cdot\rho}\,\dd^2\rho.
+\ee^{\ii[\gvec-(2\beta_0,0)]\cdot\rho}\,\dd^2\rho.
 \label{eq:cwt_matrix_element_example}
 \end{align}
-在近布拉格条件 $2\beta\approx 2\pi/a$ 下，面积积分只保留 $\gvec=\bm G_x$ 这一项，于是
+在二阶 $\Gamma$ 点 Bragg 条件 $2\beta_0\approx4\pi/a$ 下，面积积分只保留 $\gvec=2\bm G_x$ 这一项，于是
 \begin{equation}
 \kappa_{12}\equiv \kappa_1
 \propto
 A_c
-\int \Delta\varepsilon_{\bm G_x}(z)\big|\bm e_0(z)\big|^2\,\dd z.
+\int \Delta\varepsilon_{2\bm G_x}(z)\big|\bm e_0(z)\big|^2\,\dd z.
 \label{eq:cwt_kappa1_example}
 \end{equation}
 \cref{eq:cwt_kappa1_example} 说明矩阵元来自\textbf{特定倒格矢 Fourier 分量}与\textbf{纵向模场重叠}的乘积，而不是抽象常数。其他矩阵元类似，只是对应不同的 $\bm\beta_m-\bm\beta_n$ 与不同的主导倒格矢。
 
 \begin{ExampleBox}
-对方格晶格圆形空气孔（半径 $r$、晶格常数 $a$、背景折射率 $n_b\approx3.4$），主导倒格矢 $\bm G_x=(2\pi/a,0)$ 对应的截面 Fourier 分量可解析估算为
+\textbf{[本书算例] 圆孔的二阶 Fourier 分量。}对方格晶格圆形空气孔（半径 $r$、晶格常数 $a$、背景折射率 $n_b\approx3.4$），圆盘指示函数在非零倒格矢 $\bm G$ 处的归一化系数是 $2fJ_1(Gr)/(Gr)$，其中 $f=\pi r^2/a^2$。对前后向耦合需要的 $\bm G=2\bm G_x$，因此
 \[
-\Delta\varepsilon_{\bm G_x}\approx 2\left(\frac{r}{a}\right) J_1\!\left(\frac{2\pi r}{a}\right) \cdot(n_{\rm air}^2-n_b^2)
-\approx -2\left(\frac{r}{a}\right)J_1\!\left(\frac{2\pi r}{a}\right)\cdot n_b^2,
+\Delta\varepsilon_{2\bm G_x}
+=
+\left(\frac{r}{a}\right) J_1\!\left(\frac{4\pi r}{a}\right)
+\bigl(n_{\rm air}^2-n_b^2\bigr),
 \]
-其中 $J_1$ 是一阶 Bessel 函数。对典型占空比 $r/a\approx0.3$，$J_1(2\pi\times0.3)\approx0.40$，因此
+其中 $J_1$ 是一阶 Bessel 函数。对 $r/a=0.30$，$J_1(1.2\pi)\approx0.0251$，故
 \[
-|\Delta\varepsilon_{\bm G_x}|\approx 2\times0.3\times0.40\times11.6\approx2.8.
+|\Delta\varepsilon_{2\bm G_x}|
+\approx0.30\times0.0251\times(3.4^2-1)
+\approx0.080.
 \]
-再乘以纵向重叠积分（\textbf{[本书算例]}中光子晶体层常贡献约 10--20\% 纵向模能量），有效耦合系数 $\kappa_1$ 的典型量级约为 $\kappa_1/(\omega/c) \sim 10^{-2}$--$10^{-1}$，对应波矢修正 $\delta k \sim |\kappa_1|/v_g\sim1$--$10\,\mathrm{cm}^{-1}$。这应读作“数量级一致性”而非通用拟合律；与已报道 CWT/实验量级对照可见于\cite{liang2012square,liang2013triangular,yoshida2023}。
+这个数值说明二阶耦合会对孔半径十分敏感，尤其当 Bessel 函数接近零点时。它还不能单独给出 $\kappa_1$：必须继续乘以纵向重叠和由所选包络归一化决定的前因子。为避免把空间耦合系数（$\mathrm{m}^{-1}$）与时间耦合率（$\mathrm{s}^{-1}$）混用，本算例不再从无量纲 Fourier 系数直接宣称某个 $\kappa$ 范围。
 \end{ExampleBox}
 
 \section{四个基本波如何重新组合成实际候选模}
@@ -349,6 +353,8 @@ A_c
 那么 $\bm{u}_j$ 就给出第 $j$ 个候选超模在四个基本波基底上的权重，而 $\lambda_j$ 的实部则表征该超模在小信号近似下是净增长还是净衰减。
 
 \section{把四波基底改写成 \texorpdfstring{$C_{4v}$}{C4v} 的 irrep 基底}
+\paragraph{先说明基底约定}
+本节 $A_1/B_1$ 标签描述把四个振幅作为普通标量、仅按方向置换时的最小模型。把它用于真实 TE 电磁场前，必须把偏振基矢随旋转和镜面操作的变号带入表示矩阵；例如 \cref{fig:abcd-envelopes} 的余弦组合若表示轴矢量 $H_z$，两支单重态的完整场标签变为 $A_2/B_2$。以下代数基变换不受影响，但不能直接把标量标签当成未经检查的器件模 irrep。
 为了使 CWT 成为可复用的教材工具，不能只说明四个基本波可形成若干组合，还应把这些组合写成 \cref{ch:polarization} little-group 框架中的不可约表示。对方格晶格，$\Gamma$ 点 little group 为 $C_{4v}$。在最小四波子空间
 \[
 \bm{a}=
@@ -468,13 +474,13 @@ U = \frac{1}{\sqrt{2}}
 \max_j \operatorname{Re}(\lambda_j)=0.
 \label{eq:cwt_threshold}
 \end{equation}
-这个表达比“$g_{\mathrm{th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$”更适合描述 PCSEL 的模竞争，因为它允许不同超模具有不同的辐射损耗、内部损耗投影和增益重叠。CWT 并不推翻 \cref{ch:threshold} 的阈值公式，而是把单模阈值条件推广为多模耦合后的超模本征值问题。
+这个表达比“$g_{\mathrm{mod,th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$”更适合描述 PCSEL 的模竞争，因为它允许不同超模具有不同的辐射损耗、内部损耗投影和增益重叠。CWT 并不推翻 \cref{ch:threshold} 的阈值公式，而是把单模阈值条件推广为多模耦合后的超模本征值问题。
 
 若把第 $j$ 支超模的本征值显式拆成
 \begin{equation}
 \lambda_j
 =
-v_{\mathrm{en},j}
+\frac{v_{\mathrm{en},j}}{2}
 \bigl[
 \Gamma_{\mathrm{opt},j}g_{\mathrm{mat}}
 -\alpha_{\mathrm{rad},j}

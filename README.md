@@ -6,6 +6,12 @@
 
 ## 项目定位
 
+### 2026-09-17 图解与入门修订
+
+网页首页拆解 PC / SE / L；第一章前移结构比较并增加 FP 边发射原理与阈值算例；第五章增加 Γ 点相位、ABCD 组合、正方晶格真实 PWEM 能带及三角晶格 I–IV 图解；第八章增加 FFT 远场对照与椭圆化二模算例。同步纠正群速度、有限腔寿命和对称性标签的适用条件，并重写前言。
+
+新增计算入口见 `code/teaching_visuals/README.md`。书本与网站共用 `figures/computed/` 中的图源；实际计算与教学参数模型分别标明。
+
 本书尝试把 PCSEL 作为三类对象同时处理：
 
 - 周期开放电磁系统
@@ -19,7 +25,7 @@
 - PWEM、RCWA、FDTD、FEM 等数值方法
 - 外延层光学、量子阱增益、电注入、载流子输运、热-电-光耦合
 - 大面积单模设计、鲁棒性分析、动态学与噪声
-- 实用工作流、完整教材式 worked example、失败模式与检查清单
+- 从单胞到器件的仿真路径、两层可复核例题、失败模式与检查清单
 
 ## 仓库结构
 
@@ -32,9 +38,14 @@ PCSELbook/
 ├─ frontmatter/             # 封面、前言
 ├─ chapters/                # 各章节正文
 ├─ code/
-│  └─ pwem_square_hole/     # 纯 Python PWEM 教学算例
+│  ├─ vertical_tmm_mode/    # 一维纵向 TE 模与量子阱重叠
+│  ├─ pwem_square_hole/     # 二维圆孔方格 PWEM
+│  ├─ pwem_cutoff_failure/  # 截断不足反例
+│  ├─ fp_decay_q/           # 衰减寿命与 Q 的校准算例
+│  └─ rcwa_square_hole/     # RCWA 单胞算例入口
 ├─ review/                  # 各轮审稿与修订依据
 ├─ reference/               # 参考论文/资料
+├─ knowledge-site/          # 从书稿自动生成的静态知识站
 ├─ build/                   # 编译输出（忽略追踪）
 └─ version/                 # 个人留档版本（忽略追踪）
 ```
@@ -67,17 +78,21 @@ latexmk -c -outdir=build -jobname=pcselbook main.tex
 
 ## 数值算例代码
 
-仓库提供了一个最小 PWEM 教学算例：
+可运行算例按“校准件—反例—主例题”组织：
 
-- [code/pwem_square_hole/run_pwem_square_hole.py](code/pwem_square_hole/run_pwem_square_hole.py)
-- [code/pwem_square_hole/README.md](code/pwem_square_hole/README.md)
+- [code/vertical_tmm_mode/README.md](code/vertical_tmm_mode/README.md)：求纵向 TE 束缚模、$n_{\mathrm{eff}}$ 与 $\Gamma_{\mathrm{QW}}$。
+- [code/pwem_square_hole/README.md](code/pwem_square_hole/README.md)：计算正方晶格圆孔的标量 PWEM 能带与高对称点数据。
+- [code/pwem_cutoff_failure/README.md](code/pwem_cutoff_failure/README.md)：展示倒格截断不足如何造成伪收敛与模式误判。
+- `code/fp_decay_q/`：由实际衰减信号核对振幅寿命、能量寿命与 $Q$ 的因子 2。
+- `code/rcwa_square_hole/`：开放周期单胞的 RCWA 算例入口。
 
-该脚本使用纯 Python 标准库，实现一个正方晶格圆孔二维光子晶体的标量 PWEM 计算，并输出：
+书中第 23 章只把已实际运行的 TMM 与 PWEM 标为“实算值”；有限阵列和电热项明确保留为待验证条件。练习题的答案线索与逐题评分点集中在第 29 章。
 
-- `pwem_square_hole_hz_bands.csv`
-- `pwem_square_hole_summary.json`
+## 知识站同步
 
-这部分用于支撑书中关于 PWEM、能带图读取和教学算例的内容。
+`knowledge-site/` 不维护另一份正文，章节、公式、图片、目录和检索索引都从本书源文件生成。进入该目录后运行 `npm run dev`，会先同步现有书稿，并在本地开发期间监听后续书稿变化；`npm run check` 则生成并完整检查可部署版本。
+
+Cloudflare Pages 不会自动上传。只有收到明确发布指令后，才运行 `npm run deploy:pages`；该命令上传前会清理字体回退、构建清单等无用文件并审计部署产物。
 
 ## 写作与修订原则
 
@@ -123,4 +138,3 @@ git push
 1. 先改正文
 2. 再编译验收
 3. 再做一次小粒度提交
-

@@ -71,13 +71,14 @@
   \caption{全书最高频核心符号的前置工具页。表中“典型量级”用于\textbf{[教学示意]}与\textbf{[本书算例]}对齐，跨平台定量比较需回到各章文献值与边界条件。}
   \label{tab:core_symbols_toolpage}
   \setlength{\tabcolsep}{3pt}
-  \begin{tabularx}{\textwidth}{@{}p{1.95cm}p{1.95cm}p{2.2cm}Y@{}}
+  \begin{tabularx}{\textwidth}{@{}p{2.25cm}p{1.55cm}p{2.25cm}Y@{}}
     \toprule
     符号 & 所属层级 & 典型单位/量级 & 最小含义 \\
     \midrule
     $\tilde{\omega}=\omega_r-\ii\gamma$ & L1 & \si{rad.s^{-1}}（$\omega_r\sim10^{15}$） & 开放系统复频率；实部给出中心频率，虚部给出衰减率 \\
     $Q,\tau_p$ & L1/L2 & $Q$ 无量纲；$\tau_p$ 常为 ps--ns & 品质因子与光子寿命；描述被动或线性工作点下的损耗时间尺度 \\
-    $g_{\mathrm{mat}},g_{\mathrm{mod}},g_{\mathrm{th}}$ & L2 & \si{cm^{-1}}（常见 $10^1$--$10^3$） & 材料增益、模增益、阈值增益；回答“增益补偿损耗需要到哪一步” \\
+    $g_{\mathrm{mat}},g_{\mathrm{mod}}$ & L2 & \si{cm^{-1}}（常见 $10^1$--$10^3$） & 材料增益与模增益；均匀近似下 $g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}g_{\mathrm{mat}}$ \\
+    $g_{\mathrm{mod,th}},g_{\mathrm{mat,th}}$ & L2 & \si{cm^{-1}} & 模式总损耗与考虑重叠后的材料阈值要求 \\
     $I_{\mathrm{th}}$ & L3/L4 & \si{mA}--\si{A}（随面积变化） & 阈值电流；真实器件达到阈值工作点所需的注入电流 \\
     $\Gamma_{\mathrm{opt}},\Gamma_{\mathrm{loss}}$ & L1/L2 & 无量纲（常见 $10^{-2}$--$10^{-1}$） & 目标模与有源区、损耗区的重叠因子 \\
     $\alpha_{\mathrm{rad}},\alpha_{\mathrm{int}}$ & L1/L2 & \si{cm^{-1}} 或 \si{m^{-1}} & 辐射损耗与内部损耗的等效损耗系数 \\
@@ -186,7 +187,7 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
   \item “模”泛指满足给定方程和边界条件的场分布；“Bloch 模”专指无限周期结构中满足 Bloch 条件的本征场，天然属于 L1 层；
   \item $\Gamma$ 点是布里渊区中心（$\kvec=\bm{0}$）；带边是群速度趋近于零的位置——两者可能重合，但不是同义词；
   \item 被动共振提供候选模，有源阈值决定谁先赢，这个顺序不能反过来；
-  \item 阈值增益 $g_\mathrm{th}$ 是 L2 层的光学条件，阈值电流 $I_\mathrm{th}$ 是 L4 层的器件条件，中间隔着电学与热学两层桥。
+  \item $g_\mathrm{mod,th}$ 是模式需补偿的总损耗，$g_\mathrm{mat,th}=g_\mathrm{mod,th}/\Gamma_\mathrm{opt}$ 是材料增益要求；两者都是 L2 光学条件。阈值电流 $I_\mathrm{th}$ 属于 L4 器件层，中间还隔着电学与热学两层桥。
 \end{itemize}
 
 \begin{PitfallBox}
@@ -203,7 +204,7 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 \{\tilde{\omega}_m,\bm{F}_m\}
 \\
 &\xrightarrow{\text{gain/loss overlap}}
-g_{\mathrm{th},m}
+g_{\mathrm{mat,th},m}
 \xrightarrow{\text{DD + Poisson + Heat}}
 I_{\mathrm{th},m}.
 \end{aligned}
@@ -273,7 +274,7 @@ I_{\mathrm{th},m}.
 
   \item \midq 试着用自己的话区分“Bloch 模”“被动共振模”“激射模”。
 
-  \item \hardq 给出一个例子，说明为什么 $g_\mathrm{th}$ 很低时，$I_\mathrm{th}$ 仍可能很高。
+  \item \hardq 给出一个例子，说明为什么 $g_\mathrm{mat,th}$ 很低时，$I_\mathrm{th}$ 仍可能很高。
 \end{enumerate}
 
 \section*{延伸阅读}

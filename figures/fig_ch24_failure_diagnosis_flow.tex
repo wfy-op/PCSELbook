@@ -20,11 +20,11 @@
     \node[s=green, below right=12mm and 26mm of ncheck] (ok) {重建证据链\\并给出置信说明};
 
     \draw[arr] (start) -- (lcheck);
-    \draw[arr] (lcheck) -- node[left, font=\small]{否} (fix1);
+    \draw[arr] (lcheck) -- node[above=5pt, font=\small]{否} (fix1);
     \draw[arr] (lcheck) -- node[above, font=\small]{是} (pcheck);
-    \draw[arr] (pcheck) -- node[left, font=\small]{否} (fix2);
+    \draw[arr] (pcheck) -- node[above=5pt, font=\small]{否} (fix2);
     \draw[arr] (pcheck) -- node[above, font=\small]{是} (ncheck);
-    \draw[arr] (ncheck) -- node[left, font=\small]{否} (fix3);
+    \draw[arr] (ncheck) -- node[above=5pt, font=\small]{否} (fix3);
     \draw[arr] (ncheck) -- node[above, font=\small]{是} (ok);
   \end{tikzpicture}
   }

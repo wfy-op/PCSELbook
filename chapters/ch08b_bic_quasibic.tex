@@ -28,6 +28,10 @@ PCSEL 是开放系统，因此需要同时描述本征模及其向连续辐射�
 对 PCSEL 来说，BIC 是描述辐射抑制及其受控打开的极限参照。实际设计通常不工作在理想 BIC 点本身，而是在其附近的 quasi-BIC 区域选择辐射损耗与输出耦合的折中。
 \end{IntuitionBox}
 
+\begin{ExampleBox}
+\textbf{历史数量级锚点。}Kodigala 等人在 2017 年用悬空圆柱纳米谐振器阵列实现了室温光泵 BIC 激光，激射位于约 \SI{1.55}{\micro\meter}，阵列缩小到 $8\times8$ 单元后仍可起振\cite{kodigala2017}。在理想无限周期 BIC 点，辐射衰减率趋于零，因而辐射 $Q_{\mathrm{rad}}$ 在数学上趋于无穷；实验有限阵列的总 $Q$ 必然有限。把波长与这两个不同的 $Q$ 口径同时写出，可以避免把“理想 BIC 的发散 $Q$”误当成实测腔品质因数。
+\end{ExampleBox}
+
 \section{从辐射振幅到 BIC：什么叫“连续谱中的束缚态”}
 在进入公式之前，先把 BIC、普通束缚态和准 BIC 的边界一次说清。普通束缚态的“不辐射”来自频率本身不在允许传播的连续谱里；BIC 的“不辐射”则更微妙：它的频率已经落在连续谱内，按频率和动量本应可以向外辐射，但所有可用辐射通道的净耦合振幅恰好为零。准 BIC 则是理想 BIC 在有限尺寸、轻微几何扰动、上下层栈不对称或工艺误差作用下打开一条很弱辐射通道后的现实版本。
 
@@ -237,28 +241,36 @@ c_y(\kvec_\parallel)
 \end{bmatrix},
 \label{eq:bic_farfield_vector}
 \end{equation}
-其中 $\kvec_\parallel=(k_x,k_y)$ 是平面内波矢，$c_x,c_y$ 表示该模向两支法向线偏振通道的辐射振幅。BIC 点的最小判据就是
+其中 $\kvec_\parallel=(k_x,k_y)$ 是平面内波矢，$c_x,c_y$ 表示该模向\textbf{上半空间零级端口}的两支横向偏振辐射振幅。只有在工作频率低于高阶衍射阈值，且对称性或独立计算已经证明下半空间端口与该向量同时消失时，下面的二分量写法才足以判定完整 BIC。一般情况下，应把上下半空间、两种偏振和所有开放衍射级次组成总端口向量 $\bm c_{\mathrm{all}}$，完整判据是
 \begin{equation}
-\bm{c}(\kvec_{\parallel,\mathrm{BIC}})=\bm{0}.
+\bm c_{\mathrm{all}}(\kvec_{\parallel,\mathrm{BIC}})=\bm 0.
 \label{eq:bic_farfield_zero}
 \end{equation}
 也就是说，BIC 是远场矢量场中的零点。
 
-一旦离开这个零点，远场会重新出现，并携带某个主偏振方向。对近线偏振远场，主轴角可先写成
+一旦离开这个零点，远场会重新出现，并携带某个主偏振方向。偏振椭圆方位角必须对 Jones 向量的整体相位不变。定义 Stokes 参量
+\begin{equation}
+S_1=|c_x|^2-|c_y|^2,
+\qquad
+S_2=2\operatorname{Re}(c_xc_y^*),
+\label{eq:bic_stokes_s1s2}
+\end{equation}
+则在非圆偏振且远场不为零的点，主轴角为
 \begin{equation}
 \phi(\kvec_\parallel)
 =
-\frac{1}{2}\arg\!\left[c_x^2(\kvec_\parallel)+c_y^2(\kvec_\parallel)\right],
+\frac{1}{2}\operatorname{atan2}(S_2,S_1)
+=\frac{1}{2}\arg(S_1+\ii S_2),
 \label{eq:bic_polarization_angle}
 \end{equation}
-它把 \cref{eq:bic_farfield_vector} 中的复振幅 $c_x,c_y$ 直接转成偏振椭圆长轴偏角。于是，若沿着包围 BIC 的闭合回路 $C$ 绕一圈，主偏振方向角 $\phi(\kvec_\parallel)$ 发生整数倍 $2\pi$ 的绕转，则可定义拓扑电荷
+它在变换 $(c_x,c_y)\mapsto\ee^{\ii\chi}(c_x,c_y)$ 下保持不变。若沿包围 BIC 的闭合回路 $C$ 绕行，且目标带在回路上连续、没有额外简并，远场保持可定义的近线偏振，则可定义偏振线场的绕转数
 \begin{equation}
 q
 =
 \frac{1}{2\pi}\oint_C \nabla_{\kvec_\parallel}\phi\cdot \dd \kvec_\parallel.
 \label{eq:bic_topological_charge}
 \end{equation}
-这个整数 $q$ 就是 far-field polarization vortex 的 winding number。它把“这个 BIC 为什么不是数值偶然出现的零点”转化成了一个拓扑语言：只要相关带支与远场矢量场连续变化，这个零点不能凭空消失，而必须通过\textbf{带着总电荷守恒地移动、成对产生或成对湮灭}的方式演化\cite{zhen2014topological,hsu2016,yang2014bic}。
+这里还要区分两种情形：若系统具有使远场可选为实二维向量的对称性（常见条件是 $C_2^zT$ 或等价约束），孤立 BIC 的电荷按常用定向约定取整数；对一般椭圆偏振线场，$\phi$ 只定义到模 $\pi$，绕转数的量化和是否允许半整数缺陷取决于所用线场与对称性。只有在这些条件成立且所有开放端口同时为零时，才可用“总电荷守恒地移动、产生或湮灭”描述 BIC 的演化\cite{zhen2014topological,hsu2016,yang2014bic}。
 
 \begin{figure}[htbp]
   \centering
@@ -268,7 +280,7 @@ q
     \draw[dashed,gray] (0,0) circle (1.45);
     \node[gray] at (1.85,1.55){$C$};
     \filldraw[fill=black,draw=black] (0,0) circle (1.5pt);
-    \node[above right] at (0,0){连续谱束缚态，$q=+1$};
+    \node at (0,-2.75){中心为 BIC，$q=+1$};
     \foreach \ang in {0,30,...,330}{
       \pgfmathsetmacro{\x}{1.45*cos(\ang)}
       \pgfmathsetmacro{\y}{1.45*sin(\ang)}

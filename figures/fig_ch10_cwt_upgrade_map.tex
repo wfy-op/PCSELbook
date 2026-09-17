@@ -3,8 +3,8 @@
   \resizebox{0.98\textwidth}{!}{%
   \begin{tikzpicture}[
     node distance=9mm and 8mm,
-    box/.style={rectangle, rounded corners, draw, align=center, minimum width=3.4cm, minimum height=1.0cm, fill=#1!15},
-    out/.style={rectangle, draw, align=left, minimum width=3.2cm, minimum height=0.9cm, fill=#1!10},
+    box/.style={rectangle, rounded corners, draw, align=center, inner sep=6pt, minimum width=3.4cm, minimum height=1.0cm, fill=#1!15},
+    out/.style={rectangle, draw, align=left, text width=3.15cm, minimum height=1.15cm, fill=#1!10,inner sep=4pt},
     arr/.style={-Stealth, thick}
   ]
     \node[box=blue] (base) {二维最小耦合波模型\\（四波 + 单一纵向剖面）};
@@ -18,7 +18,7 @@
     \node[out=orange, below=8mm of r] (or) {$\rightarrow$ 上下泄漏可分离\\$\rightarrow$ 偏振与远场预测更稳健};
     \node[out=purple, below=8mm of e] (oe) {$\rightarrow$ 边缘泄漏可计入\\$\rightarrow$ 阵列尺寸预测更可信};
 
-    \node[box=red, below=16mm of r, minimum width=5.7cm] (target) {高阶/三维耦合波输出\\可直接对接严格耦合波、有限元、时域差分与器件模型};
+    \node[box=red, below=14mm of or, minimum width=7.0cm, minimum height=1.15cm] (target) {高阶/三维耦合波输出\\与 RCWA、FEM/FDTD 及器件模型交叉验证};
 
     \draw[arr] (base) -- (q1);
     \draw[arr] (q1) -- (v);
@@ -27,9 +27,9 @@
     \draw[arr] (v) -- (ov);
     \draw[arr] (r) -- (or);
     \draw[arr] (e) -- (oe);
-    \draw[arr] (ov.south) |- (target.west);
+    \draw[arr] (ov.south) -- ++(0,-5mm) -| (target.west);
     \draw[arr] (or.south) -- (target.north);
-    \draw[arr] (oe.south) |- (target.east);
+    \draw[arr] (oe.south) -- ++(0,-5mm) -| (target.east);
   \end{tikzpicture}
   }
   \caption{本章耦合波升级路径：从二维最小模型出发，显式补回三个关键自由度（纵向模基、辐射通道、有限尺寸包络），得到可用于工程接口的高阶/三维模型。}

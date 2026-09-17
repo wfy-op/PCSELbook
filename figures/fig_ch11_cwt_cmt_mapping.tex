@@ -2,7 +2,7 @@
 % Figure content only
 \begin{tikzpicture}[x=1cm,y=1cm]
   \tikzset{
-    stage/.style={draw=black,thick,rounded corners,minimum width=3.2cm,minimum height=1.6cm,align=center},
+    stage/.style={draw=black!65,thick,rounded corners,minimum width=3.45cm,minimum height=1.8cm,align=center,inner sep=5pt},
     arrow/.style={->,>=Stealth,very thick}
   }
 
@@ -10,12 +10,14 @@
   \node[stage,fill=orange!10] (map) at (0,0) {参数映射\\[3pt]$\omega_0,\gamma_e,\gamma_i,d$};
   \node[stage,fill=red!10] (cmt) at (4,0) {TCMT 响应\\[3pt]反射/透射/线宽};
 
-  \draw[arrow,blue!70] (cwt) -- node[above,font=\footnotesize] {提取本征频率与损耗} (map);
-  \draw[arrow,red!70] (map) -- node[above,font=\footnotesize] {代入低维散射模型} (cmt);
+  \draw[arrow,blue!70] (cwt) -- (map);
+  \draw[arrow,red!70] (map) -- (cmt);
+  \node[blue!70,font=\footnotesize] at (-2,1.3) {模态投影};
+  \node[red!70,font=\footnotesize] at (2,1.3) {端口参数化};
 
-  \node[draw=gray!70,rounded corners,fill=gray!6,align=left,font=\footnotesize,text width=13.2cm] at (0,-2.6) {
-    \textbf{工作流：}
-    先由 CWT 得到目标模的复频率和模矢量，再把辐射损耗、内部损耗和远场归一化信息压缩成
-    TCMT 参数。这样可以把“微观的耦合矩阵”转成“可直接和线宽、反射谱、耦合强度比较”的解析模型。
+  \node[draw=gray!70,rounded corners,fill=gray!6,align=left,font=\footnotesize,text width=13.2cm,inner sep=6pt] at (0,-2.6) {
+    \textbf{两步衔接：}\quad
+    ① 从 CWT 本征对中选定目标超模，提取 $\tilde\omega$ 与归一化模矢量；
+    ② 用辐射端口投影得到外耦合率与端口幅度，再与独立提取的内部损耗一起写入 TCMT。仅凭总 $Q$ 不能唯一拆出 $\gamma_e$、$\gamma_i$ 与端口相位。
   };
 \end{tikzpicture}

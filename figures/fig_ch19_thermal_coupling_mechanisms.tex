@@ -1,65 +1,37 @@
 % !TEX root = ../main.tex
-% Figure content only: inserted inside an outer figure environment in ch19.
+% Figure content only. Coupling channels radiate from one temperature node.
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+  \tikzset{
+    card/.style={draw=#1!70!black,thick,rounded corners=4pt,fill=#1!10,
+      minimum width=3.35cm,minimum height=1.35cm,align=center},
+    linklabel/.style={font=\footnotesize,fill=white,inner sep=2pt,align=center}
+  }
 
-\begin{tikzpicture}[
-    scale=0.90,
-    transform shape,
-    box/.style={
-      rectangle, draw, rounded corners, align=center,
-      minimum height=0.95cm, inner sep=4pt, font=\footnotesize
-    },
-    thermo/.style={circle, draw, thick, fill=red!18, align=center, minimum size=1.85cm, font=\small},
-    optical/.style={box, fill=green!18, text width=3.0cm},
-    electrical/.style={box, fill=blue!14, text width=3.05cm},
-    mech/.style={box, fill=orange!18, text width=3.0cm},
-    note/.style={rectangle, draw, rounded corners, fill=white, align=left, text width=3.6cm, font=\scriptsize, inner sep=4pt},
-    warning/.style={rectangle, draw=red, thick, fill=red!4, align=center, text width=4.7cm, font=\footnotesize, inner sep=4pt},
-    arrow/.style={->, >=stealth, thick},
-    feedback/.style={->, >=stealth, very thick, red}
-  ]
-  \node[thermo] (temp) at (0,0) {温度升高\\$\Delta T$};
+  \node[draw=red!70!black,very thick,circle,fill=red!10,minimum size=1.75cm,align=center]
+    (temp) at (0,0) {温升\\$\Delta T$};
+  \node[card=green] (optic) at (0,2.75)
+    {光学与增益\\$\Delta n,\ \Delta g,\ \Delta\alpha$};
+  \node[card=blue] (electric) at (-5.15,0)
+    {电学与输运\\$\Delta\mu<0,\ \Delta\rho>0$};
+  \node[card=orange] (mech) at (5.15,0)
+    {热应力与形变\\$\sigma_{ij}\approx C_{ij}\alpha_E\Delta T$};
+  \node[card=red] (risk) at (0,-2.75)
+    {正反馈风险\\电阻升高 $\to$ 发热增加\\$\to$ 结温继续上升};
 
-  % Optical channel
-  \node[optical] (optics) at (0,2.05) {光学特性变化\\折射率 $n(T)$、带隙 $E_g(T)$};
-  \node[optical] (lambda) at (-2.85,3.72) {激射波长红移\\$\mathrm{d}\lambda/\mathrm{d}T \approx 0.1\,\mathrm{nm/K}$};
-  \node[optical] (threshold) at (2.85,3.72) {阈值电流增加\\$I_{\mathrm{th}}(T)\uparrow$};
-  \draw[arrow, red] (temp) -- node[right, font=\scriptsize] {$\mathrm{d}n/\mathrm{d}T>0$} (optics);
-  \draw[arrow] (optics) -- (lambda);
-  \draw[arrow] (optics) -- (threshold);
+  \draw[->,very thick,green!60!black] (temp.north)--(optic.south)
+    node[linklabel,midway,right] {$dn/dT$\\增益峰漂移};
+  \draw[->,very thick,blue!70!black] (temp.west)--(electric.east)
+    node[linklabel,midway,above, text width=1.7cm] {迁移率\\接触参数};
+  \draw[->,very thick,orange!85!black] (temp.east)--(mech.west)
+    node[linklabel,midway,above] {热膨胀失配};
+  \draw[->,very thick,red!75!black] (temp.south)--(risk.north)
+    node[linklabel,midway,right] {闭环稳定性};
 
-  % Electrical channel
-  \node[electrical] (carrier) at (-4.95,0.35) {载流子输运退化\\迁移率 $\mu(T)\downarrow$\\电阻 $\rho(T)\uparrow$};
-  \node[electrical] (joule) at (-4.95,-1.38) {焦耳热加剧\\$P_{\mathrm{heat}}=I^2R(T)$};
-  \draw[arrow, blue] (temp) -- node[above, font=\scriptsize] {声子散射增强} (carrier);
-  \draw[<->, >=stealth, thick, dashed] (carrier) -- (joule);
+  % Return path stays outside all nodes.
+  \draw[->,very thick,red!75!black,rounded corners=8pt]
+    (electric.south) -- (-5.15,-4.3) -- (0,-4.3) -- (risk.south)
+    node[linklabel,pos=0.35,below] {$P_{\rm heat}=I^2R(T)$};
 
-  % Mechanical channel
-  \node[mech] (stress) at (4.85,-1.10) {热应力累积\\$\sigma_{ij}\approx C_{ij}\alpha_E\Delta T$};
-  \node[mech] (deform) at (4.85,-2.70) {形变或翘曲\\可能导致键合失效};
-  \draw[arrow, orange] (temp) -- node[right, font=\scriptsize] {热膨胀失配} (stress);
-  \draw[arrow] (stress) -- (deform);
-
-  % Compact parameter and mitigation notes
-  \node[note, text width=3.20cm] (params) at (-5.05,2.45) {
-    \textbf{特征温度参数}\\
-    $T_0$: $I_{\mathrm{th}}(T)=I_0\exp(T/T_0)$\\
-    $T_1$: 微分效率温度参数\\
-    典型 $T_0\sim100$--$200\,\mathrm{K}$
-  };
-  \node[note, anchor=west] (cooling) at (3.05,2.20) {
-    \textbf{散热优化策略}\\
-    $\bullet$ 倒装焊高导热键合\\
-    $\bullet$ 金刚石热沉\\
-    $\bullet$ 主动温控\\
-    $\bullet$ 降低串联电阻
-  };
-  \node[draw, rounded corners, fill=white, align=center, font=\scriptsize] at (0.35,1.05)
-    {$\mathrm{d}n/\mathrm{d}T\approx2\times10^{-4}/\mathrm{K}$\\（砷化镓，300 K）};
-
-  % Feedback loop
-  \node[warning] (runaway) at (-1.55,-3.30)
-    {\textbf{正反馈风险}\\结温上升 $\rightarrow$ 效率下降 $\rightarrow$ 发热增加\\热失控};
-  \draw[feedback, bend left=18] (threshold.west) to (joule.north);
-  \draw[feedback, bend right=18] (joule.south) to (runaway.west);
-  \draw[feedback, bend right=20] (runaway.east) to (temp.south);
+  \node[draw=gray!55,rounded corners,fill=gray!5,font=\footnotesize,align=center]
+    at (4.35,-2.75) {散热设计接口\\$k,\ h,\ T_0$ 与键合热阻};
 \end{tikzpicture}

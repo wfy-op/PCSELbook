@@ -4,7 +4,7 @@
   \centering
   \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
     \draw[->,thick] (0,0) -- (8.6,0) node[right] {损耗来源};
-    \draw[->,thick] (0,0) -- (0,7.2) node[above] {$g_{\mathrm{th}}\,[\mathrm{cm}^{-1}]$};
+    \draw[->,thick] (0,0) -- (0,7.2) node[above] {模增益/功率损耗 $[\mathrm{cm}^{-1}]$};
 
     \fill[blue!60] (1.0,0) rectangle (2.0,1.5);
     \fill[green!65!black] (2.7,0) rectangle (3.7,2.2);
@@ -16,27 +16,27 @@
     \node[black,rotate=90] at (4.9,0.5) {散射};
     \node[white,rotate=90] at (6.6,0.4) {泄漏};
 
-    \node[below] at (1.5,-0.28) {$\alpha_{\mathrm{rad}}=1.5$};
-    \node[below] at (3.2,-0.28) {$\alpha_{\mathrm{abs}}=2.2$};
-    \node[below] at (4.9,-0.28) {$\alpha_{\mathrm{sca}}=1.0$};
-    \node[below] at (6.6,-0.28) {$\alpha_{\mathrm{leak}}=0.8$};
+    \node[below,align=center] at (1.5,-0.28) {$\alpha_{\mathrm{rad}}$\\$1.5$};
+    \node[below,align=center] at (3.2,-0.28) {$\alpha_{\mathrm{abs}}$\\$2.2$};
+    \node[below,align=center] at (4.9,-0.28) {$\alpha_{\mathrm{sca}}$\\$1.0$};
+    \node[below,align=center] at (6.6,-0.28) {$\alpha_{\mathrm{leak}}$\\$0.8$};
 
     \draw[dashed,very thick,magenta!80!black] (0,5.5) -- (7.4,5.5);
-    \node[magenta!80!black,right] at (7.4,5.5) {$g_{\mathrm{th,tot}}=5.5$};
+    \node[magenta!80!black,right] at (7.4,5.5) {$g_{\mathrm{mod,th}}=5.5$};
 
     \draw[very thick,cyan!70!black] (0.4,6.8) -- (7.8,6.8);
-    \node[cyan!70!black,above] at (4.1,6.8) {$g_{\mathrm{mat,max}}\approx 15\,\mathrm{cm}^{-1}$};
-    \draw[<->,thick,purple] (8.1,0) -- (8.1,5.5);
-    \node[purple,right] at (8.1,2.75) {增益裕度};
+    \node[cyan!70!black,above] at (4.1,6.8) {$g_{\mathrm{mod,max}}=\Gamma_{\mathrm{opt}}g_{\mathrm{mat,max}}\approx 15\,\mathrm{cm}^{-1}$};
+    \draw[<->,thick,purple] (8.1,5.5) -- (8.1,6.8);
+    \node[purple,right] at (8.1,6.15) {增益裕度};
 
     \fill[pattern=north east lines,pattern color=gray!45] (1.0,1.5) rectangle (2.0,5.5);
     \fill[pattern=north east lines,pattern color=gray!45] (2.7,2.2) rectangle (3.7,5.5);
     \fill[pattern=north east lines,pattern color=gray!45] (4.4,1.0) rectangle (5.4,5.5);
     \fill[pattern=north east lines,pattern color=gray!45] (6.1,0.8) rectangle (7.1,5.5);
 
-    \node[draw,align=center,text width=7.9cm] at (4.1,-1.55)
-      {$g_{\mathrm{th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{abs}}+\alpha_{\mathrm{sca}}+\alpha_{\mathrm{leak}}+\alpha_m$\\
-      其中镜面损耗 $\alpha_m=\dfrac{1}{2L}\ln\!\left(\dfrac{1}{R_1R_2}\right)$};
+    \node[draw,align=center,text width=7.9cm] at (4.1,-2.3)
+      {$g_{\mathrm{mod,th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{abs}}+\alpha_{\mathrm{sca}}+\alpha_{\mathrm{leak}}+\alpha_{\mathrm{edge}}$\\
+      $g_{\mathrm{mat,th}}=g_{\mathrm{mod,th}}/\Gamma_{\mathrm{opt}}$；有限器件的 $\alpha_{\mathrm{edge}}$ 由边界泄漏单独提取。};
   \end{tikzpicture}
   \caption{PCSEL 阈值增益分解示意图，展示辐射、吸收、散射与泄漏各项损耗贡献及增益裕度。}
   \label{fig:ch07_threshold_gain_breakdown}

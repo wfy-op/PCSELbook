@@ -1,0 +1,41 @@
+{
+  "model": "2D scalar Hz PWEM basis-truncation diagnostic",
+  "shared_parameters": {
+    "r_over_a": 0.3,
+    "eps_background": 11.559999999999999,
+    "eps_hole": 1.0,
+    "cutoff": 2,
+    "bands": 6,
+    "points_per_segment": 16
+  },
+  "basis_sizes": {
+    "reference symmetric cutoff 4": 81,
+    "low symmetric cutoff 1": 9,
+    "low asymmetric 5x3 window": 15
+  },
+  "gamma_bands_2_to_5": {
+    "reference_symmetric_cutoff_4": [
+      0.33257037530318306,
+      0.39016286170888426,
+      0.3901628617088912,
+      0.3982856455660841
+    ],
+    "low_symmetric_cutoff_1": [
+      0.3723584172236714,
+      0.49244010721711046,
+      0.49244010721711057,
+      0.5842548095717145
+    ],
+    "low_asymmetric_5x3_window": [
+      0.35502705263459033,
+      0.4258635876493936,
+      0.4452401486327841,
+      0.5078843647093221
+    ]
+  },
+  "asymmetric_false_split_band_3_4": 0.019376560983390523,
+  "outputs": [
+    "pwem_cutoff_comparison.csv",
+    "pwem_cutoff_failure.pdf"
+  ]
+}

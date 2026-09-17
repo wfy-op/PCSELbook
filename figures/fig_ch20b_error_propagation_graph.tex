@@ -35,7 +35,7 @@
     \draw[arr] (m1) -- (d2);
     \draw[arr] (m2) -- (d2);
     \draw[arr] (m2) -- (d3);
-    \draw[arr] (m3) -- (d1);
+    \draw[arr] (m3.east) -- ++(4mm,0) -- ([xshift=-4mm]d1.west) -- (d1.west);
     \draw[arr] (m3) -- (d4);
     \draw[arr] (m4) -- (d4);
   \end{tikzpicture}

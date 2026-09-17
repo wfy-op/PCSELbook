@@ -20,14 +20,14 @@
   \draw[arr] (sym) -- (mode);
   \draw[arr] (mode) -- (rad);
   \draw[arr] (rad) -- (prod);
-  \draw[arr] (prod) -- node[above,font=\scriptsize]{不含} (dark.west);
-  \draw[arr] (prod) -- node[below,font=\scriptsize]{包含} (bright.west);
+  \draw[arr] (prod) -- node[above=5pt,font=\scriptsize]{不含} (dark.west);
+  \draw[arr] (prod) -- node[below=5pt,font=\scriptsize]{包含} (bright.west);
 
-  \node[stagebox,fill=purple!7,minimum width=4.25cm] (slab) at (10.0,0.72) {三维 slab 复核\\纵向奇偶性、上下不对称\\有限尺寸和层栈损耗};
-  \draw[dashedarr] (dark.south) .. controls (14.4,1.0) and (12.5,0.72) .. (slab.east);
+  \node[stagebox,fill=purple!7,minimum width=4.25cm] (slab) at (11.1,-0.10) {三维 slab 复核\\纵向奇偶性、上下不对称\\有限尺寸和层栈损耗};
+  \draw[dashedarr] (dark.east) -- ++(.5,0) |- (slab.south east);
   \draw[dashedarr] (bright.south) .. controls (14.0,0.35) and (12.5,0.72) .. (slab.east);
 
-  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=8.4cm,font=\footnotesize] at (3.75,0.72) {
+  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=7.0cm,font=\footnotesize] at (3.3,-0.10) {
     这张图只给“允许 / 禁戒”的第一层筛选；它不替代辐射常数、远场图和阈值增益计算。
   };
 \end{tikzpicture}%

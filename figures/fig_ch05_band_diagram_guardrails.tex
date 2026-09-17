@@ -12,7 +12,7 @@
   }
 
   \node[title] at (2.15,5.05) {能带图本身};
-  \draw[->,thick] (0.4,1.35) -- (4.25,1.35) node[right,font=\scriptsize] {高对称路径};
+  \draw[->,thick] (0.4,1.35) -- (4.25,1.35) node[below=12pt,font=\scriptsize] {高对称路径};
   \draw[->,thick] (0.4,1.35) -- (0.4,4.45) node[above,font=\scriptsize] {$\Omega$};
   \draw[blue!70!black,thick] plot[smooth] coordinates {(0.65,1.85) (1.30,2.20) (2.10,2.32) (2.95,2.18) (3.75,1.88)};
   \draw[blue!70!black,thick] plot[smooth] coordinates {(0.65,3.00) (1.30,2.84) (2.10,2.78) (2.95,2.88) (3.75,3.12)};
@@ -45,11 +45,11 @@
     实验远场一定如此
   };
 
-  \draw[arrow,green!45!black] (4.35,3.55) -- node[above,font=\scriptsize]{候选目录} (can.west);
-  \draw[arrow,blue!55!black] (can.east) -- node[above,font=\scriptsize]{升级证据} (need.west);
-  \draw[arrow,red!65!black] (need.east) -- node[above,font=\scriptsize]{仍需器件链} (cannot.west);
+  \draw[arrow,green!45!black] (3.8,3.8) -- (can.west);
+  \draw[arrow,blue!55!black] (can.east) -- (need.west);
+  \draw[arrow,red!65!black] (need.east) -- (cannot.west);
 
-  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=15.1cm,font=\footnotesize] at (10.55,0.75) {
+  \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=15.1cm,font=\footnotesize] at (10.55,-0.35) {
     边界句：band diagram 给出“候选资格”，不给出“器件判决”。真正的 PCSEL 结论要把 band、radiation、finite size、gain、injection 和 thermal 放在同一条证据链上。
   };
 \end{tikzpicture}%

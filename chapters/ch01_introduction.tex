@@ -19,17 +19,82 @@
 \section{从传统激光器到光子晶体激光器：技术背景}
 \label{sec:historical-evolution}
 
+PCSEL 是 Photonic-Crystal Surface-Emitting Laser 的缩写：PC 指光子晶体，SE 指面发射，L 指激光器。先看 \cref{fig:ch01_laser_comparison}：判断一种激光器，最有用的两个问题是“光沿哪里往返形成反馈”和“光从哪里输出”。图中的 FP 边发射与 DFB 并非互斥类别；DFB 描述反馈方式，EEL 描述出光方向，常见 DFB 同时也是边发射激光器。
+
+\begin{figure}[htbp]
+  \centering
+  \input{figures/fig_ch01_laser_comparison}
+  \caption{四种常见结构的比较。虚线双箭头表示反馈，实线箭头表示输出。(a) FP 边发射：端面反射形成面内往返；(b) VCSEL：上下 DBR 提供垂直反馈；(c) DFB：一维光栅提供沿波导的反馈，常从端面出光；(d) PCSEL：二维周期结构提供面内反馈，并耦合到法向辐射。DFB 可以属于 EEL，图中分列是为了比较反馈结构。}
+  \label{fig:ch01_laser_comparison}
+\end{figure}
+
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch01_timeline.tex}
-  \caption{PCSEL 发展历程中的代表性里程碑（2008--2025）。2008 年首次实现二维光子晶体面发射激光\cite{matsubara2008}；2014 年实现高功率、窄发散连续波输出\cite{hirose2014}；2019--2020 年器件结构和电注入方案进一步成熟\cite{yoshida2019,itoh2020}；2023--2025 年在高亮度、传感与系统集成方向持续推进\cite{yoshida2023,wang2024,zhang2025}。}
+  \caption{PCSEL 技术进步路线中的代表性里程碑（1999–2026）。
+  1999 年的半导体器件验证了二维相干振荡与面发射\cite{imada1999}；
+  2008 年电注入 GaN PCSEL 把路线扩展到蓝紫光\cite{matsubara2008}；
+  2014 年实现 \SI{1.5}{W} 级连续波输出和 $M^2\leq1.1$ 的高束质\cite{hirose2014}；
+  2019 年双晶格结构把 \SI{500}{\micro\meter} 口径的功率、发散角和亮度放进同一设计问题
+  \cite{yoshida2019}；2023 年进一步实现 \SI{3}{mm} 口径、超过 \SI{50}{W}
+  的连续波单模输出和约 $0.05^\circ$ 发散角\cite{yoshida2023}。
+  2024–2026 年的工作开始更多地面向阵列、长波长平台、直接调制、有限尺寸和系统链路
+  \cite{noda2024pcselreview,li2024laterallycoupledpcsel,zhou2024nside1550pcsel,
+  inoue2025fmpcsel,wang2025finitesizepcsel}。}
   \label{fig:ch01_development_timeline}
 \end{figure}
 
 要理解PCSEL 为什么会成为独立的研究方向，需要先回答一个问题：在它出现之前，已有的半导体激光器技术遇到了什么瓶颈？本节将从三种主流半导体激光器的局限性出发，说明 PCSEL 形成独立研究方向的技术背景。\cref{fig:ch01_development_timeline}展示了 PCSEL发展的关键时间节点和技术突破。
 
+\subsection{从 paper-nas 馆藏统计看研究重心的迁移}
+\label{sec:papernas-progress-roadmap}
+
+paper-nas 不是一张只收“冠军指标”的排行榜，而是一套同时保存器件论文、理论方法
+和邻近背景材料的本地研究语料。截至 2026 年 8 月 21 日，其 \texttt{INDEX.csv}
+快照共有 534 条记录：其中 528 条的出版年落在 1999–2026 年，另有 2 条早期背景文献
+和 4 条年份缺失或待核记录。若把 528 条有明确年份的记录按技术阶段分组，
+可得到 1999–2007 年 42 条（年均 4.7 条）、2008–2018 年 179 条（年均 16.3 条）、
+2019–2023 年 179 条（年均 35.8 条），以及 2024–2026 年 128 条
+（年均 42.7 条；2026 年尚未结束）。这些数字反映的是当前馆藏的覆盖和积累速度，
+不等同于全球总发文量，因此适合用来观察研究重心如何迁移，不宜外推为领域增长率。
+
+\begin{NoteBox}[breakable]{技术路线不是“功率一路增加”，而是四个瓶颈依次被推开}
+\textbf{第一阶段（1999–2007）：先证明反馈机理。}
+核心问题是二维周期结构能否在大面积内建立相干振荡，并同时留下法向辐射通道。
+1999 年的半导体器件给出了二维相干面发射的直接实验依据\cite{imada1999}。
+
+\textbf{第二阶段（2008–2018）：把原理做成可工作的电注入光源。}
+技术焦点从“能否振荡”转向材料平台、埋入式光子晶体、电流注入和连续波热管理。
+2008 年的蓝紫光 GaN PCSEL 和 2014 年的瓦级高束质连续波器件，
+分别推开了波段与功率两道边界\cite{matsubara2008,hirose2014}。
+
+\textbf{第三阶段（2019–2023）：让大孔径、单模和高亮度同时成立。}
+双晶格以及 Hermitian/非 Hermitian 联合调控不再只追求低损耗，
+而是主动拉开基模与高阶模的阈值差，并把有限尺寸、辐射和热致模式竞争纳入设计。
+代表结果从 \SI{500}{\micro\meter}、\SI{10}{W} 脉冲输出推进到
+\SI{3}{mm}、超过 \SI{50}{W} 的连续波单模输出\cite{yoshida2019,yoshida2023}。
+
+\textbf{第四阶段（2024–2026）：从单颗器件转向平台与系统。}
+研究问题开始落到更长波长、更高温工作、相干阵列、直接频率调制、有限尺寸误差
+和自由空间链路；评价口径也由单点功率扩展为
+“功率—束质—线宽—调制—热稳定—链路”联合指标
+\cite{noda2024pcselreview,zhou2024nside1550pcsel,li2024laterallycoupledpcsel,
+inoue2025fmpcsel,wang2025finitesizepcsel}。
+\end{NoteBox}
+
+这条路线也说明了本书为什么不能只讲能带，或只列输出功率。每一次能力跃迁，都对应一个新的主导瓶颈：先是二维反馈是否成立，随后是电注入和热管理，再到大面积模式竞争，最后才是调制、阵列与系统接口。后文的章节顺序正是沿着这组瓶颈展开。
+
 \subsection{边发射激光器的成就与局限}
-边发射激光器（edge-emitting laser）是最早实现商业化的半导体激光器类型。它的反馈机制建立在两个端面上：要么依靠解理面形成的法布里 - 珀罗腔，要么引入一维光栅形成 DFB（distributed feedback）结构以获得更好的单模特性。
+边发射激光器（edge-emitting laser，EEL）从芯片侧边出光。以最简单的法布里--珀罗（FP）器件为例，取 $z$ 为外延生长方向、$x$ 为腔长方向、$y$ 为条宽方向：上下包层把光限制在有源层附近，使它沿 $x$ 传播；条形波导或电流条限制 $y$ 向分布；两个端面把一部分光反射回来，另一部分光透射出去。电流把电子和空穴注入量子阱，受激辐射放大往返的导模。\textbf{限制光在层内传播的是波导，形成往返反馈的是端面；两者不是同一件事。}
+
+\paragraph{一次往返怎样达到阈值}
+若 $g$ 为材料功率增益系数、$\Gamma$ 为增益约束因子、$\alpha_i$ 为内部功率损耗系数，长度为 $L$ 的 FP 腔在阈值处满足
+\[
+R_1R_2\exp\{2(\Gamma g-\alpha_i)L\}=1,
+\qquad
+\Gamma g_{\rm th}=\alpha_i+\frac{1}{2L}\ln\frac{1}{R_1R_2}.
+\]
+还需满足往返相位 $2\beta L+\phi_1+\phi_2=2\pi m$，才能形成纵模。取教学参数 $L=\SI{500}{\micro\meter}=\SI{0.05}{cm}$、$R_1=R_2=0.30$、$\alpha_i=\SI{10}{cm^{-1}}$、$\Gamma=0.05$，镜面损耗约为 \SI{24.1}{cm^{-1}}，材料阈值增益约为 \SI{682}{cm^{-1}}。这些数值说明端面反射、内部损耗与量子阱重叠怎样共同决定阈值，不代表某一实际器件。若群折射率 $n_g=3.6$，纵模间隔约为 $c/(2n_gL)=\SI{83}{GHz}$。仅达到增益条件不能保证单纵模；DFB 会进一步用周期光栅进行频率选择，其反馈不再只来自端面。
 
 \paragraph{优势} 边发射激光器具有以下优点：
 \begin{itemize}
@@ -77,7 +142,15 @@ DFB 激光器通过在波导中引入一维周期光栅，利用布拉格散射�
 
 \paragraph{从三维结构到二维实现} 最初的研究热情集中在三维光子晶体上，期望能实现全方位的光子带隙。然而，制备工艺的复杂性使得三维结构长期停留在微波波段和理论模拟阶段。直到微纳加工技术的进步，才使得近红外和可见光波段的二维光子晶体成为可能。
 
-\paragraph{PCSEL 的独特定位} 正是在这个背景下，PCSEL 形成了明确的器件定位：1999 年，Noda 等人和 Meier 等人几乎同时独立提出，可以利用二维光子晶体能带结构上的奇异点（singularity point）作为半导体激光器的腔\cite{noda2023tutorial}。两者的关键差异在于所选奇异点：Meier 等人采用三角晶格 X 点的有机增益介质，由于 X 点的基本 Bloch 波只能一维耦合，未能形成二维相干共振；Noda 等人则选择了三角晶格半导体光子晶体的 $\Gamma$ 点，使三个方向的基本 Bloch 波能够一维并二维地相互耦合，并由于 $\Gamma$ 点位于光锥之上，自然获得来自表面的辐射输出——"PCSEL"这一命名正是为了强调这种面发射特性\cite{noda2023tutorial}。沿着这一思路，PCSEL 进一步发展出几个关键结构特征：
+\paragraph{PCSEL 的独特定位}
+正是在这个背景下，PCSEL 形成了明确的器件定位。1999 年，Noda 等人和 Meier 等人
+几乎同时独立提出，可以利用二维光子晶体能带结构上的奇异点（singularity point）
+作为半导体激光器的腔\cite{noda2023tutorial}。两者的关键差异在于所选奇异点：
+Meier 等人采用三角晶格 X 点的有机增益介质，由于 X 点的基本 Bloch 波只能一维耦合，
+未能形成二维相干共振；Noda 等人则选择了三角晶格半导体光子晶体的 $\Gamma$ 点，
+使三个方向的基本 Bloch 波能够一维并二维地相互耦合。由于 $\Gamma$ 点位于光锥之上，
+模式还能自然获得来自表面的辐射输出。“PCSEL”这一命名正是为了强调这种面发射特性
+\cite{noda2023tutorial}。沿着这一思路，PCSEL 进一步发展出几个关键结构特征：
 \begin{itemize}
   \item 它不像三维光子晶体那样追求完整的三维带隙，而是巧妙地利用二维面内周期结构提供的分布式反馈；
   \item 它继承了 VCSEL 的面发射优势，但通过将反馈机制从垂直 DBR 转移到面内光子晶体，绕过了 DBR 应力问题对大面积的限制；
@@ -109,12 +182,6 @@ DFB 激光器通过在波导中引入一维周期光栅，利用布拉格散射�
 
 \cref{fig:ch01_laser_comparison} 给出了四种器件的剖面结构示意图。图中双向虚线箭头表示反馈方向，橙色实线箭头表示出光方向：边发射和 DFB 的反馈沿波导轴向，VCSEL 沿垂直方向，而 PCSEL 在面内两个方向建立反馈。这种结构差异直接决定了它们的出光特性。
 
-\begin{figure}[htbp]
-  \centering
-  \input{figures/fig_ch01_laser_comparison}
-  \caption{四种主要半导体激光器的结构对比。(a) 边发射激光器：法布里-珀罗腔沿波导轴向，光从解理面输出；(b) 垂直腔面发射激光器：垂直分布式布拉格反射镜谐振腔，通过顶部氧化孔限制模式，从表面出光；(c) 分布反馈激光器：一维光栅提供分布式反馈，主要为边发射（可选表面光栅耦合器）；(d) 光子晶体面发射激光器：二维光子晶体提供面内分布式反馈，同时实现法向面发射。}
-  \label{fig:ch01_laser_comparison}
-\end{figure}
 
 \section{为什么还需要一种新的面发射激光器}
 如果读者已经接触过边发射激光器（edge-emitting laser）或垂直腔面发射激光器（vertical-cavity surface-emitting laser, VCSEL），很容易产生一个疑问：现有半导体激光器种类已经很多，为什么还需要专门讨论 PCSEL？
@@ -175,13 +242,40 @@ PCSEL 的问题意识是“如何让一个大面积半导体有源区，在面�
 \end{figure}
 
 \subsection{第一步：有源区产生导模}
-电注入使量子阱有源区产生受激辐射。有源层的折射率在整个外延层栈中通常最高，因此辐射的光场以平面导波模式被束缚在以有源层为核心的薄板波导中，沿面内方向传播。光子晶体层紧邻有源层，使得导模场通过倏逝耦合“感受到”周期折射率调制。定义光场在有源层和光子晶体层的约束因子（confinement factor）分别为 $\Gamma_{\mathrm{act}}$ 和 $\Gamma_{\mathrm{pc}}$。PCSEL 的结构允许对活性层–包层折射率差进行较大的调控，因此每个量子阱的 $\Gamma_{\mathrm{act}}$ 通常可达 2\%--3\%，高于 VCSEL 的典型值（约 1\%--1.5\%）\cite{noda2023tutorial}。$\Gamma_{\mathrm{pc}}$ 则决定了面内光学耦合的整体强度。
+电注入使量子阱有源区产生受激辐射。有源层的折射率在整个外延层栈中通常最高，
+因此光场以平面导波模式被束缚在以有源层为核心的薄板波导中，并沿面内传播。
+光子晶体层紧邻有源层，使导模场通过倏逝耦合“感受到”周期折射率调制。
+定义光场在有源层和光子晶体层的约束因子（confinement factor）分别为
+$\Gamma_{\mathrm{act}}$ 和 $\Gamma_{\mathrm{pc}}$。PCSEL 的结构允许较大幅度地调控
+有源层--包层折射率差，因此每个量子阱的 $\Gamma_{\mathrm{act}}$ 通常可达 2\%--3\%，
+高于 VCSEL 的典型值（约 1\%--1.5\%）\cite{noda2023tutorial}。
+$\Gamma_{\mathrm{pc}}$ 则决定了面内光学耦合的整体强度。
 
 \subsection{第二步：二维布拉格散射与 \texorpdfstring{$\Gamma^{(2)}$}{Gamma(2)} 点共振}
-当光子晶体的晶格常数 $a$ 满足二阶布拉格条件（$a\approx\lambda/n_{\mathrm{eff}}$，即布里渊区中心 $\Gamma^{(2)}$ 点条件）时，面内传播的四束基本 Bloch 波——沿 $+x$、$-x$、$+y$、$-y$ 方向——被晶格的倒格矢 $m\mathbf{G}_1+n\mathbf{G}_2$ 耦合在一起。对于折射率对比度较大（如空气/半导体）的正方晶格 TE 模式，这种耦合不只发生在 $180^\circ$（一维反向散射）方向，还通过高阶 Bloch 波间接发生在 $\pm90^\circ$ 方向，从而形成\textbf{二维相干共振}\cite{noda2023tutorial}。这也是 PCSEL 与传统二维 DFB 激光器的本质区别：后者的折射率对比度较低（半导体/半导体），高阶 Bloch 波不参与耦合，四束基本波仅能一维地两两对耦，无法建立二维相干振荡。在 $\Gamma^{(2)}$ 点，四束基本波的群速度降为零，形成驻波式的二维宽面积共振模式。
+当光子晶体的晶格常数 $a$ 满足二阶布拉格条件
+（$a\approx\lambda/n_{\mathrm{eff}}$，即布里渊区中心 $\Gamma^{(2)}$ 点条件）时，
+面内传播的四束基本 Bloch 波——沿 $+x$、$-x$、$+y$、$-y$ 方向——
+被晶格的倒格矢 $m\mathbf{G}_1+n\mathbf{G}_2$ 耦合在一起。
+对于折射率对比度较大（如空气/半导体）的正方晶格 TE 模式，
+这种耦合不只发生在 $180^\circ$（一维反向散射）方向，
+还通过高阶 Bloch 波间接发生在 $\pm90^\circ$ 方向，从而形成
+\textbf{二维相干共振}\cite{noda2023tutorial}。这也是 PCSEL 与传统二维 DFB 激光器的本质区别：
+后者的折射率对比度较低（半导体/半导体），高阶 Bloch 波不参与耦合，
+四束基本波仅能一维地两两对耦，无法建立二维相干振荡。
+在 $\Gamma^{(2)}$ 点，四束基本波的群速度降为零，形成驻波式的二维宽面积共振模式。
 
 \subsection{第三步：辐射通道与法向出光}
-$\Gamma^{(2)}$ 点位于光锥（light line）之上，这意味着共振模式可以通过一阶衍射与自由空间的辐射波耦合，将能量送出芯片表面。从倒空间的图像来看：每束基本 Bloch 波（波矢 $\sim\pm\mathbf{G}_1$ 或 $\pm\mathbf{G}_2$）被一个倒格矢散射回 $\mathbf{k}_\parallel=\mathbf{0}$，即法向传播的辐射波。辐射常数的大小取决于晶格点的形状和对称性。对于旋转对称的孔形（如圆孔），各辐射分量在远场相消干涉，辐射常数极小，即对称保护型 BIC（bound state in the continuum）效应\cite{noda2023tutorial}。然而，\textbf{PCSEL 追求的是高亮度输出，因此刻意破缺对称性}：通过采用非对称孔形（如三角孔、椭圆孔）或“双晶格”结构（double-lattice），使远场不再完全相消，在目标模上开放可控的辐射通道。由于对称保护 BIC 使辐射常数极小甚至趋零，直接称 PCSEL 为“BIC 激光器”并不恰当——PCSEL 需要主动打破 BIC 条件来获取足够的输出功率\cite{noda2023tutorial}。
+$\Gamma^{(2)}$ 点位于光锥（light line）之上，这意味着共振模式可以通过一阶衍射
+与自由空间的辐射波耦合，将能量送出芯片表面。从倒空间看，每束基本 Bloch 波
+（波矢 $\sim\pm\mathbf{G}_1$ 或 $\pm\mathbf{G}_2$）被一个倒格矢散射回
+$\mathbf{k}_\parallel=\mathbf{0}$，即法向传播的辐射波。辐射常数的大小取决于
+晶格点的形状和对称性。对于旋转对称的孔形（如圆孔），各辐射分量可在远场相消干涉，
+使辐射常数极小，形成对称保护型 BIC（bound state in the continuum）效应
+\cite{noda2023tutorial}。然而，\textbf{PCSEL 追求的是高亮度输出，因此会有意破缺相关对称性}：
+采用非对称孔形（如三角孔、椭圆孔）或“双晶格”结构（double-lattice），
+使远场不再完全相消，并在目标模上开放可控的辐射通道。
+由于对称保护 BIC 使辐射常数极小甚至趋零，直接称 PCSEL 为“BIC 激光器”并不准确；
+PCSEL 需要偏离理想 BIC 条件，才能获得足够的输出功率\cite{noda2023tutorial}。
 
 \subsection{第四步：模式选择——从单晶格到双晶格再到 Hermitian/非 Hermitian 联合调控}
 出光过程的完整性还包括“谁先起振”这一关键问题。在 $\Gamma^{(2)}$ 点通常存在四个带边模式，它们的频率接近但辐射损耗和面内损耗各不相同。PCSEL 通过结构设计使目标基模与高阶模之间产生足够大的\textbf{阈值增益差}（threshold margin），从而实现稳定单模工作。这一思路经历了三代演进\cite{noda2023tutorial}：
@@ -189,7 +283,14 @@ $\Gamma^{(2)}$ 点位于光锥（light line）之上，这意味着共振模式�
 \begin{enumerate}
   \item \textbf{非对称单晶格}（2014 年）\cite{hirose2014}：采用三角形等非对称孔形，打破 $C_4$ 旋转对称，使不同带边模的辐射损耗产生分化，实现瓦级单模输出。
   \item \textbf{双晶格}（2018 年）\cite{yoshida2019}：将一组晶格点相对另一组在 $x$、$y$ 方向各平移约 $\lambda/(4n_{\mathrm{eff}})$。由于两组孔的 $180^\circ$ 衍射光程差约为 $\lambda$，发生相消干涉，有效削弱面内 $180^\circ$ 耦合。其结果是基模的场型在空间上展宽，高阶模从谐振区边缘的泄漏损耗相对增大，从而拉开模式间阈值差距。凭借此方案，\SI{500}{\micro\meter} 口径器件实现了 \SI{10}{W} 级脉冲单模输出。
-  \item \textbf{Hermitian/非 Hermitian 联合调控}（2023 年）\cite{yoshida2023}：进一步精调双晶格间距与孔径比例，同时优化面内耦合（Hermitian 耦合，即 $180^\circ$ 和 $90^\circ$ 衍射）与辐射耦合（非 Hermitian 耦合，因伴随辐射损耗）。理论预测口径 \SI{3}{mm} 可实现 \SIrange{50}{100}{W} 单模工作，\SI{10}{mm} 口径可达 \SIrange{500}{1000}{W}\cite{noda2023tutorial}。实验上，\SI{3}{mm} 口径器件已实现连续波 \SI{50}{W} 单模输出，发散角仅 $0.05^\circ$（$1/e^2$），亮度达 \SI{1}{GW.cm^{-2}.sr^{-1}}，首次在连续波条件下追平了气体和固体激光器的亮度水平\cite{yoshida2023}。
+  \item \textbf{Hermitian/非 Hermitian 联合调控}（2023 年）\cite{yoshida2023}：
+  进一步精调双晶格间距与孔径比例，同时优化面内耦合
+  （Hermitian 耦合，即 $180^\circ$ 和 $90^\circ$ 衍射）与伴随辐射损耗的耗散耦合。
+  理论预测口径 \SI{3}{mm} 可实现 \SIrange{50}{100}{W} 单模工作，
+  \SI{10}{mm} 口径可达 \SIrange{500}{1000}{W}\cite{noda2023tutorial}。
+  实验上，\SI{3}{mm} 口径器件已实现连续波 \SI{50}{W} 单模输出，
+  发散角约 $0.05^\circ$（$1/e^2$），亮度达 \SI{1}{GW.cm^{-2}.sr^{-1}}
+  \cite{yoshida2023}。
 \end{enumerate}
 
 \subsection{小结：一条连贯的出光链}
@@ -314,6 +415,16 @@ B \approx \frac{P}{A_{\mathrm{eff}}\,\Omega},\qquad \Omega\approx \theta_x\theta
 \end{equation}
 其中 $P$ 为输出功率，$A_{\mathrm{eff}}$ 为有效出光面积，$\Omega$ 为远场立体角（小角度时可用发散半角 $\theta_x,\theta_y$ 近似）。这一定义提醒我们：亮度提升必须同时压缩发散角或降低等效束腰面积，不能只靠总功率上升。
 
+\begin{ExampleBox}
+\textbf{[本书算例] 用 \SI{3}{mm}、\SI{50}{W} 和 $0.05^\circ$ 估算亮度。}把出光口径近似成直径 \SI{3}{mm} 的圆，则 $A_{\mathrm{eff}}\approx\pi(0.15\,\mathrm{cm})^2=0.0707\,\mathrm{cm}^2$；再取 $\theta_x=\theta_y=0.05^\circ=8.73\times10^{-4}\,\mathrm{rad}$，得到
+\[
+B\approx\frac{50}{0.0707(8.73\times10^{-4})^2}
+\approx \SI{9.3e8}{W.cm^{-2}.sr^{-1}}
+\approx \SI{0.93}{GW.cm^{-2}.sr^{-1}}.
+\]
+若功率和口径不变而发散角增至 $1^\circ$，亮度会降至约 $2.3\times10^6\,\mathrm{W\,cm^{-2}\,sr^{-1}}$，相差约 400 倍。这个比较说明，窄发散对高亮度的贡献不是修饰项，而是平方进入分母的核心量。
+\end{ExampleBox}
+
 PCSEL 的潜在优势在于，它并非先做大面积，再事后用损耗把高阶模压下去；相反，它可以在结构层面把模式选择机制提前嵌入平面内反馈网络中。二维光子晶体带来的是“可工程化的耦合通道”：通过晶格常数、孔形、扰动、双晶格、对称性破缺等设计，研究者可以调节模式分裂、辐射方向性和偏振选择规则。
 
 这里需要进一步限定“可能有优势”的含义。PCSEL 的大面积单模潜力来自\textbf{模式组织机制}，而不是天然保证。更准确地说，PCSEL 的大面积单模能力不是 band diagram 单独的性质，而是
@@ -344,22 +455,35 @@ PCSEL 的潜在优势在于，它并非先做大面积，再事后用损耗把�
 
 这三种视角之间的关系可以概括为：第一层决定候选模，第二层决定光学阈值排序，第三层决定器件能否达到并维持该排序。更具体的接口链条可以用一条最小的量级传递线来记：
 \begin{equation}
-Q,\tilde{\omega}
-\;\Rightarrow\;
-\alpha_{\mathrm{rad}}\,(=\omega/2Qv_g)
-\;\Rightarrow\;
-g_{\mathrm{th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}
-\;\Rightarrow\;
-I_{\mathrm{th}}\ (\text{由 }g_{\mathrm{th}}\text{ 进入载流子/热方程}).
+\begin{aligned}
+Q_{\mathrm{rad}},\tilde{\omega}
+&\Rightarrow
+\alpha_{\mathrm{rad}}=\frac{\omega_0}{Q_{\mathrm{rad}}v_{\mathrm{en}}}
+\Rightarrow
+g_{\mathrm{mod,th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}},\\
+g_{\mathrm{mod,th}}
+&\Rightarrow
+g_{\mathrm{mat,th}}=\frac{g_{\mathrm{mod,th}}}{\Gamma_{\mathrm{opt}}}
+\Rightarrow
+I_{\mathrm{th}}\quad(\text{经材料增益、载流子与热模型}).
+\end{aligned}
 \end{equation}
-它提醒读者：$Q$ 与辐射损耗是 L1的输出，阈值增益是 L2的入口，阈值电流与工作窗口则必须进入L3/L4的输运与热回写。
+这里的 $Q_{\mathrm{rad}}$ 指只计辐射通道时的品质因子；若本征问题已经包含吸收，就应使用 $\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}=\omega_0/(Q_{\mathrm{tot}}v_{\mathrm{en}})$，或按各通道耗散功率拆分，不能把同一内部损耗再加一次。能量速度 $v_{\mathrm{en}}$ 负责把时间衰减率换成空间功率损耗；精确 $\Gamma$ 点不能用为零的 Bloch 群速度代替它。这条链提醒读者：$Q$ 与辐射损耗是 L1 的输出，模阈值与材料阈值是 L2 的接口，阈值电流与工作窗口则必须进入 L3/L4 的输运与热回写。
 
 为了直观展示三重视角之间的数据传递关系，\cref{fig:ch01_three_perspectives_flow}显示了从L1到L3的完整工作流。注意每个层级的输入输出量以及热回写反馈路径。
 
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch01_three_perspectives_flow}
-  \caption{光子晶体面发射激光器建模的三重视角及其数据传递链。L1（被动电磁层）求解麦克斯韦方程得到候选模的品质因子 $Q$ 和辐射损耗 $\alpha_{\mathrm{rad}}$；L2（有源光学层）加入内部损耗 $\alpha_{\mathrm{int}}$ 和有源区增益特性，计算阈值增益 $g_{\mathrm{th}}$；L3（器件层）通过电注入和热传导方程求得阈值电流 $I_{\mathrm{th}}$ 和工作温度。橙色虚线箭头表示热-电-光耦合反馈：温升会通过折射率温度系数 $dn/dT$ 和带隙温度系数 $dE_g/dT$ 回写到光学性质，可能改变模式排序。底部的黄色框总结了最小量级传递链。右侧青色框强调了三个关键区分：被动共振不等于有源阈值，阈值增益不等于阈值电流，无限周期结果不等于有限器件工作结果。}
+  \caption{光子晶体面发射激光器建模的三重视角及其数据传递链。
+  L1（被动电磁层）求解麦克斯韦方程，得到候选模的品质因子 $Q$ 和辐射损耗
+  $\alpha_{\mathrm{rad}}$；L2（有源光学层）加入内部损耗 $\alpha_{\mathrm{int}}$
+  和有源区重叠，区分阈值模增益 $g_{\mathrm{mod,th}}$ 与阈值材料增益
+  $g_{\mathrm{mat,th}}$；L3（器件层）通过电注入和热传导方程求得阈值电流
+  $I_{\mathrm{th}}$ 和工作温度。橙色虚线表示热--电--光反馈：温升通过
+  $dn/dT$ 和 $dE_g/dT$ 回写光学性质，可能改变模式排序。底部黄色框给出最小量级传递链；
+  右侧青色框强调三个关键区分：被动共振不等于有源阈值，阈值增益不等于阈值电流，
+  无限周期结果不等于有限器件工作结果。}
   \label{fig:ch01_three_perspectives_flow}
 \end{figure}
 
@@ -368,7 +492,7 @@ I_{\mathrm{th}}\ (\text{由 }g_{\mathrm{th}}\text{ 进入载流子/热方程}).
 
 \begin{itemize}
   \item 品质因子 $Q$ 与光子寿命：属于被动腔信息，用来表征损耗时间尺度；
-  \item 阈值增益 $g_\mathrm{th}$：属于有源光学层，回答“补偿损耗至少需要多少模增益”；
+  \item 阈值模增益 $g_\mathrm{mod,th}$ 与阈值材料增益 $g_\mathrm{mat,th}$：属于有源光学层，分别回答“模式需补偿多少总损耗”和“考虑有源区重叠后材料需提供多少增益”；
   \item 阈值电流 $I_\mathrm{th}$：属于器件层，回答“真实器件达到阈值所需的注入电流”；
   \item 远场与偏振：回答输出是否在目标方向、目标偏振上集中；
   \item 线宽、相干性、亮度与 $M^2$：表征器件作为系统光源的可用性。
@@ -388,7 +512,7 @@ I_{\mathrm{th}}\ (\text{由 }g_{\mathrm{th}}\text{ 进入载流子/热方程}).
     \midrule
     带图、Gamma 点候选模 & L1 被动电磁层 & PWEM、CWT、RCWA 的单胞筛选 & 反射/透射谱中的候选特征、偏振选择趋势 \\
     被动 $Q$、辐射损耗、上下出光比例 & L1 被动电磁层 & RCWA、FDTD、FEM、周期频域本征/散射模型 & 线宽收缩趋势、反射谷宽度、远场与上下出光比 \\
-    阈值增益 $g_{\mathrm{th}}$ & L2 有源光学层 & CWT、RCWA 阈值代理、重叠积分模型 & 起振前后增益需求、阈值附近谱特征变化 \\
+    $g_{\mathrm{mod,th}}$、$g_{\mathrm{mat,th}}$ & L2 有源光学层 & CWT、RCWA 阈值代理、重叠积分模型 & 模式总损耗与材料增益需求、阈值附近谱特征变化 \\
     阈值电流 $I_{\mathrm{th}}$ & L3/L4 器件层 & Poisson + 漂移扩散 + 热回写 & L--I 曲线拐点、J--V--L、热滚降起点 \\
     远场、偏振、$M^2$ & L1/L4 之间的输出层 & RCWA、FDTD、FEM、近远场变换 & CCD 远场、偏振仪、束质测量 \\
     线宽、相干性、频率噪声 & 动态/噪声层 + 实验闭环 & 速率方程、降阶噪声模型、热灵敏度模型 & 频谱仪、自外差/拍频、频率噪声谱测量 \\
@@ -437,14 +561,14 @@ I_{\mathrm{th}}\ (\text{由 }g_{\mathrm{th}}\text{ 进入载流子/热方程}).
 
 这个顺序对应模型依赖关系。模式分析依赖电磁边界条件；阈值分析依赖损耗分解；阈值电流依赖载流子输运和注入效率；最终远场和稳定性还依赖温升对折射率、增益和模式排序的回写。
 
-\section{2024--2026 进展速览：从“能激射”走向“系统可用”}
-面向 2024--2026 的文献趋势，PCSEL 研究重点已从“证明可高亮度单模”继续推进到“系统级可用”：一类工作聚焦高功率调制与相干自由空间通信，直接把调制、远场与链路指标并列报告\cite{inoue2025fmpcsel}；另一类工作通过谐振腔嵌入式设计强化模式选择与噪声控制\cite{bian2024resonatorpcsel}；还有一类工作在 BIC 语境下探索更宽角谱的高 $Q$ 机制（如 quasi-BFIC），提升有限尺寸与误差条件下的角度容差\cite{qin2025quasibfic}。  
+\section{2024–2026 进展速览：从“能激射”走向“系统可用”}
+面向 2024–2026 的文献趋势，PCSEL 研究重点已从“证明可高亮度单模”继续推进到“系统级可用”：一类工作聚焦高功率调制与相干自由空间通信，直接把调制、远场与链路指标并列报告\cite{inoue2025fmpcsel}；另一类工作通过谐振腔嵌入式设计强化模式选择与噪声控制\cite{bian2024resonatorpcsel}；还有一类工作在 BIC 语境下探索更宽角谱的高 $Q$ 机制（如 quasi-BFIC），提升有限尺寸与误差条件下的角度容差\cite{qin2025quasibfic}。  
 因此，本书后续结构既讨论模式存在的电磁条件，也讨论这些模式在真实器件和系统约束下是否仍可工作、可制造、可复核。
 
 \begin{table}[htbp]
   \centering
   \footnotesize
-  \caption{2024--2026 PCSEL 前沿对照表：进展--应用场景--设计启示。}
+  \caption{2024–2026 PCSEL 前沿对照表：进展—应用场景—设计启示。}
   \label{tab:frontier_2024_2026_matrix}
   \setlength{\tabcolsep}{4pt}
   \begin{tabularx}{\textwidth}{@{}p{0.23\textwidth}p{0.17\textwidth}p{0.23\textwidth}Y@{}}

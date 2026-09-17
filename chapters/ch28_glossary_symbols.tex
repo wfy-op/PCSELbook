@@ -2,31 +2,9 @@
 \chapter{术语表与符号总表}
 \label{ch:glossary}
 
-\paragraph{读完本章，你应能}
-\begin{itemize}
-  \item 把全书中最关键的术语、符号和层级区分压缩成可反复查阅的一份统一对照表。
-  \item 避免在阅读 \cref{ch:bic,ch:dynamics,ch:workflow,ch:worked-example,ch:failure-modes} 等跨模块章节时发生语义漂移。
-  \item 建立一套适合研究记录、仿真汇报和论文写作的统一命名习惯。
-\end{itemize}
-
-\paragraph{读前准备}
-本章是查阅型索引，没有先修门槛：从任何一章跳转过来查词都可以直接使用，遇到层级可疑的表述时随时翻开即可。
-
-\paragraph{阅读主线}
-\ChapterModelLevel{跨层索引（L1→L4）}
-本章先给出核心术语表，再给出符号总表，随后整理最常见的混淆对照，最后说明本章在工作流、例题与失败模式诊断中的使用位置。
-为了帮助读者快速建立对全书符号体系的整体认知，\cref{fig:ch28_symbol_glossary}以树状图的形式展示了所有关键符号的分类架构。该图将数百个分散在各章的物理量系统地归纳为三大族群：基础物理（蓝色）、材料几何（绿色）和数值计算（橙色），并在每个类别下进一步细分为若干子类，标注出最具代表性的符号实例。建议初次接触本书时先将此图浏览一遍，后续遇到陌生符号时可迅速定位其所属范畴以减少翻阅时间。
+本章供查词与核对符号使用，无先修要求。术语按被动电磁、增益/器件、动态学和数值验证分层；多义符号另列语境，不能只凭字母判断物理含义。\cref{fig:ch28_symbol_glossary}给出分类索引。
 
 \input{figures/fig_ch28_symbol_glossary}
-\begin{IntuitionBox}
-术语表是为了让证据链不失真，而非为了把词翻译得“直观”。PCSEL 研究跨越开放电磁系统、半导体器件和多物理场建模，同一个词若在不同章节里含义漂移，结论就会在不知不觉中越级。
-\end{IntuitionBox}
-
-\section{如何使用本章}
-本章最适合在三种情境下反复打开。第一，读到一个看似熟悉、但层级可能不同的词时，例如“threshold”“mode”“stability”。第二，准备把某个中间结果写进报告或论文时，用它检查自己是否把代理模型结论写成了器件结论。第三，团队讨论中出现“大家都在用同一个词，但好像在说不同东西”时，用本章统一语义。
-
-如果需要一个最直接的用法，可以把本章与三张表配套使用：\cref{tab:workflow-example-failure,tab:worked-map,tab:worked-summary}。前两张表告诉你应该走哪条证据链，本章则保证链条上的每一个词和符号都指向同一层物理含义。
-
 \section{核心术语表}
 \begin{longtable}{@{}p{0.28\textwidth}p{0.66\textwidth}@{}}
 \toprule
@@ -80,7 +58,8 @@ $\Gamma_\mathrm{QW}$ & 器件 & 模场与量子阱区域的重叠因子。 \\
 $\Gamma_\mathrm{loss}$ & 器件 & 模场与主要损耗区域的重叠因子。 \\
 $g_\mathrm{mat}$ & 器件 & 材料增益。 \\
 $g_\mathrm{mod}$ & 光学/器件 & 模增益，常近似写为 $\Gamma_\mathrm{opt} g_\mathrm{mat}$ 或更精细的空间积分形式。 \\
-$g_\mathrm{th}$ & 光学 & 阈值增益，即补偿模式总损耗所需的最小模增益。 \\
+$g_\mathrm{mod,th}$ & 光学 & 阈值模增益，等于模式需要补偿的总空间功率损耗。 \\
+$g_\mathrm{mat,th}$ & 光学/器件 & 阈值材料增益；均匀增益近似下为 $g_\mathrm{mod,th}/\Gamma_\mathrm{opt}$。 \\
 $N(\rvec)$ & 器件 & 载流子密度空间分布。 \\
 $J(\rvec)$ & 器件 & 电流密度空间分布。 \\
 $T(\rvec)$ & 热/器件 & 温度空间分布。 \\
@@ -151,36 +130,3 @@ BIC vs 高 $Q$ 共振 & BIC 是理想耦合严格为零的束缚态，高 $Q$ �
 把“存在一个高 $Q$ 的 $\Gamma$ 点候选模”直接改写成“器件一定会以单模低阈值工作”，是全书最需要避免的术语越级。类似地，把“调制响应更快”写成“线宽一定更窄”也是把动态学结论和噪声结论混在了一起。
 \end{PitfallBox}
 
-\section{如何把本章用回工作流、例题与失败模式}
-\cref{ch:workflow} 负责说明建模链应该怎样向前推进；\cref{ch:worked-example} 完整展开这条链；\cref{ch:failure-modes} 则把同一条链倒过来，检查哪里最容易断。本章的作用，是确保这三条阅读路径使用的是同一套词汇和符号。
-
-更具体地说：
-\begin{itemize}
-  \item 当你在 \cref{ch:bic} 里看到 BIC、quasi-BIC、radiation channel 时，应回到本章确认它们与高 $Q$、亮模、远场工程的边界。
-  \item 当你在 \cref{ch:dynamics} 里看到 $\alpha_H$、$\omega_R$、$f_{3\mathrm{dB}}$ 时，应回到本章确认这些量属于动态学和噪声层级，而不是静态阈值层级。
-  \item 当你在 \cref{ch:worked-example} 里整理中间结果时，可直接用本章检查每一个输出量属于“候选模证据”“有限尺寸证据”还是“器件代理证据”。
-  \item 当你在 \cref{ch:failure-modes} 中排错时，可用本章快速判断自己究竟是符号混用、术语越级，还是模型层级本身已经错位。
-\end{itemize}
-
-\section*{回看本章}
-本章把全书中最容易漂移的术语和符号压缩成一份统一工具表。有效的用法，是在写公式、做工作流、整理例题中间结果和诊断失败模式时，持续用它检查自己是否发生了层级混用、概念越级或符号漂移，而非偶尔查一个词。
-
-\section*{练习题}
-\begin{enumerate}
-  \item \basicq 从 \cref{ch:bic,ch:dynamics} 中各找出两个你最容易混淆的术语，分别写出一句不会越级的定义。
-
-  \item \basicq 用本章的混淆对照表，重写一句你在研究笔记里曾经写过的“高 $Q$ 因此低阈值”式表述。
-
-  \item \midq 以 \cref{ch:worked-example} 的一张中间结果表为对象，给出每个中间量的层级标签：被动光学、有限尺寸、器件代理或动态学。
-
-  \item \hardq 说明为什么在实验校准中，回验量不能再反过来参与同一轮参数拟合。
-\end{enumerate}
-
-\section*{延伸阅读}
-\begin{itemize}
-  \item 若你在整理理论与辐射主线，建议与 \cref{ch:bic,ch:math-appendix} 对照阅读。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
-
-  \item 若你在整理调制、线宽与噪声主线，建议与 \cref{ch:dynamics,ch:device-appendix} 对照阅读。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
-
-  \item 若你在整理项目执行链，建议与 \cref{ch:workflow,ch:worked-example,ch:failure-modes,ch:sim-appendix} 对照阅读。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
-\end{itemize}

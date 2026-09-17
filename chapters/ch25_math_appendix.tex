@@ -2,35 +2,8 @@
 \chapter{数学附录}
 \label{ch:math-appendix}
 
-\paragraph{读完本章，你应能}
-\begin{itemize}
-  \item 把全书反复使用的时间因子、傅里叶展开、归一化、复频率和微扰公式整理成一套统一数学语法。
-  \item 理解这些公式各自依赖的物理前提，避免把本来只对封闭或弱开放系统成立的表达式机械外推到所有 PCSEL 问题。
-  \item 建立开放 Maxwell 问题中 QNM、伴随模、双正交和广义归一化的最小数学框架。
-  \item 学会把这些数学工具用于检查仿真结果、统一跨章节符号，以及快速估计参数变化对模态的影响。
-\end{itemize}
-
-\paragraph{读前准备}
-建议已掌握 \cref{ch:maxwell,ch:bloch,ch:threshold,ch:cmt} 中关于 Maxwell 方程、Bloch 展开、阈值条件和微扰观点的内容。
-
-\paragraph{阅读主线}
-\ChapterModelLevel{跨层数学支撑（L1→L4）}
 \input{figures/fig_ch25_math_object_map}
-图 \cref{fig:ch25_math_object_map} 先把本章数学对象之间的关系固定下来，再进入各节公式推导，可明显降低“符号会看、结构不清”的阅读负担。
-
-\paragraph{首次阅读建议路径}
-若是第一次阅读本附录，建议按以下顺序进行：先读时间因子与傅里叶约定，再读周期/Bloch 展开与卷积结构，再读 QNM 与归一化，最后读互易与微扰公式。其余段落可在需要时回查。
-
-本附录是把正文反复调用、却不宜每次都从头展开的数学骨架集中讲清楚，而非把若干常见恒等式堆在一起的公式仓库。我们先统一时间因子和频域约定，因为一切损耗、增益和复频率的符号都依赖它；随后建立周期介质中的傅里叶与 Bloch 展开，解释卷积结构为什么在 \cref{ch:gamma} 的能带概念、\cref{ch:pwe} 的 PWEM、以及后续 RCWA 和 CWT 中一再出现；再讨论内积、归一化和开放系统中的复频率与 $Q$；最后给出互易性与一阶微扰公式，并明确说明它们在哪些条件下可靠、在哪些条件下只能作为工程近似。
-
-\section{为什么数学附录不是装饰，而是主结论的一部分}
-PCSEL 的建模链横跨电磁场、半导体输运和热传导。只要这些模块之间的时间因子、损耗符号、傅里叶约定或归一化不一致，最终就会出现一种很危险的情况：看起来像是“物理结论不同”，实际却只是数学约定变了。最典型的例子就是时间因子的选择。一旦一个章节使用 $\ee^{-\ii\omega t}$，另一个局部推导却默默改成 $\ee^{+\ii\omega t}$，那么介质虚部、损耗符号、复频率虚部和 $Q$ 的定义就会全部翻转。若读者没有意识到这种符号翻转，很容易把纯符号问题误读成腔损耗差异或增益符号差异。
-
-因此，本附录的目标是把正文各章默认共享的数学地基显式写出来，而非补充“额外数学”。只要地基统一，后面的开放系统、耦合波理论、RCWA、FDTD/FEM 提取和器件级回写才可能真正接成一条链。
-
-\begin{IntuitionBox}
-如果把整本书看成一套多物理场模型，那么数学附录的作用就像接口协议。接口协议一旦不统一，上层结果可能只是数值上偶然一致，而不能视为可复用结论。
-\end{IntuitionBox}
+本附录集中列出正文共用的时间因子、傅里叶展开、开放模归一化、互易与微扰公式。\cref{fig:ch25_math_object_map}是查阅索引；第一次阅读可依次查看时间约定、周期/Bloch 展开、QNM 归一化与非厄米微扰。不同文献若采用相反时间因子，介质虚部、复频率虚部和损耗符号会整体翻转，引用公式前必须先换到本书约定。
 
 \section{时间因子与频域约定：先把增益和损耗的符号说清楚}
 全书统一采用时间因子
@@ -676,7 +649,7 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 
 \section{从 CWT 本征矢量提取远场偏振：方位角、椭圆率与 Stokes 参量}
 \label{sec:cwt-polarization-extraction}
-本节给出一组可直接写进代码的公式：如何从 \cref{ch:cwt-min,ch:cwt-3d} 的四波 CWT 本征矢量读出远场偏振态。
+本节给出一组可直接写进代码的公式：如何把 \cref{ch:cwt-min,ch:cwt-3d} 的四波 CWT 本征矢量先投影到真实辐射端口，再由端口 Jones 向量计算偏振态。
 在实际器件设计中，除了关心模式的辐射常数和品质因子，还需要直接从 CWT 解中提取远场的偏振特性。设第 $j$ 个超模的本征矢量为
 \begin{equation}
 \bm V_j = 
@@ -684,11 +657,16 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
 \end{bmatrix}^{\mathsf T},
 \end{equation}
-其中下标 $x,y$ 分别表示沿 $\pm x$ 和 $\pm y$ 方向传播的基本波对。在最小四波模型中，远场主要由前向波 $c_{x,j}$ 和 $c_{y,j}$ 贡献（后向波 $s_{x,j},s_{y,j}$ 主要形成驻波反馈）。因此，远场电场的横向分量可近似写为
+其中下标 $x,y$ 分别表示沿 $\pm x$ 和 $\pm y$ 方向传播的基本波对。这四个系数描述\textbf{面内传播基底}，不是远场的 $x/y$ 偏振分量；正反向波都可能通过周期散射贡献同一个辐射端口。对给定观察方向 $\hat{\bm k}$、上/下半空间 $\sigma$ 和衍射级次 $\ell$，必须先构造由 Green 函数、Fourier 分量和端口归一化决定的 $2\times4$ 辐射矩阵 $\bm R^{(\sigma,\ell)}$：
 \begin{equation}
-\bm E_{\mathrm{ff}} \approx c_{x,j}\,\hat{\bm x} + c_{y,j}\,\hat{\bm y}.
+\bm d_j^{(\sigma,\ell)}(\hat{\bm k})
+=
+\begin{bmatrix}d_{x,j}\\d_{y,j}\end{bmatrix}
+=
+\bm R^{(\sigma,\ell)}(\hat{\bm k})\bm V_j.
+\label{eq:cwt-radiation-port-map}
 \end{equation}
-由此可直接定义三个关键偏振参数：
+只有求出 $d_{x,j},d_{y,j}$ 之后，才能定义下列偏振参数。把 $c_{x,j},c_{y,j}$ 直接代入会把传播方向系数误当成 Jones 分量。
 
 \paragraph{1. 偏振方位角 (azimuth angle)}
 线偏振主轴相对于 $x$轴的夹角为
@@ -696,14 +674,14 @@ c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
 \psi_j
 =
 \frac{1}{2}\operatorname{atan2}\!\left(
-2\,\mathrm{Re}\!\left[c_{x,j}c_{y,j}^{\ast}\right],\;
-|c_{x,j}|^2-|c_{y,j}|^2
+2\,\mathrm{Re}\!\left[d_{x,j}d_{y,j}^{\ast}\right],\;
+|d_{x,j}|^2-|d_{y,j}|^2
 \right),
 \qquad
 \psi_j \in \left(-\frac{\pi}{2},\frac{\pi}{2}\right].
 \label{eq:polarization_azimuth_from_cxy}
 \end{equation}
-特别地，当相位差接近零时，\cref{eq:polarization_azimuth_from_cxy} 会退化到熟悉的幅值比公式；当 $|c_{x,j}|=|c_{y,j}|$ 且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当 $c_{y,j}=0$ 时，$\psi_j=0^\circ$，对应纯 $x$ 偏振。
+特别地，当相位差接近零时，\cref{eq:polarization_azimuth_from_cxy} 会退化到熟悉的幅值比公式；当 $|d_{x,j}|=|d_{y,j}|$ 且相位差为零时，$\psi_j=45^\circ$，对应对角线偏振；当 $d_{y,j}=0$ 时，$\psi_j=0^\circ$，对应纯 $x$ 偏振。
 
 \paragraph{2. 椭圆率 (ellipticity)}
 若考虑复振幅的相对相位，先定义椭圆角 $\chi_j$：
@@ -711,7 +689,7 @@ c_{x,j} & s_{x,j} & c_{y,j} & s_{y,j}
 \chi_j
 =
 \frac{1}{2}\arcsin\!\left(
-\frac{2\,\mathrm{Im}\!\left[c_{x,j}^{\ast}c_{y,j}\right]}{|c_{x,j}|^2 + |c_{y,j}|^2}
+\frac{2\,\mathrm{Im}\!\left[d_{x,j}^{\ast}d_{y,j}\right]}{|d_{x,j}|^2 + |d_{y,j}|^2}
 \right),
 \qquad
 e_j = \tan\chi_j,
@@ -724,10 +702,10 @@ e_j \in [-1, 1],
 \paragraph{3. 斯托克斯参量 (Stokes parameters)}
 更一般地，可以用归一化斯托克斯参量完整刻画偏振态：
 \begin{align}
-s_0 &= |c_{x,j}|^2 + |c_{y,j}|^2, \notag\\
-s_1 &= \frac{|c_{x,j}|^2 - |c_{y,j}|^2}{s_0}, \notag\\
-s_2 &= \frac{2\mathrm{Re}(c_{x,j}^* c_{y,j})}{s_0}, \notag\\
-s_3 &= \frac{2\mathrm{Im}(c_{x,j}^* c_{y,j})}{s_0}.
+s_0 &= |d_{x,j}|^2 + |d_{y,j}|^2, \notag\\
+s_1 &= \frac{|d_{x,j}|^2 - |d_{y,j}|^2}{s_0}, \notag\\
+s_2 &= \frac{2\mathrm{Re}(d_{x,j}^* d_{y,j})}{s_0}, \notag\\
+s_3 &= \frac{2\mathrm{Im}(d_{x,j}^* d_{y,j})}{s_0}.
 \label{eq:stokes_from_cxy_chapter9}
 \end{align}
 这四个参量满足$s_1^2+s_2^2+s_3^2=1$（完全偏振光），且在庞加莱球上构成一个单位向量。结合 \cref{ch:polarization} 中的对称性分析，可以预测不同模式在不同对称破缺下的轨迹演化。
@@ -869,7 +847,7 @@ E(C_{4v}) &\to B_1(C_{2v}) \oplus B_2(C_{2v}).
 \endhead
 $\Gamma_{\mathrm{opt}}$ & \cref{ch:threshold}，\cref{eq:gamma_opt_def}：光学约束因子，定义为模式与有源区的能量重叠。 \\
 $\alpha_{\mathrm{rad}},\;\alpha_{\mathrm{int}}$ & \cref{ch:threshold}，\cref{eq:gamma_alpha_map}：辐射损耗与内部损耗的等效空间系数。 \\
-$g_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:gth}：阈值增益，$\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$ 与 $\Gamma_{\mathrm{opt}}$ 之比。 \\
+$g_{\mathrm{mod,th}},\;g_{\mathrm{mat,th}}$ & \cref{ch:threshold}，\cref{eq:gth}：前者等于 $\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}$，后者等于 $g_{\mathrm{mod,th}}/\Gamma_{\mathrm{opt}}$。 \\
 $\kappa_1,\;\kappa_2$ & \cref{ch:cwt-min}，\cref{eq:cwt_kappa}：CWT 中的耦合系数，来自主导几何 Fourier 分量与纵向模重叠。 \\
 $\bm{C}_{\mathrm{1D}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_C1D_matrix}：一维反馈耦合矩阵。 \\
 $\bm{C}_{\mathrm{rad}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_Crad_matrix}：辐射耦合矩阵，非厄米，来自开放通道。 \\
@@ -882,12 +860,12 @@ $\bm{u}_{A_1},\;\bm{u}_{B_1},\;\bm{u}_{E,x/y}$ & \cref{ch:cwt-min}，\cref{eq:cw
 $G(z,z')$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_green}：辐射波的纵向 Green 函数（近似局域均匀背景）。 \\
 $G_{m,n}(z,z')$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_green_ho}：高阶波在光子晶体层内的倏逝 Green 函数。 \\
 $\delta=\beta-\beta_0$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_eigenvalue}：偏离 Bragg 条件的传播常数偏移。 \\
-$\alpha_{\mathrm{rad},j}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：第 $j$ 模的辐射常数，$\;2\,\mathrm{Im}(\lambda_j)$（亦可写为 $-2\,\mathrm{Im}(\tilde\omega_j)/v_{g,j}$）。 \\
+$\alpha_{\mathrm{rad},j}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：第 $j$ 模的辐射常数，$\;2\,\mathrm{Im}(\lambda_j)$；由复频率换算时使用能量速度 $v_{\mathrm{en},j}$，不用 $\Gamma$ 点色散斜率。 \\
 $\eta_{N_z}$ & \cref{ch:cwt-3d}，\cref{eq:vertical_truncation_ratio}：纵向模截断能量占比。 \\
 $\mathbf{\Sigma}_{\mathrm{rad}}(\omega)$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_selfenergy}：辐射通道引入的自能项。 \\
 $\Gamma_{\mathrm{PC}}$ & \cref{ch:pwe}，\cref{eq:gamma_pc}：光子晶体层的光学限制因子，用于二维等效介电常数修正。 \\
 $\tilde\varepsilon_a,\;\tilde\varepsilon_b$ & \cref{ch:pwe}，\cref{eq:modified_eps}：送入二维 PWEM 的修正等效介电常数。 \\
-$\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\lambda)=-2\,\mathrm{Im}(\tilde\omega)/v_g$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：辐射常数与 CWT 本征值虚部（及复频率虚部）之间的换算关系。 \\
+$\alpha_{\mathrm{rad}}=2\,\mathrm{Im}(\lambda)=-2\,\mathrm{Im}(\tilde\omega)/v_{\mathrm{en}}$ & \cref{ch:cwt-3d}，\cref{eq:3d_cwt_alpha_rad}：在本书约定下，辐射常数与 CWT 本征值虚部及复频率虚部之间的换算关系。 \\
 $I_{\mathrm{th}}$ & \cref{ch:threshold}，\cref{eq:threshold_rate}：阈值电流，是器件级电-热-光结果，需经电注入模型换算。 \\
 $\Delta G_{\star j}$ & \cref{ch:threshold}：目标模与第 $j$ 竞争模之间的模鉴别裕量。 \\
 $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}，\cref{eq:3dcwt_interfaces}：三维 CWT 输出的温度灵敏度导数，用于热耦合接口。 \\
@@ -896,30 +874,6 @@ $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}�
 
 这条索引的设计目的只有一个：让读者在遇到某个量时，能在 30 秒内找到它在主线上的定义位置，而不是在各章符号之间来回猜测。本索引不追求穷举，只覆盖"跨越两个以上章节使用"的派生量。基础符号的定义应在各章首次使用时已经明确，此处不再重复。
 
-\section*{回看本章}
-数学附录的作用是统一全书的语法，而非堆公式。时间因子决定损耗与增益的符号，傅里叶卷积解释了周期介质中的耦合矩阵，QNM / resonant states 说明开放模为何不是普通束缚态，左/右模与广义归一化说明为什么开放系统不能直接照搬厄米内积，复频率给出 $Q$ 与光子寿命的精确定义，互易性与一阶微扰则为耦合和灵敏度分析提供了共同骨架。只要这些约定统一，正文中的光学、器件和仿真章节就能共享同一套数学接口；若这些约定混乱，后面的一切“高级模型”都可能只是表面连贯。
-
-\section*{练习题}
-\begin{enumerate}
-  \item \basicq 从\cref{eq:time_convention_appendix} 出发，推导在本书时间因子约定下被动介质为何对应正的 $\Im\,\varepsilon$。
-
-  \item \basicq 从能量衰减定义出发，重新推导\cref{eq:q_complexfreq_appendix}，并说明为什么振幅寿命和能量寿命差一个因子 2。
-
-  \item \midq 利用\cref{eq:convolution_appendix}，解释为什么保留有限个倒格矢后，本征问题会变成矩阵本征值问题。
-
-  \item \midq 从\cref{eq:nonhermitian_first_order_appendix} 出发，解释为什么开放系统一阶微扰需要左模，而不能只用右模与自身的复共轭关闭投影。
-
-  \item \hardq 给出一个一阶微扰公式明显失效的 PCSEL 场景，并说明失效来自哪一条前提被破坏。
-\end{enumerate}
-
-\section*{延伸阅读}
-\begin{itemize}
-  \item 下一章将把这些数学语法压缩成器件级建模的符号链，特别是从材料增益到阈值电流的映射。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
-
-  \item 若想进一步打牢开放系统与扰动理论，可对照 \cite{joannopoulos2008,sakoda2005} 中关于周期介质与模式扰动的附录阅读。 阅读时应重点核对开放系统归一化、QNM 与非厄米微扰的标准假设。
-
-  \item 若想系统补强开放系统归一化、QNM 与非厄米微扰，可继续阅读 \cite{leung1994complete,leung1994perturb,muljarov2010bw,sauvan2013qnm,kristensen2015qnm,alpeggiani2017qnm}。 阅读时应重点核对开放系统归一化、QNM 与非厄米微扰的标准假设。
-\end{itemize}
 \begin{table}[htbp]
   \centering
   \caption{本附录数学工具在正文中的应用位置}

@@ -1,69 +1,48 @@
 % !TEX root = ../main.tex
-% Figure content only: inserted inside an outer figure environment in ch09
-\begin{tikzpicture}[x=1cm,y=1cm]
+% Content-only figure: four-wave network, matrix, and mechanism legend
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,font=\small]
   \tikzset{
-    wavenode/.style={circle,draw=blue!70,thick,fill=blue!10,minimum size=1.05cm,font=\small},
-    coup1/.style={<->,>=Stealth,thick,red!75},
-    coup2/.style={<->,>=Stealth,thick,orange!85!black},
-    loss/.style={->,>=Stealth,thick,dashed,red!60},
-    gain/.style={->,>=Stealth,thick,green!50!black}
+    panel/.style={draw=black!50,rounded corners=2pt,fill=white},
+    wave/.style={circle,draw=blue!70!black,thick,fill=blue!8,minimum size=1.0cm},
+    shortnote/.style={draw=black!35,rounded corners=2pt,fill=gray!5,align=left,text width=3.2cm,font=\footnotesize,inner sep=5pt}
   }
 
-  % A
-  \begin{scope}[xshift=0cm,yshift=3.5cm]
-    \node[font=\bfseries] at (0,2.2) {(a) 四波基底};
-    \node[wavenode] (rx) at (-1.8,0.9) {$R_x$};
-    \node[wavenode] (sx) at (1.8,0.9) {$S_x$};
-    \node[wavenode] (ry) at (-1.8,-0.9) {$R_y$};
-    \node[wavenode] (sy) at (1.8,-0.9) {$S_y$};
-    \draw[coup1] (rx) -- node[above,font=\scriptsize] {$\kappa_1$} (sx);
-    \draw[coup1] (ry) -- node[below,font=\scriptsize] {$\kappa_1$} (sy);
-    \draw[coup2] (rx) -- node[left,font=\scriptsize] {$\kappa_2$} (ry);
-    \draw[coup2] (sx) -- node[right,font=\scriptsize] {$\kappa_2$} (sy);
-    \draw[coup2] (rx) -- (sy);
-    \draw[coup2] (sx) -- (ry);
-    \draw[loss] (rx) -- ++(0,0.9) node[above,font=\scriptsize] {$\gamma_{\rm rad}$};
-    \draw[loss] (sx) -- ++(0,0.9);
-    \draw[loss] (ry) -- ++(0,-0.9) node[below,font=\scriptsize] {$\gamma_{\rm rad}$};
-    \draw[loss] (sy) -- ++(0,-0.9);
-    \draw[gain] (-3.3,0.9) -- node[above,font=\scriptsize] {$g_{\rm mod}$} (rx);
-    \draw[gain] (3.3,0.9) -- (sx);
-    \draw[gain] (-3.3,-0.9) -- node[below,font=\scriptsize] {$g_{\rm mod}$} (ry);
-    \draw[gain] (3.3,-0.9) -- (sy);
-  \end{scope}
+  % Panel a: network
+  \node[panel,minimum width=6.4cm,minimum height=6.2cm] at (-3.6,1.3) {};
+  \node[font=\bfseries,anchor=north west] at (-6.55,3.9) {(a) 四波耦合网络};
+  \node[wave] (rx) at (-5.0,2.0) {$R_x$};
+  \node[wave] (sx) at (-2.2,2.0) {$S_x$};
+  \node[wave] (ry) at (-5.0,.35) {$R_y$};
+  \node[wave] (sy) at (-2.2,.35) {$S_y$};
+  \draw[<->,thick,red!70!black] (rx) -- node[above,fill=white,inner sep=1pt] {$\kappa_1$} (sx);
+  \draw[<->,thick,red!70!black] (ry) -- node[below,fill=white,inner sep=1pt] {$\kappa_1$} (sy);
+  \draw[<->,thick,orange!85!black] (rx) -- node[left=5pt] {$\kappa_2$} (ry);
+  \draw[<->,thick,orange!85!black] (sx) -- node[right=5pt] {$\kappa_2$} (sy);
+  \draw[<->,thick,orange!85!black] (rx) -- (sy);
+  \draw[<->,thick,orange!85!black] (sx) -- (ry);
+  \foreach \n in {rx,sx} {\draw[->,thick,dashed,red!60] (\n) -- ++(0,.75);}
+  \foreach \n in {ry,sy} {\draw[->,thick,dashed,red!60] (\n) -- ++(0,-.75);}
+  \node[red!70!black] at (-3.6,3.2) {开放通道 $\gamma_{\mathrm{rad}}$};
 
-  % B
-  \begin{scope}[xshift=-3.8cm,yshift=-1.2cm]
-    \node[font=\bfseries] at (2.2,1.7) {(b) 矩阵形式};
-    \node[align=center,font=\small] at (2.2,-0.1) {
-      $\displaystyle
-      \frac{\dd}{\dd t}
-      \begin{bmatrix}
-      R_x\\ S_x\\ R_y\\ S_y
-      \end{bmatrix}
-      =
-      \left(\ii\bm{\Omega}-\bm{\Gamma}+\bm{G}\right)
-      \begin{bmatrix}
-      R_x\\ S_x\\ R_y\\ S_y
-      \end{bmatrix}
-      $
-    };
-    \node[draw=black,rounded corners,fill=gray!6,align=left,font=\footnotesize,text width=4.8cm] at (2.2,-2.1) {
-      \textbf{读法：}
-      $\bm{\Omega}$ 负责保守耦合，
-      $\bm{\Gamma}$ 负责辐射/吸收损耗，
-      $\bm{G}$ 负责模增益。
-    };
-  \end{scope}
+  % Panel b: matrix
+  \node[panel,minimum width=6.4cm,minimum height=6.2cm] at (3.6,1.3) {};
+  \node[font=\bfseries,anchor=north west] at (.65,3.9) {(b) 同一网络的矩阵写法};
+  \node[align=center] at (3.6,1.65) {$\displaystyle
+    \frac{\dd}{\dd t}
+    \begin{bmatrix}R_x\\S_x\\R_y\\S_y\end{bmatrix}
+    =\left(\ii\bm\Omega-\bm\Gamma+\bm G\right)
+    \begin{bmatrix}R_x\\S_x\\R_y\\S_y\end{bmatrix}$};
+  \node[shortnote,anchor=north] at (3.6,-.05) {
+    $\bm\Omega$：保守耦合；\\
+    $\bm\Gamma$：振幅损耗；\\
+    $\bm G$：振幅增益。
+  };
 
-  % C
-  \begin{scope}[xshift=4.8cm,yshift=-1.2cm]
-    \node[font=\bfseries] at (1.8,1.7) {(c) 信号流解释};
-    \node[draw=blue!70,rounded corners,fill=blue!6,align=left,font=\footnotesize,text width=4.6cm] at (1.8,-0.5) {
-      \textbf{$\kappa_1$：}反向散射，类似 1D DFB 中的前后向反馈。\\[3pt]
-      \textbf{$\kappa_2$：}转角散射，把 $x$ 向和 $y$ 向波连接起来，是 2D PCSEL 的关键。\\[3pt]
-      \textbf{$\gamma_{\rm rad}$：}通向光锥的辐射泄漏。\\[3pt]
-      \textbf{$g_{\rm mod}$：}有源区对四波基底的等效增益注入。
-    };
-  \end{scope}
-\end{tikzpicture}
+  % Full-width legend, separated from both panels
+  \node[draw=blue!55!black,rounded corners=2pt,fill=blue!5,align=left,text width=13.2cm,inner sep=6pt,anchor=north] at (0,-2.35) {
+    \textbf{机制读法：}\textcolor{red!70!black}{$\kappa_1$} 连接正反向波，表示反馈散射；
+    \textcolor{orange!85!black}{$\kappa_2$} 连接 $x/y$ 向基底，表示二维转角散射；虚线箭头是对开放端口的泄漏。线性阈值由矩阵最大实部过零确定，而不是对某一条闭合箭头单独做“环路增益”判断。
+  };
+\end{tikzpicture}%
+}

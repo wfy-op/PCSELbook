@@ -2,32 +2,19 @@
 \chapter{FDTD 与 FEM 在 PCSEL 建模中的作用}
 \label{ch:fdtd-fem}
 
-\paragraph{读完本章，你应能}
-\begin{itemize}
-  \item 理解为什么在 RCWA 之后仍然需要 FDTD 与 FEM，以及它们分别擅长解决哪类 PCSEL 问题。
-  \item 掌握几何设置、边界条件、激励源、结果提取和收敛检查的基本逻辑，而不是停留在软件界面操作层面。
-  \item 清楚地区分冷腔分析、带损耗分析和加入增益后的分析在数学意义上有什么不同。
-\end{itemize}
-
 \paragraph{读前准备}
 建议已掌握 \cref{ch:rcwa,ch:threshold,ch:polarization} 中关于开放边界、损耗、远场和阈值的基础概念。
 
-\section*{本章结构}
-\ChapterModelLevel{L1→L2}
-上一章的 RCWA 解决的是周期单胞开放结构问题，但真实 PCSEL 最终总要回到有限尺寸器件。边缘、有限孔阵、非理想窗口、局部几何细节和复杂外延层堆栈，都会把问题推向更一般的全波求解。本章先解释为什么 FDTD 和 FEM 会在这里登场，再分别说明它们的控制方程和数值哲学，随后讨论边界条件、激励源、共振参数提取与远场计算，最后严格说明它们能给出什么、又不能单独给出什么。
+把周期单胞截成有限孔阵后，Bloch 波矢不再足以标记模式：边缘终止、横向包络、侧向泄漏和实际出光窗口同时进入边值问题。FDTD 适合宽带激励与时域衰减，FEM 适合复杂几何与开放本征模；本章以同一有限结构说明两者的输入、可比输出和误差来源。
 
 \section{为什么有限尺寸一旦重要，全波方法就不可回避}
 对 PCSEL 来说，使单胞方法不再充分的，不只是“器件变大了”，而是有限尺寸带来的物理变了。无限周期模型里，模式由 Bloch 波矢标记；有限器件里，模式必须同时满足边缘终止、横向包络和开放边界条件。于是，边缘泄漏、横向模式竞争、注入窗口截断和热透镜效应都会显式出现。
 
 此时，如果还只依赖周期单胞方法，就会把有限器件里决定模式排序的一部分物理漏掉。FDTD 与 FEM 的意义在于，它们不再默认平面内无限周期，而是直接对给定有限几何上的 Maxwell 方程做求解。也正因为如此，它们成为从“单胞光学”走向“真实器件光学”的关键台阶。
 
-\begin{IntuitionBox}
-RCWA 擅长告诉你"无限周期单胞在开放边界下会怎样散射"；FDTD 和FEM 则开始回答"这个真实大小、真实边界、真实窗口的器件会怎样支持模式并向外辐射"。这两层都属于光学，但问题层次已经不同。
-\end{IntuitionBox}
-
 \input{chapters/ch14_fdtd_fem_for_pcsel/comparison_table.tex}
 
-\cref{tab:ch14_method_comparison}系统对比了FDTD、FEM 和RCWA三种方法的关键特征。对PCSEL建模而言，这三种方法并非相互排斥，而是各有舒适区：RCWA适用于无限周期结构的快速扫描和初步设计；FDTD适用于有限尺寸阵列的宽带响应和瞬态过程；FEM 则适用于复杂几何结构的高精度本征模分析。在实际工作流程中，通常会先用RCWA或CWT筛选候选结构，再用FDTD或FEM进行精细验证，最后结合TCMT进行物理诠释。
+\cref{tab:ch14_method_comparison}比较三种方法的边值问题和直接输出。RCWA 的对象是无限周期单胞；FDTD 与 FEM 可处理有限结构，但前者从时域信号提取模，后者可直接求复本征频率。只有在几何、材料和开放边界一致时，三者的共振频率、模式对称性与辐射趋势才可互证。
 
 \section{同一个 Maxwell 方程，为什么会分化出两种数值哲学}
 无论 FDTD 还是 FEM，最终处理的都是 Maxwell 方程。若写成频域形式，可用
@@ -46,16 +33,16 @@ FDTD 通过时间推进观察场如何建立、衰减和传播。它适合宽带
 FEM 则更像是频域定点瞄准。它适合在指定频率附近做高精度场分布分析，也适合直接构造本征值问题来求开放腔的复频率与模场。
 
 概括地说，FDTD 侧重时间演化和宽带响应，FEM 侧重指定频率或指定模态附近的精细求解。
-为了帮助读者直观理解FDTD 仿真的完整配置，\cref{fig:ch14_fdtd_setup}展示了一个典型的三维PCSEL FDTD仿真区域设置示意图，包括PML 吸收边界层、PCSEL有源层结构、PhC孔洞阵列、偶极子激励源、时间监视器、频谱监视器以及近远场变换面的位置关系。图中参数（例如 PML 厚度）应视为\textbf{[工程经验]}起点，需由收敛扫描确认，不是固定标准\cite{berenger1994,taflove2005}。
+\cref{fig:ch14_fdtd_setup}给出三维 FDTD 的最小配置：PML 包围有限孔阵，偶极源位于有源区，时域监视器用于谐波反演，闭合或足够完整的场面用于近远场变换。PML 厚度与监视面位置必须通过参数扫描确定\cite{berenger1994,taflove2005}。
 
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch14_fdtd_setup.tex}
-  \caption{三维FDTD仿真区域的标准配置。(a)整体布局：PML 吸收边界层包围整个计算区域，PCSEL有源层位于中心，周围是空气或包层介质；(b)激励源配置：偶极子源放置在有源区内，模拟自发辐射初始激发；(c)监视器布置：时间监视器记录特定点的场随时间演化，频谱监视器提取共振频率和Q值，近远场变换面用于计算远场辐射图案。关键参数如“PML 厚度 12--20 层、PML 与器件间距约半个波长、网格分辨率 $\le a/10$”均应作为\textbf{[工程经验]}初值，需通过误差门限校核\cite{taflove2005}。}
+  \caption{有限 PCSEL 阵列的三维 FDTD 配置。源的偏振与位置决定可激发的模态子空间；时域监视器用于提取复频率；近远场面同时记录切向电场与磁场。PML 距离、厚度和网格只在扫描后确定，不采用跨结构固定值\cite{taflove2005}。}
   \label{fig:ch14_fdtd_setup}
 \end{figure}
 
-\cref{fig:ch14_fdtd_setup}展示的给出的不只是几何布局，也包括边界、源和监视器之间的基本约束：PML确保开放边界条件正确实现，监视器位置决定了能否准确提取共振参数，而激励源的选择直接影响哪些模式会被有效激发。对于PCSEL这类高Q值共振系统，合理的仿真配置不能由单纯细化网格替代。
+图中的三类设置控制不同误差：PML 影响人工反射，源决定模式可见性，监视面决定远场积分是否漏掉通量。单独细化网格不能修复这三类错误。
 
 \section{FDTD 的强项：宽带、瞬态与模建立过程}
 FDTD 的核心是把时域 Maxwell 方程写在交错的 Yee 网格上，用电场和磁场在半时间步上交替更新。该方法适用于 PCSEL 中的三类问题。
@@ -108,21 +95,14 @@ FDTD 与 FEM 的区别，不是“一个近似，一个精确”。两者都是�
   \begin{tabularx}{\textwidth}{@{}p{3.0cm}p{4.0cm}Y@{}}
     \toprule
     项目 & 建议起点 & 通过门槛 \\ \midrule
-    PML 与器件最近距离 & 至少取 $d_{\mathrm{PML}}\gtrsim \lambda_0/n_{\mathrm{eff}}$；若存在强倏逝尾则进一步外推 & 共振频率、$Q$ 和远场主瓣对该距离变化小于预设容差 \\
-    PML 厚度 & 至少 $L_{\mathrm{PML}}\gtrsim \lambda_0/(2n_{\min})$，且不少于 $8$--$12$ 个网格层 & 继续增厚时，反射谱、$Q$ 与远场变化应进入平台区 \\
-    PML 吸收强度 / 拉伸参数 & 先用默认稳定值，再单因子扫描使理论边界反射压到 $10^{-6}$ 量级以下 & 不应出现随吸收参数变化而大幅漂移的伪模或伪反射 \\
+    PML 与器件最近距离 & 从能完整容纳倏逝尾和近场结构的距离开始，至少取三个值外推 & 共振频率、$Q$、功率平衡和远场主瓣对距离变化进入平台区 \\
+    PML 厚度 & 以求解器稳定默认值为起点，逐步增加厚度或网格层数 & 继续增厚时关键输出在预先声明的容差内稳定 \\
+    PML 吸收强度 / 拉伸参数 & 围绕稳定默认值做独立扫描，避免只调到某一个“最好看”的点 & 不出现随吸收参数系统漂移、分裂或消失的伪模 \\
 \end{tabularx}
 \end{table}
 
 \begin{warningbox}
-\textbf{高$Q$腔的 PML 特殊要求。}对$Q > 10^4$的高$Q$腔（如 BIC 或准-BIC 模），常规 PML 设置可能导致显著的数值误差：
-\begin{itemize}
-  \item \textbf{目标反射率：}应达到$R_{\mathrm{PML}} < 10^{-8}$而非普通的$10^{-6}$
-  \item \textbf{PML 厚度：}建议增加到$\lambda_0/n_{\min}$以上，或使用渐变 PML(graded PML)
-  \item \textbf{距离要求：}倏逝尾场必须在到达 PML 前衰减到峰值的$10^{-6}$以下
-  \item \textbf{验证方法：}扫描 PML 参数（厚度、吸收强度、距离）时，$Q$值变化应小于$1\%$
-\end{itemize}
-若 PML 设置不足，高$Q$模的数值$Q$值会被人为限制在$10^4$--$10^5$量级，无法反映真实物理极限。
+\textbf{高 $Q$ 模必须用误差预算反推 PML 要求。}允许的人工边界泄漏率应显著小于待测物理泄漏率；因此 $Q$ 越高，PML 反射、截断误差和计算时间窗的容许上限越低。不存在对所有结构通用的反射率、厚度或距离门槛。至少应联合扫描 PML 距离、厚度与吸收剖面，并把所得 $Q$ 变化计入不确定度；若不同扫描路径收敛到不同平台，当前 $Q$ 不能报告为物理值。
 \end{warningbox}
 
 更具体地说，若要报告一个可追溯的开放边界结果，至少应给出三条收敛句：第一，PML 与器件距离从 $d_{\mathrm{PML}}^{(1)}$ 增加到 $d_{\mathrm{PML}}^{(2)}$ 时，目标模频率与 $Q$ 的变化量；第二，PML 厚度从 $L_{\mathrm{PML}}^{(1)}$ 增加到 $L_{\mathrm{PML}}^{(2)}$ 时的变化量；第三，远场主瓣角度与主瓣半高全宽是否对监视面位置稳定。若这三条信息没有出现，那么“边界已经足够远”通常只是主观判断。
@@ -163,6 +143,15 @@ Q=\frac{\omega_0}{2\gamma}.
 \label{eq:q_from_decay}
 \end{equation}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{code/fp_decay_q/output/fp_decay_q_fit.pdf}
+  \caption{一维 Fabry--Perot 腔的可复现时域衰减标定。随书脚本逐回程传播储能，取 $\lambda_0=\SI{940}{nm}$、$n=3.4$、$L=\SI{5}{\micro\meter}$、$R_1=R_2=0.985$ 和 $\alpha_i=\SI{5}{\per\centi\meter}$，对 $\ln U(t)$ 做线性拟合得到 $\tau_U=\SI{3.22}{ps}$ 与 $Q=6451$。}
+  \label{fig:fp_decay_q_fit}
+\end{figure}
+
+这个一维算例由 \path{code/fp_decay_q/run_fp_decay_q.py} 生成，是检查 $Q$ 定义、拟合窗口和单位换算的校准件：储能按 $U(t)\propto\exp(-t/\tau_U)$ 衰减时，$Q=\omega_0\tau_U$。它没有模拟 PCSEL 的三维有限阵列，但能在进入 FDTD 前先排除“把场幅寿命和能量寿命混成两倍”这类基础错误。输出的 CSV、JSON 和图都保存在 \path{code/fp_decay_q/output/}。
+
 \begin{warningbox}
 \textbf{模拍频对$Q$提取的影响。}当结构支持两个或多个近简并模（频率差$\Delta\omega \lesssim \gamma$）时，时域衰减信号会出现模拍（mode beating）现象：
 \[
@@ -172,7 +161,7 @@ E(t) \sim A_1 e^{-\gamma_1 t}e^{-i\omega_1 t} + A_2 e^{-\gamma_2 t}e^{-i\omega_2
 \begin{itemize}
   \item \textbf{谐波反演（harmonic inversion）：}将信号拟合成多个指数衰减项的叠加
   \item \textbf{滤波隔离：}在频域用窄带滤波器分离出单个模式后再做时域拟合
-  \item \textbf{本征模求解：}直接使用 FEM 或 FDTD 的本征模求解器获取各模的复频率
+  \item \textbf{矩阵束 / Prony 方法：}在多个监视点联合拟合复指数，减少单点模节点造成的漏检
   \item \textbf{长时间窗：}确保时间窗长度$T \gg 2\pi/\Delta\omega$以分辨拍频周期
 \end{itemize}
 若忽略模拍效应，近简并模的$Q$值可能被高估或低估一个数量级以上。
@@ -198,16 +187,14 @@ FEM 中，则常通过开放本征值求解直接得到复频率
 
 最后是与器件层的接口量，例如与量子阱区的重叠因子、与重掺杂层或金属层的场重叠。这些量往往比单一“最大场强”更重要，因为它们直接进入 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 的器件模型。
 
-若要把近场变成可比较的远场，至少要记住角谱或近远场变换的最小形式。对监视面上的切向场，远场复振幅可形式化写成
+若要把近场变成可比较的远场，监视面必须同时提供切向电场和磁场。由等效原理定义
 \begin{equation}
-\bm{F}(k_x,k_y)
-\propto
-\iint_{S_{\mathrm{mon}}}
-\bm{E}_t(x,y)\,
-\ee^{-\ii(k_x x+k_y y)}\,
-\dd x\,\dd y,
+\bm J_s=\hat{\bm n}\times\bm H,
+\qquad
+\bm M_s=-\hat{\bm n}\times\bm E,
 \label{eq:angular_spectrum_nf2ff}
 \end{equation}
+再对 $\bm J_s$ 与 $\bm M_s$ 的平面波谱做辐射积分，得到每个 $(k_x,k_y)$ 通道的复振幅。只有在均匀半空间、单一平面且满足额外近似时，才可把计算简化为某个切向场分量的二维傅里叶变换。
 其观察角满足
 \begin{equation}
 k_x = n_{\mathrm{out}}k_0\sin\theta\cos\phi,
@@ -215,7 +202,7 @@ k_x = n_{\mathrm{out}}k_0\sin\theta\cos\phi,
 k_y = n_{\mathrm{out}}k_0\sin\theta\sin\phi.
 \label{eq:angular_coordinates_nf2ff}
 \end{equation}
-\cref{eq:angular_spectrum_nf2ff,eq:angular_coordinates_nf2ff} 的意义是提醒两个常见事实：第一，远场角谱本质上是监视面切向场的二维傅里叶变换，而非要求读者手写近远场变换程序；第二，若监视面过近、截面过小或含有强反应近场，角谱会被直接污染。
+\cref{eq:angular_spectrum_nf2ff,eq:angular_coordinates_nf2ff}还要求监视面位于已知均匀背景中并包围全部等效源；监视面过小或穿过非均匀材料都会破坏该前提。
 
 \begin{PitfallBox}
 “谱污染”在这里通常是指你以为看到的是器件的远场或本征谱，实际上看到的是边界反射、监视面截断、时间窗不够长或错误激励源带来的伪结构，而非指图像不够平滑。只要改变监视面位置、时间窗或 PML 设置后主结论就翻转，就应先怀疑谱污染，而不是先怀疑新物理。

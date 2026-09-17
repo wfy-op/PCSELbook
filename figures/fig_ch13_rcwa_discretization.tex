@@ -1,74 +1,63 @@
 % !TEX root = ../main.tex
-% Figure content only
-\begin{tikzpicture}[x=1cm,y=1cm]
+% Figure content only. Each panel owns one idea; formulas do not share the curve area.
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
   \tikzset{
-    layer/.style={draw=black,thick},
-    slice/.style={draw=orange!80!black,thick,densely dashed},
+    panel/.style={draw=gray!45,rounded corners=3pt,fill=gray!2},
     note/.style={font=\footnotesize,align=center}
   }
 
-  % A
   \begin{scope}[xshift=-5cm]
-    \node[font=\bfseries] at (0,3.1) {(a) 连续剖面};
-    \fill[gray!20] (-1.8,0) rectangle (1.8,-0.7);
-    \fill[blue!15] (-1.8,0) rectangle (1.8,1.8);
-    \draw[layer] (-1.8,0) -- (1.8,0);
-    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
-    \foreach \x/\h in {-1.0/0.8,0/1.0,1.0/0.7} {
-      \fill[white] (\x,0.2) ellipse (0.33 and \h);
-      \draw[blue!70] (\x,0.2) ellipse (0.33 and \h);
+    \draw[panel] (-2.05,-1.45) rectangle (2.05,3.1);
+    \node[font=\bfseries] at (0,2.78) {(a) 连续纵向剖面};
+    \fill[gray!20] (-1.55,-0.2) rectangle (1.55,-0.75);
+    \fill[blue!14] (-1.55,-0.2) rectangle (1.55,1.25);
+    \draw[thick] (-1.55,-0.2) -- (1.55,-0.2);
+    \draw[thick] (-1.55,1.25) -- (1.55,1.25);
+    \foreach \x/\h in {-0.95/0.55,0/0.82,0.95/0.48} {
+      \draw[blue!70,thick] (\x,0.05) ellipse (0.28 and \h);
     }
-    \node[note] at (0,-1.15) {真实结构在 $z$ 方向连续变化};
+    \node[note] at (0,-1.08) {$z$ 方向材料与场连续变化};
   \end{scope}
 
-  % B
-  \begin{scope}[xshift=0cm]
-    \node[font=\bfseries] at (0,3.1) {(b) 分层近似};
-    \fill[gray!20] (-1.8,0) rectangle (1.8,-0.7);
-    \foreach \y/\c in {0/15,0.36/20,0.72/25,1.08/30,1.44/35} {
-      \fill[blue!\c] (-1.8,\y) rectangle (1.8,\y+0.36);
+  \begin{scope}
+    \draw[panel] (-2.05,-1.45) rectangle (2.05,3.1);
+    \node[font=\bfseries] at (0,2.78) {(b) 分层近似};
+    \fill[gray!20] (-1.55,-0.2) rectangle (1.55,-0.75);
+    \foreach \y/\c in {-0.2/14,0.09/20,0.38/26,0.67/32,0.96/38} {
+      \fill[blue!\c] (-1.55,\y) rectangle (1.55,\y+0.29);
     }
-    \draw[layer] (-1.8,0) -- (1.8,0);
-    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
-    \foreach \y in {0.36,0.72,1.08,1.44} {
-      \draw[slice] (-1.8,\y) -- (1.8,\y);
-    }
-    \draw[<->,orange!80!black,thick] (2.15,0.36) -- (2.15,0.72)
-      node[midway,right,font=\footnotesize] {$\Delta z$};
-    \node[note] at (0,-1.15) {每一层内只保留平面内周期变化};
+    \foreach \y in {0.09,0.38,0.67,0.96} {\draw[orange!80!black,dashed] (-1.55,\y)--(1.55,\y);}
+    \draw[<->,orange!80!black,thick] (1.72,0.38)--(1.72,0.67)
+      node[midway,left=4pt,font=\footnotesize] {$\Delta z$};
+    \node[note] at (0,-1.08) {每层内材料参数取常量};
   \end{scope}
 
-  % C
   \begin{scope}[xshift=5cm]
-    \node[font=\bfseries] at (0,3.1) {(c) 层内傅里叶展开};
-    \fill[blue!15] (-1.8,0) rectangle (1.8,1.8);
-    \draw[layer] (-1.8,0) -- (1.8,0);
-    \draw[layer] (-1.8,1.8) -- (1.8,1.8);
-    \node[align=center,font=\small] at (0,1.0) {
-      $\displaystyle \epsilon^{(j)}(x)=\sum_m \tilde{\epsilon}^{(j)}_m \ee^{\ii m Gx}$\\[6pt]
-      截断到 $m=-M,\ldots,M$
-    };
-    \draw[red!70,thick,domain=-1.5:1.5,samples=120]
-      plot(\x,{0.28*sin(\x*360)+0.45});
-    \draw[orange!85!black,thick,domain=-1.5:1.5,samples=120]
-      plot(\x,{0.16*sin(\x*720)+0.95});
-    \node[red!70,font=\footnotesize] at (1.0,0.8) {$m=1$};
-    \node[orange!85!black,font=\footnotesize] at (1.0,1.25) {$m=2$};
-    \node[note] at (0,-1.15) {每层变成有限维谐波耦合问题};
+    \draw[panel] (-2.05,-1.45) rectangle (2.05,3.1);
+    \node[font=\bfseries] at (0,2.78) {(c) 层内傅里叶展开};
+    \node[font=\small] at (0,1.98)
+      {$\epsilon^{(j)}(x)=\displaystyle\sum_{m=-M}^{M}\tilde\epsilon_m^{(j)}\ee^{\ii mGx}$};
+    \draw[->,gray!70] (-1.65,0.10)--(1.65,0.10) node[right,font=\scriptsize] {$x$};
+    \draw[red!75,thick,domain=-1.55:1.1,samples=100]
+      plot(\x,{0.24*sin(\x*360)+0.45});
+    \draw[orange!85!black,thick,domain=-1.55:1.1,samples=100]
+      plot(\x,{0.14*sin(\x*720)+0.92});
+    \node[red!75,font=\scriptsize,anchor=west] at (1.15,0.45) {$m=1$};
+    \node[orange!85!black,font=\scriptsize,anchor=west] at (1.15,0.92) {$m=2$};
+    \node[note,text width=3.6cm] at (0,-.90) {$2M+1$ 个谐波\\组成有限维通道};
   \end{scope}
 
-  % D
-  \begin{scope}[yshift=-3.8cm]
-    \node[font=\bfseries] at (0,0.9) {(d) S 矩阵级联};
-    \foreach \x/\lab in {-3.6/{\mathbf{S}^{(1)}},-1.2/{\mathbf{S}^{(2)}},1.2/{\mathbf{S}^{(3)}},3.6/{\mathbf{S}^{(N)}}} {
-      \draw[draw=blue!70,thick,rounded corners,fill=blue!10] (\x-0.75,-0.25) rectangle (\x+0.75,0.65);
-      \node at (\x,0.2) {$\lab$};
+  \begin{scope}[yshift=-3.35cm]
+    \node[font=\bfseries] at (0,0.72) {(d) 稳定的 S 矩阵级联};
+    \foreach \x/\lab in {-3.6/{\mathbf S^{(1)}},-1.2/{\mathbf S^{(2)}},1.2/{\mathbf S^{(3)}},3.6/{\mathbf S^{(N)}}} {
+      \node[draw=blue!65,rounded corners,fill=blue!8,minimum width=1.45cm,minimum height=0.72cm] at (\x,0) {$\lab$};
     }
-    \draw[->,thick,orange!80!black] (-2.85,0.2) -- (-1.95,0.2);
-    \draw[->,thick,orange!80!black] (-0.45,0.2) -- (0.45,0.2);
-    \draw[->,thick,orange!80!black] (1.95,0.2) -- (2.85,0.2);
-    \node[draw=green!60!black,thick,rounded corners,fill=green!12] at (6.2,0.2) {$\mathbf{S}^{\rm total}$};
-    \draw[->,thick,orange!80!black] (4.45,0.2) -- (5.2,0.2);
-    \node[note] at (0,-0.95) {$\mathbf{S}^{\rm total}=\mathbf{S}^{(1)}\star\mathbf{S}^{(2)}\star\cdots\star\mathbf{S}^{(N)}$};
+    \draw[->,thick,orange!80!black] (-2.85,0)--(-1.95,0);
+    \draw[->,thick,orange!80!black] (-0.45,0)--(0.45,0);
+    \draw[->,thick,orange!80!black] (1.95,0)--(2.85,0);
+    \node[draw=green!55!black,rounded corners,fill=green!10,minimum width=1.7cm,minimum height=0.72cm] (st) at (6.0,0) {$\mathbf S^{\rm total}$};
+    \draw[->,thick,orange!80!black] (4.35,0)--(5.1,0);
+    \node[font=\footnotesize] at (0,-0.78)
+      {$\mathbf S^{\rm total}=\mathbf S^{(1)}\star\mathbf S^{(2)}\star\cdots\star\mathbf S^{(N)}$};
   \end{scope}
 \end{tikzpicture}

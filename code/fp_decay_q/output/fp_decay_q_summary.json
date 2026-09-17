@@ -1,0 +1,22 @@
+{
+  "model": "lossy 1D Fabry-Perot round-trip energy decay",
+  "parameters": {
+    "wavelength_nm": 940.0,
+    "refractive_index": 3.4,
+    "cavity_length_um": 5.0,
+    "mirror_power_reflectivity_1": 0.985,
+    "mirror_power_reflectivity_2": 0.985,
+    "internal_loss_cm_inverse": 5.0,
+    "round_trips": 90
+  },
+  "round_trip_time_ps": 0.11341179236737167,
+  "round_trip_energy_factor": 0.9653859826247202,
+  "fitted_energy_lifetime_ps": 3.2194312608912865,
+  "q_from_fit": 6451.368872788285,
+  "q_from_exact_round_trip_factor": 6451.368872788286,
+  "relative_fit_error": 1.4097701119047065e-16,
+  "outputs": [
+    "fp_decay_trace.csv",
+    "fp_decay_q_fit.pdf"
+  ]
+}

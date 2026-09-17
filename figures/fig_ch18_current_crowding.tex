@@ -1,140 +1,53 @@
-% Figure: Current crowding effect in PCSEL
-% Chapter: ch18 - Electrical Injection and Carrier Transport
-% Description: 2D heatmap showing non-uniform current density distribution under p-contact
-% Key insight: Current density peaks near electrode edges due to lateral resistance
+% !TEX root = ../main.tex
+% Figure content only. The map, color scale and line cut are independent panels.
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+  \tikzset{
+    panel/.style={draw=gray!45,rounded corners=3pt,fill=gray!2},
+    tag/.style={draw=gray!55,rounded corners=2pt,fill=white,font=\footnotesize,inner sep=3pt}
+  }
 
-\begin{tikzpicture}[
-  scale=0.92,
-  transform shape,
-  axis_label/.style={font=\small},
-  tick_label/.style={font=\footnotesize}
-]
-    
-    % ========== Main 2D Heatmap ==========
-    \begin{scope}[shift={(0,0)}]
-      % Draw coordinate grid
-      \draw[->, thick] (0,0) -- (7.5,0) node[right, axis_label] {$x$ ($\mu$m)};
-      \draw[->, thick] (0,0) -- (0,7.5) node[above, axis_label] {$y$ ($\mu$m)};
-      
-      % Color gradient representing current density J(x,y)
-      % Using concentric pattern: high at edges, low at center
-      \foreach \r in {0.2, 0.4, ..., 3.5} {
-        \pgfmathsetmacro{\opacity}{\r/3.5}
-        \ifdim\r pt < 1.0pt
-          \draw[fill=red!\opacity!orange, opacity=0.3] (3.5,3.5) circle (\r);
-        \else\ifdim\r pt < 2.0pt
-          \draw[fill=orange!\opacity!yellow, opacity=0.3] (3.5,3.5) circle (\r);
-        \else
-          \draw[fill=yellow!\opacity!blue, opacity=0.3] (3.5,3.5) circle (\r);
-        \fi\fi
-      }
-      
-      % Square p-contact boundary
-      \draw[ultra thick, dashed] (1.5,1.5) rectangle (5.5,5.5);
-      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize] at (5.65, 5.72) {$p$型接触边界};
-      
-      % High current density regions (edges/corners)
-      \fill[red!60, opacity=0.5] (1.5,1.5) rectangle (2.0,2.0);
-      \fill[red!60, opacity=0.5] (5.0,1.5) rectangle (5.5,2.0);
-      \fill[red!60, opacity=0.5] (1.5,5.0) rectangle (2.0,5.5);
-      \fill[red!60, opacity=0.5] (5.0,5.0) rectangle (5.5,5.5);
-      
-      % Edge hotspots
-      \foreach \pos in {2.5, 3.5, 4.5} {
-        \fill[red!50, opacity=0.4] (1.5,\pos) rectangle (1.8,\pos+0.3);
-        \fill[red!50, opacity=0.4] (5.2,\pos) rectangle (5.5,\pos+0.3);
-        \fill[red!50, opacity=0.4] (\pos,1.5) rectangle (\pos+0.3,1.8);
-        \fill[red!50, opacity=0.4] (\pos,5.2) rectangle (\pos+0.3,5.5);
-      }
-      
-      % Low current density region (center)
-      \fill[blue!30, opacity=0.3] (3.0,3.0) rectangle (4.0,4.0);
-      \node[anchor=center] at (3.5,3.5) {\scriptsize $J$最小};
-      
-      % Current flow arrows (from edges toward center but decaying)
-      \foreach \angle in {0, 45, ..., 315} {
-        \draw[->, thick, purple!70!black] (3.5+\angle/360*2, 3.5+\angle/360*2) -- 
-          (3.5+\angle/360*1.2, 3.5+\angle/360*1.2);
-      }
-      
-      % Annotation arrows
-      \draw[->, thick, red] (6.35, 5.20) -- (5.65, 5.15);
-      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize, red] at (6.25,5.45) {边缘电流密集};
-      \draw[->, thick, blue] (6.35, 2.15) -- (4.0, 3.2);
-      \node[anchor=west, fill=white, inner sep=1pt, font=\scriptsize, blue] at (6.25,2.35) {中心电流稀疏};
-      
-      % Title
-      \node[anchor=south, font=\large\bfseries] at (3.5, 7.8) {(a)电流密度分布 $J(x,y)$};
-    \end{scope}
-    
-    % ========== Colorbar ==========
-    \begin{scope}[shift={(7.8,2.2)}]
-      % Gradient bar
-      \shade[top color=red, middle color=yellow, bottom color=blue] 
-        (0,0) rectangle (0.8, 4);
-      
-      % Colorbar frame
-      \draw[thick] (0,0) rectangle (0.8, 4);
-      
-      % Tick marks and labels
-      \foreach \y/\val in {0/0, 1/5, 2/10, 3/15, 4/20} {
-        \draw[-] (0.8, \y) -- (1.0, \y);
-        \node[anchor=west, tick_label] at (1.0, \y) {$\val$};
-      }
-      
-      % Colorbar label
-      \node[anchor=south, rotate=90, axis_label] at (-0.5, 2) {电流密度 $J$（千安每平方厘米）};
-      
-      % High/Low markers
-      \node[anchor=west, font=\scriptsize, red] at (1.1, 4.15) {高 $J$};
-      \node[anchor=west, font=\scriptsize, blue] at (1.1, -0.15) {低 $J$};
-    \end{scope}
-    
-    % ========== Cross-section plot ==========
-    \begin{scope}[shift={(9.65,0.65)}]
-      \node[anchor=south, font=\large\bfseries] at (2, 3.35) {(b) 截面分布};
-      
-      % Axes
-      \draw[->, thick] (0,0) -- (4.2,0) node[right, axis_label] {$x$ ($\mu$m)};
-      \draw[->, thick] (0,0) -- (0,3.15) node[above, axis_label] {$J(x)$};
-      
-      % Current density profile (peaks at edges)
-      \draw[thick, red, domain=0:4, samples=100] plot (\x, {
-        0.5 + 2.0*exp(-(\x-0.5)^2/0.3) + 2.0*exp(-(\x-3.5)^2/0.3)
-      });
-      
-      % Contact edges
-      \draw[dashed] (0.5, 0) -- (0.5, 3.0) node[above] {\scriptsize 边缘};
-      \draw[dashed] (3.5, 0) -- (3.5, 3.0) node[above] {\scriptsize 边缘};
-      
-      % Peak markers
-      \draw[<->, red, thick] (0.5, 2.8) -- (0.5, 3.0);
-      \node[anchor=south, red, font=\small] at (0.5, 3.0) {$J_{\max}$};
-      
-      % Center minimum
-      \draw[<->, blue, thick] (2.0, 0) -- (2.0, 0.3);
-      \node[anchor=south, blue, font=\small] at (2.0, 0.3) {$J_{\min}$};
-      
-      % Shaded contact region
-      \fill[gray!20] (0.5, 0) rectangle (3.5, -0.3);
-      \node[anchor=north] at (2, -0.3) {\scriptsize $p$型接触下方};
-    \end{scope}
-    
-    % ========== Physics explanation box ==========
-    \begin{scope}[shift={(0,-2.5)}]
-      \draw[rounded corners, fill=orange!15] (-0.5,-1.48) rectangle (14.2, 0.45);
-      \node[anchor=west, font=\footnotesize] at (-0.3, 0.1) {
-        \textbf{物理机制}: 电流拥挤效应的成因
-      };
-      \node[anchor=west, font=\footnotesize] at (-0.3, -0.35) {
-        • 横向电阻：空穴在p 型层中横向流动时遇到电阻，倾向于走最短路径（边缘）
-      };
-      \node[anchor=west, font=\footnotesize] at (-0.3, -0.80) {
-        • 接触电阻：金属 - 半导体界面的非理想欧姆接触加剧边缘集中
-      };
-      \node[anchor=west, font=\footnotesize] at (-0.3, -1.20) {
-        \textbf{后果}: 边缘处载流子浓度过高 $\Rightarrow$ 俄歇复合增强 $\Rightarrow$ 效率下降 + 局部发热
-      };
-    \end{scope}
-    
+  % Current-density map
+  \begin{scope}[shift={(-3.75,0.35)}]
+    \draw[panel] (-3.15,-2.85) rectangle (3.15,3.05);
+    \node[font=\bfseries] at (0,2.70) {(a) 面内电流密度 $J(x,y)$};
+    \foreach \r/\c in {2.25/blue!16,1.90/blue!24,1.55/purple!24,1.20/red!20,0.80/blue!28} {
+      \fill[\c] (0,0) circle (\r);
+    }
+    \draw[very thick,dashed] (-1.55,-1.55) rectangle (1.55,1.55);
+    \foreach \x/\y in {-1.55/-1.55,1.55/-1.55,-1.55/1.55,1.55/1.55,
+      -1.55/0,1.55/0,0/-1.55,0/1.55} {
+      \fill[red!65] (\x,\y) circle (0.16);
+    }
+    \node[tag,anchor=south] (edge) at (-.55,1.95) {接触边缘：$J$ 高};
+    \draw[->,red!75,thick] (edge.south east)--(1.48,1.48);
+    \node[tag,anchor=north] (center) at (0,-1.92) {中心：$J$ 低};
+    \draw[->,blue!75,thick] (center.north)--(0,-0.25);
+    \draw[->,thick] (-2.55,-2.35)--(2.55,-2.35) node[right] {$x$};
+    \draw[->,thick] (-2.55,-2.35)--(-2.55,2.30) node[above] {$y$};
+  \end{scope}
+
+  % Colorbar, with its own title outside the map.
+  \begin{scope}[shift={(0.05,-0.55)}]
+    \shade[top color=red,bottom color=blue] (0,0) rectangle (0.48,3.5);
+    \draw[thick] (0,0) rectangle (0.48,3.5);
+    \node[font=\footnotesize,rotate=90,anchor=south] at (-0.12,1.75) {相对电流密度};
+    \node[red!75,font=\scriptsize,anchor=west] at (0.62,3.5) {高};
+    \node[blue!75,font=\scriptsize,anchor=west] at (0.62,0) {低};
+  \end{scope}
+
+  % Line cut
+  \begin{scope}[shift={(4.35,0.35)}]
+    \draw[panel] (-2.75,-2.85) rectangle (2.75,3.05);
+    \node[font=\bfseries] at (0,2.70) {(b) 穿过接触区的线切};
+    \draw[->,thick] (-2.1,-1.55)--(2.20,-1.55) node[right] {$x$};
+    \draw[->,thick] (-2.1,-1.55)--(-2.1,1.95) node[above] {$J(x)$};
+    \draw[red!75,very thick,domain=-1.95:1.95,samples=120]
+      plot(\x,{-0.75+1.85*exp(-((\x+1.35)^2)/0.20)+1.85*exp(-((\x-1.35)^2)/0.20)});
+    \draw[dashed,gray!70] (-1.35,-1.55)--(-1.35,1.20);
+    \draw[dashed,gray!70] (1.35,-1.55)--(1.35,1.20);
+    \node[tag,anchor=south] at (-1.35,1.35) {$J_{\max}$};
+    \node[tag,anchor=north] at (0,-0.90) {$J_{\min}$};
+    \node[font=\footnotesize,align=center] at (0,-2.25)
+      {横向电阻与接触电阻\\共同增强边缘电流拥挤};
+  \end{scope}
 \end{tikzpicture}

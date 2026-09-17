@@ -14,10 +14,10 @@
   \node[solver,fill=green!8] (opt) at (10.0,3.1) {光学求解\\$\tilde\omega,Q,\text{远场}$\\$n,g,\alpha$ 回写后更新};
   \node[solver,fill=yellow!14] (judge) at (15.0,3.1) {固定点判据\\$\Delta T,\Delta\lambda,\Delta I_{\mathrm{th}}$\\连续收敛};
 
-  \draw[arr,blue!70!black] (elec) -- node[above,font=\scriptsize]{电流密度与复合热源} (heat);
-  \draw[arr,red!70!black] (heat) -- node[above,font=\scriptsize]{$\Delta n,\Delta g,\Delta\alpha,\Delta\mu$} (opt);
-  \draw[arr,green!55!black] (opt) -- node[above,font=\scriptsize]{模式排序与吸收热} (judge);
-  \draw[loop,orange!80!black] (judge.south) .. controls (12.4,0.75) and (2.8,0.75) .. node[below,font=\scriptsize]{若未收敛，更新材料参数和工作点再迭代} (elec.south);
+  \draw[arr,blue!70!black] (elec) -- node[above=29pt,font=\scriptsize]{电流与热源} (heat);
+  \draw[arr,red!70!black] (heat) -- node[above=29pt,font=\scriptsize]{$\Delta n,\Delta g,\Delta\alpha,\Delta\mu$} (opt);
+  \draw[arr,green!55!black] (opt) -- node[above=29pt,font=\scriptsize]{模式与吸收热} (judge);
+  \draw[loop,orange!80!black] (judge.north) -- (15,5.2) -- node[above,font=\scriptsize]{若未收敛，更新材料参数和工作点再迭代} (0,5.2) -- (elec.north);
 
   \node[metric] at (0,1.35) {不只输出平均温升\\而是 $T(x,y,z)$};
   \node[metric] at (5.0,1.35) {不只输出热阻\\而是热源位置};

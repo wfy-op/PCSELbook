@@ -8,8 +8,8 @@
 
   % (a) Γ 点模式
   \begin{scope}[shift={(0,0)}]
-    \node[font=\bfseries] at (2.5,7.45) {(a) $\Gamma$ 点模式（$k_x=k_y=0$）};
-    \node at (2.5,6.92) {\textbf{近场}};
+    \node[font=\bfseries] at (2.5,8.25) {(a) $\Gamma$ 点模式（$k_x=k_y=0$）};
+    \node at (2.5,7.78) {\textbf{近场}};
     \foreach \i in {0,...,5} {
       \foreach \j in {0,...,3} {
         \draw[单元] (\i*0.8,4.25+\j*0.8) rectangle ++(0.8,0.8);
@@ -18,23 +18,23 @@
     }
     \draw[->,blue,thick] (0.6,3.95) -- (4.2,3.95) node[midway,below] {同相位};
 
-    \node at (2.5,3.32) {\textbf{远场}};
+    \node at (1.1,3.1) {\textbf{远场}};
     \draw[->] (0.2,1.3) -- (4.8,1.3) node[right] {$k_x$};
-    \draw[->] (2.5,-0.7) -- (2.5,3.0) node[above] {$k_y$};
+    \draw[->] (2.5,-0.15) -- (2.5,2.85) node[above] {$k_y$};
     \shade[inner color=orange!90,outer color=orange!10] (2.5,1.3) circle (0.7);
     \fill[orange!90] (2.5,1.3) circle (0.12);
     \draw[->,very thick,orange!85!black] (2.5,1.75) -- (2.5,2.75);
     \node[right] at (2.55,2.45) {法向辐射};
-    \node at (2.5,-0.35) {\scriptsize 旁瓣受抑};
+    \node at (2.5,-0.45) {\scriptsize 旁瓣受抑};
 
     \node[draw,rounded corners,fill=green!12,align=center,text width=4.8cm,anchor=north]
-      at (2.5,0.9) {原胞近似同相振荡\\$\Rightarrow$ 远场相干叠加形成法向主瓣};
+      at (2.5,-0.85) {原胞间相位一致\\辐射矩阵元非零时可形成法向主瓣};
   \end{scope}
 
   % (b) 非 Γ 点模式
   \begin{scope}[shift={(6.8,0)}]
-    \node[font=\bfseries] at (2.5,7.45) {(b) 非 $\Gamma$ 点模式（$k_x,k_y\neq 0$）};
-    \node at (2.5,6.92) {\textbf{近场}};
+    \node[font=\bfseries] at (2.5,8.25) {(b) 非 $\Gamma$ 点模式（$k_x,k_y\neq 0$）};
+    \node at (2.5,7.78) {\textbf{近场}};
     \foreach \i in {0,...,5} {
       \foreach \j in {0,...,3} {
         \draw[单元] (\i*0.8,4.25+\j*0.8) rectangle ++(0.8,0.8);
@@ -48,9 +48,9 @@
     }
     \draw[->,blue,thick] (0.5,3.95) -- (4.4,3.95) node[midway,below] {相位梯度};
 
-    \node at (2.5,3.32) {\textbf{远场}};
+    \node at (1.1,3.1) {\textbf{远场}};
     \draw[->] (0.2,1.3) -- (4.8,1.3) node[right] {$k_x$};
-    \draw[->] (2.5,-0.7) -- (2.5,3.0) node[above] {$k_y$};
+    \draw[->] (2.5,-0.15) -- (2.5,2.85) node[above] {$k_y$};
     \foreach \x/\y in {3.35/2.15,1.65/2.15,3.35/0.45,1.65/0.45} {
       \shade[inner color=orange!85,outer color=orange!10] (\x,\y) circle (0.45);
       \fill[orange!90] (\x,\y) circle (0.1);
@@ -58,14 +58,14 @@
     \draw[dashed,gray] (2.5,1.3) circle (0.22);
     \draw[->,very thick,orange!85!black] (3.35,2.15) -- (4.15,2.8);
     \node[right] at (3.95,2.65) {倾斜辐射};
-    \node at (2.5,-0.35) {\scriptsize 多瓣结构};
+    \node at (2.5,-0.45) {\scriptsize 多瓣结构};
 
     \node[draw,rounded corners,fill=red!12,align=center,text width=4.8cm,anchor=north]
-      at (2.5,0.9) {面内行波相位推进\\$\Rightarrow$ 远场偏离法向};
+      at (2.5,-0.85) {面内行波相位推进\\$\Rightarrow$ 远场偏离法向};
   \end{scope}
 
   \node[draw,rounded corners,fill=blue!10,align=left,text width=12.0cm,anchor=north west]
-    at (0.1,-0.95) {\textbf{光子晶体面发射激光器常在 $\Gamma$ 点附近工作的原因：}
-    (1) 法向提取效率更高；
-    (2) 平坦能带趋势（$v_g\!\approx\!0$）有利于提升光子寿命与有效 $Q$。};
+    at (0.1,-3.05) {\textbf{光子晶体面发射激光器常在 $\Gamma$ 点附近工作的原因：}
+    (1) 允许法向动量匹配，但辐射强度还由对称性和耦合决定；
+    (2) 带边有利于面内反馈；光子寿命仍需由各损耗通道求得。};
 \end{tikzpicture}

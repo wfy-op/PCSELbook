@@ -1,86 +1,38 @@
 % !TEX root = ../main.tex
-% Figure: Mode splitting due to perturbation in coupled resonators
-% Chapter: ch11 - CMT and Perturbation Theory for Mode Splitting
-% Description: Degenerate modes split when symmetry is broken
+% Content-only figure: distinguish uncoupled degeneracy from coupled/detuned splitting
+\resizebox{0.95\textwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,font=\small]
+  \tikzset{panel/.style={draw=black!50,rounded corners=2pt,minimum width=6.5cm,minimum height=6.3cm}}
 
-\begin{tikzpicture}[scale=1.2]
-    % Left: Unperturbed degenerate system
-    \begin{scope}[shift={(-5,0)}]
-      % Two identical rings (resonators)
-      \draw[thick, blue] (-1,0) circle (1);
-      \draw[thick, red] (1,0) circle (1);
-      
-      % Overlap region (coupling)
-      \fill[green!20] (0,-0.3) ellipse (0.3 and 0.6);
-      
-      % Field distribution in ring 1
-      \draw[very thick, blue, domain=-180:-90, samples=30] 
-        plot({-1+cos(\x)+0.2*sin(3*\x)},{sin(\x)});
-      
-      % Field distribution in ring 2
-      \draw[very thick, red, domain=0:90, samples=30] 
-        plot({1+cos(\x)-0.2*sin(3*\x)},{sin(\x)});
-      
-      % Energy level diagram above
-      \draw[thick] (-1.5,2) -- (-0.5,2) node[midway, above] {$\omega_0$};
-      \draw[thick] (0.5,2) -- (1.5,2) node[midway, above] {$\omega_0$};
-      
-      \node[above, font=\bfseries] at (0,2.8) {(a) 未微扰：简并态};
-      \node[below, align=center] at (0,-1.5) {两个相同谐振腔\\弱耦合，频率简并};
-      
-      % Coupling strength indication
-      \draw[<->, thick, green!60!black] (-0.3,0) -- (0.3,0);
-      \node[above, green!60!black] at (0,0.2) {\scriptsize $\kappa$};
-    \end{scope}
-    
-    % Right: Perturbed system with splitting
-    \begin{scope}[shift={(2,0)}]
-      % Asymmetric rings (one slightly deformed)
-      \draw[thick, blue] (-1,0) circle (1);
-      \draw[thick, red, rotate around={15:(1,0)}] (1,0) circle (0.95);
-      
-      % Reduced overlap
-      \fill[orange!20] (0.2,-0.2) ellipse (0.2 and 0.4);
-      
-      % Modified field patterns
-      \draw[very thick, blue, domain=-180:-90, samples=30] 
-        plot({-1+cos(\x)+0.15*sin(2*\x)},{sin(\x)});
-      
-      \draw[very thick, red, domain=-30:105, samples=30] 
-        plot({1+0.95*cos(\x)-0.25*sin(2*\x)},{0.95*sin(\x)});
-      
-      % Energy level splitting
-      \draw[thick] (-1.5,2.3) -- (-0.5,2.3) node[midway, above] {$\omega_+$};
-      \draw[thick] (-1.5,1.7) -- (-0.5,1.7) node[midway, below] {$\omega_-$};
-      
-      \draw[thick] (0.5,2.5) -- (1.5,2.5) node[midway, above] {$\omega_0+\Delta$};
-      \draw[thick] (0.5,1.5) -- (1.5,1.5) node[midway, below] {$\omega_0-\Delta$};
-      
-      \node[above, font=\bfseries] at (0,2.8) {(b) 微扰后：简并解除};
-      \node[below, align=center] at (0,-1.5) {对称性破缺\\能级分裂$2\Delta$};
-      
-      % Splitting magnitude
-      \draw[<->, very thick, purple] (1.7,1.5) -- (1.7,2.5);
-      \node[right, purple, font=\bfseries] at (1.7,2) {$2\Delta$};
-    \end{scope}
-    
-    % Center: Transition arrow
-    \draw[->, ultra thick, orange, bend left=20] (-2,1.5) to[out=30,in=150] 
-      node[above, align=center, font=\small] {施加微扰\\形变/折射率变化/应力} (0,1.5);
-    
-    % Bottom: Mathematical formulation
-    \node[draw, align=center, font=\small] at (0,-2.5) {
-      微扰哈密顿量矩阵元:\\
-      $H'_{mn}=\langle\psi_m^{(0)}|\delta\varepsilon|\psi_n^{(0)}\rangle$\\[4pt]
-      本征值分裂:$\Delta\omega = \frac{\omega_0}{2}\sqrt{\left(\frac{\delta\varepsilon}{\varepsilon}\right)^2 + 4\kappa^2}$
-    };
-    
-    % Physical examples sidebar
-    \node[align=left, font=\footnotesize, anchor=south east] at (-3.5,-3) {
-      \textbf{实际微扰来源}:\\
-      $\bullet$ 制造误差（孔径偏差$\pm 2\,\mathrm{nm}$）\\
-      $\bullet$ 热梯度引起的折射率不均匀\\
-      $\bullet$ 机械应力导致的双折射\\
-      $\bullet$ 载流子注入的空间非均匀性
-    };
-  \end{tikzpicture}
+  % Uncoupled degenerate basis
+  \node[panel] at (-3.7,1.5) {};
+  \node[font=\bfseries,anchor=north west] at (-6.7,4.40) {(a) 隔离且同频：简并基底};
+  \draw[thick,blue!75!black] (-5.1,1.45) circle (.85);
+  \draw[thick,red!75!black] (-2.3,1.45) circle (.85);
+  \node at (-5.1,.3) {谐振器 1};
+  \node at (-2.3,.3) {谐振器 2};
+  \draw[thick] (-5.8,2.75) -- (-4.4,2.75) node[midway,above] {$\omega_0$};
+  \draw[thick] (-3.0,2.75) -- (-1.6,2.75) node[midway,above] {$\omega_0$};
+  \node[draw=gray!50,rounded corners,fill=gray!6] at (-3.7,-.15) {$\kappa=0,\quad \delta\omega=0$};
+
+  % Coupled and detuned system
+  \node[panel] at (3.7,1.5) {};
+  \node[font=\bfseries,anchor=north west] at (.7,4.40) {(b) 打开耦合并加入失谐};
+  \draw[thick,blue!75!black] (2.25,1.45) circle (.85);
+  \draw[thick,red!75!black] (5.15,1.45) ellipse (.78 and .92);
+  \draw[<->,very thick,orange!85!black] (3.12,1.45) -- node[above,fill=white,inner sep=1pt] {$\kappa$} (4.35,1.45);
+  \draw[thick] (1.25,3.15) -- (2.55,3.15) node[midway,above] {$\omega_+$};
+  \draw[thick] (1.25,2.65) -- (2.55,2.65) node[midway,below=1pt] {$\omega_-$};
+  \draw[<->,purple!75!black,thick] (2.85,2.65) -- node[right] {$\Delta\omega$} (2.85,3.15);
+  \node[draw=gray!50,rounded corners,fill=gray!6,align=center] at (3.7,-.70) {非零 $\kappa$ 已产生超模分裂；\\$\delta\omega$ 与损耗差再修正本征值};
+
+  \draw[->,ultra thick,orange!85!black] (-.2,1.5) -- (.2,1.5);
+
+  \node[draw=blue!55!black,rounded corners=2pt,fill=blue!5,align=center,text width=12.8cm,inner sep=6pt,anchor=north] at (0,-1.9) {
+    \textbf{两模本征频率：}\quad
+    $\displaystyle \tilde\omega_\pm=\frac{\tilde\omega_1+\tilde\omega_2}{2}
+    \pm\sqrt{\left(\frac{\tilde\omega_1-\tilde\omega_2}{2}\right)^2+\kappa_{12}\kappa_{21}}$.\\[5pt]
+    {\footnotesize\textbf{实际微扰来源：}孔径/位置误差、温度梯度、机械应力和非均匀载流子注入。它们可能同时改变频率、损耗与耦合系数，不能只压缩成一个实数“能级偏移”。}
+  };
+\end{tikzpicture}%
+}

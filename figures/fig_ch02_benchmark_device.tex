@@ -1,26 +1,28 @@
 % 本书统一 benchmark 器件示意图
+\resizebox{\textwidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
   % (a) 俯视图
   \begin{scope}[shift={(0,0)}]
     \node[font=\bfseries] at (2.4,3.35) {(a) 俯视：方格孔阵};
     \draw[thick] (0,0) rectangle (4.8,3.0);
     \foreach \x in {0.6,1.5,2.4,3.3,4.2} {
-      \foreach \y in {0.5,1.25,2.0,2.75} {
+      \foreach \y in {0.6,1.5,2.4} {
         \draw[fill=white] (\x,\y) circle (0.16);
       }
     }
-    \draw[green!60!black,thick] (1.5,0.5) rectangle (3.3,2.0);
-    \node[green!60!black,below] at (2.4,0.42) {维格纳-赛茨原胞};
+    \draw[green!60!black,thick] (1.95,1.05) rectangle (2.85,1.95);
+    \node[green!60!black,below] at (2.4,-0.85) {维格纳-赛茨原胞};
     \draw[<->,thick] (0.6,-0.35) -- (1.5,-0.35);
     \node[below] at (1.05,-0.35) {$a$};
-    \draw[->,thick] (2.4,1.25) -- (2.56,1.25);
-    \node[above] at (2.55,1.35) {$r$};
-    \draw[->,thick,blue] (2.4,1.25) -- (4.15,1.25) node[above] {$\mathbf{a}_1=a\hat{x}$};
-    \draw[->,thick,red] (2.4,1.25) -- (2.4,2.75) node[above left] {$\mathbf{a}_2=a\hat{y}$};
+    \draw[->,thick] (2.4,1.5) -- (2.56,1.5);
+    \node[above] at (2.85,2.1) {$r$};
+    \draw[->,thick,blue] (2.4,1.5) -- (4.15,1.5) node[below=5pt] {$\mathbf{a}_1=a\hat{x}$};
+    \draw[->,thick,red] (2.4,1.5) -- (2.4,2.65);
+    \node[red,anchor=east] at (-.15,2.65) {$\mathbf{a}_2=a\hat{y}$};
   \end{scope}
 
   % (b) 侧视图
-  \begin{scope}[shift={(6.4,0)}]
+  \begin{scope}[shift={(8.0,0)}]
     \node[font=\bfseries] at (2.7,3.35) {(b) 侧视：外延层栈};
     \fill[purple!15] (0,2.2) rectangle (5.4,2.9);
     \fill[red!15]    (0,1.6) rectangle (5.4,2.2);
@@ -39,4 +41,4 @@
     \draw[<->] (5.7,1.1) -- (5.7,1.6); \node[right] at (5.7,1.35) {$t_{\mathrm{clad}}$};
     \draw[<->] (5.7,0.0) -- (5.7,1.1); \node[right] at (5.7,0.55) {$t_{\mathrm{sub}}$};
   \end{scope}
-\end{tikzpicture}
+\end{tikzpicture}}

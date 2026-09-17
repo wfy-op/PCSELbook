@@ -63,7 +63,15 @@ PCSEL 的“反馈”与“出光”是同一个散射网络的两种后果，�
 2\betaslab \approx mG,
 \label{eq:bragg_1d}
 \end{equation}
-其中 $G=2\pi/a$ 是主导倒格矢大小，$m$ 为布拉格阶次。这里必须强调一阶与二阶布拉格的物理区别：一阶条件 $2\betaslab=G$（半波长周期）主要形成 $+\betaslab\leftrightarrow-\betaslab$ 的前后向耦合，折叠回 $\Gamma$ 点的分量满足 $k_\parallel=\betaslab-G=-\betaslab\neq 0$，因此通常仍在光锥外，难以直接法向辐射；二阶条件 $2\betaslab=2G$（全波长周期）则允许单次散射后 $k_\parallel=\betaslab-G\approx 0$ 的分量落入光锥中心，打开法向出射通道。也因此 PCSEL 更强调二阶布拉格或等效的 $\Gamma$ 点折叠。对 PCSEL 常见的区中心工作图像，更有用的说法是：原本在扩展区方案中位于 $\pm \betaslab$ 的几支导模分量，经由倒格矢散射折叠回 $\Gamma$ 点附近，因此常把
+其中 $G=2\pi/a$ 是主导倒格矢大小，$m$ 为布拉格阶次。
+一阶与二阶布拉格条件对应不同的物理过程：一阶条件 $2\betaslab=G$（半波长周期）
+主要形成 $+\betaslab\leftrightarrow-\betaslab$ 的前后向耦合，
+折叠后的分量满足 $k_\parallel=\betaslab-G=-\betaslab\neq 0$，
+因此通常仍在光锥外，难以直接法向辐射。二阶条件 $2\betaslab=2G$（全波长周期）
+则允许单次散射后的 $k_\parallel=\betaslab-G\approx 0$ 分量落入光锥中心，
+从而打开法向出射通道。因此 PCSEL 更强调二阶布拉格或等效的 $\Gamma$ 点折叠。
+在 PCSEL 常见的区中心工作图像中，原本在扩展区方案中位于 $\pm \betaslab$
+的几支导模分量，经由倒格矢散射折叠回 $\Gamma$ 点附近，因此常把
 \begin{equation}
 |\kvec_\parallel+\gvec|\approx 0
 \label{eq:gamma_folding_condition}
@@ -71,12 +79,30 @@ PCSEL 的“反馈”与“出光”是同一个散射网络的两种后果，�
 视作区中心耦合条件。教材里说“PCSEL 工作在二阶布拉格附近”，强调的是这类折叠回路，而不是孤立的整数阶次标签。
 
 \begin{ExampleBox}
+\textbf{[本书算例] \SI{940}{nm} 器件的第一轮几何起点。}取 $n_{\mathrm{eff}}\approx3.4$，区中心折叠条件 $\betaslab\approx G$ 给出
+\[
+a\approx\frac{\lambda_0}{n_{\mathrm{eff}}}
+=\frac{\SI{940}{nm}}{3.4}
+\approx\SI{276}{nm}.
+\]
+所以 \SI{280}{nm} 左右是合理的初始晶格常数。它只是把纵向导模传播常数折回 $\Gamma$ 点的尺度估计；孔形、刻蚀深度和开放辐射会继续移动真实候选频率。
+\end{ExampleBox}
+
+\begin{ExampleBox}
 \textbf{为什么 PCSEL 总是强调二阶布拉格，而不是一阶布拉格？}
 
 一阶布拉格最擅长做的是导模之间的前后向反馈，它确实能形成分布式反射，但通常还不足以把主导波分量直接送进法向出射通道。二阶布拉格或等效的 $\Gamma$ 点折叠则不同：同一组倒格矢既能维持面内反馈网络，又能把部分面内动量压缩到 $k_\parallel\approx 0$，于是法向辐射被打开。对 PCSEL 来说，关键不在“整数阶次”标签本身，而在是否存在同时提供反馈和出射的散射路径。
 \end{ExampleBox}
 \paragraph{扩展区方案与简约区方案的对应关系}
-一阶布拉格条件 $2\beta_{\mathrm{slab}} = G$ 在\textbf{扩展区方案}中对应导模在 $\pm\beta_{\mathrm{slab}}$ 处的前后向耦合；而在\textbf{简约区方案}中，这两个状态被折叠回第一布里渊区边界 ($k_x = \pi/a$),形成带隙。二阶布拉格 $2\beta_{\mathrm{slab}} = 2G$ 在扩展区中对应 $\beta_{\mathrm{slab}} \approx G$ 的导模经散射后到达 $k_\parallel \approx 0$;在简约区中则表现为 $\Gamma$ 点附近的模式折叠。PCSEL 的法向辐射要求简约区图像中模式位于 $\Gamma$ 点 ($k_\parallel \approx 0$),这对应扩展区中 $\beta_{\mathrm{slab}} \approx G$ 的分量经一次倒格矢散射后到达光锥中心。
+一阶布拉格条件 $2\beta_{\mathrm{slab}} = G$ 在\textbf{扩展区方案}中，
+对应导模在 $\pm\beta_{\mathrm{slab}}$ 处的前后向耦合；在\textbf{简约区方案}中，
+这两个状态被折叠回第一布里渊区边界（$k_x = \pi/a$），形成带隙。
+二阶布拉格 $2\beta_{\mathrm{slab}} = 2G$ 在扩展区中，对应
+$\beta_{\mathrm{slab}} \approx G$ 的导模经散射后到达 $k_\parallel \approx 0$；
+在简约区中则表现为 $\Gamma$ 点附近的模式折叠。
+PCSEL 的法向辐射要求简约区图像中的模式位于 $\Gamma$ 点
+（$k_\parallel \approx 0$），这对应扩展区中 $\beta_{\mathrm{slab}} \approx G$
+的分量经一次倒格矢散射后到达光锥中心。
 如果把 \cref{eq:pcsel_bragg_general} 与 \cref{eq:gamma_folding_condition} 放在一起看，会更容易理解本章后面要不断出现的两件事。第一，面内反馈来自“导模 $\rightarrow$ 导模”的闭合散射回路；第二，法向辐射来自“导模 $\rightarrow$ 光锥内连续谱”的开放散射回路。两条路的区别不在于是否经过周期结构，而在于散射后的终态仍在导模族里，还是已经掉进了辐射连续谱里。
 
 \begin{RigorousBox}
@@ -102,7 +128,15 @@ PCSEL 的“反馈”与“出光”是同一个散射网络的两种后果，�
 \begin{ApplicationBox}{Noda 2023 tutorial 给出的反馈网络设计路线}
 Noda 等人的 tutorial 对本章最有教学价值的一点，是把“二维反馈网络”从概念图像推进成可放大的设计路线\cite{noda2023tutorial}。如果只看结果数字，很容易把路线误读为“孔形越来越复杂、功率越来越高”；但按本章语言重写，它实际上是一条反馈网络逐步可控化的链条。
 
-第一步是高折射率反差方格或三角晶格：它证明 $\Gamma^{(2)}$ 点附近的多束 Bloch 波可以形成二维相干共振，而不是一维 DFB 的简单并列。第二步是非对称单胞，例如三角孔或直角三角孔：它不再只追求高 $Q$，而是有意改变各带边模的辐射常数和远场干涉，使目标模获得可用的法向出射通道\cite{hirose2014}。第三步是双晶格：两组晶格点的相对位移重排 $180^\circ$ 衍射相位，使基模横向包络展开，同时让高阶横向模更容易在有限边界承担相对更大的损耗\cite{yoshida2019}。第四步是 Hermitian/非 Hermitian 联合调控：面内 $180^\circ/90^\circ$ 衍射不再单独优化，而要和经由辐射波产生的耗散耦合一起调节，使毫米级口径下仍然保留模式裕量\cite{yoshida2023,noda2023tutorial}。
+第一步是高折射率反差方格或三角晶格：$\Gamma^{(2)}$ 点附近的多束 Bloch 波
+可以形成二维相干共振，而不是一维 DFB 的简单并列。第二步是非对称单胞，
+例如三角孔或直角三角孔：设计目标不再只是高 $Q$，而是有意改变各带边模的辐射常数
+和远场干涉，使目标模获得可用的法向出射通道\cite{hirose2014}。
+第三步是双晶格：两组晶格点的相对位移重排 $180^\circ$ 衍射相位，
+使基模横向包络展开，同时让高阶横向模在有限边界承担相对更大的损耗\cite{yoshida2019}。
+第四步是 Hermitian/非 Hermitian 联合调控：面内 $180^\circ/90^\circ$ 衍射
+不再单独优化，而要和经由辐射波产生的耗散耦合一起调节，
+使毫米级口径下仍然保留模式裕量\cite{yoshida2023,noda2023tutorial}。
 
 这条路线说明，PCSEL 的“反馈设计”不能只问某个耦合强不强，而要问该耦合在目标模和竞争模之间如何分配、在法向输出和边缘泄漏之间如何分配、在冷腔和热工作点之间是否仍保持同样排序。这也是本书后面用模裕量和工作窗口语言重写高功率 PCSEL 的原因。
 \end{ApplicationBox}
@@ -115,7 +149,15 @@ Noda 等人的 tutorial 对本章最有教学价值的一点，是把“二维�
 |\kvec_\parallel| \le n_{\mathrm{out}}\frac{\omega}{c},
 \label{eq:light_cone_condition}
 \end{equation}
-其中 $n_{\mathrm{out}}$ 是目标输出侧外部介质的折射率；若上方为空气，则 $n_{\mathrm{out}}\approx 1$。现实 PCSEL 不只存在一个光锥，而是有上下两个光锥：向上空气侧的光锥较窄，向下衬底侧的光锥更宽。以下方 GaAs 衬底为例，常有 $n_{\mathrm{sub}}\approx 3.5$，因此许多对空气侧来说仍偏“导模”的分量，对衬底侧却已经是允许辐射的波。这也是上下辐射天然不对称的第一原因。满足\cref{eq:light_cone_condition} 的区域称为光锥（light cone）。普通 slab 导模往往位于光锥之外，因此难以直接向自由空间辐射。但周期散射可以改变面内动量：一个原本位于光锥外的导模分量，经由倒格矢散射后，可能被折回到上方或下方光锥内，于是对应的场就能向自由空间泄露。
+其中 $n_{\mathrm{out}}$ 是目标输出侧外部介质的折射率；若上方为空气，
+则 $n_{\mathrm{out}}\approx 1$。现实 PCSEL 不只存在一个光锥，而是有上下两个光锥：
+向上空气侧的光锥较窄，向下衬底侧的光锥更宽。
+以下方 GaAs 衬底为例，常有 $n_{\mathrm{sub}}\approx 3.5$，
+因此许多对空气侧来说仍偏“导模”的分量，对衬底侧却已成为允许辐射的波。
+这是上下辐射天然不对称的一个原因。满足\cref{eq:light_cone_condition} 的区域称为光锥
+（light cone）。普通 slab 导模往往位于光锥之外，难以直接向自由空间辐射。
+但周期散射可以改变面内动量：原本位于光锥外的导模分量经倒格矢散射后，
+可能被折回到上方或下方光锥内，于是对应的场可以向自由空间泄露。
 
 这就是 PCSEL 面发射的核心机制：面内导模先存在，周期结构再把它的一部分动量“搬运”到可辐射区域。因而面发射是由晶格动量补偿打开的辐射通道，而非对原有导模的简单泄漏。
 
@@ -163,19 +205,19 @@ d_\nu
   \resizebox{0.9\textwidth}{!}{%
   \begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
     \begin{scope}
-      \node[font=\bfseries] at (0,2.95) {动量空间};
+      \node[font=\bfseries] at (0,3.45) {动量空间};
       \fill[cyan!8] (0,0) circle (1.52);
       \draw[->,gray!70] (-3.0,0)--(3.15,0) node[right]{$k_x$};
       \draw[->,gray!70] (0,-2.15)--(0,2.35) node[above]{$k_y$};
       \draw[very thick,cyan!60!black] (0,0) circle (1.52);
-      \node[cyan!55!black,fill=white,inner sep=1.5pt] at (0,1.83){光锥内：可辐射};
+      \node[cyan!55!black,anchor=east] at (-.35,1.85){光锥内：可辐射};
       \node[gray!60,align=center] at (-2.15,-1.45){光锥外\\导模区};
 
       \coordinate (guided) at (2.35,0.86);
       \coordinate (folded) at (0.88,0.86);
       \draw[densely dashed,gray!55] (0,0)--(guided);
       \fill[blue!75!black] (guided) circle (0.085);
-      \node[blue!75!black,anchor=west] at (2.48,0.98){原始导模 $\kvec_\parallel$};
+      \node[blue!75!black,anchor=west] at (1.7,-2.25){原始导模 $\kvec_\parallel$};
       \draw[->,very thick,orange!90!black] (guided)--node[above,sloped,fill=white,inner sep=1pt]{$-\gvec$}(folded);
       \fill[red!80!black] (folded) circle (0.085);
       \node[red!80!black,anchor=east] at (0.75,1.15){折叠分量};
@@ -185,8 +227,8 @@ d_\nu
       \node[teal!65!black,anchor=west] at (1.05,-1.45){下出光};
     \end{scope}
 
-    \begin{scope}[shift={(6.7,0)}]
-      \node[font=\bfseries] at (0,2.95) {实空间对应};
+    \begin{scope}[shift={(8.3,0)}]
+      \node[font=\bfseries] at (0,3.45) {实空间对应};
       \shade[left color=gray!12,right color=gray!5] (-2.65,-0.55) rectangle (2.65,0.45);
       \draw[thick] (-2.65,0.45)--(2.65,0.45);
       \foreach \x in {-2.2,-1.55,...,2.2} {
@@ -195,8 +237,8 @@ d_\nu
       }
       \draw[->,very thick,blue!75!black] (-2.35,0.9)--(-0.55,0.9)
         node[midway,above]{面内导模};
-      \draw[->,very thick,orange!90!black] (-0.25,0.72)--(0.35,0.72)
-        node[midway,below=2pt]{$\gvec$};
+      \draw[->,very thick,orange!90!black] (1.15,1.0)--(2.1,1.0)
+        node[midway,above=3pt]{$\gvec$};
       \foreach \x in {-0.7,-0.35,0,0.35,0.7} {
         \draw[->,thick,teal!70!black] (\x,0.45)--(\x,2.25);
       }
@@ -220,25 +262,25 @@ d_\nu
     \draw[very thick,gray!75] (0,0)--(5.15,3.75)
       node[above right,fill=white,inner sep=1pt,font=\scriptsize]{光锥边界};
     \node[cyan!55!black,align=center,font=\scriptsize] at (1.05,3.25){辐射\\连续谱};
-    \node[gray!60,align=center,font=\scriptsize] at (4.85,1.10){光锥外\\导模区};
+    \node[gray!60,align=center,font=\scriptsize] at (5.15,.50){光锥外\\导模区};
 
     \draw[very thick,blue!75!black]
-      plot[smooth] coordinates {(1.45,1.55) (2.25,1.85) (3.05,2.30) (3.85,2.90) (4.65,3.55)};
-    \node[blue!75!black,fill=white,inner sep=1pt,font=\scriptsize] at (4.38,2.68){原始导模};
+      plot[smooth] coordinates {(2.5,.90) (3.3,1.20) (4.1,1.55) (4.9,1.85) (5.7,2.20)};
+    \node[blue!75!black,font=\scriptsize] at (4.7,1.18){原始导模};
 
     \draw[very thick,red!80!black,densely dashed]
-      plot[smooth] coordinates {(0.55,2.55) (1.25,2.42) (1.95,2.38) (2.65,2.48) (3.35,2.75)};
-    \node[red!80!black,fill=white,inner sep=1pt,font=\scriptsize] at (2.10,2.98){折叠分支};
+      plot[smooth] coordinates {(0,1.01) (.5,1.20) (1.3,1.55) (2.1,1.85) (2.9,2.20)};
+    \node[red!80!black,font=\scriptsize] at (.58,1.75){折叠分支};
 
-    \coordinate (p1) at (3.85,2.90);
-    \coordinate (p2) at (1.55,2.40);
-    \draw[densely dashed,gray!60] (p1)--(3.85,0);
-    \draw[densely dashed,gray!60] (p2)--(1.55,0);
-    \draw[->,very thick,orange!90!black] (p1)--node[above,fill=white,inner sep=1pt]{$-\gvec$}(p2);
+    \coordinate (p1) at (4.1,1.55);
+    \coordinate (p2) at (1.3,1.55);
+    \draw[densely dashed,gray!60] (p1)--(4.1,0);
+    \draw[densely dashed,gray!60] (p2)--(1.3,0);
+    \draw[->,very thick,orange!90!black] (p1)--node[pos=.2,above=5pt,font=\scriptsize]{$-\gvec$}(p2);
     \fill[blue!75!black] (p1) circle (0.065);
     \fill[red!80!black] (p2) circle (0.065);
-    \draw[->,thick,teal!70!black] (p2)--(1.55,3.28);
-    \node[teal!65!black,anchor=west,font=\scriptsize] at (1.70,3.20){自由空间通道};
+    \draw[->,thick,teal!70!black] (p2)--(1.3,2.85);
+    \node[teal!65!black,anchor=west,font=\scriptsize] at (1.55,2.85){自由空间通道};
   \end{tikzpicture}%
   }
   \caption{平板导模色散与光锥边界示意。周期散射并不创造新色散，而是把原本位于光锥外的导模分量平移到光锥内；产生辐射的是折叠后的分支与自由空间连续谱的相交。}

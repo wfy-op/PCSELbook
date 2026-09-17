@@ -1,49 +1,21 @@
 \begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[scale=0.74, transform shape,
-    step/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3.7cm, minimum height=1cm, align=center},
-    decision/.style={diamond, draw, aspect=1.8, fill=#1!20, minimum width=3.1cm, align=center},
-    arrow/.style={->, >=stealth, thick},
-    feedback/.style={->, >=stealth, thick, dashed}
-  ]
-    \node[step=blue, minimum height=1.2cm] (specs) at (0,10) {第一步：明确技术指标\\目标波长$\lambda$、输出功率$P$、光束质量$M^2$、工作温度范围};
-
-    \node[step=green, below=1cm of specs] (initial) {第二步：初始结构设计\\外延层栈、晶格类型、初始刻蚀深度$d_{\mathrm{etch}}$};
-    \draw[arrow] (specs) -- (initial);
-
-    \node[step=yellow, below=1cm of initial] (pwem) {第三步：能带与候选模筛选\\定位$\Gamma$点与平带趋势，确定$a/\lambda$初值};
-    \draw[arrow] (initial) -- (pwem);
-
-    \node[decision=orange, below=1.5cm of pwem] (singlemode) {是否满足单模间隔？\\$\Delta \nu >$ 增益线宽};
-    \draw[arrow] (pwem) -- (singlemode);
-    \draw[feedback] (singlemode.west) -- ++(-2,0) |- node[pos=0.72,left,align=center] {否\\回调占空比\\与刻蚀深度} (initial.west);
-
-    \node[step=cyan, below=1.5cm of singlemode] (threshold) {第四步：阈值增益评估\\提取耦合系数$\kappa$并估算$g_{\mathrm{th}}$};
-    \draw[arrow] (singlemode) -- node[right,pos=0.5] {是} (threshold);
-
-    \node[decision=purple, below=1.5cm of threshold] (gaincheck) {材料增益能否覆盖阈值？\\$g_{\mathrm{th}} < g_{\max}$};
-    \draw[arrow] (threshold) -- (gaincheck);
-    \draw[feedback] (gaincheck.east) -- ++(2,0) |- node[pos=0.72,right,align=center] {否\\降低损耗或\\增强限制因子} (initial.east);
-
-    \node[step=pink, below=1.5cm of gaincheck] (farfield) {第五步：远场与偏振优化\\优化孔形/包络以抑制旁瓣与偏振串扰};
-    \draw[arrow] (gaincheck) -- node[left,pos=0.5] {是} (farfield);
-
-    \node[step=red, below=1cm of farfield] (thermal) {第六步：热学校核\\估算热阻$R_{\mathrm{th}}$并约束$\Delta T$};
-    \draw[arrow] (farfield) -- (thermal);
-
-    \node[step=brown, below=1cm of thermal] (tolerance) {第七步：工艺容差分析\\统计几何偏差对模式与阈值的影响};
-    \draw[arrow] (thermal) -- (tolerance);
-
-    \node[step=blue, minimum height=1.2cm, below=1cm of tolerance] (output) {第八步：版图与交付\\输出版图文件并整理仿真与工艺文档};
-    \draw[arrow] (tolerance) -- (output);
-
-    \node[align=center, font=\small, anchor=south west] at (-5.2,0.2) {
-      \textbf{典型开发周期}:\\
-      参数迭代：2--4 周\\
-      流片与测试：8--12 周\\
-      全流程：约 3--4 个月
-    };
-  \end{tikzpicture}
-  \caption{光子晶体面发射激光器从指标定义、结构初设、候选模筛选、阈值评估、远场与热优化，到容差分析和版图交付的完整工程流程。图中“温升约束”和“几何容差”仅作为\textbf{[本书算例]}示例门槛，需按目标波段、散热边界和工艺统计重标定\cite{zhou2024nside1550pcsel,miao2024modeimpactpcsel}。}
-  \label{fig:ch22_design_workflow}
+\centering
+\resizebox{.98\textwidth}{!}{%
+\begin{tikzpicture}[>=Latex,font=\small,
+ b/.style={draw,rounded corners,align=left,text width=5.2cm,minimum height=1.25cm,fill=blue!6}]
+\node[b] (a) at (0,6) {1 指标与工作条件\\波长、功率、束质、温度、驱动方式};
+\node[b] (b) at (0,3.8) {2 纵向与平面结构\\层栈、约束因子、晶格与孔形};
+\node[b] (c) at (0,1.6) {3 被动模与开放损耗\\能带候选、辐射、有限尺寸与模式身份};
+\node[b] (d) at (0,-.6) {4 模增益和阈值排序\\加入材料增益与损耗，比较竞争模};
+\node[b,fill=green!7] (e) at (7,-.6) {5 远场与偏振\\主瓣、旁瓣、上下出光及偏振纯度};
+\node[b,fill=green!7] (f) at (7,1.6) {6 电热工作点\\注入、温升、折射率和增益回写};
+\node[b,fill=green!7] (g) at (7,3.8) {7 误差与容差\\工艺分布、模式稳定性、性能窗口};
+\node[b,fill=green!7] (h) at (7,6) {8 版图与实验验证\\保存参数、收敛证据和测量协议};
+\foreach \s/\t in {a/b,b/c,c/d,d/e,e/f,f/g,g/h}{\draw[->,thick](\s)--(\t);}
+\draw[->,dashed,orange!80!black,thick] (g.east)--(10.5,3.8)--(10.5,7.5)--(-3.5,7.5)--(-3.5,3.8)--(b.west);
+\node[orange!80!black,above] at (3.5,7.5) {任一性能或稳定性要求不满足时，返回结构设计};
+\end{tikzpicture}}
+\caption{PCSEL 设计步骤与迭代关系。单模判断依靠同一工作点的增益、损耗和模式竞争，
+不能仅靠模间隔大于材料增益谱宽；实际开发周期取决于工艺和验证资源。}
+\label{fig:ch22_design_workflow}
 \end{figure}

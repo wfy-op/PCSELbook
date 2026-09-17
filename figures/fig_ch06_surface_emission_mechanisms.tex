@@ -14,7 +14,7 @@
 
     % (a) second-order Bragg extraction
     \begin{scope}[shift={(-5.2,0)}]
-      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \draw[panel] (-2.35,-1.9) rectangle (2.35,2.65);
       \node[font=\bfseries] at (0,2.32) {(a) 二阶 Bragg 折叠};
       \draw[slab] (-2.0,-0.35) rectangle (2.0,0.35);
       \foreach \x in {-1.55,-1.05,...,1.55} {
@@ -22,21 +22,21 @@
         \draw[gray!55] (\x,0.08) ellipse (0.13 and 0.08);
       }
       \draw[guided] (-1.85,0.82)--(-0.35,0.82) node[midway,above]{导模};
-      \draw[->,very thick,orange!90!black] (-0.22,0.56)--(0.48,0.56)
-        node[midway,below=2pt]{$\gvec$};
+      \draw[->,very thick,orange!90!black] (.9,.85)--(1.75,.85)
+        node[midway,above=3pt]{$\gvec$};
       \foreach \x in {-0.42,0,0.42} {
         \draw[beam] (\x,0.35)--(\x,1.78);
       }
       \node[teal!65!black] at (0,1.98){法向辐射};
-      \draw[->,thick,blue!60!black] (1.15,-0.72)--(1.85,-0.72);
-      \draw[->,thick,blue!60!black] (-1.15,-0.72)--(-1.85,-0.72);
-      \node[align=center,text width=4.1cm] at (0,-1.16)
+      \draw[->,thick,blue!60!black] (1.15,-0.52)--(1.85,-0.52);
+      \draw[->,thick,blue!60!black] (-1.15,-0.52)--(-1.85,-0.52);
+      \node[align=center,text width=4.1cm] at (0,-1.42)
       {倒格矢同时提供反馈与出光动量。};
     \end{scope}
 
     % (b) coherent Gamma-point band-edge emission
     \begin{scope}
-      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \draw[panel] (-2.35,-1.9) rectangle (2.35,2.65);
       \node[font=\bfseries] at (0,2.32) {(b) $\Gamma$ 点带边相干辐射};
       \draw[slab] (-2.0,-0.38) rectangle (2.0,0.38);
       \foreach \x in {-1.5,-1.0,...,1.5} {
@@ -50,15 +50,14 @@
       \foreach \x in {-1.2,-0.8,...,1.2} {
         \draw[beam] (\x,0.42)--(\x,1.72);
       }
-      \draw[<->,thick,gray!75] (-0.95,1.30)--(-0.45,1.30);
-      \node[gray!60,fill=white,inner sep=1pt] at (-0.70,1.53){同相};
-      \node[align=center,text width=4.0cm] at (0,-1.16)
+      \node[gray!60,fill=white,inner sep=1pt] at (0,1.9){同相};
+      \node[align=center,text width=4.0cm] at (0,-1.42)
       {带边慢光增强驻波场，远场相位更有序。};
     \end{scope}
 
     % (c) defect or disorder assisted leakage
     \begin{scope}[shift={(5.2,0)}]
-      \draw[panel] (-2.35,-1.55) rectangle (2.35,2.65);
+      \draw[panel] (-2.35,-1.9) rectangle (2.35,2.65);
       \node[font=\bfseries] at (0,2.32) {(c) 缺陷/无序辅助散射};
       \draw[slab] (-2.0,-0.35) rectangle (2.0,0.35);
       \foreach \x in {-1.55,-1.05,-0.55,0.85,1.35} {
@@ -67,14 +66,14 @@
       }
       \fill[red!22] (0.05,-0.28) ellipse (0.32 and 0.20);
       \draw[red!75!black,densely dashed,thick] (0.05,-0.28) ellipse (0.32 and 0.20);
-      \node[red!75!black,fill=white,inner sep=1pt] at (0.28,0.52){局域扰动};
+      \node[red!75!black] at (1.15,-.68){局域扰动};
       \draw[guided] (-1.85,0.82)--(-0.15,0.82);
       \foreach \ang in {35,65,100,135,160} {
         \draw[scatter] (0.05,0.02)--++(\ang:1.15);
       }
       \node[orange!80!black,align=center,font=\scriptsize,fill=white,inner sep=1pt]
         at (0,1.62){分散出光\\相干性较弱};
-      \node[align=center,text width=4.1cm] at (0,-1.16)
+      \node[align=center,text width=4.1cm] at (0,-1.42)
       {局域散射可增加出光，但常伴随损耗与远场劣化。};
     \end{scope}
   \end{tikzpicture}%

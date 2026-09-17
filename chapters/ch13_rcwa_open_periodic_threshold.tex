@@ -111,7 +111,14 @@ S_{21}=\frac{b_{\mathrm{down},0}}{a_{\mathrm{up},0}},
 对 PCSEL 来说，\cref{eq:rcwa_smatrix} 的威力在于它直接把“内部结构”和“外部辐射通道”连在一起了。于是，上下辐射不对称、偏振选择、法向出光窗口和反射谱中的共振尖峰，都能在同一个框架下被读取。不过，开放散射仍是被动层面的问题，它不会自动给出激射结论\RedlineRef{2}。
 
 \paragraph{Fourier factorization：由界面连续性决定的离散化规则}
-RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fourier factorization。对具有介电常数跳变的周期结构，像 $\varepsilon E$ 这样的乘积项并不能一律用“傅里叶系数逐项卷积”来处理。Li 的 factorization 规则要求根据场分量在界面处的连续性，选择对 $\varepsilon$ 还是对 $\varepsilon^{-1}$ 构造 Toeplitz 卷积矩阵\cite{li1996}。记 $[\varepsilon]_{mn}=\hat{\varepsilon}_{m-n}$ 为对介电函数傅里叶系数构造的 Toeplitz 矩阵，$[\varepsilon^{-1}]$ 为对 $1/\varepsilon$ 同样构造的矩阵。若乘积中的场分量在界面处连续（如 TE 偏振的电场切向分量），可直接使用 Laurent 规则
+RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fourier factorization。
+对具有介电常数跳变的周期结构，像 $\varepsilon E$ 这样的乘积项
+并不能一律用“傅里叶系数逐项卷积”来处理。Li 的 factorization 规则要求
+根据场分量在界面处的连续性，选择对 $\varepsilon$ 还是对 $\varepsilon^{-1}$
+构造 Toeplitz 卷积矩阵\cite{li1996}。记
+$[\varepsilon]_{mn}=\hat{\varepsilon}_{m-n}$ 为对介电函数傅里叶系数构造的 Toeplitz 矩阵，
+$[\varepsilon^{-1}]$ 为对 $1/\varepsilon$ 同样构造的矩阵。
+若乘积中的场分量在界面处连续（如 TE 偏振的电场切向分量），可直接使用 Laurent 规则
 \begin{equation}
 \widehat{\varepsilon E_t}
 \approx
@@ -127,7 +134,15 @@ RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fou
 [\varepsilon^{-1}]^{-1}\hat E_n.
 \label{eq:rcwa_inverse_rule}
 \end{equation}
-用错规则的后果通常是伪收敛：Gibbs 震荡增强，收敛速度从指数级降为代数级，并出现系统性频移，而非发散。以 GaAs/空气二元光栅（折射率对比约 3.4:1）为例，错误的卷积规则可使 TM 偏振共振峰位产生 5--10 nm 的系统性偏移，且把傅里叶阶数从 $N=5$ 提高到 $N=21$ 后偏移仍不消失。因此，如果 RCWA 预测的共振波长与实验测量总有几纳米的固定偏差，在排除工艺误差后，应优先检查 factorization 规则是否与界面连续性一致。\cref{eq:rcwa_laurent_rule,eq:rcwa_inverse_rule} 想让读者记住的只有一件事：Fourier factorization 是由界面连续性决定的离散化规则，而非可由提高截断阶数自动消除的数值细节。
+用错规则的后果通常是伪收敛：Gibbs 震荡增强，收敛速度从指数级降为代数级，
+并出现系统性频移，而非发散。以 GaAs/空气二元光栅（折射率对比约 3.4:1）为例，
+错误的卷积规则可使 TM 偏振共振峰位产生 5--10 nm 的系统性偏移，
+且把傅里叶阶数从 $N=5$ 提高到 $N=21$ 后偏移仍不消失。
+因此，如果 RCWA 预测的共振波长与实验测量总有几纳米的固定偏差，
+在排除工艺误差后，应优先检查 factorization 规则是否与界面连续性一致。
+\cref{eq:rcwa_laurent_rule,eq:rcwa_inverse_rule} 想让读者记住的只有一件事：
+Fourier factorization 是由界面连续性决定的离散化规则，
+而非可由提高截断阶数自动消除的数值细节。
 
 \section{被动谱、共振与极点：谱线为什么会尖起来}
 很多读者第一次用 RCWA 时，最直观的输出是一条反射谱或透射谱。看到尖峰或窄谷之后，容易把它直接称为“高 $Q$ 模”或“低阈值候选模”。这种说法并非总错，但如果不说明其背后的极点结构，就会显得很经验化。
@@ -144,20 +159,36 @@ RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fou
 
 只有把这些问题答清楚，被动谱才能转化为器件设计信息。
 
+\subsection{随书实算：从 PWEM 频窗到 RCWA 反射谱}
+\cref{fig:rcwa_square_hole_triptych} 是脚本 \path{code/rcwa_square_hole/run_rcwa_square_hole.py} 用 \texttt{grcwa} 实际计算的结果。模型取正方晶格圆形空气孔，$r/a=0.30$，高折射率层 $n=3.4$、厚度 $0.5a$，上方为空气、下方衬底 $n=1.5$；请求 49 个 Fourier 级次，求解器实际保留 45 个。被动扫描在 $\Omega=a/\lambda\approx0.43$ 附近出现明显的 Fano 型反射结构，且全频窗内 $|R+T-1|$ 的最大误差小于 $10^{-12}$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{code/rcwa_square_hole/output/rcwa_square_hole_triptych.pdf}
+  \caption{正方晶格圆孔 slab 的可复现 RCWA 算例。左：被动反射、透射及能量守恒检查；中：候选共振附近的定向细扫；右：在高折射率区域加入三组小负介电常数虚部后的线性增益代理。右图只说明给定实频谱怎样随小信号增益改变，不是自洽激光阈值解。}
+  \label{fig:rcwa_square_hole_triptych}
+\end{figure}
+
+这份算例把“PWEM 告诉 RCWA 去哪里看”变成了可执行接口：先在候选窗口做无源宽扫，再对谱线结构细扫，最后才改变增益代理。复现时至少应同时提高 Fourier 阶数与实空间采样网格；若峰位、线形或 $R+T$ 守恒随截断显著变化，就不能把该谱线用于模式排序。
+
 \section{RCWA 怎样进入光学阈值分析}
 前面 \cref{ch:threshold} 已经明确区分了阈值增益和阈值电流。RCWA 在这里的作用，是估计周期开放结构层面上的光学阈值增益，而非直接给出 $I_{\mathrm{th}}$。最常见的做法，是在有源层引入小信号增益对应的等效虚部，例如写成
 \begin{equation}
 \varepsilon(\omega)
 =
-\varepsilon'(\omega)+\ii\varepsilon''_g(g),
+\varepsilon'(\omega)+\ii\varepsilon''_g(g_{\mathrm{mat}}),
 \label{eq:rcwa_gain_continuation}
 \end{equation}
-然后扫描增益参数 $g$，寻找使目标共振从净衰减变为恰好补偿损耗的条件。
+然后扫描材料功率增益 $g_{\mathrm{mat}}$，寻找使目标共振从净衰减变为恰好补偿损耗的条件。这里必须给出 $g_{\mathrm{mat}}\leftrightarrow\varepsilon''_g$ 的材料关系与符号约定；若实际扫描的是任意的虚部尺度因子，就只能报告该尺度因子的阈值，不能直接把它标成 \si{cm^{-1}} 的材料增益。
 
 如果只停在这一步，读者容易把“扫到线宽为零”误听成“已经建立了完整激光阈值理论”。教材写法必须把这件事分层说清。对 PCSEL 而言，至少应区分以下四个层次：
 \begin{enumerate}
   \item \textbf{冷腔开放共振层}：先在无增益条件下找到复频率极点 $\tilde{\omega}_0=\omega_0-\ii\gamma_0$，它描述的是开放系统如何储能与泄能。
-  \item \textbf{线性小信号阈值代理层}：在给定小信号增益模型后继续追踪极点 $\tilde{\omega}(g)$，并用 $\Im \tilde{\omega}(g_{\mathrm{th}})=0$ 估计光学阈值增益。
+  \item \textbf{线性小信号阈值代理层}：在给定小信号增益模型后继续追踪极点 $\tilde{\omega}(g_{\mathrm{mat}})$。阈值材料增益由
+  \[
+  \Im\,\tilde{\omega}(g_{\mathrm{mat,th}})=0
+  \]
+  估计。
   \item \textbf{阈值处自洽有源场层}：真正的阈值问题要求场、极化和反转分布同时满足自洽条件，尤其当增益色散明显时，实部与虚部不能被拆成两个彼此独立的旋钮。
   \item \textbf{阈上稳态激光层}：一旦超过阈值，增益饱和、空间烧孔、模式竞争和注入非均匀性都会进入主导地位，这时需要更完整的有源激光形式化，例如基于 Maxwell--Bloch 方程的稳态或时域求解。
 \end{enumerate}
@@ -171,7 +202,7 @@ RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fou
   \item 在小信号线性框架中，目标模的总损耗被增益恰好补偿。
 \end{itemize}
 
-这一步得到的是 $g_{\mathrm{th}}$ 这类光学量。它对设计极其有用，因为它告诉我们结构本身对目标模和竞争模提出了多高的增益要求。但必须再次强调，$g_{\mathrm{th}}$ 不是 $I_{\mathrm{th}}$。从前者到后者，还需要材料增益模型、漂移-扩散输运、复合和热反馈。
+这一步得到的是 $g_{\mathrm{mat,th}}$ 这类光学量。它对设计极其有用，因为它告诉我们结构本身对目标模和竞争模提出了多高的材料增益要求。但必须再次强调，$g_{\mathrm{mat,th}}$ 不是 $I_{\mathrm{th}}$。从前者到后者，还需要材料增益随载流子与温度的关系、漂移--扩散输运、复合和热反馈。
 
 \paragraph{为什么这只是线性小信号阈值代理}
 式 \eqref{eq:rcwa_gain_continuation} 默认我们已经把有源区压缩成了一个“可调复介电常数”模型。只要这一模型仍停留在线性响应层面，那么我们实际上做的是：给开放冷腔模外加一个\emph{尚未饱和}的增益补偿，并观察净衰减是否被抵消。这个判据与 \cref{ch:threshold} 的阈值条件相容，但它并没有告诉我们阈上光场会稳定在什么幅度、是否发生多模竞争、反转是否仍近似均匀，也没有告诉我们空间烧孔会不会把模式排序翻转。
@@ -182,16 +213,23 @@ RCWA 还有一个经常被忽略、却直接决定收敛质量的技术点：Fou
 \paragraph{阈值频率并不必然等于冷腔共振频率}
 把阈值理解成“在冷腔频率上把线宽调到零”也过于粗糙。更准确的说法是：随着增益参数变化，极点本身会沿复频率平面移动，
 \begin{equation}
-\tilde{\omega}(g)=\omega_r(g)-\ii\gamma(g).
+\tilde{\omega}(g_{\mathrm{mat}})=\omega_r(g_{\mathrm{mat}})-\ii\gamma(g_{\mathrm{mat}}).
 \end{equation}
-阈值条件是 $\gamma(g_{\mathrm{th}})=0$，而真正的阈值频率应写成
+阈值条件是 $\gamma(g_{\mathrm{mat,th}})=0$，而真正的阈值频率应写成
 \begin{equation}
-\omega_{\mathrm{th}}=\Re \tilde{\omega}(g_{\mathrm{th}}),
+\omega_{\mathrm{th}}=\Re \tilde{\omega}(g_{\mathrm{mat,th}}),
 \end{equation}
 它不一定与冷腔共振频率 $\omega_0$ 完全相同。造成这种偏移的原因包括：增益色散引起的频率拉动、场分布随增益微调而改变，以及不同辐射通道和材料色散共同作用下的复频率漂移。对 PCSEL 来说，这种偏移尤其重要，因为 $\Gamma$ 点附近的模式排序本来就可能很近，微小的频移就足以改变“哪一支模先达到阈值”的判断。
 
 \paragraph{它与更完整 active lasing formulations 的关系}
-从更宽的理论坐标系看，本章 RCWA 增益扫描与更完整的有源激光稳态理论之间是“前端代理”和“自洽主问题”的关系。前者把目标模的阈值判定简化成线性极点继续问题，因此很适合做候选模筛选和参数排序。后者则把 Maxwell 方程与极化、反转和饱和非线性联立起来，直接求解阈值处或阈上稳态激光解；典型代表包括 Maxwell--Bloch 方程的直接时域求解，以及稳态自洽形式如 steady-state \emph{ab initio} laser theory（SALT）\cite{tureci2007salt,tureci2009salt}。本书在这里不展开 SALT 的完整推导，但读者必须知道：RCWA 扫 $\varepsilon''<0$ 到零线宽，\emph{是为真正的有源激光问题提供一个计算成本较低、可解释、可筛选的线性近似入口，而非}激光理论本体。
+从更宽的理论坐标系看，本章 RCWA 增益扫描与更完整的有源激光稳态理论之间，
+是“前端代理”和“自洽主问题”的关系。前者把目标模的阈值判定简化成线性极点继续问题，
+因此很适合做候选模筛选和参数排序。后者则把 Maxwell 方程与极化、反转和饱和非线性联立起来，
+直接求解阈值处或阈上稳态激光解；典型代表包括 Maxwell--Bloch 方程的直接时域求解，
+以及稳态自洽形式如 steady-state \emph{ab initio} laser theory（SALT）
+\cite{tureci2007salt,tureci2009salt}。本书在这里不展开 SALT 的完整推导，
+但读者必须知道：RCWA 扫 $\varepsilon''<0$ 到零线宽，
+\emph{是为真正的有源激光问题提供一个计算成本较低、可解释、可筛选的线性近似入口，而非}激光理论本体。
 
 \section{为什么 RCWA 特别适合做“单胞层面的设计判断”}
 一旦接受“RCWA 主要给光学阈值增益和辐射通道信息”，它在工作流中的位置就非常清晰了。它适合做以下几类判断：

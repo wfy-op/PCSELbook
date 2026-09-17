@@ -1,45 +1,22 @@
-% PCSEL 三重建模视角与数据传递链
 \resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,font=\small]
-  \tikzset{
-    层/.style={draw,rounded corners,minimum width=6.3cm,minimum height=1.25cm,align=center,thick},
-    端口/.style={draw,rounded corners,minimum width=2.8cm,minimum height=0.85cm,align=center,fill=gray!10},
-    前向/.style={->,thick,blue!65!black},
-    回写/.style={->,thick,dashed,orange!80!black}
-  }
-
-  \node[层,fill=blue!10] (L1) at (0,0) {\textbf{第一层：开放周期电磁层}\\麦克斯韦方程 + 布洛赫理论\\\scriptsize 求解器：平面波展开、严格耦合波、时域差分、有限元};
-  \node[层,fill=red!10] (L2) at (0,-2.2) {\textbf{第二层：有源光学层}\\模增益 + 内部损耗\\\scriptsize 求解器：耦合波、重叠积分、阈值模型};
-  \node[层,fill=green!12] (L3) at (0,-4.4) {\textbf{第三层：器件注入与热层}\\泊松方程 + 漂移扩散 + 热传导方程\\\scriptsize 求解器：电荷输运模块、半导体模块、热传导模块};
-
-  \node[端口,anchor=east] (I1) at (-4.8,0) {\scriptsize 结构参数\\$\epsilon(x,y,z),a,r,t$};
-  \node[端口,anchor=east] (I2) at (-4.8,-2.2) {\scriptsize 材料参数\\$g(\lambda),\alpha_{\mathrm{int}}$};
-  \node[端口,anchor=east] (I3) at (-4.8,-4.4) {\scriptsize 外延与电极\\热/电边界条件};
-
-  \node[端口,anchor=west,fill=green!12] (O1) at (4.8,0) {\scriptsize 候选模\\$(\tilde\omega_n,Q_n),\alpha_{\mathrm{rad}}$};
-  \node[端口,anchor=west,fill=green!12] (O2) at (4.8,-2.2) {\scriptsize 阈值增益\\$g_{\mathrm{th}}$ 排序};
-  \node[端口,anchor=west,fill=green!12] (O3) at (4.8,-4.4) {\scriptsize 阈值电流\\$I_{\mathrm{th}},\Delta T$};
-
-  \draw[前向] (I1) -- (L1.west);
-  \draw[前向] (L1.east) -- (O1);
-  \draw[前向] (I2) -- (L2.west);
-  \draw[前向] (L2.east) -- (O2);
-  \draw[前向] (I3) -- (L3.west);
-  \draw[前向] (L3.east) -- (O3);
-
-  \draw[前向] (0,-0.7) -- node[right,font=\scriptsize] {$Q,\alpha_{\mathrm{rad}}$} (0,-1.5);
-  \draw[前向] (0,-2.9) -- node[right,font=\scriptsize] {$g_{\mathrm{th}}$} (0,-3.7);
-
-  \draw[回写,bend left=18] (O3.north west) to node[below,font=\scriptsize] {$\Delta n(T),\Delta E_g(T)$} (O2.south west);
-
-  \node[draw,rounded corners,dashed,fill=cyan!10,align=left,anchor=north west,text width=3.2cm,font=\scriptsize]
-    at (-7.9,-0.75) {\textbf{关键点}\\
-    第一层：有哪些候选模\\
-    第二层：谁先达到阈值\\
-    第三层：器件能否落地\\
-    高 $Q$ 不等于低 $I_{\mathrm{th}}$};
-
-  \node[draw,rounded corners,fill=yellow!15,minimum width=10.9cm,minimum height=0.9cm,align=center]
-    at (0,-5.95) {\textbf{最小量级传递链：}\quad $Q,\tilde\omega \Rightarrow \alpha_{\mathrm{rad}} \Rightarrow g_{\mathrm{th}} \Rightarrow I_{\mathrm{th}}$};
-\end{tikzpicture}%
-}
+\begin{tikzpicture}[>=Latex,font=\small,
+ box/.style={draw,rounded corners,align=center,text width=6.8cm,minimum height=1.3cm,fill=blue!6},
+ io/.style={draw,rounded corners,align=center,text width=3.2cm,minimum height=1.2cm,fill=green!7}]
+\node[box] (a) at (0,5) {第一层：开放周期电磁层\\Maxwell 方程与 Bloch 模\\求解频率、模场和开放辐射};
+\node[box,fill=red!6] (b) at (0,2.7) {第二层：有源光学层\\材料增益、重叠积分与内部损耗\\比较各模的阈值增益};
+\node[box,fill=yellow!8] (c) at (0,.4) {第三层：器件注入与热层\\载流子输运、复合与热传导\\计算阈值电流和稳定工作窗口};
+\node[io] (aa) at (6,5) {$\tilde\omega,\ Q_{\mathrm{rad}}$\\候选模和损耗};
+\node[io] (bb) at (6,2.7) {$g_{\mathrm{mod,th}}$\\$g_{\mathrm{mat,th}}$};
+\node[io] (cc) at (6,.4) {$I_{\mathrm{th}},T(\mathbf r)$\\器件工作窗口};
+\draw[->,thick] (a)--(b);
+\draw[->,thick] (b)--(c);
+\draw[->,thick] (a)--(aa);
+\draw[->,thick] (b)--(bb);
+\draw[->,thick] (c)--(cc);
+\draw[->,thick,orange!80!black] (c.west)--(-4.5,.4)--(-4.5,5)--(a.west);
+\node[rotate=90,orange!80!black] at (-4.85,2.7) {温度与载流子回写材料参数};
+\node[draw,align=center,text width=11.5cm,inner sep=6pt,anchor=north,fill=gray!5] at (1.5,-1.0) {
+$Q_{\mathrm{rad}}\ \longrightarrow\ \alpha_{\mathrm{rad}}\ \longrightarrow\
+g_{\mathrm{mod,th}}\ \longrightarrow\ g_{\mathrm{mat,th}}\ \longrightarrow\ I_{\mathrm{th}}$\\
+每一步都需要新增物理输入，不能由高 $Q$ 单独推出低阈值电流。};
+\end{tikzpicture}}

@@ -2,6 +2,8 @@
 \chapter{周期介质中的 Maxwell 方程}
 \label{ch:maxwell}
 
+想象一只“关不上门”的腔：顶部完全封闭，光出不来；顶部一旦打开，能量又必然泄漏。PCSEL 必须在这两者之间工作，所以它的模式从一开始就不是普通封闭腔里的实频本征态，而是带辐射寿命的开放共振。本章要建立的 Maxwell 语言，正是为了把这扇门怎样打开、打开后频率和损耗怎样一起出现说清楚。
+
 \paragraph{读完本章，你应能}
 \begin{itemize}
   \item 从时域 Maxwell 方程出发，建立本书后续使用的频域本征问题。
@@ -82,13 +84,25 @@
 = \frac{\ii\omega}{2}\left(\mu_0\mu_r|\Hf|^2 - \varepsilon_0\varepsilon_r^*|\E|^2\right).
 \label{eq:poynting-complex}
 \end{equation}
-对全空间积分并取实部，得到时间平均功率流
+式~\eqref{eq:poynting-complex} 是\textbf{无外加源、实频率}下的关系。对被动介质，若定义
 \begin{equation}
-P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\cdot\dd\bm{s}
- = -\int_V\frac{\omega}{2}\operatorname{Im}(\varepsilon_r)\varepsilon_0|\E|^2\,\dd V.
-\label{eq:poynting-real-power}
+P_{\mathrm{abs}}
+=
+\int_V\frac{\omega}{2}\varepsilon_0\operatorname{Im}(\varepsilon_r)|\E|^2\,\dd V
+\quad (P_{\mathrm{abs}}\ge 0),
+\label{eq:poynting-absorption}
 \end{equation}
-若边界为理想导体（$\bm{n}\times\E=0$）且介质无损（$\operatorname{Im}\varepsilon_r=0$），则两侧均为零，能量既不能流出也不能耗散，只能永远囚禁在腔内；而 PCSEL 表面没有金属屏蔽，光可以从衍射栅耦合出去，坡印亭净通量不为零。因此，判断一个系统是“封闭”还是“开放”，不应只看几何形状，而应看坡印亭矢量的净通量是否为零。下一节将看到，这一能量差别决定了本征频率是实数还是复数。
+那么直接取实部会得到 $P_{\mathrm{out}}=-P_{\mathrm{abs}}$。这个负号不是说“被动腔一边吸收、一边凭空向外辐射”，而是在提醒我们：\textbf{无源、被动、实频率的开放边界问题没有非平凡稳态本征解}。实频散射问题必须加入外部电流或入射端口，此时功率守恒写成
+\begin{equation}
+P_{\mathrm{src}}=P_{\mathrm{out}}+P_{\mathrm{abs}}.
+\label{eq:poynting-driven-balance}
+\end{equation}
+无源开放腔则应使用复频率，回到时域后写成
+\begin{equation}
+\frac{\dd U}{\dd t}=-P_{\mathrm{out}}-P_{\mathrm{abs}},
+\label{eq:poynting-qnm-decay}
+\end{equation}
+其中 $U$ 是腔内储能。若边界为理想导体且介质无损，则两项均为零，允许实频率封闭腔本征模；PCSEL 允许光穿过开放边界，因而无源本征问题通常必须用复频率描述。判断“封闭”或“开放”要看边界上的能量通量和本征问题的频率条件，不能只看几何形状。
 
 \section{算符观点：为什么有时本征频率是实数，有时必须是复数}
 为了建立后文需要的概念，我们把 \cref{eq:maxwell-eigen} 记成算符形式
@@ -128,18 +142,17 @@ P_{\text{out}} = \oint_{\partial V}\frac{1}{2}\operatorname{Re}(\E\times\Hf^*)\c
   \begin{tikzpicture}[scale=0.95]
     \draw[->,thick] (-3.8,0)--(3.8,0) node[right]{实部轴（$\omega_r$）};
     \draw[->,thick] (0,-3.2)--(0,1.5) node[above]{虚部轴};
-    \fill[red!8] (-3.7,0) rectangle (3.7,1.4);
-    \node[red!60,font=\footnotesize] at (2.5,0.85){被动外延拓区（非物理解）};
+    \node[red!60,font=\footnotesize] at (0,2.7){上半平面：被动系统无增长模};
     \draw[dashed,gray] (-3.7,0)--(3.7,0);
     \fill[blue!70] (1.0,-0.4) circle (0.08) node[right,font=\footnotesize]{高品质因子};
-    \fill[blue!70] (-1.5,-1.8) circle (0.08) node[right,font=\footnotesize]{低品质因子};
-    \fill[orange!80!black] (2.5,-0.02) circle (0.08) node[above right,font=\footnotesize]{连续谱束缚态（$\gamma\to 0$）};
+    \fill[blue!70] (-1.5,-1.8) circle (0.08) node[left,font=\footnotesize]{低品质因子};
+    \fill[orange!80!black] (2.5,0) circle (0.08);
+    \draw[->,orange!80!black] (2.5,.7)--(2.5,.12);
+    \node[above,font=\footnotesize] at (2.5,.7){BIC：$\gamma=0$};
     \fill[green!60!black] (0.5,-1.0) circle (0.08) node[right,font=\footnotesize]{准连续谱束缚态};
-    \draw[densely dotted,gray!70] (-3.6,-0.35)--(3.6,-0.35) node[right,font=\scriptsize]{$Q\sim10^3$ 量级};
-    \draw[densely dotted,gray!70] (-3.6,-0.06)--(3.6,-0.06) node[right,font=\scriptsize]{$Q\sim10^5$ 量级};
-    \draw[<->,thin] (1.15,-0.02)--(1.15,-0.38);
+    \draw[<->,thin] (.75,-0.02)--(.75,-0.38);
     \draw[<->,thin] (-1.35,-0.02)--(-1.35,-1.78);
-    \node[font=\footnotesize] at (0,-2.8){下半平面 = 开放/有损共振};
+    \node[font=\footnotesize] at (0,-3.65){下半平面 = 开放/有损共振};
   \end{tikzpicture}
   \caption{复频率平面示意。被动开放系统的共振模位于下半平面（$\gamma>0$），距实轴越近表示 $Q$ 越高。连续谱束缚态理想地处于实轴上（$\gamma=0$），准连续谱束缚态则刚刚离开实轴。}
   \label{fig:complex-freq-plane}
@@ -166,28 +179,38 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 在无损、无色散、封闭边界条件下，Maxwell 本征问题可以写成自伴形式，因此本征频率为实数。
 \end{proposition}
 \begin{proof}[教学化证明思路]
-对两个试探场 $\E_1,\E_2$，构造加权内积
+更稳妥的写法是把 Maxwell 方程视为广义本征值问题
+\begin{equation}
+A\E=\lambda B\E,
+\qquad
+A=\nabla\times\mu_r^{-1}\nabla\times,
+\quad B=\varepsilon_r,
+\quad \lambda=\left(\frac{\omega}{c}\right)^2.
+\label{eq:maxwell-generalized-hermitian}
+\end{equation}
+这里 $A$ 与 $B$ 的 Hermitian 性先在普通 $L^2$ 内积
+$\langle\E_1,\E_2\rangle=\int_V\E_1^*\cdot\E_2\,\dd V$ 下判断。利用向量恒等式对旋度做分部积分，得到
 \[
-\langle \E_1,\E_2\rangle_\varepsilon=\int_V \varepsilon_r(\rvec)\E_1^\ast\cdot\E_2\,\dd V.
-\]
-在上述约束子空间内，下面只抓住对“为什么封闭无损时频率为实数”关键的一步：旋度项在该加权内积下可通过分部积分变成对称形式。利用向量恒等式 $\nabla\cdot(\bm{A}\times\bm{B})=\bm{B}\cdot(\nabla\times\bm{A})-\bm{A}\cdot(\nabla\times\bm{B})$ 对旋度做分部积分，可以把作用在 $\E_2$ 上的旋度“转移”到 $\E_1$ 上：
-\[
-\int_V \E_1^\ast\cdot(\nabla\times\nabla\times \E_2)\,\dd V
+\int_V \E_1^\ast\cdot\bigl(\nabla\times\mu_r^{-1}\nabla\times \E_2\bigr)\,\dd V
 =
-\int_V (\nabla\times\E_1)^\ast\cdot(\nabla\times \E_2)\,\dd V
--\oint_{\partial V}(\E_1^\ast\times\nabla\times\E_2)\cdot\hat{\bm n}\,\dd S.
+\int_V (\nabla\times\E_1)^\ast\cdot\mu_r^{-1}(\nabla\times \E_2)\,\dd V
+-\oint_{\partial V}\bigl[\E_1^\ast\times\mu_r^{-1}(\nabla\times\E_2)\bigr]\cdot\hat{\bm n}\,\dd S.
 \]
 若边界为理想导体（PEC），则在边界上 $\hat{\bm n}\times\E=\bm{0}$，表面积分项为零；若为周期边界，相对两侧的法向相反且场值满足 Bloch 条件，表面项成对抵消。更具体地，在两侧边界 $\rvec$ 与 $\rvec+\bm{R}$ 上有
 \[
 \E(\rvec+\bm{R})=\E(\rvec)\ee^{\ii\kvec\cdot\bm{R}},
 \]
-表面积分的相位因子与法向翻转带来的负号相抵，因而相消。这一步只在 $\kvec$ 为实向量时成立；若 $\kvec$ 取复值（表示面内衰减），表面积分不再严格抵消，算符也不再严格自伴。对调 $\E_1$ 和 $\E_2$ 后结果不变，于是
-\[
-\langle \E_1,\hat{\mathcal L}\E_2\rangle_\varepsilon=\langle \hat{\mathcal L}\E_1,\E_2\rangle_\varepsilon,
-\]
-这也是自伴性的定义。自伴算符的本征值必为实数。
+表面积分的相位因子与法向翻转带来的负号相抵，因而相消。这一步只在 $\kvec$ 为实向量时成立；若 $\kvec$ 取复值（表示面内衰减），表面项一般不再抵消。对无损介质，$\mu_r$ 与 $\varepsilon_r$ 为正实 Hermitian 张量，因此 $A$ 与 $B$ 都是 Hermitian，且 $B$ 正定。于是
+\begin{equation}
+\lambda
+=
+\frac{\langle\E,A\E\rangle}{\langle\E,B\E\rangle}
+\in\mathbb{R}_{\ge0},
+\label{eq:maxwell-rayleigh-quotient}
+\end{equation}
+从而 $\omega$ 可取实数。等价地，也可以用 $B^{-1/2}AB^{-1/2}$ 把它变成普通 Hermitian 本征问题。需要注意：这里证明的是广义本征对 $(A,B)$ 的 Hermitian 结构，并没有证明旋度算符在 $\varepsilon$ 加权内积下直接自伴。
 
-但对开放辐射边界，$\partial V$ 延伸到无穷远，出射波携带能量使表面积分不为零且不对称，算符不再自伴。本征频率必须取复数 $\tilde{\omega}=\omega_0-\ii\gamma$，其中 $\gamma>0$ 直接编码能量向外辐射的速率。
+但对开放辐射边界，$\partial V$ 延伸到无穷远，出射波携带能量使表面积分不为零且不对称，算符不再自伴。本征频率必须取复数 $\tilde{\omega}=\omega_0-\ii\gamma$，其中 $\gamma>0$ 是场振幅衰减率，储能衰减率为 $2\gamma$。
 \end{proof}
 
 \section{开放 Maxwell 问题的函数空间直觉：为什么它不再是普通闭腔本征值问题}
@@ -223,7 +246,14 @@ Q=\frac{\omega_0}{2\gamma}\quad\Rightarrow\quad \frac{\gamma}{\omega_0}=\frac{1}
 \lim_{r\to\infty} r\left(\frac{\partial E}{\partial r}-\ii k_0 E\right)=0,
 \label{eq:qnm_radiation_bc}
 \end{equation}
-表示无穷远处只有向外传播分量，没有向内入射分量。这与束缚态要求的 $E\to 0$（$r\to\infty$）完全不同；正因为 $\tilde{\omega}$ 的虚部存在，QNM 在空间上可指数增长，导致其 $L^2$ 范数发散。数值计算中采用 PML，正是将这一出射条件以可计算的方式实现。这里上标 $\mathrm{R}$ 表示右模（right mode），是为了和后面会出现的伴随模区分。对应的复频率 $\tilde{\omega}_n$ 可等价地理解为 Green 张量或散射矩阵的极点位置；也就是说，开放系统的模不是先于散射存在的独立对象，而正是散射响应在复频率平面上的结构化奇点 \cite{fan2002guided,sauvan2013qnm,alpeggiani2017qnm}。
+表示无穷远处只有向外传播分量，没有向内入射分量。这与束缚态要求的
+$E\to 0$（$r\to\infty$）完全不同；正因为 $\tilde{\omega}$ 的虚部存在，
+QNM 在空间上可指数增长，导致其 $L^2$ 范数发散。数值计算中采用 PML，
+正是将这一出射条件以可计算的方式实现。这里上标 $\mathrm{R}$ 表示右模（right mode），
+是为了和后面会出现的伴随模区分。对应的复频率 $\tilde{\omega}_n$
+可等价地理解为 Green 张量或散射矩阵的极点位置；也就是说，开放系统的模
+不是先于散射存在的独立对象，而正是散射响应在复频率平面上的结构化奇点
+\cite{fan2002guided,sauvan2013qnm,alpeggiani2017qnm}。
 
 这个定义已经足够支撑本书后面的物理主线。它告诉我们：
 \begin{itemize}
@@ -289,7 +319,7 @@ Q=\frac{\omega_0}{2\gamma}=\omega_0\tau_p.
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch03_boundary_conditions.tex}
-  \caption{开放边界条件的数值实现方式对比。(a)辐射边界条件：在计算域边界施加出射波条件，要求波只能向外传播；(b)完全匹配层（PML）：通过在边界处引入复坐标延拓使外向波指数衰减，理想情况下无反射；(c) 周期性边界条件：利用Bloch 定理将无限周期结构约化到单个原胞；(d) 边界条件选择指南：根据问题类型（本征模、散射、周期结构）选择合适的边界条件组合。注意 PML并非物理实体，而是将无限空间折叠进有限计算域的数学技巧。}
+  \caption{三类常用边界机制及其组合规则。(a) 出射辐射边界直接施加外向波条件；(b) PML 通过复坐标延拓衰减外向波；(c) Bloch 边界把无限周期结构约化为单胞。底部选择条强调：周期性与开放性属于两个不同方向上的问题，常需组合使用，并分别做相位与边界收敛检查。}
   \label{fig:ch03_boundary_conditions}
 \end{figure}
 

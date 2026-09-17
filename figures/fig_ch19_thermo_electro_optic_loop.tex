@@ -1,47 +1,43 @@
 % !TEX root = ../main.tex
-% Figure: Thermal-electro-optic coupling workflow
-% Chapter: ch19 - Thermal and Electro-Optic Coupling Effects
-% Description: Flowchart showing coupled physics in PCSEL operation
-
+% Three-domain coupling with all feedback routed outside the cards.
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[
-    box/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=2.5cm, minimum height=1cm, align=center},
-    arrow/.style={->, >=stealth, thick}
-  ]
-    % Main boxes
-    \node[box=blue] (electrical) at (0,6) {电学注入\\$J(V,n,p,T)$};
-    \node[box=red] (thermal) at (4,4) {热传导\\$\nabla\cdot(k\nabla T)+Q_{\mathrm{heat}}=0$};
-    \node[box=green] (optical) at (-4,4) {光学谐振\\麦克斯韦方程组};
-    \node[box=yellow] (gain) at (0,2) {增益介质\\$g(n,T,\lambda)$};
-    
-    % Arrows with labels
-    \draw[arrow, blue] (electrical) -- node[right, align=left, font=\small] {焦耳热\\$J\cdot E$} (thermal);
-    \draw[arrow, red] (thermal) -- node[above, font=\small] {$T$升高} (gain);
-    \draw[arrow, green] (optical) -- node[left, align=right, font=\small] {受激发射\\光子产生} (gain);
-    \draw[arrow, yellow] (gain) |- node[pos=0.75,below, font=\small] {载流子消耗} (electrical);
-    \draw[arrow, red] (thermal.west) .. controls (-2,4) and (-2,2) .. node[pos=0.3,left, align=right, font=\small] {折射率变化\\$dn/dT$} (optical.south);
-    \draw[arrow, red] (thermal.east) .. controls (6,4) and (6,2) .. (gain.east);
-    \node[right, font=\small, align=left] at (6.2,3) {带隙收缩\\$dE_g/dT$\\迁移率下降};
-    
-    % Feedback loops
-    \draw[arrow, dashed, purple] (optical.north) .. controls (-2,5) and (-2,5.5) .. node[pos=0.5,above, font=\small] {模式竞争} (electrical.west);
-    \draw[arrow, dashed, orange] (gain) -- node[right, font=\small] {光谱烧孔} (thermal);
-    
-    % Time scales annotation
-    \node[below, align=center, font=\footnotesize] at (0,0.5) {特征时间尺度:\\电学 $\tau_e \sim \mathrm{ns}$ | 热学 $\tau_{th} \sim \mu\mathrm{s}$--$\mathrm{ms}$ | 光学 $\tau_o \sim \mathrm{ps}$};
-    
-    % Boundary conditions
-    \draw[arrow, dashed, purple] (optical.north) .. controls (-2,5) and (-2,5.5) .. node[pos=0.5,above, font=\small] {模式竞争} (electrical.west);
-    \draw[arrow, dashed, orange] (gain) -- node[right, font=\small] {光谱烧孔} (thermal);
-    
-    % Time scales annotation
-    \node[below, align=center, font=\footnotesize] at (0,0.5) {特征时间尺度:\\电学 $\tau_e \sim \mathrm{ns}$ | 热学 $\tau_{th} \sim \mu\mathrm{s}$--$\mathrm{ms}$ | 光学 $\tau_o \sim \mathrm{ps}$};
-    
-    % Boundary conditions
-    \node[draw, dashed, minimum width=10cm, minimum height=7cm, label={[anchor=north east]north east:边界条件}] at (0,3.5) {};
-    \node[align=left, font=\small] at (-5,0) {散热路径:\\对流$h(T-T_\infty)$\\导热$k\partial_n T$\\辐射$\epsilon\sigma T^4$};
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+    \tikzset{
+      domain/.style={draw=#1!70!black,very thick,rounded corners=5pt,fill=#1!10,
+        minimum width=3.45cm,minimum height=1.55cm,align=center},
+      interface/.style={font=\footnotesize,fill=white,inner sep=2.5pt,align=center}
+    }
+
+    \node[domain=blue] (elec) at (-4.2,1.55)
+      {电学与注入\\$J,\ n,\ p,\ \mu,\rho_c$};
+    \node[domain=red] (therm) at (0,1.55)
+      {热传导\\$\nabla\!\cdot(k\nabla T)+Q_{\rm heat}=0$};
+    \node[domain=green] (optic) at (4.2,1.55)
+      {光学与增益\\$n(T),\ g(N,T),\ \alpha(T)$};
+
+    \draw[->,very thick,orange!85!black] (elec.east)--(therm.west)
+      node[interface,midway,above] {焦耳热、复合热\\$Q_{\rm heat}$};
+    \draw[->,very thick,red!75!black] (therm.east)--(optic.west)
+      node[interface,midway,above] {温度场回写\\$\Delta n,\Delta g,\Delta\alpha$};
+
+    % Outer return path: no arrow crosses any card.
+    \draw[->,very thick,blue!70!black,rounded corners=8pt]
+      (optic.south) -- (4.2,-0.45) -- (-4.2,-0.45) -- (elec.south)
+      node[interface,pos=0.48,below] {受激复合与吸收改变载流子、功率和热源};
+
+    \node[draw=gray!55,rounded corners,fill=gray!5,align=center,font=\footnotesize,
+      minimum width=11.5cm,minimum height=0.85cm] at (0,-1.65)
+      {时间尺度分离：光学 $\tau_o\sim\mathrm{ps}$\quad
+       电学 $\tau_e\sim\mathrm{ns}$\quad
+       热学 $\tau_{\rm th}\sim\mu\mathrm{s}$--$\mathrm{ms}$};
+
+    \node[font=\footnotesize,align=center,text width=12cm] at (0,-2.65)
+      {求解目标不是依次“跑完三个模块”，而是寻找三者接口量同时收敛的工作点。};
   \end{tikzpicture}
-  \caption{PCSEL中的热电光多物理场耦合工作流程。电学注入产生焦耳热（红色箭头），导致温度上升；温升引起材料参数变化（带隙收缩、折射率改变、迁移率下降），进而影响增益谱和光学模式特性（绿色框）；光学场的变化反过来通过受激发射速率调制载流子浓度，形成闭环反馈。这种强非线性耦合导致了复杂的动态行为，如弛豫振荡、自脉动、甚至混沌。理解各物理过程的特征时间尺度（电学 ns级、热学μs-ms级、光学 ps级）对于设计稳定的单模激光器至关重要。虚线表示次级效应：模式竞争和光谱烧孔。}
+  \caption{PCSEL 的热--电--光闭环。电学模块向热学模块提供焦耳热和复合热；
+  温度场通过折射率、增益、吸收和迁移率回写光学与电学参数；
+  受激复合与吸收又改变载流子分布、输出功率和热源。箭头均表示模块间传递的接口量，
+  不表示三个物理过程具有相同时间尺度。}
   \label{fig:ch19_thermo_electro_optic_loop}
 \end{figure}

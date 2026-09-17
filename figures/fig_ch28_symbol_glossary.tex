@@ -4,7 +4,7 @@
       scale=0.82,
       transform shape,
       category/.style={rectangle, draw, rounded corners, fill=#1!20, minimum width=3.6cm, minimum height=0.85cm, align=center, font=\small},
-      subcat/.style={rectangle, draw, dashed, fill=#1!10, minimum width=2.7cm, minimum height=0.65cm, align=center, font=\footnotesize},
+      subcat/.style={rectangle, draw, dashed, fill=#1!10, minimum width=2.05cm, minimum height=0.65cm, align=center, font=\footnotesize},
       detail/.style={rectangle, draw, align=left, fill=white, text width=3.95cm, minimum height=1.7cm, font=\scriptsize, inner sep=4pt},
       wide/.style={rectangle, draw, rounded corners, align=left, fill=#1!8, text width=5.7cm, font=\scriptsize, inner sep=4pt},
       arrow/.style={->, >=stealth, thick}
@@ -13,12 +13,12 @@
     \node[category=green] (materials) at (0,5.0) {材料与几何参数\\折射率、尺寸、填充};
     \node[category=orange] (numerics) at (5.1,5.0) {数值计算量\\离散步长、算符、本征值};
 
-    \node[subcat=blue] (fields) at (-6.0,3.75) {电磁场\\$\mathbf{E},\mathbf{H},\mathbf{D},\mathbf{B}$};
-    \node[subcat=blue] (waves) at (-4.2,3.75) {波动参数\\$\mathbf{k},\omega,\lambda,\beta$};
-    \node[subcat=green] (optic) at (-0.9,3.75) {光学常数\\$n,n_g,\varepsilon,\chi^{(3)}$};
-    \node[subcat=green] (geo) at (0.9,3.75) {几何尺寸\\$a,h,r,f,w,\Lambda$};
-    \node[subcat=orange] (disc) at (4.2,3.75) {离散参数\\$N_x,N_t,\Delta x,\Delta t$};
-    \node[subcat=orange] (ops) at (6.0,3.75) {算符与谱量\\$\hat{\Theta},\nabla\times,\lambda_n$};
+    \node[subcat=blue] (fields) at (-6.25,3.75) {电磁场\\$\mathbf{E},\mathbf{H},\mathbf{D},\mathbf{B}$};
+    \node[subcat=blue] (waves) at (-3.95,3.75) {波动参数\\$\mathbf{k},\omega,\lambda,\beta$};
+    \node[subcat=green] (optic) at (-1.15,3.75) {光学常数\\$n,n_g,\varepsilon,\chi^{(3)}$};
+    \node[subcat=green] (geo) at (1.15,3.75) {几何尺寸\\$a,h,r,f,w,\Lambda$};
+    \node[subcat=orange] (disc) at (3.95,3.75) {离散参数\\$N_x,N_t,\Delta x,\Delta t$};
+    \node[subcat=orange] (ops) at (6.25,3.75) {算符与谱量\\$\hat{\Theta},\nabla\times,\lambda_n$};
 
     \foreach \src/\dst in {physics/fields,physics/waves,materials/optic,materials/geo,numerics/disc,numerics/ops}
       \draw[arrow] (\src) -- (\dst);
@@ -46,7 +46,7 @@
 
     \node[wide=blue] at (-3.15,-0.25) {
       \textbf{常用希腊字母}\\
-      $\alpha$: 损耗系数；$\gamma$: 约束因子；$\Gamma$: 光学限制因子\\
+      $\alpha$: 损耗系数；$\gamma$: 振幅衰减率；$\Gamma$: 光学限制因子\\
       $\kappa$: 耦合系数；$\eta$: 效率；$\lambda$: 真空波长；$\omega$: 角频率
     };
 
@@ -56,7 +56,7 @@
       CMT: 耦合模理论；PWE/FDTD/FEM: 常用数值求解方法
     };
 
-    \node[rectangle, draw, dashed, rounded corners, align=center, fill=gray!5, text width=6.9cm, font=\scriptsize, inner sep=4pt] at (0,-2.25) {
+    \node[rectangle, draw, dashed, rounded corners, align=center, fill=gray!5, text width=6.9cm, font=\scriptsize, inner sep=4pt] at (0,-2.75) {
       \textbf{量纲一致性检查}\\
       所有物理方程都应满足左右两侧量纲相同、求和项量纲一致。\\
       例：$\nabla\times\mathbf{E}$ 的单位为 $\mathrm{V/m^2}$。

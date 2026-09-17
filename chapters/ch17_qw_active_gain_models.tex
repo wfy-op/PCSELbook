@@ -36,7 +36,16 @@ g_{\mathrm{mat}}=g_{\mathrm{mat}}(\omega,N,T).
 \section{SQW 与 MQW：不是多放几层阱这么简单}
 最直观的设计分支是单量子阱（single quantum well, SQW）和多量子阱（multiple quantum wells, MQW）。如果只看材料增益的峰值，似乎多量子阱总更有利，因为总有源体积更大；但真实 PCSEL 设计必须同时看四个量：总可用增益、载流子在各阱之间的分配均匀性、应变累积以及与纵向模剖面的重叠。
 
-为了帮助读者直观理解应变量子阱中的能带结构及其对偏振特性的影响，\cref{fig:ch17_qw_band_diagram}展示了一个典型的 InGaAs/GaAs 压应变量子阱示意。图中显示三个关键特征：第一，导带电子的抛物线型能带色散关系 $E_c(z)$；第二，价带中重空穴带（HH,$E_{\mathrm{HH}}$）和轻空穴带（LH, $E_{\mathrm{LH}}$）在应变作用下发生分裂 $\delta E_{\mathrm{strain}}$；第三，量子化能级 $E_{c1}$、$E_{hh1}$、$E_{lh1}$ 及其包络波函数分布。对常见 (001) 压应变 InGaAs/GaAs 量子阱，HH 带上移后 C1-HH1 跃迁通常增强平面内偶极分量，因此更有利于 TE 增益而非 TM 增益；张应变情形才可能提升 TM 分量\cite{coldren2012,ahn1995strained,nicholes2008strainedmqw}。图中的虚线框出了量子阱区域（宽度常见为数纳米到十纳米量级，具体取决于材料体系与应变预算），两侧为 AlGaAs 或 GaAsP 势垒层。
+为了直观说明应变量子阱的能带结构及其偏振选择性，
+\cref{fig:ch17_qw_band_diagram}画出了典型的 InGaAs/\allowbreak GaAs 压应变量子阱。
+图中包含三个要点：导带电子的抛物线型色散 $E_c(z)$；
+重空穴带（HH，$E_{\mathrm{HH}}$）与轻空穴带（LH，$E_{\mathrm{LH}}$）
+在应变作用下产生的分裂 $\delta E_{\mathrm{strain}}$；以及量子化能级
+$E_{c1}$、$E_{hh1}$、$E_{lh1}$ 及其包络波函数。
+对常见 (001) 压应变 InGaAs/GaAs 量子阱，HH 带上移后，C1--HH1 跃迁通常
+增强平面内偶极分量，因此更有利于 TE 增益；张应变则可能提升 TM 分量
+\cite{coldren2012,ahn1995strained,nicholes2008strainedmqw}。
+图中虚线框为量子阱区域，其宽度由材料体系和应变预算决定；两侧为 AlGaAs 或 GaAsP 势垒层。
 
 \begin{figure}[htbp]
   \centering
@@ -84,7 +93,14 @@ g_{\mathrm{pk}}(N,T)
 -a_{\lambda}(N,T)\,\Delta\lambda^2.
 \label{eq:gain_detuning_parabolic}
 \end{equation}
-\cref{eq:gain_detuning_parabolic} 是教材化的最小代理模型（其中 $a_{\lambda}$ 的量纲为 $\mathrm{cm}^{-1}\mathrm{nm}^{-2}$，确保量纲与增益一致），而非通用材料定律。其适用窗口必须绑定材料平台与工作波段：以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，增益谱半高宽常见于 $20$--$30\,\mathrm{nm}$ 量级，抛物线近似在峰值附近 $|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 常可用于一阶估算\cite{wang2024,zhou2024nside1550pcsel}；对 GaN/深紫外等平台，谱形与展宽机制差异更大，应重新标定窗口而非平移复用该区间\cite{coldren2012,lu2025deepuvpcsel}。它的作用是把“模式波长是否压在增益峰上”这件事，直接写成可计算的阈值链一环。
+\cref{eq:gain_detuning_parabolic} 是教材化的最小代理模型，而非通用材料定律；
+其中 $a_{\lambda}$ 的量纲为 $\mathrm{cm}^{-1}\mathrm{nm}^{-2}$，以保证量纲与增益一致。
+其适用窗口必须绑定材料平台与工作波段。以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，
+增益谱半高宽常见于 $20$--$30\,\mathrm{nm}$ 量级，抛物线近似在峰值附近
+$|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 可用于一阶估算
+\cite{wang2024,zhou2024nside1550pcsel}。对 GaN/深紫外等平台，谱形与展宽机制差异更大，
+应重新标定窗口，而不能平移复用这一范围\cite{coldren2012,lu2025deepuvpcsel}。
+这个代理模型的作用，是把“模式波长是否落在增益峰附近”写成阈值链中的可计算量。
 
 \section{2024--2026 前沿补充：跨材料平台增益窗口不可直接平移}
 最新器件结果进一步强调了“平台绑定”的必要性：可见光 GaN-PCSEL、1.55~$\mu$m InP-PCSEL 与深紫外 PCSEL 的增益谱宽、温漂和可用工作窗口并不共享同一组经验常数\cite{taguchi2024greenpcsel,aoki2024stable1550pcsel,lu2025deepuvpcsel}。因此，本章所有失谐、增益窗口与阈值裕量参数，都应写成“平台 + 温区 + 注入条件”三元条件化形式。
@@ -148,8 +164,7 @@ g_{m,\mathrm{mod}}
 \eta_{m,\mathrm{TE}}g_{\mathrm{mat,TE}}
 +
 \eta_{m,\mathrm{TM}}g_{\mathrm{mat,TM}}
-\right]
--\alpha_{m,\mathrm{int}}.
+\right].
 \label{eq:gmod_pol_weighted}
 \end{equation}
 \cref{eq:gmod_pol_weighted} 明确表明：即使冷腔更偏好某一支偏振家族，若有源区的 TE/TM 增益分裂朝着相反方向偏置，真正的激射模排序仍可能被重新洗牌。
@@ -184,7 +199,10 @@ g_{\mathrm{mat}}(\lambda_m,N,T)
 \rightarrow
 g_{\mathrm{mod}}
 \rightarrow
-g_{\mathrm{th}}.
+g_{\mathrm{net}}
+\quad\text{并与}\quad
+g_{\mathrm{mod,th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}
+\quad\text{比较}.
 \label{eq:gain_chain_compact}
 \end{equation}
 只有沿着这条链逐层下去，读者才不会把“材料增益峰更高”误当成“目标模式阈值一定更低”。
@@ -194,12 +212,10 @@ g_{\mathrm{th}}.
  g_{\mathrm{mod}}
  =
  \frac{\int_{V_{\mathrm{QW}}} g_{\mathrm{mat}}(\rvec)\,\varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}
- {\int_V \varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}
- -
- \alpha_{\mathrm{int}}.
+ {\int_V \varepsilon(\rvec)|\E(\rvec)|^2\,\dd V}.
 \label{eq:gmod_spatial}
 \end{equation}
-这条式子已经提前把 \cref{ch:electrical} 的注入非均匀性引进来了：同一个 MQW 结构，若电子泄漏或空穴分布不均导致各阱填充不同，最终参与模式竞争的并非某条理想均匀材料增益曲线，而是一个被器件输运重新加权后的局域增益场。
+这条式子给出的是\textbf{未扣除损耗的毛模增益}。净模增益另定义为 $g_{\mathrm{net}}=g_{\mathrm{mod}}-\alpha_{\mathrm{int}}-\alpha_{\mathrm{rad}}$；不能一边把 $\alpha_{\mathrm{int}}$ 藏进“模增益”，一边又在阈值条件中重复扣除。该式也提前把 \cref{ch:electrical} 的注入非均匀性引进来了：同一个 MQW 结构，若电子泄漏或空穴分布不均导致各阱填充不同，最终参与模式竞争的并非某条理想均匀材料增益曲线，而是一个被器件输运重新加权后的局域增益场。
 
 \section{透明载流子密度、微分增益和工作点灵敏度}
 在器件教材里，透明载流子密度 $N_{\mathrm{tr}}$ 与阈值载流子密度 $N_{\mathrm{th}}$ 必须严格区分。$N_{\mathrm{tr}}$ 对应材料净增益刚好为零的状态；而 PCSEL 真正达到阈值时，需要的是模增益补偿 \cref{ch:threshold} 已经定义的总损耗，因此 $N_{\mathrm{th}}$ 通常显著高于 $N_{\mathrm{tr}}$。对 GaAs/InGaAs 量子阱体系，若把它粗略换算成三维等效载流子密度，$N_{\mathrm{tr}}$ 常落在 $10^{18}\,\mathrm{cm}^{-3}$ 量级。混淆透明与阈值载流子密度，会系统性低估器件级注入需求。
@@ -214,9 +230,10 @@ g_{\mathrm{th}}.
 把上一章的阈值条件接回来，最小阈值载流子估计可写成
 \begin{equation}
 \Gamma_{\mathrm{opt}}\,g_{\mathrm{mat}}(\omega_m,N_{\mathrm{th}},T_{\mathrm{th}})
--\alpha_{\mathrm{int}}(N_{\mathrm{th}},T_{\mathrm{th}})
 =
-g_{\mathrm{th},m},
+g_{\mathrm{mod,th},m}
+=
+\alpha_{\mathrm{int},m}(N_{\mathrm{th}},T_{\mathrm{th}})+\alpha_{\mathrm{rad},m},
 \label{eq:nth_from_gain}
 \end{equation}
 而在阈值附近做一阶展开时，
@@ -254,7 +271,7 @@ g_N\,\delta N
 \bigl[\text{阱宽、势垒、应变、阻挡层}\bigr]
 &\rightarrow g_{\mathrm{mat}}(\omega,N,T) \\
 &\rightarrow g_{\mathrm{mod}}(\omega,N,T) \\
-&\rightarrow g_{\mathrm{th}}
+&\rightarrow g_{\mathrm{net}}(\omega,N,T)=0
 \rightarrow N_{\mathrm{th}}.
 \end{aligned}
 \label{eq:symbol_chain_gain}
@@ -296,9 +313,9 @@ PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线�
 =
 \underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{第 3--8 章}}
 =
-\frac{\omega_0}{2Q\,v_{g,m}}
+\frac{\omega_0}{Q\,v_{\mathrm{en},m}}
 =
-\frac{n_{g,m}\omega_0}{2Qc}
+\frac{\omega_0}{Q}\frac{U_m}{P_{\mathrm{flow},m}}
 \]
 
 这个等式的深刻含义是：\textbf{阈值载流子浓度}$N_\text{th}$\textbf{是冷腔品质因数$Q$的函数}，而非一个孤立的材料参数。高$Q$模式（如 BIC 或 quasi-BIC）之所以重要，正是因为它们降低了$\alpha_\text{rad}$，从而降低了对$g_\text{mod}$的需求，进而降低了$N_\text{th}$。

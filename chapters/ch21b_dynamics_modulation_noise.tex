@@ -2,34 +2,19 @@
 \chapter{动态学、调制与噪声}
 \label{ch:dynamics}
 
-本章关注 PCSEL 在高速调制下的动态行为及其在实际应用中的表现。我们将重点讨论两个核心问题：第一，小信号调制响应的物理机制和带宽限制因素；第二，相对强度噪声（RIN）等噪声动力学的特性和抑制思路。这些内容对于设计用于光通信、激光雷达和传感系统的 PCSEL 至关重要。
+给阈上器件一个电流阶跃，载流子先上升，光子数随后追赶；受激辐射又抽空载流子，于是系统可能振铃后才到达新稳态。这个载流子--光子反馈同时决定小信号带宽、过冲、模式竞争和强度噪声，是静态阈值条件无法回答的部分。
 
-为了帮助读者直观理解 PCSEL 的小信号调制响应特性，\cref{fig:ch21b_modulation_response}展示了不同偏置电流条件下的示意响应曲线。图中三条曲线对应 $I/I_{th}=1.5$（蓝色）、$2.5$（红色）和 $4.0$（绿色）。这里的 GHz 数值与“最优偏置区间”应读作\textbf{[教学示意]}，不是跨结构普适常数：弛豫振荡频率与带宽会随孔阵尺寸、寄生电容、热阻和封装条件显著变化\cite{coldren2012,itoh2020}。更稳妥的结论是：偏置升高通常推动 $f_R$ 上移并改变阻尼，但工程最优点必须在给定器件和热窗口下通过实测或标定模型确定。
+\cref{fig:ch21b_modulation_response}给出三个偏置点下的归一化小信号响应\textbf{[教学示意]}。曲线只表达“偏置改变弛豫频率与阻尼”这一趋势；横轴上的 GHz 数值不是 PCSEL 的通用指标。实际带宽还受孔阵尺寸、寄生电容、热阻和封装条件制约，必须在具体器件上由实测或标定模型确定\cite{coldren2012,itoh2020}。
 
 \input{figures/fig_ch21b_modulation_response}
 
-\paragraph{读完本章，你应能}
-\begin{itemize}
-  \item 从阈值条件出发建立 PCSEL 的最小动态学语言，理解载流子、光子数、增益压缩和模式竞争如何共同决定工作稳定性。
-  \item 掌握弛豫振荡、小信号调制和线宽来源之间的逻辑链，而不是把它们割裂成不同专题。
-  \item 明确哪些动态结论可以由确定性多物理场模型支撑，哪些结论必须进一步引入降阶噪声模型或实验闭环。
-\end{itemize}
-
 \paragraph{读前准备}
 建议已掌握 \cref{ch:threshold,ch:electrical,ch:eto-coupling,ch:robustness} 中关于阈值、有效模增益、电注入分布和热反馈的内容。
-
-\paragraph{阅读主线}
-\ChapterModelLevel{L4}
-前面的章节已经把 PCSEL 的静态链条搭了起来：模式、阈值增益、阈值电流来源以及热-电-光工作窗口都已经出现。接下来必须补上的，是“过了阈值以后会怎样”。本章先从单模速率方程出发，建立最小动态学骨架；再把增益压缩、模竞争和热时间尺度纳入，说明为什么真实器件的稳定工作从来不是一句“高于阈值即可”这么简单；随后讨论小信号调制和弛豫振荡；最后把相位噪声、线宽增强因子与线宽来源串起来，明确哪些量可以从建模中直接得到，哪些量还需要实验和降阶噪声模型闭环。
 
 \section{为什么“跨过阈值”只是动态学的起点}
 \cref{ch:threshold} 给出的阈值条件，本质上是线性起振判据：目标模的净增益刚好补偿总损耗。但激光器一旦进入起振以上区域，问题马上变成一个动态平衡问题。载流子继续被注入，光子数增长，受激辐射开始反过来抽空载流子，温升又在更慢时间尺度上改变增益谱和损耗分布。于是，“器件能亮”并不等于“器件稳定、单模、低噪声”。
 
 对 PCSEL 来说，这个提醒尤其必要。因为它往往具有较大横向面积、多个接近的候选模、可工程化的偏振支路以及显著的热-电-光回写。只要其中任一支路在工作过程中失去净优势，器件表现就可能从“窄远场、单偏振、相对稳定”转为“远场变宽、偏振波动、模式跳变明显”。因此，本章讨论动态学，是为了说明\textbf{为什么 PCSEL 的器件工作窗口必须用动态语言来定义}。
-
-\begin{IntuitionBox}
-阈值只回答“哪一支模最先有资格起振”，动态学回答的则是“起振以后这支模能不能继续站住、能站多稳、对外界看起来有多干净”。
-\end{IntuitionBox}
 
 \section{最小单模速率方程：把阈值语言延伸到起振以上}
 在最小单模、等效均匀有源区的近似下，可用载流子密度 $N$ 与光子密度 $S$ 写出一组真正可计算的最小速率方程
@@ -38,12 +23,12 @@
 &=
 \frac{\eta_{\mathrm{inj}} I}{q V_{\mathrm{act}}}
 - R(N,T)
-- \Gamma v_g g(N,T) S,
+  - \Gamma v_{\mathrm{en}} g(N,T) S,
 \label{eq:rate_N}
 \\
 \frac{\dd S}{\dd t}
 &=
-\left[\Gamma v_g g(N,T)-\frac{1}{\tau_p}\right]S
+  \left[\Gamma v_{\mathrm{en}} g(N,T)-\frac{1}{\tau_p}\right]S
 + \Gamma\beta_{\mathrm{sp}} R_{\mathrm{sp}}(N,T).
 \label{eq:rate_S}
 \end{align}
@@ -54,9 +39,19 @@ g(N,T,S)
 \frac{g_0\!\left(N-N_{\mathrm{tr}}\right)}{1+\varepsilon_g S},
 \label{eq:gain_compression_dynamic}
 \end{equation}
-这里 $R(N,T)$ 是总复合率，$\Gamma$ 是目标模约束因子，$v_g$ 是群速度，$\tau_p$ 是光子寿命，$\beta_{\mathrm{sp}}$ 是自发辐射耦合因子，$\varepsilon_g$ 是增益压缩系数。对量子阱半导体激光器，$\varepsilon_g$ 常见于 $10^{-17}$--$10^{-16}\,\mathrm{cm}^3$ 量级；但在 PCSEL 里它应被视为\textbf{平台与工作点相关的拟合参数}，需绑定波段、孔阵尺度、寄生电容与热边界联合标定\cite{coldren2012,itoh2020,inoue2025fmpcsel}。因此本书仅将该区间作为\textbf{[工程经验]}敏感度扫描初值，而不作为“PCSEL 固定常数”。只要把稳态条件 $\dd N/\dd t=\dd S/\dd t=0$ 代入，\cref{eq:rate_S} 就会回到 \cref{ch:threshold} 的阈值形式；但一旦允许时间变化，它们便开始描述开机瞬态、工作点回稳以及小扰动响应。
+这里 $R(N,T)$ 是总复合率，$\Gamma$ 是目标模约束因子，$v_{\mathrm{en}}$
+是把空间增益映射为时间增长率的等效能量速度，$\tau_p$ 是光子寿命，
+$\beta_{\mathrm{sp}}$ 是自发辐射耦合因子，$\varepsilon_g$ 是增益压缩系数。
+对量子阱半导体激光器，$\varepsilon_g$ 常见于 $10^{-17}$--$10^{-16}\,\mathrm{cm}^3$ 量级；
+但在 PCSEL 中，它应被视为\textbf{平台与工作点相关的拟合参数}，
+需结合波段、孔阵尺度、寄生电容与热边界联合标定
+\cite{coldren2012,itoh2020,inoue2025fmpcsel}。因此本书只把该区间作为
+\textbf{[工程经验]}敏感度扫描的初值，而不把它当作“PCSEL 固定常数”。
+把稳态条件 $\dd N/\dd t=\dd S/\dd t=0$ 代入时，
+\cref{eq:rate_S} 回到 \cref{ch:threshold} 的阈值形式；允许时间变化后，
+这组方程才描述开机瞬态、工作点回稳和小扰动响应。
 
-\cref{eq:rate_N,eq:rate_S} 中的 $v_g$ 必须读成\textbf{速率方程中的等效光子-增益转换参数}，而不能机械理解成“PWEM 带图在 $\Gamma$ 点的 Bloch 群速度”。对 PCSEL 的 standing-wave / $\Gamma$ 点模式来说，带图上的群速度趋零与速率方程里仍可出现一个有限的等效增益转换系数，并不矛盾，因为两者服务的是不同层级的降阶描述。
+\cref{eq:rate_N,eq:rate_S} 中的 $v_{\mathrm{en}}$ 不是 PWEM 带图在 $\Gamma$ 点的 Bloch 群速度。前者是速率方程的能量输运参数，后者是色散导数；对驻波型 $\Gamma$ 点模式，二者不能互相替代。
 
 这个模型当然还很粗糙。它把空间分布压缩成了单个 $N$ 和单个 $S$，因此不能直接处理横向多模竞争和空间烧孔；它的适用前提——目标模已知、主导时间尺度相对分离、空间非均匀性可被等效参数吸收——一旦被突破，就必须升级到多模或空间分辨模型。但它有重要教学价值：它让读者第一次看到阈值以上的闭环机制。注入提高 $N$，增益提高；增益提高后 $S$ 上升；$S$ 上升后又通过受激辐射消耗 $N$，最终形成新的稳态。
 
@@ -67,7 +62,7 @@ g(N,T,S)
 \begin{equation}
 \frac{\dd S_m}{\dd t}
 =
-\left[\Gamma_m v_{g,m} g_m(N,T,\{S_n\})-\frac{1}{\tau_{p,m}}\right]S_m
+\left[\Gamma_m v_{\mathrm{en},m} g_m(N,T,\{S_n\})-\frac{1}{\tau_{p,m}}\right]S_m
 + \beta_m R_{\mathrm{sp},m}.
 \label{eq:multimode_rate}
 \end{equation}
@@ -96,7 +91,7 @@ g_N=\left.\frac{\partial g}{\partial N}\right|_{(N_0,T_0)}.
 \end{equation}
 再把稳态条件
 \[
-\Gamma v_g g_0=\frac{1}{\tau_p}
+\Gamma v_{\mathrm{en}} g_0=\frac{1}{\tau_p}
 \]
 代入 \cref{eq:rate_N,eq:rate_S}，并定义
 \begin{equation}
@@ -109,33 +104,33 @@ g_N=\left.\frac{\partial g}{\partial N}\right|_{(N_0,T_0)}.
 \begin{align}
 \delta \dot N
 &=
--\left(\frac{1}{\tau_N}+\Gamma v_g g_N S_0\right)\delta N
--\Gamma v_g g_0\,\delta S
+-\left(\frac{1}{\tau_N}+\Gamma v_{\mathrm{en}} g_N S_0\right)\delta N
+-\Gamma v_{\mathrm{en}} g_0\,\delta S
 +
 \frac{\eta_{\mathrm{inj}}}{qV_{\mathrm{act}}}\delta I,
 \label{eq:lin_rate_N}
 \\
 \delta \dot S
 &=
-\Gamma v_g g_N S_0\,\delta N.
+\Gamma v_{\mathrm{en}} g_N S_0\,\delta N.
 \label{eq:lin_rate_S}
 \end{align}
 消去 $\delta N$ 之后，就得到
 \begin{equation}
 \delta \ddot S
 +
-\left(\frac{1}{\tau_N}+\Gamma v_g g_N S_0\right)\delta \dot S
+\left(\frac{1}{\tau_N}+\Gamma v_{\mathrm{en}} g_N S_0\right)\delta \dot S
 +
-\frac{\Gamma v_g g_N S_0}{\tau_p}\,\delta S
+\frac{\Gamma v_{\mathrm{en}} g_N S_0}{\tau_p}\,\delta S
 =
-\Gamma v_g g_N S_0\frac{\eta_{\mathrm{inj}}}{qV_{\mathrm{act}}}\delta I,
+\Gamma v_{\mathrm{en}} g_N S_0\frac{\eta_{\mathrm{inj}}}{qV_{\mathrm{act}}}\delta I,
 \label{eq:small_signal_second_order}
 \end{equation}
 它正是 \cref{eq:relaxation_form} 的具体来源。由 \cref{eq:small_signal_second_order} 立刻可读出
 \begin{equation}
-\omega_R^2 \approx \frac{\Gamma v_g g_N S_0}{\tau_p},
+\omega_R^2 \approx \frac{\Gamma v_{\mathrm{en}} g_N S_0}{\tau_p},
 \qquad
-2\zeta\omega_R \approx \frac{1}{\tau_N}+\Gamma v_g g_N S_0.
+2\zeta\omega_R \approx \frac{1}{\tau_N}+\Gamma v_{\mathrm{en}} g_N S_0.
 \label{eq:omegaR_zeta}
 \end{equation}
 这条推导链的教学意义在于：弛豫振荡是载流子库和光子库围绕稳态点的线性耦合本征响应，而非凭经验命名的峰。
@@ -152,16 +147,23 @@ g_N^{\mathrm{eff}}
 这一步在 PCSEL 中的意义，不只是教读者认识一个标准术语，而是帮助判断器件到底更像“能稳定工作的大面积单模器件”，还是“在注入和热反馈下很容易触发模式起伏的边缘设计”。因为如果目标模与竞争模距离太近、增益压缩太强、热时间尺度又开始进入测量窗口，那么单一弛豫峰的理想小信号图像就会被明显扭曲。
 
 对于小信号调制，最重要的是知道应当报告什么，而非死记带宽公式。合理的报告方式通常至少包括：偏置电流、温度、主导偏振、是否为单模区间、测得或估计的弛豫频率、阻尼情况以及是否出现模式竞争导致的额外滚降。否则，“器件调制带宽是多少”这种说法很容易失去上下文。
-若暂时忽略强阻尼、额外热极点和显著模式竞争，一个常见的教学近似是
+对 \cref{eq:relaxation_form} 的标准二阶响应，若低频增益归一化为 1，则 $3\,\mathrm{dB}$ 频率由
 \begin{equation}
-f_{3\mathrm{dB}}
-\approx
-\sqrt{3}\,f_R,
-\qquad
-f_R=\frac{\omega_R}{2\pi},
+\frac{f_{3\mathrm{dB}}}{f_R}
+=
+\left[
+1-2\zeta^2+sqrt{,2-4\zeta^2+4\zeta^4,}
+\right]^{1/2},
+\qquad f_R=\frac{\omega_R}{2\pi},
 \label{eq:f3db_approx}
 \end{equation}
-它的用途只是给出“单模小信号极限下的数量级”，而不是替代真实器件在复杂工作点下的带宽测量。
+其中 $\zeta$ 是阻尼比。零阻尼极限为 $f_{3\mathrm{dB}}/f_R=\sqrt{1+\sqrt2}\approx1.55$；寄生 RC、热极点、增益压缩和模式竞争都会改写这一二阶关系。因此带宽必须与偏置、温度和拟合模型一起报告。
+
+\begin{ApplicationBox}{把教学带宽公式与真实 FM-PCSEL 对齐}
+Inoue 等人的双区 PCSEL 提供了一个带完整工作点的现实锚点：器件出光口径 \SI{500}{\micro\meter}、激射波长 \SI{942}{nm}，在 \SI{3}{A} 偏置下输出超过 \SI{1}{W}；时变三维 CWT 预测反相电流驱动可把幅度调制压低，并把明显的频率调制响应保持到约 \SI{3}{GHz}，该上限对应其弛豫频率\cite{inoue2025fmpcsel}。实验在 \SI{1.1}{W} 平均功率下实现了 \SI{0.5}{Gbaud} 与 \SI{1.0}{Gbaud} 相干自由空间通信，对应链路预算分别为 \SI{88}{dB} 与 \SI{81}{dB}。
+
+这些数字不能直接代入 \cref{eq:f3db_approx}：\SI{3}{GHz} 是给定模型下的 FM/AM 响应边界，Gbaud 是系统传输速率，二者都不是未经协议说明的强度调制 $3\,\mathrm{dB}$ 带宽。真实带宽必须连同偏置、功率、调制方式、探测器带宽和误码判据一起报告。
+\end{ApplicationBox}
 
 \section{热时间尺度为什么会把快动态问题改写成慢漂移问题}
 如果只讨论载流子和光子，动态问题常集中在纳秒到皮秒尺度；但真实电注入 PCSEL 还有更慢的热时间尺度。温升不会像光子数那样瞬时响应，却会在微秒到毫秒甚至更长时间上逐步改写折射率、增益峰和吸收。于是很多实验上观测到的“线宽变宽”“偏振开始晃”“远场主瓣慢慢偏”并非快噪声，而是慢热漂移叠加在快动态之上。
@@ -191,7 +193,7 @@ f_R=\frac{\omega_R}{2\pi},
 \frac{n_{\mathrm{sp}}}{\tau_p N_{\mathrm{ph},0}},
 \label{eq:henry_linewidth_est}
 \end{equation}
-其中 $n_{\mathrm{sp}}$ 是等效自发辐射因子，$N_{\mathrm{ph},0}$ 是稳态腔内光子数（若前文使用光子密度记号，则 $N_{\mathrm{ph},0}=S_0V_{\mathrm{ph}}$）。\cref{eq:henry_linewidth_est} 的用途，是把“载流子引起的折射率起伏会放大线宽”这件事压缩成一个可估量的工作点公式；它的边界则同样必须一起写出：只有当器件近似单模、工作点近稳态、相位扩散可视为小扰动时，它才是可靠的第一近似。
+其中 $n_{\mathrm{sp}}$ 是等效自发辐射因子，$N_{\mathrm{ph},0}$ 是稳态腔内光子数（前文的 $S_0$ 是光子\textbf{密度}，故 $N_{\mathrm{ph},0}=S_0V_{\mathrm{ph}}$）。\cref{eq:henry_linewidth_est}还采用 $R_{\mathrm{sp,mode}}\simeq n_{\mathrm{sp}}/\tau_p$ 的单模近稳态约定，并把结果解释为 Lorentzian 本征线宽；若采用不同的单/双边谱密度或半高全宽约定，前因子会改变。空间烧孔、多模分配噪声、技术噪声和慢热漂移均不包含在该式中。
 
 本书在这里强调它的作用，是为了说明线宽为什么天然依赖\textbf{工作点、光子寿命、材料增益导数和热环境}。因此，后面的性能章节在讨论线宽时，只把确定性全波和器件模型视为中间量提供者，而不把它们误当成“一次仿真直接给出线宽”的完整线宽模型；若器件进入强热漂移、偏振切换、模式跳变或显著多模竞争区域，$\alpha_H$ 也不再是足以封装全部相位噪声的单参数。
 

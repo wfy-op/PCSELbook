@@ -208,7 +208,15 @@ g_{\mathrm{mat}}(\omega,N,T),
 \frac{\partial \mu}{\partial T}\Delta T.
 \label{eq:thermal_feedback_mu}
 \end{align}
-\cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu} 的意义，在于把"热会改写光和电"这句口头话，变成可进入迭代求解的接口：光学模块最关心 $\Delta n,\Delta g,\Delta \alpha$，电学模块最关心 $\Delta \mu$ 与相关接触/复合参数的变化。为避免跨平台误读，本章把定量句统一写成"范围 + 条件 + 引文"：\textbf{[文献值]} 在近红外 GaAs/InP 相关平台，$\partial n/\partial T$ 常见于 $10^{-4}\,\mathrm{K}^{-1}$ 量级（典型约 $2\times10^{-4}\,\mathrm{K}^{-1}$ 到 $3\times10^{-4}\,\mathrm{K}^{-1}$）\cite{dellacorte2000thermooptic}；模增益温度斜率通常为负且依赖工作点，在阈值附近可近似为
+\cref{eq:thermal_feedback_n,eq:thermal_feedback_g,eq:thermal_feedback_alpha,eq:thermal_feedback_mu}
+把“热会改写光和电”这句定性描述变成可进入迭代求解的接口：
+光学模块接收 $\Delta n,\Delta g,\Delta \alpha$，
+电学模块接收 $\Delta \mu$ 与相关接触、复合参数的变化。
+为避免跨平台误读，本章的定量陈述都绑定“范围、条件与引文”。
+\textbf{[文献值]} 在近红外 GaAs/InP 相关平台，$\partial n/\partial T$
+常见于 $10^{-4}\,\mathrm{K}^{-1}$ 量级，典型约为
+$2\times10^{-4}\,\mathrm{K}^{-1}$ 到 $3\times10^{-4}\,\mathrm{K}^{-1}$
+\cite{dellacorte2000thermooptic}；模增益温度斜率通常为负且依赖工作点，在阈值附近可近似为
 \begin{equation}
 \left.\frac{\partial g_{\mathrm{mod}}}{\partial T}\right|_{n=n_{\mathrm{th}}}
 \approx
@@ -342,7 +350,16 @@ T(\rvec)
 相同的平面内晶格参数、相似的冷腔带结构，放在不同平台上时，可能因为折射率背景、热导、p 侧导电和掺杂损耗不同，而对应完全不同的真实器件工作点\RedlineRef{3}。器件级设计的提问方式因此是：“这个平面内方案在某一平台上，是否还能通过 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 这条器件链，维持所需的模式重叠、注入均匀性和热稳定性？”
 
 \section*{回看本章}
-热效应在 PCSEL 中是把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical} 重新耦合成器件工作点的主导机制，而非补充项。Joule 热、复合热和吸收热共同生成三维热源，热方程给出空间温度场，而温度场又通过折射率、增益谱、吸收、迁移率和接触特性回写到模式与注入分布中。对大面积、单模、高功率 PCSEL 来说，需要分析的是热斑、空间烧孔和模式竞争的耦合，而不是单一平均温升。GaAs、InP、GaN 等材料平台则进一步表明：同一套 PCSEL 光学框架在不同器件材料上会因折射率、热导、掺杂损耗和工艺路径不同而表现出完全不同的工作约束。至此，\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 构成了一套器件物理模块：外延层定义纵向模式背景，有源区定义可用增益，注入工程定义局域载流子分布，热反馈决定这个分布和模式是否能在真实工作点下稳定存在。
+热效应把 \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical}
+重新耦合成真实器件工作点，是 PCSEL 中的主导机制，而不是补充项。
+Joule 热、复合热和吸收热共同构成三维热源；热方程给出空间温度场，
+温度场再通过折射率、增益谱、吸收、迁移率和接触特性，回写模式与注入分布。
+对大面积、单模、高功率 PCSEL，需要分析的是热斑、空间烧孔和模式竞争的耦合，
+而不是单一平均温升。GaAs、InP、GaN 等材料平台也表明，同一套 PCSEL 光学框架
+会因折射率、热导、掺杂损耗和工艺路径不同，表现出不同的工作约束。
+\cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling}
+由此组成一个闭环：外延层定义纵向模式背景，有源区定义可用增益，
+注入工程定义局域载流子分布，热反馈则决定该分布和模式能否在真实工作点稳定存在。
 
 \section*{练习题}
 \begin{enumerate}

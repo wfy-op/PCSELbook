@@ -2,6 +2,8 @@
 \chapter{平面波展开法（PWEM）与光子能带计算}
 \label{ch:pwe}
 
+本章结束时，你将亲手算出 \cref{fig:pwem_python_band_result}：不是照着文献描一条带，而是从圆孔几何、倒格矢、Fourier 系数和矩阵截断逐项生成它，并能指出图中哪一处简并可信、哪一处还需要收敛检查。
+
 \paragraph{读完本章，你应能}
 \begin{itemize}
   \item 从头理解平面波展开法（Plane-Wave Expansion Method, PWEM）为什么能用来计算光子晶体能带，以及它和 \cref{ch:gamma} 中能带概念之间的关系。
@@ -80,7 +82,13 @@ PWEM 是避免这两种误区的第一步。它把 \cref{ch:gamma} 的能带概�
 \end{equation}
 \cref{eq:pwem_ez_scalar} 与 \cref{eq:pwem_hz_scalar} 的结构并不相同，因此两类极化的能带通常也不同。很多教材在讨论带隙时会分别画出两套带图，就是这个原因。对 PCSEL 初学者来说，关键是理解：二维能带本来就带有极化依赖，且这种依赖在真实 slab 中会进一步变成更复杂的矢量模式问题，而非一开始就记住哪一个一定叫 TE、哪一个一定叫 TM。
 
-从数值收敛角度，$H_z$ 标量问题（\cref{eq:pwem_hz_scalar}）通常比 $E_z$ 问题（\cref{eq:pwem_ez_scalar}）收敛更快。原因在于 $H_z$ 方程对介电常数的逆 $\eta=1/\varepsilon_r$ 做展开，而在高折射率对比界面处 $1/\varepsilon_r$ 的不连续性比 $\varepsilon_r$ 本身更温和，使傅里叶级数截断引入的吉布斯效应更小。这一经验与 Fourier factorization 和平面波收敛文献相一致\cite{li1996,johnson2001}。因此教学上常以 $H_z$ 问题为主线；而在折射率对比度很高（如空气孔深刻蚀、$\Delta n/\bar n > 0.3$）时，对收敛性的检查尤为重要。
+从数值收敛角度，$H_z$ 标量问题（\cref{eq:pwem_hz_scalar}）通常比
+$E_z$ 问题（\cref{eq:pwem_ez_scalar}）收敛更快。原因在于 $H_z$ 方程对介电常数的逆
+$\eta=1/\varepsilon_r$ 做展开，而在高折射率对比界面处，$1/\varepsilon_r$ 的不连续性
+比 $\varepsilon_r$ 本身更温和，使傅里叶级数截断引入的吉布斯效应更小。
+这一经验与 Fourier factorization 和平面波收敛文献相一致\cite{li1996,johnson2001}。
+因此教学上常以 $H_z$ 问题为主线；而在折射率对比度很高
+（如空气孔深刻蚀、$\Delta n/\bar n > 0.3$）时，对收敛性的检查尤为重要。
 
 若把 $E_z$ 同样写成平面波展开，则会得到另一类矩阵本征问题：
 \begin{equation}
@@ -163,37 +171,45 @@ PWEM 的本质是“把一个模式理解成许多平面波在周期介质中彼
 \begin{figure}[htbp]
   \centering
   \begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
-    \begin{scope}
-      \draw[rounded corners,fill=blue!4,draw=blue!35] (-2.7,-2.3) rectangle (2.7,2.3);
+    \tikzset{
+      panel/.style={draw=gray!45,rounded corners=4pt,fill=gray!2},
+      legend/.style={draw=gray!50,rounded corners=2pt,fill=white,font=\footnotesize,inner sep=3pt}
+    }
+    \begin{scope}[xshift=-3.8cm]
+      \draw[panel] (-3.05,-2.65) rectangle (3.05,3.05);
+      \node[font=\bfseries] at (0,2.65) {(a) 截断后的 PWEM 矩阵};
       \foreach \i in {-2,-1,0,1,2}{
         \foreach \j in {-2,-1,0,1,2}{
-          \pgfmathsetmacro{\x}{\i*0.9}
-          \pgfmathsetmacro{\y}{-\j*0.75}
+          \pgfmathsetmacro{\x}{\i*0.72}
+          \pgfmathsetmacro{\y}{-\j*0.58}
           \ifnum\i=\j
-            \node[draw,minimum width=0.82cm,minimum height=0.62cm,fill=blue!18] at (\x,\y) {};
+            \node[draw=blue!60,minimum width=0.64cm,minimum height=0.48cm,fill=blue!18] at (\x,\y) {};
           \else
-            \node[draw,minimum width=0.82cm,minimum height=0.62cm,fill=orange!10] at (\x,\y) {};
+            \node[draw=orange!60,minimum width=0.64cm,minimum height=0.48cm,fill=orange!10] at (\x,\y) {};
           \fi
         }
       }
-      \node[align=center] at (0,1.95) {截断后的平面波展开矩阵};
-      \node[align=center,fill=white,inner sep=1pt] at (0,0) {$\eta_{\gvec-\gvec'}$};
-      \node[align=center,fill=white,inner sep=1pt] at (1.8,-1.5) {对角项\\$|\kvec+\gvec|^2\eta_0$};
-      \node[align=center,fill=white,inner sep=1pt] at (-1.9,1.45) {非对角项\\几何傅里叶耦合};
+      \node[fill=white,inner sep=1pt] at (0,0) {$\eta_{\gvec-\gvec'}$};
+      \node[legend,anchor=west] (diag) at (-2.75,-1.95)
+        {蓝色：对角权重 $|\kvec+\gvec|^2\eta_0$};
+      \node[legend,anchor=east] (off) at (2.75,1.78)
+        {橙色：傅里叶通道耦合};
+      \draw[->,blue!70] (diag.north east)--(1.18,-1.18);
+      \draw[->,orange!80!black] (off.south west)--(-1.18,1.18);
     \end{scope}
-    \begin{scope}[xshift=7.6cm]
-      \draw[->] (-2.2,0)--(2.2,0) node[right]{$G_x$};
-      \draw[->] (0,-2.2)--(0,2.2) node[above]{$G_y$};
+    \begin{scope}[xshift=4.0cm]
+      \draw[panel] (-3.05,-2.65) rectangle (3.05,3.05);
+      \node[font=\bfseries] at (0,2.65) {(b) 倒格矢截断窗口};
+      \draw[->] (-2.15,0)--(2.20,0) node[right]{$G_x$};
+      \draw[->] (0,-1.55)--(0,1.85) node[left=4pt]{$G_y$};
       \draw[dashed,gray!70] (-1.45,-1.45) rectangle (1.45,1.45);
       \foreach \m in {-2,-1,0,1,2}{
-        \foreach \n in {-2,-1,0,1,2}{
-          \fill[blue!60] (\m*0.72,\n*0.72) circle (0.055);
-        }
+        \foreach \n in {-2,-1,0,1,2}{\fill[blue!60] (\m*0.72,\n*0.72) circle (0.055);}
       }
-      \fill[red!75] (0,0) circle (0.07);
-      \node[above right=1pt] at (0,0) {$\gvec=\mathbf 0$};
-      \node[align=center] at (0,1.95) {倒格矢截断窗口};
-      \node[align=center] at (0,-1.95) {$|m|,|n|\le N$\\$N_c=(2N+1)^2$ 个平面波通道};
+      \fill[red!75] (0,0) circle (0.075);
+      \node[legend,anchor=south west] at (0.12,0.10) {$\gvec=\mathbf 0$};
+      \node[font=\footnotesize,align=center] at (0,-2.05)
+        {$|m|,|n|\le N$\\$N_c=(2N+1)^2$ 个平面波通道};
     \end{scope}
   \end{tikzpicture}
   \caption{平面波展开法的两个核心离散对象。左图强调矩阵的对角项主要来自“单个平面波通道的波矢权重”，非对角项主要来自介质傅里叶系数引入的通道耦合；右图强调实际求解并非保留无限多个倒格矢，而是在 $\gvec$ 空间截断出一个有限窗口。}

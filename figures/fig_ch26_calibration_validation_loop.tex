@@ -3,7 +3,7 @@
   \resizebox{0.98\textwidth}{!}{%
   \begin{tikzpicture}[
     node distance=10mm and 12mm,
-    step/.style={rectangle, rounded corners, draw, fill=#1!15, minimum width=3.1cm, minimum height=9mm, align=center},
+    step/.style={rectangle, rounded corners, draw, fill=#1!15, minimum width=3.1cm, minimum height=9mm, inner sep=6pt, align=center},
     arr/.style={-Stealth, thick}
   ]
     \node[step=blue] (m) {测量\\（几何、伏安、光谱、热特性）};
@@ -18,7 +18,7 @@
     \draw[arr] (c) -- (p);
     \draw[arr] (p) -- (v);
     \draw[arr] (v) -- (u);
-    \draw[arr] (u) -- (m);
+    \draw[arr] (u.east) -- ++(1.0,0) |- ([yshift=1.3cm]m.north) -- (m.north);
   \end{tikzpicture}
   }
   \caption{器件级建模的“校准-验证”闭环：从测量和参数提取出发，经分阶段校准与预测，再由留出集验证回写模型不确定度。}

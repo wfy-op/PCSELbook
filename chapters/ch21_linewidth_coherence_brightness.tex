@@ -81,7 +81,7 @@ g^{(1)}(\tau)=\exp(-\pi\Delta\nu_{\mathrm{L}}|\tau|),
 因此，对 PCSEL 而言，$\alpha_H=2$--$5$ 仅能作为数量级参考。当 (i) 主模与边模净裕量接近、存在模式跳变，(ii) 偏振分支在工作窗口内可切换，(iii) 温升回写显著改变模排序，或 (iv) 频率调制与相位噪声耦合成为系统指标时，应从单模 Henry 公式升级到多模/非正交或系统级噪声模型；这在高亮度与调制型 PCSEL 报道中尤为常见\cite{suh2004tcmt,itoh2020,yoshida2023}。
 \end{warningbox}
 
-在行波近似下，线宽常相对理想 Schawlow--Townes 极限再乘上 $(1+\alpha_H^2)$ 的放大量级。\cref{fig:ch21_linewidth_enhancement}展示了 Henry 因子的定义及其导致的线宽展宽机理。右图中“$\alpha_H=3$ 时约放大 10 倍”应读作\textbf{[教学示意]}数量级，不是所有 PCSEL 的固定倍数。
+在常用的单模、白噪声近似下，线宽相对理想 Schawlow--Townes 结果会出现与 $(1+\alpha_H^2)$ 同阶的放大。\cref{fig:ch21_linewidth_enhancement}把三个容易混写的层次分开：$\alpha_H$ 的材料导数定义、特定稳态噪声模型中的线宽放大，以及直接调制下的瞬态啁啾。后两者并不是同一个“线宽数字”，也不能脱离噪声谱和观测协议直接比较。
 
 \input{figures/fig_ch21_linewidth_enhancement}
 \section{频率噪声谱、短时/长时线宽与测量协议}
@@ -178,7 +178,17 @@ M^2\approx \frac{\pi w_0\theta}{\lambda},
 这个数字提供的是比较基线，不是适用于所有器件的统一标准：若实测发散角远大于该量级，就不应先把原因归咎于“大面积”，而应优先检查近场幅度不均、相位起伏、边缘泄漏、热透镜或多模共存。
 \end{ExampleBox}
 
-Noda 等人的 2023 tutorial 给了一个很好的性能报告样本库：同样是“高亮度 PCSEL”，\SI{500}{\micro\meter} 双晶格器件可在脉冲条件下达到 \SI{10}{W} 级、约 $0.2^\circ$--$0.3^\circ$ 发散；引入背面 DBR 后，脉冲峰值功率超过 \SI{20}{W}，亮度达到约 \(1.5\,\mathrm{GW\,cm^{-2}\,sr^{-1}}\)；\SI{1}{mm} 器件在 CW 下达到 \SI{10}{W} 级，并通过频率噪声白噪声平台给出低于 \SI{1.23}{kHz} 的内禀线宽估计；\SI{3}{mm} 器件进一步实现 \SI{50}{W} CW、约 $0.05^\circ$ 发散和 \(1\,\mathrm{GW\,cm^{-2}\,sr^{-1}}\) 亮度\cite{noda2023tutorial,yoshida2019,yoshida2023}。这些数字必须和口径、脉冲/CW、热边界、线宽测量带宽、远场定义一起读（见 \cref{tab:noda2023_metric_protocol}）。
+Noda 等人的 2023 tutorial 提供了一组可比较的性能报告样本。
+同样是“高亮度 PCSEL”，\SI{500}{\micro\meter} 双晶格器件可在脉冲条件下
+达到 \SI{10}{W} 级、约 $0.2^\circ$--$0.3^\circ$ 发散；引入背面 DBR 后，
+脉冲峰值功率超过 \SI{20}{W}，亮度约为
+\(1.5\,\mathrm{GW\,cm^{-2}\,sr^{-1}}\)。\SI{1}{mm} 器件在 CW 下达到
+\SI{10}{W} 级，并通过频率噪声白噪声平台给出低于 \SI{1.23}{kHz} 的内禀线宽估计；
+\SI{3}{mm} 器件进一步实现 \SI{50}{W} CW、约 $0.05^\circ$ 发散和
+\(1\,\mathrm{GW\,cm^{-2}\,sr^{-1}}\) 亮度
+\cite{noda2023tutorial,yoshida2019,yoshida2023}。
+比较这些数字时，必须同时核对口径、脉冲/CW、热边界、线宽测量带宽和远场定义
+（见 \cref{tab:noda2023_metric_protocol}）。
 
 尤其要注意 \SI{3}{mm} CW 结果中的一个细节：论文报告的 $M^2$ 约为 2.36，但器件仍被判定为单模工作；原因主要是均匀电流注入导致的超高斯近场强度分布，而不是传统意义上的多横模混合\cite{noda2023tutorial}。因此，对 PCSEL 而言，$M^2>1$ 不能自动等价为“多模失败”，必须结合光谱、近场、远场、偏振和工作点一起解释。
 

@@ -1,0 +1,49 @@
+{
+  "name": "pcsel-knowledge-site",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "compile:book": "node scripts/compile_book_if_needed.mjs",
+    "generate:figures": "node scripts/run_book_generator.mjs scripts/render_figures.py",
+    "generate:book": "node scripts/run_book_generator.mjs",
+    "generate:font": "node scripts/run_book_generator.mjs scripts/build_font_subset.py",
+    "sync:book": "npm run compile:book && npm run generate:figures && npm run generate:book && npm run generate:font && node scripts/prerender_math.mjs",
+    "prepare:content": "npm run sync:book",
+    "dev": "node scripts/dev_with_book_sync.mjs",
+    "build": "npm run prepare:content && vite build && node scripts/finalize_static_site.mjs && npm run optimize:deploy && npm run audit:deploy",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "optimize:deploy": "node scripts/optimize_deploy_output.mjs",
+    "audit:deploy": "node scripts/audit_deploy_output.mjs",
+    "deploy:pages": "npm run check && npm run audit:deploy && wrangler pages deploy dist/client --project-name pcsel-knowledge-site --branch main",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "check": "npm run build && npm run test && npm run lint && npm run typecheck",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint app src scripts tests vite.config.ts"
+  },
+  "dependencies": {
+    "katex": "^0.18.4",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@types/katex": "^0.16.8",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "eslint": "9.39.4",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "16.4.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.59.3",
+    "vite": "8.0.13",
+    "wrangler": "4.92.0"
+  },
+  "type": "module"
+}

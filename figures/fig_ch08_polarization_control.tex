@@ -1,73 +1,59 @@
 % !TEX root = ../main.tex
-% 光子晶体面发射激光器偏振调控技术汇总
+% Four independent polarization-control panels; qualitative, not a universal ranking
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[x=0.95cm,y=0.95cm,>=Latex,font=\small]
-    \node[font=\Large\bfseries] at (0,5.3) {光子晶体面发射激光器偏振调控技术汇总};
+  \resizebox{0.96\textwidth}{!}{%
+  \begin{tikzpicture}[x=1cm,y=1cm,>=Stealth,font=\small]
+    \tikzset{
+      panel/.style={draw=black!55,rounded corners=2pt,minimum width=6.1cm,minimum height=3.25cm,fill=white},
+      tag/.style={font=\bfseries,anchor=north west},
+      mechanism/.style={draw=black!35,rounded corners=2pt,fill=gray!5,font=\footnotesize,align=center,minimum width=4.2cm,minimum height=.58cm}
+    }
 
-    % (a) 椭圆孔
-    \begin{scope}[shift={(-4.6,2.5)}]
-      \draw[thick] (-2.3,-1.3) rectangle (2.3,1.3);
-      \foreach \x in {-1.7,-0.8,0.1,1.0,1.9} {
-        \foreach \y in {-0.9,-0.3,0.3,0.9} {
-          \draw[fill=gray!25] (\x,\y) ellipse (0.15 and 0.24);
-        }
-      }
-      \draw[->,very thick,red] (-2.1,-1.7) -- (2.1,-1.7);
-      \node[red,below] at (0,-2.25) {(a) 椭圆孔各向异性};
-      \node[above] at (0,1.45) {破坏 $C_4$ 对称性};
-    \end{scope}
+    % (a) Elliptical holes
+    \node[panel] at (-3.3,2.0) {};
+    \node[tag] at (-6.1,3.35) {(a) 椭圆孔：几何双折射};
+    \foreach \x in {-5.3,-4.45,...,-1.9} {
+      \foreach \y in {1.55,2.25} {\draw[fill=blue!12] (\x,\y) ellipse (.14 and .25);}
+    }
+    \draw[->,very thick,blue!75!black] (-5.4,1.15) -- (-1.8,1.15);
+    \node[mechanism] at (-3.3,.72) {破坏四重旋转对称性，分离正交偏振态};
 
-    % (b) 矩形晶格
-    \begin{scope}[shift={(4.6,2.5)}]
-      \draw[thick] (-2.3,-1.3) rectangle (2.3,1.3);
-      \foreach \x in {-1.6,-0.7,0.2,1.1,2.0} {
-        \foreach \y in {-0.8,0.0,0.8} {
-          \draw[fill=gray!25] (\x,\y) circle (0.14);
-        }
-      }
-      \draw[<->] (-2.45,-1.0) -- (-2.45,1.0) node[midway,left] {$a_y$};
-      \draw[<->] (-1.8,-1.55) -- (1.8,-1.55) node[midway,below] {$a_x$};
-      \node[above] at (0,1.45) {$a_x\neq a_y$};
-      \node[blue,below] at (0,-2.25) {(b) 矩形晶格};
-    \end{scope}
+    % (b) Rectangular lattice
+    \node[panel] at (3.3,2.0) {};
+    \node[tag] at (.5,3.35) {(b) 矩形晶格：晶格各向异性};
+    \foreach \x in {1.25,2.15,...,5.75} {
+      \foreach \y in {1.55,2.25} {\draw[fill=orange!16] (\x,\y) circle (.14);}
+    }
+    \draw[<->,thick] (1.25,1.10) -- node[above] {$a_x$} (2.15,1.10);
+    \draw[<->,thick] (.95,1.55) -- node[left] {$a_y$} (.95,2.25);
+    \node[mechanism] at (3.3,.72) {$a_x\ne a_y$ 改写色散与辐射耦合};
 
-    % (c) 狭缝型
-    \begin{scope}[shift={(-4.6,-1.4)}]
-      \draw[thick] (-2.3,-1.3) rectangle (2.3,1.3);
-      \fill[gray!25] (-2.3,-1.3) rectangle (2.3,1.3);
-      \fill[white] (-0.35,-1.3) rectangle (0.35,1.3);
-      \draw[thick] (-0.35,-1.3) rectangle (0.35,1.3);
-      \foreach \y in {-0.85,-0.25,0.35,0.95} {
-        \draw[fill=white] (-1.35,\y) circle (0.18);
-        \draw[fill=white] (1.35,\y) circle (0.18);
-      }
-      \draw[<->,very thick,red] (-0.28,0.1) -- (0.28,0.1);
-      \node[red,below] at (0,-2.15) {(c) 狭缝型光子晶体};
-      \node[above] at (0,1.45) {狭缝内场增强};
-    \end{scope}
+    % (c) Slot perturbation
+    \node[panel] at (-3.3,-2.0) {};
+    \node[tag] at (-6.1,-.65) {(c) 狭缝微扰：局域场选择};
+    \fill[blue!10] (-5.5,-2.55) rectangle (-1.1,-1.35);
+    \fill[white] (-3.58,-2.55) rectangle (-3.02,-1.35);
+    \draw[thick] (-3.58,-2.55) rectangle (-3.02,-1.35);
+    \draw[<->,very thick,red!70!black] (-3.52,-1.95) -- (-3.08,-1.95);
+    \node[mechanism] at (-3.3,-3.28) {利用狭缝方向与场分量选择性改变模态损耗};
 
-    % (d) 集成偏振栅
-    \begin{scope}[shift={(4.6,-1.4)}]
-      \draw[thick] (-2.3,-1.3) rectangle (2.3,1.3);
-      \foreach \x in {-1.9,-1.5,...,1.7} {
-        \fill[gray!65] (\x,-1.3) rectangle ++(0.18,2.6);
-      }
-      \draw[->,very thick,green!60!black] (-3.1,0.12) -- (-2.28,0.12);
-      \node[left,green!60!black,align=right] at (-3.1,0.12) {\scriptsize 横电入射};
-      \draw[->,thick,red,dashed] (-3.1,0.62) -- (-2.28,0.62);
-      \node[left,red,align=right] at (-3.1,0.62) {\scriptsize 横磁入射};
-      \draw[very thick,red] (2.28,0.55) -- (2.85,0.55);
-      \node[red,right] at (2.85,0.55) {被吸收};
-      \node[blue,below] at (0,-2.15) {(d) 集成线栅偏振片};
-      \node[above] at (0,1.45) {选择性偏振损耗};
-    \end{scope}
+    % (d) Wire-grid output selector
+    \node[panel] at (3.3,-2.0) {};
+    \node[tag] at (.5,-.65) {(d) 线栅：输出端口选择};
+    \draw[thick] (1.35,-2.55) rectangle (5.25,-1.35);
+    \foreach \x in {1.55,1.9,...,5.05} {\fill[gray!65] (\x,-2.55) rectangle ++(.12,1.2);}
+    \node[green!55!black,anchor=east] at (.72,-1.72) {$E_\parallel$};
+    \draw[->,very thick,green!55!black] (.82,-1.72) -- (1.3,-1.72);
+    \node[red!70!black,anchor=east] at (.72,-2.20) {$E_\perp$};
+    \draw[->,thick,dashed,red!70!black] (.82,-2.20) -- (1.3,-2.20);
+    \node[mechanism] at (3.3,-3.28) {在外耦合端口引入偏振相关透射或吸收};
 
-    \node[draw,align=center,text width=11.2cm] at (0,-4.95)
-      {\textbf{典型偏振消光比：}
-      椭圆孔：约 $8$--$12$ 分贝，矩形晶格：约 $10$--$15$ 分贝，狭缝型：高于 $15$ 分贝，线栅偏振片：高于 $20$ 分贝。\\
-      核心思路：引入可控各向异性，使目标偏振的阈值低于正交偏振。};
-  \end{tikzpicture}
-  \caption{光子晶体面发射激光器中四类常用偏振调控方法对比。}
+    \node[draw=blue!55!black,rounded corners=2pt,fill=blue!5,align=center,text width=12.0cm,inner sep=5pt,anchor=north] at (0,-3.85) {
+      四种方法作用在不同接口：前两种改变本征模，狭缝改变局域耦合，线栅改变输出端口。偏振消光比必须由具体结构、损耗与测量口径计算，不能由方法名称直接排序。
+    };
+  \end{tikzpicture}%
+  }
+  \caption{四类偏振调控途径及其作用接口。图中只表达机制，不给出跨结构通用的消光比。}
   \label{fig:ch08_polarization_control}
 \end{figure}

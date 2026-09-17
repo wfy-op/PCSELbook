@@ -1,73 +1,42 @@
 % !TEX root = ../main.tex
-% Figure content only: inserted inside an outer figure environment in ch08
-\begin{tikzpicture}[x=1.05cm,y=1.05cm]
+% Figure content only: a three-stage mode-classification diagram.
+\begin{tikzpicture}[x=1cm,y=1cm,>=Stealth]
   \tikzset{
-    modebox/.style={draw=black,thick,rounded corners,inner sep=3pt},
-    modelabel/.style={font=\small\bfseries,anchor=east},
-    fieldvec/.style={->,>=Stealth,thick,blue!70!black}
+    panel/.style={draw=gray!45,rounded corners=4pt,fill=gray!2,minimum width=3.7cm,minimum height=5.3cm},
+    modebox/.style={draw=black!70,rounded corners=3pt,minimum width=2.25cm,minimum height=0.58cm,align=center},
+    note/.style={font=\scriptsize,align=center,text width=3.25cm}
   }
 
-  \node[font=\bfseries] at (0,1.2) {(a) 四波基};
-  \node[font=\bfseries] at (5.4,1.2) {(b) 驻波分类};
-  \node[font=\bfseries] at (10.8,1.2) {(c) 微扰后分裂};
+  \node[panel] (pa) at (0,0) {};
+  \node[panel] (pb) at (5.1,0) {};
+  \node[panel] (pc) at (10.2,0) {};
+  \node[font=\bfseries] at (0,1.92) {(a) 四波行波基};
+  \node[font=\bfseries] at (5.1,1.92) {(b) 对称性分类};
+  \node[font=\bfseries] at (10.2,1.92) {(c) 微扰解除简并};
 
-  % Column A
-  \begin{scope}[xshift=0cm]
-    \draw[->,thick] (0,-0.2) -- (0,0.9) node[above] {$y$};
-    \draw[->,thick] (-0.8,0.35) -- (0.8,0.35) node[right] {$x$};
-    \foreach \dx/\dy/\txt in {0.55/0/{\((1,0)\)},-0.55/0/{\((-1,0)\)},0/0.55/{\((0,1)\)},0/-0.55/{\((0,-1)\)}} {
-      \draw[fill=blue!12,draw=blue!60] (\dx,0.35+\dy) circle (0.26);
-      \node[font=\scriptsize] at (\dx,0.35+\dy) {\txt};
+  \begin{scope}[shift={(0,0.45)}]
+    \draw[->,thick] (-1.25,0) -- (1.25,0);
+    \draw[->,thick] (0,-1.0) -- (0,1.05);
+    \foreach \x/\y/\lab in {1.05/0/{(1,0)},-1.05/0/{(-1,0)},0/0.90/{(0,1)},0/-0.90/{(0,-1)}} {
+      \node[draw=blue!60,fill=blue!10,circle,inner sep=1pt,minimum size=0.45cm,font=\scriptsize] at (\x,\y) {$\lab$};
     }
   \end{scope}
+  \node[note] at (0,-1.48) {四个主要 Bloch 分量\\在 $\Gamma$ 点附近相互耦合};
 
-  \begin{scope}[xshift=0cm,yshift=-3.4cm]
-    \draw[->,thick] (0,-0.2) -- (0,0.9) node[above] {$y$};
-    \draw[->,thick] (-0.8,0.35) -- (0.8,0.35) node[right] {$x$};
-    \foreach \dx/\dy/\txt in {0.55/0/{\((1,0)\)},-0.55/0/{\((-1,0)\)},0/0.55/{\((0,1)\)},0/-0.55/{\((0,-1)\)}} {
-      \draw[fill=green!12,draw=green!50!black] (\dx,0.35+\dy) circle (0.26);
-      \node[font=\scriptsize] at (\dx,0.35+\dy) {\txt};
-    }
-    \node[font=\scriptsize,align=center] at (0,-0.75) {四个布拉格耦合的\\行波基态};
-  \end{scope}
+  \node[modebox,fill=orange!12] (s1) at (5.1,1.05) {singlet 1};
+  \node[modebox,fill=orange!12] (s2) at (5.1,0.10) {singlet 2};
+  \node[modebox,fill=cyan!12] (db) at (5.1,-0.85) {doublet};
+  \node[note] at (5.1,-2.05) {四波共同重组\\两个单重态 + 一个双重态};
 
-  % Column B
-  \begin{scope}[xshift=5.4cm]
-    \node[modebox,minimum width=2.5cm,minimum height=0.8cm,fill=orange!12] (s1) at (0,0.35) {singlet 1};
-    \node[modebox,minimum width=2.5cm,minimum height=0.8cm,fill=orange!12] (s2) at (0,-1.0) {singlet 2};
-    \node[modebox,minimum width=2.5cm,minimum height=0.8cm,fill=cyan!12] (d1) at (0,-2.35) {doublet};
-    \draw[->,thick] (-0.2,-0.15) -- (-0.2,-0.55);
-    \draw[->,thick] (-0.2,-1.5) -- (-0.2,-1.9);
-    \node[font=\scriptsize,align=center] at (0,-3.15) {正反向波先形成两支驻波，\\侧向波保持简并};
-  \end{scope}
+  \foreach \y/\lab in {1.22/{mode 1},0.42/{mode 2},-0.38/{mode 3},-1.18/{mode 4}} {
+    \node[modebox,fill=red!10] at (10.2,\y) {\lab};
+  }
+  \draw[decorate,decoration={brace,amplitude=4pt},thick] (11.65,-0.68) -- (11.65,0.72)
+    node[midway,right=10pt,font=\scriptsize,align=left] {分裂};
+  \node[note] at (10.2,-2.1) {破坏面内保护对称性\\双重态可分裂};
 
-  % Column C
-  \begin{scope}[xshift=10.8cm]
-    \node[modebox,minimum width=2.4cm,minimum height=0.72cm,fill=red!12] at (0,0.45) {mode 1};
-    \node[modebox,minimum width=2.4cm,minimum height=0.72cm,fill=red!12] at (0,-0.6) {mode 2};
-    \node[modebox,minimum width=2.4cm,minimum height=0.72cm,fill=red!12] at (0,-1.65) {mode 3};
-    \node[modebox,minimum width=2.4cm,minimum height=0.72cm,fill=red!12] at (0,-2.7) {mode 4};
-    \draw[decorate,decoration={brace,amplitude=5pt},thick] (1.55,-1.95) -- (1.55,-0.3)
-      node[midway,right=6pt,font=\scriptsize,align=left] {doublet 在\\微扰下分裂};
-    \node[font=\scriptsize,align=center] at (0,-3.15) {结构不对称或外延扰动会\\解除剩余简并};
-  \end{scope}
-
-  % Connecting arrows
-  \draw[->,very thick,gray!70] (1.4,-1.5) -- (3.7,-1.5);
-  \draw[->,very thick,gray!70] (6.9,-1.5) -- (9.1,-1.5);
-
-  % Bottom explanatory strip
-  \node[
-    draw=blue!60,
-    rounded corners,
-    fill=blue!5,
-    text width=13.2cm,
-    align=left,
-    font=\footnotesize
-  ] at (5.4,-5.2) {
-    \textbf{物理含义：}
-    在弱耦合极限下可先用四个行波基 $(\pm1,0)$、$(0,\pm1)$ 描述 $\Gamma$ 点附近的模。
-    耦合后，正反向波优先形成两支 singlet，而侧向波保留为一支 doublet。
-    若再引入对称性破缺，doublet 会继续裂成两支非简并模，最终得到四支可区分的模式。
-  };
+  \draw[->,very thick,gray!70] (2.05,0) -- (3.05,0)
+    node[midway,above,font=\scriptsize] {耦合};
+  \draw[->,very thick,gray!70] (7.15,0) -- (8.15,0)
+    node[midway,above,font=\scriptsize] {破缺对称性};
 \end{tikzpicture}

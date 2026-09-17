@@ -1,0 +1,181 @@
+{
+  "model": "lossless planar TE/TM bound modes at fixed wavelength",
+  "parameters": {
+    "wavelength_nm": 940.0,
+    "lower_index": 3.3,
+    "upper_index": 3.3,
+    "layers": [
+      {
+        "name": "Lower SCH",
+        "thickness_nm": 128.0,
+        "index": 3.42,
+        "is_qw": false
+      },
+      {
+        "name": "QW 1",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true
+      },
+      {
+        "name": "Barrier 1",
+        "thickness_nm": 20.0,
+        "index": 3.42,
+        "is_qw": false
+      },
+      {
+        "name": "QW 2",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true
+      },
+      {
+        "name": "Barrier 2",
+        "thickness_nm": 20.0,
+        "index": 3.42,
+        "is_qw": false
+      },
+      {
+        "name": "QW 3",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true
+      },
+      {
+        "name": "Upper SCH",
+        "thickness_nm": 128.0,
+        "index": 3.42,
+        "is_qw": false
+      }
+    ]
+  },
+  "total_finite_thickness_nm": 320.0,
+  "all_bound_mode_effective_indices": [
+    3.360935197413051
+  ],
+  "tm_effective_indices": [
+    3.3573348218781724
+  ],
+  "selected_fundamental_effective_index": 3.360935197413051,
+  "qw_confinement_factor": 0.0682059400137449,
+  "overlaps": {
+    "gamma_qw_field": 0.062224379638552915,
+    "gamma_qw_electric": 0.0682059400137449,
+    "gamma_qw_gain": 0.06572472682213253,
+    "n_group_nondispersive": 3.420857188854096,
+    "lower_amplitude_decay_um": 0.2348260482848753,
+    "upper_amplitude_decay_um": 0.2348260482848753,
+    "layers": [
+      {
+        "name": "Lower cladding",
+        "index": 3.3,
+        "is_qw": false,
+        "integral": 0.11741302414243765,
+        "gamma_field": 0.1584214899846812,
+        "gamma_electric": 0.1500537628263074,
+        "gamma_gain": 0.15554924038757006
+      },
+      {
+        "name": "Lower SCH",
+        "thickness_nm": 128.0,
+        "index": 3.42,
+        "is_qw": false,
+        "integral": 0.19137142049665523,
+        "gamma_field": 0.25821109537887466,
+        "gamma_electric": 0.26268303734746556,
+        "gamma_gain": 0.2627488762281014
+      },
+      {
+        "name": "QW 1",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true,
+        "integral": 0.015253124749067723,
+        "gamma_field": 0.02058053412147942,
+        "gamma_electric": 0.02255891796582482,
+        "gamma_gain": 0.021738263858073707
+      },
+      {
+        "name": "Barrier 1",
+        "thickness_nm": 20.0,
+        "index": 3.42,
+        "is_qw": false,
+        "integral": 0.03872860919070823,
+        "gamma_field": 0.05225522481716598,
+        "gamma_electric": 0.053160229819352874,
+        "gamma_gain": 0.05317355390019567
+      },
+      {
+        "name": "QW 2",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true,
+        "integral": 0.015610931885880544,
+        "gamma_field": 0.021063311395594038,
+        "gamma_electric": 0.023088104082095218,
+        "gamma_gain": 0.022248199105985078
+      },
+      {
+        "name": "Barrier 2",
+        "thickness_nm": 20.0,
+        "index": 3.42,
+        "is_qw": false,
+        "integral": 0.03872860919070828,
+        "gamma_field": 0.05225522481716604,
+        "gamma_electric": 0.05316022981935294,
+        "gamma_gain": 0.05317355390019574
+      },
+      {
+        "name": "QW 3",
+        "thickness_nm": 8.0,
+        "index": 3.55,
+        "is_qw": true,
+        "integral": 0.01525312474906775,
+        "gamma_field": 0.020580534121479456,
+        "gamma_electric": 0.02255891796582486,
+        "gamma_gain": 0.021738263858073745
+      },
+      {
+        "name": "Upper SCH",
+        "thickness_nm": 128.0,
+        "index": 3.42,
+        "is_qw": false,
+        "integral": 0.1913714204966564,
+        "gamma_field": 0.2582110953788762,
+        "gamma_electric": 0.26268303734746723,
+        "gamma_gain": 0.262748876228103
+      },
+      {
+        "name": "Upper cladding",
+        "index": 3.3,
+        "is_qw": false,
+        "integral": 0.11741302414243905,
+        "gamma_field": 0.15842148998468308,
+        "gamma_electric": 0.15005376282630917,
+        "gamma_gain": 0.1555492403875719
+      }
+    ]
+  },
+  "validation": {
+    "root_residual": 6.465590282572664e-15,
+    "double_scan_max_difference": 1.7763568394002505e-15,
+    "quadrature_32_to_64_difference": 1.3877787807814457e-17,
+    "finite_difference": [
+      {
+        "step_nm": 4.0,
+        "neff": 3.36093996714491,
+        "absolute_error": 4.769731859255444e-06
+      },
+      {
+        "step_nm": 2.0,
+        "neff": 3.360936387524133,
+        "absolute_error": 1.1901110821277427e-06
+      },
+      {
+        "step_nm": 1.0,
+        "neff": 3.360935492647729,
+        "absolute_error": 2.9523467803826975e-07
+      }
+    ]
+  }
+}

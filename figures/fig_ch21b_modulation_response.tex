@@ -1,87 +1,48 @@
 % !TEX root = ../main.tex
-% Figure: Dynamics and modulation response of PCSEL
-% Chapter: ch21b - Dynamics, Modulation, and Noise Characteristics
-% Description: Small-signal modulation bandwidth and resonance peak
-
+% Clipped teaching schematics; axes and curves are independent panels
 \begin{figure}[htbp]
   \centering
-  \begin{tikzpicture}[scale=0.88]
-    % AM frequency response plot
-    \begin{scope}
-      % Axes
-      \draw[->, thick] (0,0) -- (7,0) node[right] {频率$f$（千兆赫）};
-      \draw[->, thick] (0,-4) -- (0,3) node[above] {归一化响应（分贝）};
-      
-      % Grid lines
-      \foreach \y in {-3,-2,...,2} {
-        \draw[gray!30] (0,\y) -- (6.5,\y);
-      }
-      
-      % Three curves for different bias currents
-      \draw[very thick, blue, domain=0:6.5, samples=100] 
-        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/2)^2)^2+(0.5*\x/2)^2)))-3});
-      \node[blue, above] at (3,1) {\scriptsize $I/I_{th}=1.5$};
-      
-      \draw[very thick, red, domain=0:6.5, samples=100] 
-        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/3)^2)^2+(0.4*\x/3)^2)))-1});
-      \node[red, above] at (4,1.5) {\scriptsize $I/I_{th}=2.5$};
-      
-      \draw[very thick, green!60!black, domain=0:6.5, samples=100] 
-        plot(\x,{max(-4, 20*log10(1/sqrt((1-(\x/4)^2)^2+(0.3*\x/4)^2)))+1});
-      \node[green!60!black, above] at (5,2) {\scriptsize $I/I_{th}=4.0$};
-      
-      % Resonance peaks marking
-      \fill[blue] (1.9,-0.5) circle (2pt);
-      \fill[red] (2.9,0.3) circle (2pt);
-      \fill[green!60!black] (3.9,1.2) circle (2pt);
-      
-      % -3dB bandwidth indication
-      \draw[dashed, thick] (0,-3) -- (5.5,-3);
-      \draw[<->, thick, magenta] (4.2,-3.3) -- node[below] {\scriptsize $f_{-3\,\text{分贝}}$} (5.5,-3.3);
-      
-      % Relaxation oscillation frequency
-      \draw[dotted, thick] (2.9,0) -- (2.9,3);
-      \node[below, red] at (2.9,-0.3) {$f_R$};
-      
-      \node[above, font=\bfseries] at (3.5,3.5) {(a) 小信号调制响应};
-    \end{scope}
-    
-    % Eye diagram inset
-    \begin{scope}[shift={(8,0)}, scale=0.8]
-      % Axes
-      \draw[->, thick] (0,0) -- (5,0) node[right] {时间（单位间隔）};
-      \draw[->, thick] (0,-2) -- (0,2.5) node[above] {光功率};
-      
-      % Ideal eye pattern
-      \draw[very thick, blue, opacity=0.6] 
-        (0,0) .. controls (1,0.5) and (1.5,1.5) .. (2.5,2)
-        (0,2) .. controls (1,1.5) and (1.5,0.5) .. (2.5,0)
-        (2.5,0) .. controls (3.5,-0.5) and (4,0.5) .. (5,2)
-        (2.5,2) .. controls (3.5,1.5) and (4,0.5) .. (5,0);
-      
-      % Real degraded pattern (overlaid)
-      \draw[thick, red, opacity=0.4] 
-        (0,0.2) .. controls (1,0.6) and (1.5,1.3) .. (2.5,1.8)
-        (0,1.8) .. controls (1,1.4) and (1.5,0.7) .. (2.5,0.2);
-      
-      % Eye opening measurement
-      \draw[<->, thick, green!60!black] (2.3,-0.3) -- (2.3,0.3);
-      \node[right, green!60!black] at (2.4,0) {\scriptsize 眼高};
-      
-      \draw[<->, thick, orange] (1.8,1) -- (3.2,1);
-      \node[above, orange] at (2.5,1.1) {\scriptsize 眼宽};
-      
-      \node[above, font=\bfseries] at (2.5,2.8) {(b) 眼图};
-      
-      % Quality metrics
-      \node[align=left, font=\footnotesize, anchor=north west] at (-0.5,-2.5) {
-        \textbf{信号质量指标}:\\
-        $\bullet$ 消光比: $P_1/P_0 > 8\,\text{分贝}$\\
-        $\bullet$ 抖动: $<0.1\,\text{单位间隔}$\\
-        $\bullet$ Q 因子:$>6$ （误码率$<10^{-9}$）
-      };
-    \end{scope}
-  \end{tikzpicture}
-  \caption{光子晶体面发射激光器动态调制示意：左图为小信号频率响应随偏置电流升高而展宽，右图为高速数字调制下的眼图与主要质量指标。}
+  \resizebox{0.98\textwidth}{!}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      at={(0cm,0cm)},anchor=south west,
+      width=7.3cm,height=5.8cm,
+      title={(a) 偏置改变小信号响应},
+      xlabel={频率（归一化单位）},ylabel={响应（dB）},
+      xmin=0,xmax=6,ymin=-20,ymax=8,
+      grid=none,clip=true,
+      legend style={font=\scriptsize,draw=none,fill=white,at={(.03,.03)},anchor=south west},
+      tick label style={font=\scriptsize},label style={font=\small},title style={font=\bfseries}
+    ]
+      \addplot[very thick,blue,smooth] coordinates {(0,0)(.8,.2)(1.5,1.2)(1.9,3.0)(2.2,1.1)(2.8,-3)(3.5,-8)(4.5,-14)(6,-20)};
+      \addlegendentry{$I/I_{\mathrm{th}}=1.5$}
+      \addplot[very thick,red!75!black,smooth] coordinates {(0,0)(1.2,.3)(2.1,1.5)(2.8,4.2)(3.2,2.0)(3.8,-2)(4.6,-7)(5.4,-13)(6,-17)};
+      \addlegendentry{$I/I_{\mathrm{th}}=2.5$}
+      \addplot[very thick,green!50!black,smooth] coordinates {(0,0)(1.5,.2)(2.8,1.2)(3.8,4.8)(4.2,2.8)(4.8,-1)(5.4,-6)(6,-11)};
+      \addlegendentry{$I/I_{\mathrm{th}}=4.0$}
+      \addplot[black,dashed] coordinates {(0,-3)(6,-3)};
+      \node[font=\scriptsize] at (axis cs:4.8,6) {虚线：$-3$ dB};
+    \end{axis}
+
+    \begin{axis}[
+      at={(8.2cm,0cm)},anchor=south west,
+      width=6.6cm,height=5.8cm,
+      title={(b) 眼图示意},
+      xlabel={时间（UI）},ylabel={归一化光功率},
+      xmin=0,xmax=2,ymin=-.05,ymax=1.1,
+      xtick={0,1,2},ytick={0,1},
+      clip=true,
+      tick label style={font=\scriptsize},label style={font=\small},title style={font=\bfseries}
+    ]
+      \addplot[very thick,blue!65,opacity=.75,smooth] coordinates {(0,0)(.25,.03)(.55,.18)(.82,.62)(1,1)(1.25,.97)(1.55,.82)(1.82,.38)(2,0)};
+      \addplot[very thick,blue!65,opacity=.75,smooth] coordinates {(0,1)(.25,.97)(.55,.82)(.82,.38)(1,0)(1.25,.03)(1.55,.18)(1.82,.62)(2,1)};
+      \addplot[thick,red!65,opacity=.45,smooth] coordinates {(0,.08)(.3,.10)(.6,.24)(.85,.55)(1,.88)(1.3,.90)(1.6,.76)(1.85,.45)(2,.12)};
+      \addplot[thick,red!65,opacity=.45,smooth] coordinates {(0,.92)(.3,.90)(.6,.76)(.85,.45)(1,.12)(1.3,.10)(1.6,.24)(1.85,.55)(2,.88)};
+      \draw[orange!85!black,dashed,thick] (axis cs:.78,.34) rectangle (axis cs:1.22,.66);
+      \node[font=\scriptsize,orange!85!black] at (axis cs:1,.50) {判决窗};
+    \end{axis}
+  \end{tikzpicture}%
+  }
+  \caption{小信号响应与眼图的教学示意。所有曲线均被坐标轴裁切；横轴和幅值不代表特定器件，定量带宽与眼图质量须由给定寄生参数、热工作点和测量数据确定。}
   \label{fig:ch21b_modulation_response}
 \end{figure}

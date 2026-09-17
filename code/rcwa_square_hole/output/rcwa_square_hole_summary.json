@@ -1,0 +1,31 @@
+{
+  "model": "grcwa normal-incidence square-lattice circular-hole slab",
+  "parameters": {
+    "r_over_a": 0.3,
+    "slab_thickness_over_a": 0.5,
+    "n_slab": 3.4,
+    "n_top": 1.0,
+    "n_substrate": 1.5,
+    "fourier_orders_requested": 49,
+    "grid_nx": 64,
+    "grid_ny": 64,
+    "omega_min": 0.25,
+    "omega_max": 0.55,
+    "passive_points": 151,
+    "zoom_half_width": 0.018,
+    "zoom_points": 101,
+    "gain_epsilon_imag": [
+      0.0,
+      -0.005,
+      -0.01
+    ]
+  },
+  "actual_fourier_orders": 45,
+  "identified_feature_omega": 0.42600000000000005,
+  "passive_energy_balance_max_error": 8.79296635503124e-14,
+  "outputs": [
+    "rcwa_passive_spectrum.csv",
+    "rcwa_gain_proxy_scan.csv",
+    "rcwa_square_hole_triptych.pdf"
+  ]
+}

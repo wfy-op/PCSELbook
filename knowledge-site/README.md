@@ -1,0 +1,57 @@
+# PCSEL 知识站
+
+《PCSEL 理论、仿真与器件物理导论》的纯静态、公开只读知识站。网站正文以父目录 LaTeX 书稿为唯一内容源；公式在构建期转成带 MathML 的 KaTeX，书中图形从原始 LaTeX/TikZ 图源生成独立 WebP，不使用 PDF 页面截图。
+
+## 本地开发与自动同步
+
+前置条件：Node.js `>=22.13.0`、XeLaTeX/latexmk，以及项目 Python 环境中的 Pillow、pypdf、PyMuPDF 和 fontTools。
+
+```powershell
+npm install
+npm run dev
+```
+
+`npm run dev` 会先执行一次完整书稿同步，然后监听父目录的章节、前言、图源、封面、主文件、符号表和参考文献。书稿保存后，本地 PDF、图形、章节 JSON、检索索引、字体子集和公式 HTML 会自动按需更新，Vite 随后刷新页面。默认开发地址为 `http://127.0.0.1:5173/`；生产版可用 `npm run preview` 在 `http://127.0.0.1:4173/` 审阅。
+
+需要手动执行一次同步时：
+
+```powershell
+npm run sync:book
+```
+
+不要直接编辑 `public/data/chapters/*.json`、清单或检索索引；这些都是可重建产物。
+
+## 阅读进度与章节跳转
+
+- 章节、小节、滚动位置和更新时间保存在浏览器 `localStorage` 的 `pcsel-reading-progress-v1` 中。
+- 每台电脑、每个浏览器配置各有自己的记录；不会跨设备同步，也不使用 Cookie 或服务器数据库。
+- 首页会显示“继续阅读”，恢复本机上次章节和滚动位置。
+- 侧栏小章节使用真实正文锚点；即使仍在同一章内，点击也会显式滚动到目标标题。
+
+## 构建、检查与精简
+
+```powershell
+npm run build
+npm run check
+```
+
+标准流程依次完成：
+
+1. 仅在书稿源比 PDF 新时调用 latexmk 重新编译。
+2. 仅在图源或导言发生变化时重新渲染 WebP 图形。
+3. 生成章节数据、引用、搜索索引、统计和字体子集，并严格预渲染全部公式。
+4. Vite 输出 `dist/client`，再为每章生成可独立访问的静态回退页。
+5. 删除部署中不需要的 TTF/WOFF 回退、source map 和构建清单，只保留现代 WOFF2 字体。
+6. 审计文件数量、单文件大小、引用资源和禁止上传的临时/源码文件。
+
+测试不再锁死某一次书稿的页数或公式数，而是按当前清单核对所有章节标题锚点、公式、图形、表格、引用、检索和路由，因此后续增删内容会自动进入网站并接受一致性检查。
+
+## Cloudflare Pages
+
+Cloudflare 上传必须等待用户明确命令，不会因书稿更新或本地构建自动发生。收到发布指令后才运行：
+
+```powershell
+npm run deploy:pages
+```
+
+该命令会先执行完整 `check` 和部署审计，再通过 Direct Upload 发布到 `pcsel-knowledge-site.pages.dev`。站点只包含公开静态资源，没有登录、写接口或服务器状态。

@@ -226,6 +226,10 @@ Bloch 波矢并非任意二维向量都互不相同。若 $\gvec$ 是倒格矢�
 \end{equation}
 在该条件附近，$\pm x/\pm y$ 方向的主导平面波分量经区折叠与周期耦合汇聚到 $\Gamma$ 邻域，形成后续第5章讨论的区中心模家族与模式选择问题。
 
+\begin{ExampleBox}
+\textbf{[本书算例] 从 \SI{940}{nm} 反推晶格常数。}若先取 $a=\SI{280}{nm}$，则主倒格矢 $G=2\pi/a\approx\SI{22.4}{\per\micro\meter}$。再用 $\beta\approx 2\pi n_{\mathrm{eff}}/\lambda$ 与 $\beta\approx G$，可反推 $n_{\mathrm{eff}}\approx\lambda/a\approx3.36$。因此“\SI{940}{nm} 配 \SI{280}{nm} 晶格”对应的是一个清楚的折叠数量级，而不是经验记忆；真实 slab 仍需用纵向模和三维开放模型修正。
+\end{ExampleBox}
+
 \section{二维晶格、倒晶格与布里渊区}
 \cref{fig:lattice-reciprocal} 展示了二维实空间晶格和倒空间晶格的概念示意。\cref{fig:ch04_brillouin_zone}进一步给出了正方晶格的完整实例，包括实空间原胞构造（左）和对应的第一布里渊区及高对称路径（右）。
 \begin{figure}[htbp]
@@ -318,7 +322,7 @@ Bloch 波矢并非任意二维向量都互不相同。若 $\gvec$ 是倒格矢�
     \draw[thick,orange!85] (-1.55,-1)--(1.55,-1);
     \draw[very thick,blue!60] (-1,-1)--(1,-1)--(1,1)--(-1,1)--cycle;
     \node[below left] at (0,0) {$\Gamma$};
-    \node at (0,-2.0) {最近邻倒格点的垂直平分线围出第一布里渊区};
+    \node at (0,-2.65) {最近邻倒格点的垂直平分线围出第一布里渊区};
   \end{tikzpicture}
   \caption{方格晶格第一布里渊区的构造示意。蓝色区域是围住原点的 Wigner--Seitz 原胞。}
   \label{fig:bz_construction_square}
@@ -330,7 +334,7 @@ Bloch 波矢并非任意二维向量都互不相同。若 $\gvec$ 是倒格矢�
   \centering
   \begin{tikzpicture}[scale=1.0]
     \draw[thick] (-1.8,-1.8) rectangle (1.8,1.8);
-    \fill[red] (0,0) circle (0.08) node[above right]{$\Gamma$};
+    \fill[red] (0,0) circle (0.08) node[below left]{$\Gamma$};
     \fill (1.8,0) circle (0.04) node[right]{$X$};
     \fill (0,1.8) circle (0.04) node[above]{$Y$};
     \fill (1.8,1.8) circle (0.04) node[above right]{$M$};
