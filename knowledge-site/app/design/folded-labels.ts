@@ -1,4 +1,4 @@
-import type { FoldedScene } from './folded-engine.ts';
+import type { FoldedScene } from './core/folded-engine.ts';
 
 /** Number detectors independently of other optics, in prescription order.
  * Derived labels preserve IDs and custom names in existing version-1 files.

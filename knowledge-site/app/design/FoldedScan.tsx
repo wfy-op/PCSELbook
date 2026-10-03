@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { foldedLabels } from './folded-labels';
-import type { FoldedScene } from './folded-engine';
-import { bestFoldedScanPoint, scanFoldedParameter, sceneAtScanValue, type FoldedScanOptions, type FoldedScanParameter, type FoldedScanPoint } from './folded-scan';
+import type { FoldedScene } from './core/folded-engine';
+import { bestFoldedScanPoint, scanFoldedParameter, sceneAtScanValue, type FoldedScanOptions, type FoldedScanParameter, type FoldedScanPoint } from './core/folded-scan';
 
 const labels: Record<FoldedScanParameter, string> = { x: '位置 X / mm', y: '位置 Y / mm', angleDeg: '法线角度 / °', focal: '焦距 / mm' };
 const fmt = (value: number | null, digits = 4) => value === null ? '—' : (Math.abs(value) < 1e-10 ? 0 : value).toFixed(digits);
@@ -12,13 +12,14 @@ function Field({ label, value, change, min, max, unit }: { label: string; value:
 }
 
 export function FoldedScan({ scene, commit }: { scene: FoldedScene; commit: (next: FoldedScene) => void }) {
-  const fallback = scene.elements.find(e => e.kind === 'lens' || e.kind === 'objective') ?? scene.elements[0];
+  const fallback = scene.elements.find(e => ['lens', 'objective', 'cylindrical'].includes(e.kind)) ?? scene.elements[0];
   const [elementId, setElementId] = useState(fallback?.id ?? '');
   const [detectorId, setDetectorId] = useState(scene.elements.find(e => e.kind === 'detector')?.id ?? '');
   const [parameter, setParameter] = useState<FoldedScanParameter>('x');
   const element = scene.elements.find(e => e.id === elementId) ?? fallback;
   const detector = scene.elements.find(e => e.id === detectorId && e.kind === 'detector') ?? scene.elements.find(e => e.kind === 'detector');
-  const lensLike = element?.kind === 'lens' || element?.kind === 'objective';
+  const lensLike = !!element && ['lens', 'objective', 'cylindrical'].includes(element.kind);
+  const rmsLabel = scene.source.beam ? '几何 RMS 2D' : '子午一维 RMS';
   const labelsById = foldedLabels(scene);
   const activeParameter = parameter === 'focal' && !lensLike ? 'x' : parameter;
   const [min, setMin] = useState((fallback?.x ?? 250) - 30);
@@ -49,7 +50,7 @@ export function FoldedScan({ scene, commit }: { scene: FoldedScene; commit: (nex
   const y = (v: number) => 155 - v / top * 125;
   return <section className="od-prescription fd-scan" aria-labelledby="fd-scan-title">
     <div className="od-section-title"><h2 id="fd-scan-title">按需求扫描空间光路</h2><span>21 点实际追迹 · 先预览再应用</span></div>
-    <p>选择变量和目标探测器，比较一维采样 RMS；同时要求探测器接收足够的输入份额。无接收与追迹未完成的点不会被选为最优。</p>
+    <p>选择变量和目标探测器，比较{rmsLabel}；同时要求探测器接收足够的输入份额。无接收与追迹未完成的点不会被选为最优。</p>
     <div className="fd-scan-controls">
       <label className="od-select-field">扫描元件<select aria-label="空间扫描元件" value={element?.id ?? ''} onChange={e => { setElementId(e.target.value); centerRange(e.target.value, activeParameter); }}>{scene.elements.map(e => <option key={e.id} value={e.id}>{labelsById.get(e.id)!.label}</option>)}</select></label>
       <label className="od-select-field">变量<select aria-label="空间扫描变量" value={activeParameter} onChange={e => { const param = e.target.value as FoldedScanParameter; setParameter(param); centerRange(element?.id ?? '', param); }}>{Object.entries(labels).filter(([p]) => p !== 'focal' || lensLike).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
@@ -62,8 +63,8 @@ export function FoldedScan({ scene, commit }: { scene: FoldedScene; commit: (nex
     {!element || !detector ? <p className="od-muted">先加入一个可调元件和目标探测器。</p> : null}
     {scan && !points.length && <p className="od-muted">工程或扫描条件已改变，请重新计算。</p>}{error && <p role="alert" className="od-negative">{error}</p>}
     {!!points.length && <>
-      <svg className="fd-scan-plot" viewBox="0 0 710 200" role="img" aria-label="扫描变量与探测器一维 RMS 曲线">
-        <path d="M50 25V155H660" stroke="#93a9bd" fill="none" /><text x="8" y="20" fill="#456580" fontSize="11">RMS / mm</text><text x="45" y="178" fill="#456580" fontSize="11">{fmt(min, 2)}</text><text x="615" y="178" fill="#456580" fontSize="11">{fmt(max, 2)}</text><text x="7" y="37" fill="#456580" fontSize="11">{fmt(top, 3)}</text><text x="20" y="158" fill="#456580" fontSize="11">0</text><text x="300" y="196" fill="#456580" fontSize="11">{labels[activeParameter]}</text>
+      <svg className="fd-scan-plot" viewBox="0 0 710 200" role="img" aria-label={`扫描变量与探测器${rmsLabel}曲线`}>
+        <path d="M50 25V155H660" stroke="#93a9bd" fill="none" /><text x="8" y="20" fill="#456580" fontSize="11">{rmsLabel} / mm</text><text x="45" y="178" fill="#456580" fontSize="11">{fmt(min, 2)}</text><text x="615" y="178" fill="#456580" fontSize="11">{fmt(max, 2)}</text><text x="7" y="37" fill="#456580" fontSize="11">{fmt(top, 3)}</text><text x="20" y="158" fill="#456580" fontSize="11">0</text><text x="300" y="196" fill="#456580" fontSize="11">{labels[activeParameter]}</text>
         {points.slice(1).map((p, i) => p.rms !== null && points[i].rms !== null ? <path key={`line-${i}`} d={`M${x(points[i].value)} ${y(points[i].rms!)}L${x(p.value)} ${y(p.rms)}`} stroke="#7795b2" fill="none" /> : null)}
         {valid.map(p => <circle key={p.value} cx={x(p.value)} cy={y(p.rms!)} r={p === best ? 5 : 3} fill={p.feasible ? '#2862a9' : '#b77938'}><title>{fmt(p.value)}：RMS {fmt(p.rms)} mm，接收 {(p.captureFraction * 100).toFixed(2)}% · {p.reason}</title></circle>)}
       </svg>

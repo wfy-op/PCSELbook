@@ -23,7 +23,9 @@
     "qa:optics": "node scripts/qa_optical_lab.mjs",
     "check": "npm run build && npm run test && npm run lint && npm run typecheck",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint app src scripts tests vite.config.ts"
+    "lint": "eslint app src scripts tests vite.config.ts",
+    "build:optics": "vite build && node scripts/finalize_static_site.mjs && npm run optimize:deploy && npm run audit:deploy",
+    "qa:workbench": "node scripts/qa_optical_lab.mjs --no-screenshots && node scripts/qa_spatial_workbench.mjs"
   },
   "dependencies": {
     "katex": "^0.18.4",

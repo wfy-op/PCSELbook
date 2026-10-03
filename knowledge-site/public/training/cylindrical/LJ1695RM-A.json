@@ -1,0 +1,119 @@
+{
+  "retrievedAt": "2026-10-03T18:08:42.012635+00:00",
+  "api": "https://www.thorlabs.com/graphql",
+  "product": {
+    "code": "LJ1695RM-A",
+    "name": "LJ1695RM-A",
+    "familyPageUrlTL": "/mounted-plano-convex-round-cylindrical-lenses-n-bk7",
+    "properties": [],
+    "descriptionsWithFallbacksTL": [
+      {
+        "content": null,
+        "reviewType": "PerItemNoteJPY"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteSEK"
+      },
+      {
+        "content": null,
+        "reviewType": "CalibrationInstructions"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteGBP"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteEUR"
+      },
+      {
+        "content": "Mounted Plano-Convex Round Cylindrical Lenses, N-BK7",
+        "reviewType": "FamilyPageName"
+      },
+      {
+        "content": "/item/lj1695rm-a",
+        "reviewType": "ItemUrl"
+      },
+      {
+        "content": "/mounted-plano-convex-round-cylindrical-lenses-n-bk7",
+        "reviewType": "FamilyPageUrl"
+      },
+      {
+        "content": null,
+        "reviewType": "CalibrationTerms"
+      },
+      {
+        "content": "[[\"Mounted Plano-Convex Round Cylindrical Lenses, N-BK7\",\"/mounted-plano-convex-round-cylindrical-lenses-n-bk7\"],[\"Cylindrical Lenses\",\"/cylindrical-lenses\"],[\"Optical Lenses\",\"/optical-lenses\"],[\"Optical Elements\",\"/optical-elements\"],[\"Optics\",\"/optics\"],[\"All Products\",\"/main-visual-navigation\"],[\"LJ1695RM-A\",\"/item/lj1695rm-a\"]]",
+        "reviewType": "Breadcrumb"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteCNY"
+      },
+      {
+        "content": "f = 50.0 mm, Ø1\", N-BK7 Mounted Plano-Convex Round Cyl Lens, ARC 350-700",
+        "reviewType": "Title"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNote"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteBRL"
+      }
+    ],
+    "assets": [
+      {
+        "name": "20057-E0W.pdf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.pdf?v=0116124535",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.pdf?v=0116124535",
+        "size": 0,
+        "description": "CAD PDF"
+      },
+      {
+        "name": "20057-E0W.dxf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.dxf?v=0116124535",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.dxf?v=0116124535",
+        "size": 0,
+        "description": "CAD DXF"
+      },
+      {
+        "name": "20057-E0W.sldprt",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.sldprt?v=0116124536",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.sldprt?v=0116124536",
+        "size": 0,
+        "description": "Solidworks"
+      },
+      {
+        "name": "20057-E0W.step",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.step?v=0116124536",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-e0w.step?v=0116124536",
+        "size": 0,
+        "description": "Step"
+      },
+      {
+        "name": "20057-S02.zar",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-s02.zar?v=0116124537",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-s02.zar?v=0116124537",
+        "size": 0,
+        "description": "Zemax"
+      },
+      {
+        "name": "20057-S03.zmx",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/lj/lj1/lj1695rm-a/20057-s03.zmx?v=0116124534",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/lj/lj1/lj1695rm-a/20057-s03.zmx?v=0116124534",
+        "size": 0,
+        "description": "Zemax (ZMX)"
+      }
+    ]
+  },
+  "downloads": [
+    {
+      "name": "20057-S03.zmx",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ],
+  "verificationNote": "Nominal focal length, optic diameter, and coating band are verified against the current official product title. Conservative 21 mm clear aperture is the historical catalog lower bound, not a measured value. No optical prescription is used by the ideal model."
+}

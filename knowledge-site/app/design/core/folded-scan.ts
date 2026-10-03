@@ -8,7 +8,7 @@ export function sceneAtScanValue(scene: FoldedScene, options: FoldedScanOptions,
   const element = scene.elements.find(e => e.id === options.elementId);
   if (!element) throw new Error('扫描元件不存在。');
   if (!['x', 'y', 'angleDeg', 'focal'].includes(options.parameter)) throw new Error('不支持此扫描变量。');
-  if (options.parameter === 'focal' && element.kind !== 'lens' && element.kind !== 'objective') throw new Error('焦距只适用于透镜或物镜。');
+  if (options.parameter === 'focal' && !['lens', 'objective', 'cylindrical'].includes(element.kind)) throw new Error('焦距只适用于透镜、物镜或柱透镜。');
   return parseFoldedScene({ ...scene, elements: scene.elements.map(e => e.id === element.id ? { ...e, [options.parameter]: value, ...(options.parameter === 'focal' && e.objective ? { objective: { ...e.objective, catalogSku: undefined } } : {}) } : e) });
 }
 
@@ -25,7 +25,7 @@ export function scanFoldedParameter(scene: FoldedScene, options: FoldedScanOptio
       const result = traceFoldedScene(sceneAtScanValue(scene, options, value));
       const target = result.detectors.find(d => d.elementId === options.detectorId);
       const captureFraction = result.energy.input > 0 ? (target?.power ?? 0) / result.energy.input : 0;
-      const rms = target?.rms ?? null;
+      const rms = scene.source.beam ? target?.spot.rms2D ?? null : target?.rms ?? null;
       const feasible = captureFraction > 0 && captureFraction + 1e-12 >= options.minCaptureFraction && rms !== null && Number.isFinite(rms) && result.energy.unresolved <= result.energy.input * 1e-10;
       return { value, captureFraction, rms, feasible, reason: feasible ? '通过接收份额与追迹完成检查' : result.energy.unresolved > result.energy.input * 1e-10 ? '追迹存在未完成份额' : captureFraction <= 0 ? '目标无接收' : captureFraction < options.minCaptureFraction ? '接收份额低于要求' : '目标统计不可用' };
     } catch (error) { return { value, captureFraction: 0, rms: null, feasible: false, reason: error instanceof Error ? error.message : '参数无效' }; }

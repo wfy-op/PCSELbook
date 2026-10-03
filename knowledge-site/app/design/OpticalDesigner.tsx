@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import catalog from '../training/thorlabs-catalog.json';
-import { analyzeDesign, catalogDesignObjective, catalogDesignLens, customDesignLens, optimizePositions, type DesignElement, type DesignProject, type DesignSource, type OptimizeResult } from './design-engine';
+import { analyzeDesign, catalogDesignObjective, catalogDesignLens, customDesignLens, optimizePositions, type DesignElement, type DesignProject, type DesignSource, type OptimizeResult } from './core/design-engine';
 import { DesignCanvas, type Selection } from './DesignCanvas';
 import { DesignAnalysis, formatValue as fmt } from './DesignAnalysis';
 import { DRAFT_KEY, LIBRARY_KEY, loadDraft, loadLibrary, parseDesignFile, presetProject, presets, type DesignFile, type DesignGoal, type SavedDesign } from './design-projects';
 import { designReport, downloadText, prescriptionCsv } from './design-export';
 import { FoldedDesigner } from './FoldedDesigner';
 import { convertSequentialProject } from './design-conversion';
-import type { FoldedScene } from './folded-engine';
-import { objectiveParts } from './objective-model';
+import type { FoldedScene } from './core/folded-engine';
+import { objectiveParts } from './core/objective-model';
 import { ObjectiveLibrary } from './ObjectiveLibrary';
 import { ObjectiveInfo } from './ObjectiveInfo';
 import { OpticsIcon } from './OpticsIcon';

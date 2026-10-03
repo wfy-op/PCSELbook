@@ -1,0 +1,17 @@
+[
+  {
+    "sku": "LJ1695RM-A",
+    "retrievedAt": "2026-10-03T18:08:42.012635+00:00",
+    "record": "/training/cylindrical/LJ1695RM-A.json"
+  },
+  {
+    "sku": "LJ1567RM-A",
+    "retrievedAt": "2026-10-03T18:08:42.023681+00:00",
+    "record": "/training/cylindrical/LJ1567RM-A.json"
+  },
+  {
+    "sku": "LJ1653RM-B",
+    "retrievedAt": "2026-10-03T18:08:42.156822+00:00",
+    "record": "/training/cylindrical/LJ1653RM-B.json"
+  }
+]

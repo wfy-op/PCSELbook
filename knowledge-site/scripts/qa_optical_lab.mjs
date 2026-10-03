@@ -95,10 +95,16 @@ async function readKey(key) {
 }
 const scene = async () => (await readKey(storage.spatialDraft)).scene;
 const design = async () => (await readKey(storage.sequentialDraft)).project;
+const spatialDiameterLabel = async () => (await scene()).source.beam ? '长轴光斑直径' : '入射光源孔径';
 
 // Use disclosure names, not the layout's library/inspector class hierarchy.
 async function reveal(locator, disclosureName = /元件与工程|器件与工程|元件库|工程库|参数/) {
   if (await locator.isVisible()) return;
+  const showParameters = page.getByRole('button', { name: '显示参数', exact: true });
+  if (/参数|光源/.test(String(disclosureName)) && await showParameters.isVisible()) {
+    await showParameters.click();
+    if (await locator.isVisible()) return;
+  }
   const disclosures = page.getByRole('button', { name: disclosureName });
   for (const button of await disclosures.all()) {
     if (await button.isVisible() && await button.getAttribute('aria-expanded') === 'false') {
@@ -243,7 +249,7 @@ async function saveAndImport(model, expected) {
   const library = await readKey(model === 'spatial' ? storage.spatialLibrary : storage.sequentialLibrary);
   assert.deepEqual(model === 'spatial' ? library[0].scene : library[0].file.project, expected);
   const json = await exportedJson(workspace.getByRole('button', { name: model === 'spatial' ? '导出 JSON' : '导出工程', exact: true, includeHidden: true }));
-  await edit(model === 'spatial' ? '入射光源孔径' : '入射光源口径', 8.4);
+  await edit(model === 'spatial' ? await spatialDiameterLabel() : '入射光源口径', 8.4);
   const importButton = workspace.getByRole('button', { name: '导入', exact: true, includeHidden: true });
   await reveal(importButton, /工程文件/);
   await importButton.click();
@@ -256,6 +262,7 @@ async function saveAndImport(model, expected) {
 }
 
 async function compactControls(model) {
+  if (model === 'spatial') return compactSpatialControls();
   const tab = model === 'spatial' ? spatialTab() : sequentialTab();
   await tab.click();
   const title = model === 'spatial' ? '元件与工程' : '器件与工程';
@@ -313,6 +320,48 @@ async function compactControls(model) {
   return { sourceDiameter: before.source.diameter, elementCount: before.elements.length, paletteInitiallyCollapsed: true, paletteKeyboardCollapse: true, canvasPosition, inspectorFit, initialViewportChecked: canvasPosition.viewportHeight >= 740 };
 }
 
+async function compactSpatialControls() {
+  await spatialTab().click();
+  const workspace = panel('spatial'), palette = workspace.getByRole('button', { name: '元件库', exact: true });
+  assert.equal(await palette.getAttribute('aria-expanded'), 'false', 'spatial: compact palette should start collapsed');
+  const canvas = page.locator('#fd-layout-svg');
+  assert.ok(await canvas.isVisible(), 'spatial: canvas must remain visible with palette collapsed');
+  const canvasPosition = await canvas.evaluate(node => {
+    const r = node.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, viewportHeight: innerHeight };
+  });
+  if (canvasPosition.viewportHeight >= 740) assert.ok(canvasPosition.top < canvasPosition.viewportHeight && canvasPosition.bottom > 0, 'spatial: canvas below initial viewport: ' + JSON.stringify(canvasPosition));
+  const before = await scene(), selector = workspace.getByLabel('选择空间元件', { exact: true });
+  assert.equal(await selector.locator('option').count(), before.elements.length + 1);
+  if (before.elements[0]) {
+    const first = before.elements[0]; await selector.selectOption(first.id);
+    const optic = canvas.getByRole('button', { name: '选择 ' + first.name, exact: true });
+    assert.equal(await optic.getAttribute('aria-pressed'), 'true');
+    assert.ok(await workspace.getByLabel('元件 x', { exact: true }).isVisible(), 'selection must reveal compact inspector');
+    await optic.focus(); await optic.press('ArrowRight');
+    assert.equal((await scene()).elements[0].x, first.x + 5);
+    await workspace.getByRole('button', { name: '撤销', exact: true }).click(); assert.deepEqual(await scene(), before);
+  }
+  await selector.selectOption('source');
+  const text = await canvas.locator('text').first().evaluate(node => ({ font: parseFloat(getComputedStyle(node).fontSize), scale: node.getScreenCTM().a }));
+  assert.ok(text.font * text.scale >= 11.5, 'spatial label shrank below readable screen size');
+  await edit(await spatialDiameterLabel(), before.source.diameter);
+  const inspectorFit = await workspace.locator('.fd-inspector').evaluate(node => {
+    const r = node.getBoundingClientRect(), f = node.querySelector('input[type=number]').getBoundingClientRect();
+    return { width: r.width, fieldLeft: f.left - r.left, fieldRight: f.right - r.left };
+  });
+  assert.ok(inspectorFit.fieldLeft >= 0 && inspectorFit.fieldRight <= inspectorFit.width, 'compact inspector fields overflow: ' + JSON.stringify(inspectorFit));
+  await palette.click();
+  const drawer = workspace.locator('.fd-equipment-drawer');
+  await drawer.getByRole('button', { name: /^完美薄透镜/ }).click();
+  await drawer.getByRole('button', { name: '加入 lens', exact: true }).click();
+  assert.equal((await scene()).elements.length, before.elements.length + 1);
+  await workspace.getByRole('button', { name: '撤销', exact: true }).click(); assert.deepEqual(await scene(), before);
+  await palette.focus(); await palette.press('Enter'); assert.equal(await palette.getAttribute('aria-expanded'), 'true');
+  await palette.press('Enter'); assert.equal(await palette.getAttribute('aria-expanded'), 'false', 'palette cannot collapse with keyboard');
+  await page.evaluate(() => scrollTo(0, 0));
+  return { sourceDiameter: before.source.diameter, elementCount: before.elements.length, paletteInitiallyCollapsed: true, paletteKeyboardCollapse: true, canvasPosition, inspectorFit };
+}
+
 try {
   const { chromium } = await import(process.env.PCSEL_PLAYWRIGHT_MODULE || 'playwright');
   browser = await chromium.launch({ channel, headless: true });
@@ -343,12 +392,12 @@ try {
       assert.equal(await spatialTab().getAttribute('aria-selected'), 'true');
       assert.equal(await page.getByRole('tablist', { name: '计算模型', exact: true }).count(), 1);
       assert.ok(await page.locator('#fd-layout-svg').isVisible());
-      assert.ok(await page.locator('.fd-metrics').isVisible());
-      assert.ok((await page.locator('.fd-metrics').innerText()).trim().length > 20);
-      return { spatialReadout: await page.locator('.fd-metrics').innerText() };
+      assert.ok(await page.getByLabel('光路能量预算', { exact: true }).isVisible());
+      assert.ok((await page.getByLabel('光路能量预算', { exact: true }).innerText()).trim().length > 20);
+      return { spatialReadout: await page.getByLabel('光路能量预算', { exact: true }).innerText() };
     });
     await check('spatial source aperture and project name commit to own draft', async () => {
-      await edit('入射光源孔径', 7.3);
+      await edit(await spatialDiameterLabel(), 7.3);
       const name = page.getByRole('textbox', { name: '空间工程名称', exact: true });
       await name.fill('Optical Lab QA Draft');
       await name.press('Enter');
@@ -383,8 +432,9 @@ try {
       assert.equal(await spatialTab().getAttribute('aria-selected'), 'true');
       assert.deepEqual(await scene(), spatialSnapshot);
       assert.equal(await page.getByRole('textbox', { name: '空间工程名称', exact: true }).inputValue(), spatialSnapshot.name);
-      await reveal(page.getByRole('spinbutton', { name: '入射光源孔径', exact: true, includeHidden: true }), /参数|光源/);
-      assert.equal(await page.getByRole('spinbutton', { name: '入射光源孔径', exact: true }).inputValue(), '7.3');
+      const diameterLabel = await spatialDiameterLabel();
+      await reveal(page.getByRole('spinbutton', { name: diameterLabel, exact: true, includeHidden: true }), /参数|光源/);
+      assert.equal(await page.getByRole('spinbutton', { name: diameterLabel, exact: true }).inputValue(), '7.3');
       await sequentialTab().click();
       assert.deepEqual(await design(), sequentialSnapshot);
       assert.equal(await page.getByRole('textbox', { name: '工程名称', exact: true }).inputValue(), sequentialSnapshot.name);

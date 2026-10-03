@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import { analyzeDesign, type DesignProject } from './design-engine';
+import { analyzeDesign, type DesignProject } from './core/design-engine';
 
 export type Selection = string | 'source' | 'screen';
 const bounded = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));

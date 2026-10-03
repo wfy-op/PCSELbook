@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { blankFoldedScene, foldedElement, foldedPresets, parseFoldedScene, traceFoldedScene } from '../app/design/folded-engine.ts';
+import { blankFoldedScene, foldedElement, foldedPresets, parseFoldedScene, traceFoldedScene } from '../app/design/core/folded-engine.ts';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 const element = (kind, id, x, y, overrides = {}) => ({ ...foldedElement(kind, id, x, y), ...overrides });

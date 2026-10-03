@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   blankProject, customDesignLens, catalogDesignLens, parseDesignProject,
   analyzeDesign, multiplyMatrices, optimizePositions,
-} from '../app/design/design-engine.ts';
+} from '../app/design/core/design-engine.ts';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}, tolerance ${tolerance}`);
 const lens = (id, z, focal = 100, overrides = {}) => ({ ...customDesignLens(id, z), focal, ...overrides });

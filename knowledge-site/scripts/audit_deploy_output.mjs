@@ -20,7 +20,7 @@ const records = await Promise.all(files.map(async (file) => ({
   relative: path.relative(outputRoot, file).replaceAll("\\", "/"),
   size: (await stat(file)).size,
 })));
-const forbidden = records.filter(({ file, relative }) => forbiddenExtensions.has(path.extname(file).toLowerCase()) || forbiddenNames.has(path.basename(file)) || /(^|\/)(?:outputs|tmp|work|\.wrangler)(\/|$)/.test(relative));
+const forbidden = records.filter(({ file, relative }) => forbiddenExtensions.has(path.extname(file).toLowerCase()) || forbiddenNames.has(path.basename(file)) || /(^|\/)(?:outputs|tmp|work|\.wrangler|\.openai|\.git)(\/|$)/.test(relative));
 if (forbidden.length) throw new Error(`Forbidden deployment files:\n${forbidden.map((item) => item.relative).join("\n")}`);
 
 const cssRecords = records.filter((item) => path.extname(item.file) === ".css");

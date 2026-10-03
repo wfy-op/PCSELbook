@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { blankProject, customDesignLens } from '../app/design/design-engine.ts';
+import { blankProject, customDesignLens } from '../app/design/core/design-engine.ts';
 import { convertSequentialProject } from '../app/design/design-conversion.ts';
 
 test('spatial copy preserves the geometric source and optical prescription without mutating it', () => {

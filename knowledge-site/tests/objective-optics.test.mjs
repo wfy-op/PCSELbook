@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { objectiveFocal, objectiveParts, objectivePupil, objectiveReference, objectiveWarnings, parseObjectiveModel } from '../app/design/objective-model.ts';
-import { analyzeDesign, blankProject, catalogDesignObjective, customDesignLens, parseDesignProject } from '../app/design/design-engine.ts';
-import { blankFoldedScene, foldedElement, foldedPresets, parseFoldedScene, traceFoldedScene } from '../app/design/folded-engine.ts';
+import { objectiveFocal, objectiveParts, objectivePupil, objectiveReference, objectiveWarnings, parseObjectiveModel } from '../app/design/core/objective-model.ts';
+import { analyzeDesign, blankProject, catalogDesignObjective, customDesignLens, parseDesignProject } from '../app/design/core/design-engine.ts';
+import { blankFoldedScene, foldedElement, foldedPresets, parseFoldedScene, traceFoldedScene } from '../app/design/core/folded-engine.ts';
 import { foldedLabels } from '../app/design/folded-labels.ts';
 import { convertSequentialProject } from '../app/design/design-conversion.ts';
-import { sceneAtScanValue } from '../app/design/folded-scan.ts';
+import { sceneAtScanValue } from '../app/design/core/folded-scan.ts';
 import { foldedCsv, foldedEngineeringFile, foldedReport, parseFoldedEngineeringFile } from '../app/design/folded-export.ts';
 import { prescriptionCsv, designReport } from '../app/design/design-export.ts';
 

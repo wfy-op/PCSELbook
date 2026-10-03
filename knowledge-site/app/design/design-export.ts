@@ -1,5 +1,5 @@
 import { objectiveReport } from './objective-report.ts';
-import { analyzeDesign, type DesignProject } from './design-engine.ts';
+import { analyzeDesign, type DesignProject } from './core/design-engine.ts';
 
 export function downloadText(name: string, type: string, text: string) {
   const url = URL.createObjectURL(new Blob([text], { type }));

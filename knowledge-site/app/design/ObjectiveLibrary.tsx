@@ -1,4 +1,4 @@
-import { objectiveFocal, objectiveParts } from './objective-model';
+import { objectiveFocal, objectiveParts } from './core/objective-model';
 import { OpticsIcon } from './OpticsIcon';
 import './objective-ui.css';
 

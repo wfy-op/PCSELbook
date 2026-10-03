@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { analyzeDesign, parseDesignProject, type DesignProject } from './design-engine';
+import { analyzeDesign, parseDesignProject, type DesignProject } from './core/design-engine';
 import catalog from '../training/thorlabs-catalog.json';
 
 export const formatValue = (v: number | null | undefined, digits = 3) => v === null || v === undefined || !Number.isFinite(v) ? '—' : Math.abs(v) < 1e-10 ? (0).toFixed(digits) : Math.abs(v) < .001 ? v.toExponential(2) : v.toFixed(digits);

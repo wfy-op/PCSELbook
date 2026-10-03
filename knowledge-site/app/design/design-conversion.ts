@@ -1,5 +1,5 @@
-import type { DesignProject } from './design-engine';
-import { parseFoldedScene, type FoldedScene } from './folded-engine.ts';
+import type { DesignProject } from './core/design-engine';
+import { parseFoldedScene, type FoldedScene } from './core/folded-engine.ts';
 
 /** Copy a geometric prescription into a spatial scene; never pretend q rays carry power. */
 export function convertSequentialProject(p: DesignProject): FoldedScene {

@@ -1,4 +1,4 @@
-import { objectiveFocal, objectiveHalfAngle, objectiveParts, objectivePupil, objectiveReference, objectiveWarnings, type ObjectiveModel } from './objective-model';
+import { objectiveFocal, objectiveHalfAngle, objectiveParts, objectivePupil, objectiveReference, objectiveWarnings, type ObjectiveModel } from './core/objective-model';
 import './objective-ui.css';
 
 export function ObjectiveInfo({ model, focal, aperture, diameter, wavelength }: { model: ObjectiveModel; focal: number; aperture: number; diameter: number; wavelength: number }) {
@@ -14,7 +14,7 @@ export function ObjectiveInfo({ model, focal, aperture, diameter, wavelength }: 
       <p>物方焦平面的点发出的光，经物镜变成准直束；平行光反向入射，可聚焦到样品侧。要把样品成像在相机上，还需加入筒镜并把探测面放在其像面。</p>
       <p>一阶关系：u′ = u − h/f；标称 f = f筒镜 / M = {model.tubeFocal} / {model.magnification} = {objectiveFocal(model)} mm。实际成像倍率为 −f筒镜 / f物镜。</p>
       <p>图上位置是等效主面，WD 是前端至样品的机械工作距离，不能用 WD 代替 f。外径默认 25.4 mm 是遮挡范围假设，未还原真实镜筒或主面位置。空间模式法线从样品侧指向筒镜侧。</p>
-      <p>无限远校正物镜的多片结构、高 NA 全孔径成像、盖玻片、像差与色差未计算。小角度束可用于一阶搭建与对准；大角度请查看模型提示。</p>
+      <p>无限远校正物镜的多片结构、高 NA 全孔径成像、盖玻片，以及真实处方的像差与色差未计算。空间模式的自定义瞳面 OPD 系数是用户模型。小角度束可用于一阶搭建与对准；大角度请查看模型提示。</p>
     </details>
     {template && <p className="obj-source-links"><a href={template.sourceUrl} target="_blank" rel="noreferrer">官方产品页</a><a href={template.recordUrl} download>原始规格 JSON</a><a href={template.tubeSourceUrl} target="_blank" rel="noreferrer">倍率与筒镜依据</a></p>}
   </section>;

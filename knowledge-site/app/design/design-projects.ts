@@ -1,5 +1,5 @@
-import { blankProject, catalogDesignObjective, customDesignLens, parseDesignProject, type DesignProject } from './design-engine';
-import { objectiveParts } from './objective-model';
+import { blankProject, catalogDesignObjective, customDesignLens, parseDesignProject, type DesignProject } from './core/design-engine';
+import { objectiveParts } from './core/objective-model';
 import catalog from '../training/thorlabs-catalog.json';
 
 export type DesignGoal = { kind: 'focus' | 'diameter' | 'collimation'; value: number };

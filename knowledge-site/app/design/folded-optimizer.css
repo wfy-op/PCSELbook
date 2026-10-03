@@ -1,0 +1,24 @@
+.fd-optimizer > summary { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; color:#285448; cursor:pointer; font-size:15px; font-weight:650; }
+.fd-optimizer > summary::-webkit-details-marker { display:none; }
+.fd-optimizer-chevron { flex-shrink:0; }
+.fd-optimizer[open] .fd-optimizer-chevron { transform:rotate(90deg); }
+.fd-optimizer > summary small { margin-left:auto; color:#566960; font-size:12px; font-weight:400; }
+.fd-optimizer > summary:focus-visible { outline:2px solid #247768; outline-offset:-4px; }
+.fd-optimizer-content { padding:0 20px 20px; }
+.fd-optimizer-content > p { max-width:75ch; line-height:1.65; }
+.fd-optimizer fieldset { border:0; min-width:0; padding:0; margin:18px 0; }
+.fd-optimizer-controls { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); align-items:end; gap:12px; }
+.fd-optimizer-variable-add { display:grid; grid-template-columns:minmax(160px,2fr) minmax(120px,1fr) auto; align-items:end; gap:12px; margin:18px 0 12px; }
+.fd-optimizer-table-wrap { overflow-x:auto; }
+.fd-optimizer table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; font-size:12px; }
+.fd-optimizer th,.fd-optimizer td { text-align:left; padding:10px 8px; border-bottom:1px solid #e1e7e1; color:#3e514a; }
+.fd-optimizer th { font-weight:600; }
+.fd-optimizer-variables input { width:100%; min-width:74px; max-width:160px; }
+.fd-optimizer-variables th:first-child { min-width:145px; }
+.fd-optimizer-variables td:last-child { width:64px; }
+.fd-optimizer button { min-height:34px; }
+.fd-optimizer-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.fd-optimizer-progress { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin:16px 0; font-size:12px; color:#3e514a; }
+.fd-optimizer-progress progress { width:180px; accent-color:#237b69; }
+.fd-optimizer-changes { padding-left:20px; line-height:1.7; color:#3e514a; font-size:12px; }
+@media(max-width:700px) { .fd-optimizer-controls { grid-template-columns:repeat(2,minmax(0,1fr)); } .fd-optimizer > summary { flex-wrap:wrap; gap:6px; padding:14px; } .fd-optimizer > summary small { width:100%; margin-left:18px; } .fd-optimizer-content { padding:0 14px 16px; } .fd-optimizer-variable-add { grid-template-columns:minmax(0,1fr) minmax(0,1fr); } .fd-optimizer-variable-add button { grid-column:1/-1; justify-self:start; } }
