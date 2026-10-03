@@ -1,0 +1,276 @@
+/* Shared design chrome. Only the interactive design route uses this layer. */
+.od-design-app {
+  --ui-bg: #f4f5f2;
+  --ui-surface: #fff;
+  --ui-ink: #203c35;
+  --ui-muted: #647c73;
+  --ui-line: #dce5df;
+  --ui-accent: #167c69;
+  --ui-soft: #edf5f0;
+  --ui-shadow: 0 3px 14px #233b2f05;
+  background: var(--ui-bg);
+  color: var(--ui-ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+}
+.od-design-app .optics-icon { fill: none; stroke: currentColor; }
+.od-design-app .od-mode-switch {
+  padding: 15px 26px;
+  background: #fff;
+  border-bottom: 1px solid var(--ui-line);
+  color: var(--ui-ink);
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: 0 2px 12px #1f3f3003;
+}
+.od-app-brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: var(--ui-ink); flex-shrink: 0; }
+.od-app-brand:hover { color: var(--ui-accent); }
+.od-app-mark { width: 43px; height: 43px; border-radius: 12px; background: #164d40; color: #f1fff5; display: grid; place-items: center; }
+.od-app-brand strong { display: block; font-size: 16px; font-weight: 650; letter-spacing: .03em; }
+.od-app-brand small { display: block; font-size: 10px; margin-top: 3px; color: #74887e; letter-spacing: .04em; }
+.od-design-app .od-mode-switch [role=tablist] { padding: 4px; border: 1px solid #e6ece7; background: #f4f6f3; border-radius: 12px; gap: 4px; }
+.od-design-app .od-mode-switch [role=tab] { display: inline-flex; justify-content: center; align-items: center; gap: 8px; border-radius: 8px; padding: 10px 16px; color: #6b7f75; font-size: 12px; white-space: nowrap; transition: background .15s, color .15s, box-shadow .15s; }
+.od-design-app .od-mode-switch [role=tab][aria-selected=true] { color: #19614e; background: #fff; border-color: #e1e9e2; box-shadow: 0 2px 5px #24473409; }
+.od-design-app .od-mode-switch [role=tab]:hover { color: #185f4b; }
+.od-design-app .od-mode-switch [role=tab]:focus-visible { outline-color: var(--ui-accent); }
+.od-design-app .od-local-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; color: #6f8378; }
+.od-local-badge i { width: 6px; height: 6px; border-radius: 50%; background: #489f7d; box-shadow: 0 0 0 4px #eef7f0; }
+
+/* Spatial workbench: a white working surface framed by quiet tool panels. */
+.od-design-app .fd-workbench { --fd-blue: #167c69; --fd-border: #dce5df; --fd-muted: #6d8176; background: var(--ui-bg); color: var(--ui-ink); font-family: inherit; }
+.od-design-app .fd-workbench button { border-color: #dce5df; border-radius: 8px; color: #4d685b; padding: 8px 12px; transition: border-color .15s, background .15s, box-shadow .15s; }
+.od-design-app .fd-workbench button:hover:not(:disabled) { border-color: #afc9b9; background: #f0f6f1; color: #215e48; }
+.od-design-app .fd-workbench input,
+.od-design-app .fd-workbench select,
+.od-design-app .fd-workbench textarea { border-color: #dce5df; border-radius: 8px; background: #fbfcfa; color: #294b3e; padding: 8px 10px; }
+.od-design-app .fd-workbench input:focus-visible,
+.od-design-app .fd-workbench select:focus-visible,
+.od-design-app .fd-workbench textarea:focus-visible,
+.od-design-app .fd-workbench button:focus-visible { outline-color: #167c69; outline-offset: 2px; }
+.od-design-app .fd-workbench input:focus-visible,
+.od-design-app .fd-workbench select:focus-visible { background: white; }
+.od-design-app .fd-workbench input[type=checkbox] { accent-color: #167c69; }
+.od-design-app .fd-workbench a { color: #357a60; }
+.od-design-app .fd-heading { padding: 20px 26px 16px; border: 0; background: var(--ui-bg); }
+.od-design-app .fd-heading .fd-brand { display: none; }
+.od-design-app .fd-heading h1 { font-size: 23px; color: #203e32; font-weight: 650; letter-spacing: -.025em; }
+.od-design-app .fd-heading span { color: #7a8a80; font-size: 12px; padding-left: 15px; border-left: 1px solid #d7e2d9; }
+.od-design-app .fd-heading>div:last-child { gap: 9px; }
+.od-design-app .fd-heading>div:last-child>a,
+.od-design-app .fd-heading button,
+.od-design-app .fd-project-bar>button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 12px; }
+.od-design-app .fd-heading>div:last-child>a { margin-right: 8px; }
+.od-design-app .fd-heading .fd-report-button { background: #fff; box-shadow: var(--ui-shadow); }
+.od-design-app .fd-project-bar { margin: 0 24px; padding: 12px 15px; background: #fff; border: 1px solid var(--ui-line); border-radius: 12px; gap: 8px; box-shadow: var(--ui-shadow); }
+.od-design-app .fd-project-name { max-width: 470px; gap: 12px; margin-right: 5px; }
+.od-design-app .fd-project-name span { font-size: 11px; color: #6b8373; }
+.od-design-app .fd-project-name input { border-color: transparent; background: #f5f7f3; font-weight: 550; }
+.od-design-app .fd-project-bar select { max-width: 230px; font-size: 12px; background: #fafbf8; }
+.od-design-app .fd-workbench .fd-primary { background: #176d55 !important; border-color: #176d55 !important; color: white !important; box-shadow: 0 2px 5px #176d5515; }
+.od-design-app .fd-workbench .fd-primary:hover:not(:disabled) { background: #135b47 !important; border-color: #135b47 !important; }
+.od-design-app .fd-notice { margin: 0 26px !important; padding: 10px 2px 0; min-height: 26px; background: transparent; border: 0; color: #7a8c7e; font-size: 11px; }
+.od-design-app .fd-alert { color: #996a2f; }
+.od-design-app .fd-grid { grid-template-columns: 228px minmax(0,1fr) 286px; gap: 18px; padding: 16px 24px 24px; max-width: 2000px; margin: auto; }
+.od-design-app .fd-library,
+.od-design-app .fd-inspector,
+.od-design-app .fd-canvas,
+.od-design-app .fd-prescription,
+.od-design-app .fd-analysis,
+.od-design-app .fd-scan { border-color: var(--ui-line); border-radius: 13px; background: #fff; box-shadow: var(--ui-shadow); }
+.od-design-app .fd-library { padding: 13px; }
+.od-design-app .fd-tabs { background: #f4f7f3; border: 0; padding: 4px; border-radius: 9px; gap: 3px; margin-bottom: 13px; }
+.od-design-app .fd-tabs button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 0; font-size: 12px; padding: 9px 7px; color: #7a8c7f; border-radius: 6px; }
+.od-design-app .fd-tabs button[aria-pressed=true] { color: #22674f; background: #fff; box-shadow: 0 2px 6px #28533c0a; }
+.od-design-app .fd-hint { color: #7b8b7e; font-size: 11px; line-height: 1.8; }
+.od-design-app .fd-part-card { gap: 10px; padding: 11px 10px !important; border-color: #e4ebe4; border-radius: 10px; background: #fff !important; margin: 8px 0; }
+.od-design-app .fd-part-card:hover:not(:disabled) { background: #f6faf5 !important; border-color: #bfd4c4; box-shadow: 0 3px 10px #26523908; }
+.od-design-app .fd-part-card>b { display: grid; place-items: center; min-width: 37px; height: 39px; border-radius: 9px; background: #edf6f1; color: #418c73; }
+.od-design-app .fd-part-card strong { font-size: 13px; color: #2d503f; }
+.od-design-app .fd-part-card small { color: #839388; font-size: 10px; }
+.od-design-app .fd-part-card>.fd-part-arrow { margin-left: auto; color: #bccabf; }
+.od-design-app .fd-part-mirror>b { background: #edf2f8; color: #6489ad; }
+.od-design-app .fd-part-beamsplitter>b { background: #f4eff8; color: #9b7caf; }
+.od-design-app .fd-part-iris>b { background: #f2f4ee; color: #91a16e; }
+.od-design-app .fd-part-detector>b { background: #f7f1e5; color: #b69650; }
+.od-design-app .fd-library h3 { font-size: 11px; color: #5c7664; letter-spacing: .035em; padding-top: 16px; margin-top: 19px; border-color: #e5ebe3; }
+.od-design-app .fd-catalog-card { border-color: #e5ece4; border-radius: 9px; background: #f9fbf7; padding: 10px 11px; }
+.od-design-app .fd-catalog-card>button { border-radius: 0; }
+.od-design-app .fd-catalog-card strong { font: 600 12px "Consolas",monospace; color: #3b5f47; display: flex; justify-content: space-between; align-items: center; }
+.od-design-app .fd-catalog-card span { font-size: 10px; color: #809083; }
+.od-design-app .fd-catalog-card .fd-reference-tag { font: 9px/1.5 "Segoe UI","Microsoft YaHei",sans-serif; color: #91a287; background: #eef3e9; padding: 1px 4px; border-radius: 3px; }
+.od-design-app .fd-catalog-card small { color: #76946f; font-size: 10px; margin-top: 3px; }
+.od-design-app .fd-catalog-card a { color: #87a082; font-size: 10px; margin-top: 6px; }
+.od-design-app .fd-metrics { gap: 12px; border: 0; background: transparent; margin-bottom: 15px; }
+.od-design-app .fd-metrics>div { padding: 14px 16px; border: 1px solid #dfe7df; border-radius: 12px; background: #fff; box-shadow: var(--ui-shadow); }
+.od-design-app .fd-metrics>div:last-child { border: 1px solid #dfe7df; }
+.od-design-app .fd-metrics span { font-size: 11px; color: #819181; }
+.od-design-app .fd-metrics strong { font: 500 28px/1.25 "Consolas","SFMono-Regular",monospace; letter-spacing: -.04em; color: #35543c; margin-top: 7px; }
+.od-design-app .fd-metrics>div:first-child { background: #194d3e; border-color: #194d3e; }
+.od-design-app .fd-metrics>div:first-child span { color: #b2ccbc; }
+.od-design-app .fd-metrics>div:first-child strong { color: #f3fff6; }
+.od-design-app .fd-canvas-toolbar { padding: 13px 15px; background: white; border-color: #e8ede7; }
+.od-design-app .fd-canvas-toolbar strong { font-size: 13px; font-weight: 600; color: #345640; }
+.od-design-app .fd-canvas-toolbar>div:first-child>.optics-icon { color: #88a48b; }
+.od-design-app .fd-canvas-toolbar label,
+.od-design-app .fd-canvas-toolbar span { color: #819282; }
+.od-design-app .fd-canvas-toolbar button { background: #f8faf6; border-color: #e2e9df; border-radius: 5px; color: #628266; padding: 4px 7px; }
+.od-design-app .fd-canvas-scroll { background: white; }
+.od-design-app .fd-canvas-caption { padding: 11px 14px; border-color: #e5ece4; font-size: 10px; color: #8c9b8e; }
+.od-design-app .fd-section-bar { padding: 14px 16px; border-color: #e6ece4; }
+.od-design-app .fd-section-bar h3 { font-size: 13px; color: #34573d; }
+.od-design-app .fd-section-bar span { color: #95a392; }
+.od-design-app .fd-prescription,
+.od-design-app .fd-analysis,
+.od-design-app .fd-scan { margin-top: 16px; }
+.od-design-app .fd-workbench th { color: #899b89; background: #f7f9f4; border-color: #e5ece0; padding: 11px 12px; }
+.od-design-app .fd-workbench td { color: #5a755b; border-color: #edf1e8; padding: 11px 12px; font-size: 12px; }
+.od-design-app .fd-workbench tbody tr:last-child td { border-bottom: 0; }
+.od-design-app .fd-workbench tbody tr:hover { background: #f8fbf5; }
+.od-design-app .fd-workbench td:first-child>button { color: #34593d; }
+.od-design-app .fd-workbench td:first-child small { color: #93a18d; margin-top: 3px; }
+.od-design-app .fd-selected-row { background: #edf6ec; }
+.od-design-app .fd-analysis { padding: 14px 16px 16px; }
+.od-design-app .fd-detector-card { background: #fafcf7; border-color: #dfe8da; border-radius: 11px; padding: 15px; }
+.od-design-app .fd-detector-card>button { color: #456644; }
+.od-design-app .fd-detector-card>button>span { font: 500 24px "Consolas",monospace; color: #397756; }
+.od-design-app .fd-detector-card dt { color: #8b9d84; }
+.od-design-app .fd-detector-card dd { color: #55704e; font: 12px/1.5 "Consolas",monospace; }
+.od-design-app .fd-power-track { height: 3px; background: #e4eddc; margin: 12px 0 14px; }
+.od-design-app .fd-power-track i { background: #77a579; }
+.od-design-app .fd-inspector { padding: 16px; }
+.od-design-app .fd-inspector-header { border-color: #e4ebe2; padding-bottom: 14px; margin-bottom: 17px; }
+.od-design-app .fd-inspector-header h3 { color: #2f573b; font-size: 15px; font-weight: 600; }
+.od-design-app .fd-inspector-header button { font-size: 11px; border-radius: 6px; padding: 5px 9px; }
+.od-design-app .fd-inspector-header button[aria-pressed=true] { background: #ecf4e9; border-color: #d8e5d1; color: #497847; }
+.od-design-app .fd-number { margin: 11px 0; }
+.od-design-app .fd-number>span { font-size: 11px; color: #7d927b; margin-bottom: 5px; }
+.od-design-app .fd-number small { font-size: 10px; color: #a1afa0; }
+.od-design-app .fd-number input { font: 13px/1.45 "Consolas",monospace; background: #f8faf5; border-color: #e1e8dc; }
+.od-design-app .fd-select>span { color: #7d927b; font-size: 11px; }
+.od-design-app .fd-select select,
+.od-design-app .fd-select input { font-size: 12px; border-color: #e1e8dc; background: #f8faf5; }
+.od-design-app .fd-lossless-toggle { padding: 9px; background: #eef5e9; border-radius: 7px; color: #5c8153; font-size: 11px; }
+.od-design-app .fd-rotate-actions>button,
+.od-design-app .fd-edit-actions>button { font-size: 11px; padding: 7px 5px; }
+.od-design-app .fd-bounds,
+.od-design-app .fd-catalog-note { border-color: #e3ebdf; color: #899982; }
+.od-design-app .fd-bounds summary,
+.od-design-app .fd-catalog-note summary { color: #6d8c61; }
+.od-design-app .fd-footer { background: #f1f4ed; color: #94a28a; border-color: #e0e8da; padding: 20px 28px; font-size: 10px; }
+.od-design-app .fd-footer strong { color: #738d67; }
+.od-design-app .fd-warnings { border-color: #e9dfc6; background: #fffaf0; border-radius: 9px; }
+.od-design-app .fd-import-dialog { border-radius: 15px; border-color: #d5e2d0; color: #37523a; }
+.od-design-app .fd-scan>p { color: #899a82; }
+.od-design-app .fd-scan .od-section-title { border-color: #e6ece2; color: #375b3a; }
+.od-design-app .fd-scan .od-section-title>span { color: #9aab92; font-size: 10px; }
+.od-design-app .fd-scan .od-select-field,
+.od-design-app .fd-scan .od-number>span { color: #7c9274; font-size: 11px; }
+.od-design-app .fd-scan-actions button.od-primary { background: #176d55; color: white; border-color: #176d55; }
+.od-design-app .fd-scan .fd-scan-best { background: #eef6e9; color: #5f8652; border-radius: 8px; }
+
+@media(min-width:1100px) {
+  .od-design-app .fd-library,
+  .od-design-app .fd-inspector { position: sticky; top: 98px; max-height: calc(100dvh - 118px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c9d8c5 transparent; }
+}
+@media(max-width:1220px) {
+  .od-design-app .fd-grid { grid-template-columns: 192px minmax(0,1fr) 252px; gap: 12px; padding: 14px 16px; }
+  .od-design-app .fd-project-bar { margin: 0 16px; }
+  .od-design-app .fd-heading { padding: 18px 18px 14px; }
+  .od-design-app .fd-part-card { gap: 7px; padding: 10px 8px !important; }
+  .od-design-app .fd-part-card>b { min-width: 30px; height: 35px; }
+  .od-design-app .fd-part-card>.fd-part-arrow { display: none; }
+  .od-design-app .fd-metrics>div { padding: 11px 12px; }
+  .od-design-app .fd-metrics strong { font-size: 23px; }
+}
+@media(max-width:1000px) {
+  .od-design-app .od-mode-switch { padding: 12px 16px; gap: 10px; }
+  .od-design-app .od-app-brand small { display: none; }
+  .od-design-app .od-local-badge { display: none; }
+  .od-design-app .od-mode-switch [role=tab] { font-size: 11px; padding: 9px 10px; }
+  .od-design-app .fd-grid { grid-template-columns: 190px minmax(0,1fr); }
+  .od-design-app .fd-inspector { grid-column: 1/-1; padding: 16px; }
+}
+@media(max-width:650px) {
+  .od-design-app .od-mode-switch { position: static; padding: 13px 12px 10px; flex-wrap: wrap; gap: 12px; }
+  .od-design-app .od-app-mark { width: 34px; height: 34px; border-radius: 10px; }
+  .od-design-app .od-app-brand { gap: 9px; }
+  .od-design-app .od-app-brand strong { font-size: 15px; }
+  .od-design-app .od-app-brand small { display: inline; font-size: 9px; }
+  .od-design-app .od-mode-switch [role=tablist] { width: 100%; border-radius: 10px; padding: 3px; }
+  .od-design-app .od-mode-switch [role=tab] { min-width: 0; gap: 5px; font-size: 10px; padding: 9px 5px; }
+  .od-design-app .fd-heading { padding: 16px 13px 12px; flex-wrap: wrap; gap: 12px; }
+  .od-design-app .fd-heading h1 { font-size: 20px; }
+  .od-design-app .fd-heading>div:last-child { width: 100%; gap: 7px; }
+  .od-design-app .fd-heading button,
+  .od-design-app .fd-heading>div:last-child>a { font-size: 10px; padding: 6px 8px; gap: 4px; }
+  .od-design-app .fd-heading>div:last-child>a { margin: 0; padding-left: 0; }
+  .od-design-app .fd-heading button .optics-icon { display: none; }
+  .od-design-app .fd-project-bar { margin: 0 10px; padding: 10px; gap: 6px; }
+  .od-design-app .fd-project-name { gap: 10px; }
+  .od-design-app .fd-project-bar select { max-width: 170px; font-size: 11px; }
+  .od-design-app .fd-project-bar>button { font-size: 10px; padding: 7px 8px; gap: 4px; }
+  .od-design-app .fd-project-bar>button .optics-icon { width: 13px !important; height: 13px !important; }
+  .od-design-app .fd-notice { margin: 0 12px !important; font-size: 10px; }
+  .od-design-app .fd-grid { grid-template-columns: minmax(0,1fr); padding: 12px 10px; gap: 13px; }
+  .od-design-app .fd-library { padding: 11px; }
+  .od-design-app .fd-part-card { padding: 10px 8px !important; }
+  .od-design-app .fd-part-card>b { min-width: 32px; height: 35px; }
+  .od-design-app .fd-part-card strong { font-size: 11px; }
+  .od-design-app .fd-part-card small { font-size: 9px; }
+  .od-design-app .fd-catalog-card { padding: 8px; }
+  .od-design-app .fd-catalog-card .fd-reference-tag { display: none; }
+  .od-design-app .fd-catalog-card span { font-size: 9px; }
+  .od-design-app .fd-metrics { gap: 7px; }
+  .od-design-app .fd-metrics>div { padding: 10px 8px; border-radius: 9px; }
+  .od-design-app .fd-metrics span { font-size: 8px; }
+  .od-design-app .fd-metrics strong { font-size: 19px; }
+  .od-design-app .fd-canvas-toolbar { padding: 10px; }
+  .od-design-app .fd-canvas-toolbar strong { font-size: 12px; }
+  .od-design-app .fd-canvas-caption { padding: 9px 10px; font-size: 9px; }
+  .od-design-app .fd-inspector { padding: 13px; }
+  .od-design-app .fd-analysis { padding: 12px; }
+  .od-design-app .fd-footer { padding: 17px 13px; }
+  .od-design-app .fd-scan-actions label { min-width: 180px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .od-design-app button { transition: none; }
+}
+
+/* Small operational labels stay readable on the pale surfaces. */
+.od-design-app .fd-number>span,
+.od-design-app .fd-select>span,
+.od-design-app .fd-hint,
+.od-design-app .fd-notice,
+.od-design-app .fd-canvas-toolbar label,
+.od-design-app .fd-canvas-toolbar span,
+.od-design-app .fd-canvas-caption,
+.od-design-app .fd-part-card small,
+.od-design-app .fd-catalog-card span,
+.od-design-app .fd-catalog-card small,
+.od-design-app .fd-catalog-card a,
+.od-design-app .fd-number small,
+.od-design-app .fd-footer,
+.od-design-app .fd-scan>p,
+.od-design-app .fd-scan .od-select-field,
+.od-design-app .fd-scan .od-number>span { color: #5e715f; }
+.od-design-app .fd-number>span,
+.od-design-app .fd-select>span { font-size: 12px; }
+.od-design-app .fd-part-card small,
+.od-design-app .fd-catalog-card span { font-size: 11px; }
+.od-design-app .fd-workbench th { color: #5e715f; }
+.od-design-app .fd-metrics>div:not(:first-child) span { color: #5e715f; }
+.od-design-app .fd-detector-card dt { color: #5e715f; font-size: 11px; }
+.od-design-app .fd-workbench td:first-child small,
+.od-design-app .fd-heading span { color: #5e715f; }
+.od-design-app .fd-scan .od-section-title>span { color: #5e715f; }
+.od-design-app .od-designer .od-topbar>.od-brand,
+.od-design-app .od-designer .od-topbar>.od-brand-divider { display: none; }
+.od-design-app .od-designer .od-topbar h1 { font-size: 22px; }
+.od-design-app .od-designer :is(.od-field-help,.od-analysis-note,.od-muted,.od-library-foot,.od-catalog-item small,.od-number>span,.od-number small,.od-model-details,.od-statusbar) { color: #5e715f; }
+@media(max-width:650px) {
+  .od-design-app .od-designer .od-topbar h1 { font-size: 19px; }
+  .od-design-app .fd-part-card small,
+  .od-design-app .fd-catalog-card span { font-size: 10px; }
+}

@@ -1,0 +1,70 @@
+html.ol-document, body.ol-document { overflow-x: clip; overflow-y: visible; }
+
+.ol-lab {
+  --ol-header-height: 76px;
+  min-height: 100vh;
+  background: #f4f5f2;
+  color: #203c35;
+  font-family: var(--sans);
+}
+
+.ol-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--ol-header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px 26px;
+  border-bottom: 1px solid #dce5df;
+  background: #fff;
+  box-shadow: 0 3px 14px #233b2f05;
+}
+
+.ol-header a { color: #526d61; text-decoration: none; }
+.ol-header a:hover { color: #176d55; }
+.ol-header a:focus-visible { outline-color: #167c69; }
+.ol-brand { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
+.ol-mark { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 12px; background: #164d40; color: #f1fff5; }
+.ol-brand strong { display: block; font-size: 17px; font-weight: 650; color: #203c35; }
+.ol-brand small { display: block; font-size: 10px; margin-top: 3px; color: #647c73; letter-spacing: .035em; }
+.ol-pages { display: flex; gap: 4px; padding: 4px; border: 1px solid #e0e9e1; border-radius: 12px; background: #f4f6f3; }
+.ol-pages a { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 40px; padding: 9px 24px; border-radius: 8px; font-size: 13px; white-space: nowrap; }
+.ol-pages a[aria-current=page] { background: #fff; color: #19614e; font-weight: 600; box-shadow: 0 2px 6px #24473412; }
+.ol-book-link { font-size: 12px; white-space: nowrap; }
+.ol-book-link span { margin-left: 5px; }
+
+/* The shared header owns page navigation; model controls remain within design. */
+.ol-lab .od-design-app .od-mode-switch { position: static; min-height: 66px; padding: 10px 24px; gap: 18px; background: #f8faf6; box-shadow: none; }
+.ol-model-label { font-size: 12px; color: #5e7468; white-space: nowrap; }
+.ol-lab .od-design-app .od-mode-switch [role=tablist] { background: #edf2ed; }
+.ol-lab .od-design-app .od-mode-switch [role=tab] { padding: 8px 14px; }
+.ol-lab .od-design-app .od-local-badge { margin-left: auto; }
+.ol-lab .od-design-app .fd-heading h1 { margin-left: 0; }
+.ol-lab .od-design-app .od-topbar { gap: 14px; }
+.ol-lab :is(#od-workspace, #ob-course, #ob-pump-case, #ob-guide, #optical-playground) { scroll-margin-top: calc(var(--ol-header-height) + 24px); }
+
+@media (max-width: 900px) {
+  .ol-header { padding-right: 18px; padding-left: 18px; gap: 16px; }
+  .ol-pages a { padding: 9px 16px; }
+}
+
+@media (max-width: 720px) {
+  .ol-lab { --ol-header-height: 128px; }
+  .ol-header { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 12px 14px; }
+  .ol-mark { width: 38px; height: 38px; border-radius: 10px; }
+  .ol-brand strong { font-size: 16px; }
+  .ol-book-link { font-size: 11px; }
+  .ol-pages { grid-row: 2; grid-column: 1 / -1; }
+  .ol-pages a { flex: 1; padding: 9px 12px; }
+  .ol-lab .od-design-app .od-mode-switch { gap: 8px; padding: 10px 12px; flex-wrap: wrap; }
+  .ol-lab .od-design-app .od-mode-switch [role=tablist] { flex: 1 1 100%; width: 100%; }
+  .ol-lab .od-design-app .od-mode-switch [role=tab] { padding: 9px 6px; }
+}
+
+@media print {
+  .ol-header, .ol-lab .od-mode-switch { display: none; }
+  .ol-lab { background: #fff; }
+}

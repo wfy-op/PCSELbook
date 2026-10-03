@@ -13,6 +13,7 @@
     "sync:book": "npm run compile:book && npm run generate:figures && npm run generate:book && npm run generate:font && node scripts/prerender_math.mjs",
     "prepare:content": "npm run sync:book",
     "dev": "node scripts/dev_with_book_sync.mjs",
+    "dev:training": "vite --host 127.0.0.1 --port 5175 --strictPort",
     "build": "npm run prepare:content && vite build && node scripts/finalize_static_site.mjs && npm run optimize:deploy && npm run audit:deploy",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "optimize:deploy": "node scripts/optimize_deploy_output.mjs",

@@ -1,0 +1,309 @@
+/* Sequential workbench: visual layer only; propagation and canvas scale are unchanged. */
+.od-design-app .od-designer {
+  --od-ink: #203c35;
+  --od-muted: #647c73;
+  --od-line: #dce5df;
+  --od-blue: #167c69;
+  --od-soft: #f1f5f2;
+  background: #f4f5f2;
+  color: var(--od-ink);
+}
+
+/* Consistent controls and clear keyboard focus. */
+.od-design-app .od-designer button {
+  border-color: var(--od-line);
+  border-radius: 8px;
+  color: #38574c;
+  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+.od-design-app .od-designer button:hover:not(:disabled) {
+  background: #edf5f0;
+  border-color: #9abdb0;
+}
+.od-design-app .od-designer button:disabled { opacity: .45; }
+.od-design-app .od-designer input,
+.od-design-app .od-designer select,
+.od-design-app .od-designer textarea {
+  border-color: #d2ded6;
+  border-radius: 8px;
+  color: var(--od-ink);
+  background: #fff;
+}
+.od-design-app .od-designer :is(button, input, select, textarea, a):focus-visible {
+  outline: 2px solid #167c69;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #167c6910;
+}
+.od-design-app .od-designer input[type=checkbox] { accent-color: #167c69; }
+.od-design-app .od-designer a { color: #167c69; }
+.od-design-app .od-designer .od-primary {
+  background: #167c69;
+  color: #fff;
+  border-color: #167c69;
+  box-shadow: 0 2px 3px #145d4e12;
+}
+.od-design-app .od-designer .od-primary:hover:not(:disabled) {
+  background: #126754;
+  color: #fff;
+  border-color: #126754;
+}
+
+/* Compact white chrome gives the optical workspace the first viewport. */
+.od-design-app .od-designer .od-topbar {
+  padding: 16px 24px;
+  min-height: 74px;
+  background: #fff;
+  color: var(--od-ink);
+  border-bottom: 1px solid var(--od-line);
+}
+.od-design-app .od-designer .od-topbar .od-brand { color: #203c35; }
+.od-design-app .od-designer .od-brand span { color: #647c73; }
+.od-design-app .od-designer .od-brand-divider { background: #dce5df; }
+.od-design-app .od-designer .od-topbar h1 { font-size: 18px; font-weight: 650; }
+.od-design-app .od-designer .od-model-tag {
+  color: #52756a;
+  background: #f0f6f2;
+  border-color: #d9e8de;
+  border-radius: 6px;
+}
+.od-design-app .od-designer .od-topbar nav a { color: #47685c; }
+.od-design-app .od-designer .od-topbar nav button {
+  color: #345b4b;
+  background: #f7faf7;
+  border-color: #d2e2d7;
+}
+.od-design-app .od-designer .od-projectbar {
+  background: #fff;
+  padding: 13px 24px;
+  border-bottom-color: var(--od-line);
+}
+.od-design-app .od-designer :is(.od-project-name, .od-template-label) { color: var(--od-muted); }
+.od-design-app .od-designer .od-project-name input { background: #f8faf8; font-weight: 600; }
+.od-design-app .od-designer .od-project-actions { gap: 8px; }
+.od-design-app .od-designer .od-workspace {
+  grid-template-columns: 225px minmax(0, 1fr) 295px;
+  align-items: start;
+  gap: 18px;
+  padding: 20px 24px;
+}
+.od-design-app .od-designer .od-main { min-width: 0; padding: 0; }
+.od-design-app .od-designer :is(.od-sidebar, .od-inspector) {
+  background: #fff;
+  border: 1px solid var(--od-line);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #203c3504;
+  overflow: clip;
+}
+.od-design-app .od-designer :is(.od-sidebar-tabs, .od-inspector-tabs) {
+  padding: 0 10px;
+  background: #fff;
+  border-bottom-color: var(--od-line);
+}
+.od-design-app .od-designer :is(.od-sidebar-tabs, .od-inspector-tabs) button {
+  border-radius: 0;
+  color: var(--od-muted);
+  padding: 14px 8px;
+}
+.od-design-app .od-designer :is(.od-sidebar-tabs, .od-inspector-tabs) button[aria-selected=true] {
+  color: #167c69;
+  background: #f7faf7;
+  border-bottom-color: #167c69;
+  font-weight: 600;
+}
+
+/* Parts and saved projects remain functional, easy-to-scan cards. */
+.od-design-app .od-designer .od-library-filter { padding-top: 17px; }
+.od-design-app .od-designer .od-custom-parts button {
+  color: #41665a;
+  background: #f0f6f2;
+  border-color: #d9e6dc;
+}
+.od-design-app .od-designer .od-catalog-item {
+  border-radius: 10px;
+  border-color: #dfe7e1;
+  box-shadow: 0 1px 2px #203c3504;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+.od-design-app .od-designer .od-catalog-item:hover:not(:disabled) {
+  border-color: #8cbbaa;
+  box-shadow: 0 3px 10px #203c3509;
+}
+.od-design-app .od-designer .od-catalog-item strong { color: #275342; letter-spacing: .2px; }
+.od-design-app .od-designer .od-catalog-item > span { color: #426b5b; font-family: var(--mono); }
+.od-design-app .od-designer .od-catalog-item :is(b, small) { color: #647c73; }
+.od-design-app .od-designer :is(.od-library-foot, .od-saved-projects p, .od-saved-projects span, .od-saved-projects small) {
+  color: var(--od-muted);
+}
+.od-design-app .od-designer .od-library-foot { background: #fbfcfa; }
+.od-design-app .od-designer .od-saved-projects > button { border-radius: 10px; }
+.od-design-app .od-designer :is(.od-empty-library, .od-plot-empty) {
+  color: var(--od-muted);
+  background: #f8faf7;
+  border-color: #cfdcd2;
+  border-radius: 10px;
+}
+
+/* Real calculation readouts, with typography distinct from control labels. */
+.od-design-app .od-designer .od-readout { gap: 10px; margin-bottom: 16px; }
+.od-design-app .od-designer .od-readout > div {
+  min-width: 0;
+  padding: 13px 14px 12px;
+  background: #fff;
+  border: 1px solid var(--od-line);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px #203c3503;
+}
+.od-design-app .od-designer .od-readout > div:first-child {
+  background: #eef6f0;
+  border-color: #cbded1;
+}
+.od-design-app .od-designer .od-readout :is(span, small) { color: var(--od-muted); }
+.od-design-app .od-designer .od-readout strong {
+  color: #205a45;
+  font-size: clamp(19px, 1.5vw, 27px);
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  margin-top: 7px;
+}
+.od-design-app .od-designer :is(.od-layout, .od-prescription, .od-analysis) {
+  border-color: var(--od-line);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #203c3504;
+}
+.od-design-app .od-designer :is(.od-canvas-tools, .od-section-title) {
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom-color: var(--od-line);
+}
+.od-design-app .od-designer .od-canvas-tools strong { color: var(--od-ink); font-weight: 600; }
+.od-design-app .od-designer :is(.od-canvas-tools > div > span, .od-canvas-tools label, .od-canvas-caption) {
+  color: var(--od-muted);
+}
+.od-design-app .od-designer .od-canvas-caption { background: #fcfdfb; border-top-color: #e4ebe5; }
+.od-design-app .od-designer .od-section-title > div { color: var(--od-muted); }
+.od-design-app .od-designer .od-warnings {
+  background: #fffaf0;
+  border-color: #e6d9b9;
+  border-radius: 10px;
+  color: #806535;
+}
+
+/* Editable prescription table: restrained lines, stable numeric columns. */
+.od-design-app .od-designer .od-data-scroll th {
+  background: #f5f8f4;
+  color: #587268;
+  border-bottom-color: var(--od-line);
+  font-size: 12px;
+  font-weight: 600;
+}
+.od-design-app .od-designer .od-data-scroll td { border-bottom-color: #edf1ec; }
+.od-design-app .od-designer .od-data-scroll tbody tr:hover { background: #f7faf7; }
+.od-design-app .od-designer .od-data-scroll tbody .od-selected-row {
+  background: #edf6ef;
+  box-shadow: inset 3px 0 #167c69;
+}
+.od-design-app .od-designer .od-data-scroll .od-number input {
+  background: #fff;
+  color: #315b4a;
+  border-color: #e0e7e0;
+  border-radius: 6px;
+}
+.od-design-app .od-designer .od-row-name small { color: var(--od-muted); }
+.od-design-app .od-designer .od-table-action { color: #447361 !important; }
+.od-design-app .od-designer :is(.od-table-empty, .od-data-scroll caption) { color: var(--od-muted); }
+
+/* Analysis and inspector use the same quiet emerald palette. */
+.od-design-app .od-designer .od-analysis-tabs { padding: 0 12px; border-bottom-color: var(--od-line); }
+.od-design-app .od-designer .od-analysis-tabs button { color: var(--od-muted); border-radius: 0; }
+.od-design-app .od-designer .od-analysis-tabs button[aria-selected=true] {
+  color: #167c69;
+  border-bottom-color: #167c69;
+  font-weight: 600;
+}
+.od-design-app .od-designer .od-analysis-kpis > div {
+  background: #f2f6f0;
+  border: 1px solid #e5ece2;
+  border-radius: 10px;
+}
+.od-design-app .od-designer .od-analysis-kpis span { color: var(--od-muted); }
+.od-design-app .od-designer .od-analysis-kpis strong { color: #28513e; }
+.od-design-app .od-designer .od-focus-cards > div { border-radius: 10px; border-color: var(--od-line); }
+.od-design-app .od-designer :is(.od-plot-legend, .od-analysis-note, .od-focus-cards p, .od-system p) {
+  color: var(--od-muted);
+}
+.od-design-app .od-designer .od-matrix { color: #315e4a; border-color: #85a695; }
+.od-design-app .od-designer :is(.od-system dt, .od-candidate dt) { color: var(--od-muted); }
+.od-design-app .od-designer :is(.od-system dd, .od-candidate dd) { color: #28543f; }
+.od-design-app .od-designer .od-formulas { color: #557062; background: #f3f7f1; border-radius: 8px; }
+.od-design-app .od-designer :is(.od-number > span, .od-number small, .od-select-field, .od-field-help, .od-variable-check, .od-provenance, .od-provenance h3, .od-variable-list small, .od-scan-controls label, .od-sweep-values label) {
+  color: var(--od-muted);
+}
+.od-design-app .od-designer .od-selection-buttons button[aria-pressed=true] {
+  background: #eaf4ed;
+  color: #167c69;
+  border-color: #a7cbb8;
+}
+.od-design-app .od-designer .od-derived { background: #f1f6ef; border: 1px solid #e0eadc; border-radius: 10px; }
+.od-design-app .od-designer .od-derived span { color: var(--od-muted); }
+.od-design-app .od-designer .od-derived b { color: #315d45; }
+.od-design-app .od-designer .od-candidate {
+  background: #eff7f0;
+  border-color: #bfd9c7;
+  border-radius: 12px;
+}
+.od-design-app .od-designer .od-candidate h3 { color: #266746; }
+.od-design-app .od-designer .od-candidate p { color: #557768; }
+.od-design-app .od-designer :is(.od-muted, .od-statusbar, .od-model-details) { color: var(--od-muted); }
+.od-design-app .od-designer .od-statusbar { background: #eef3ec; border-top-color: var(--od-line); }
+.od-design-app .od-designer .od-model-details { background: #f4f5f2; }
+.od-design-app .od-designer .od-model-details summary { color: #47705b; }
+.od-design-app .od-designer .od-modal-backdrop { background: #142c245e; backdrop-filter: blur(3px); }
+.od-design-app .od-designer .od-import-dialog {
+  border-color: #c6dacf;
+  border-radius: 16px;
+  box-shadow: 0 22px 90px #203c3529;
+}
+.od-design-app .od-designer .od-import-dialog :is(p, label) { color: var(--od-muted); }
+.od-design-app .od-designer .od-negative { color: #ab583d; }
+.od-design-app .od-designer :is(.od-catalog-list, .od-canvas-scroll, .od-data-scroll) {
+  scrollbar-width: thin;
+  scrollbar-color: #bfcec3 transparent;
+}
+
+/* Preserve local canvas/table scrolling and responsive panel stacking. */
+@media (min-width: 1750px) {
+  .od-design-app .od-designer .od-workspace { grid-template-columns: 250px minmax(0, 1fr) 320px; gap: 22px; }
+}
+@media (max-width: 1220px) {
+  .od-design-app .od-designer .od-workspace { grid-template-columns: 195px minmax(0, 1fr) 260px; gap: 12px; padding: 16px; }
+  .od-design-app .od-designer .od-topbar { padding: 15px 18px; }
+  .od-design-app .od-designer .od-readout > div { padding: 11px 10px; }
+  .od-design-app .od-designer .od-readout strong { font-size: 19px; }
+  .od-design-app .od-designer .od-canvas-tools { padding: 12px; }
+}
+@media (max-width: 980px) {
+  .od-design-app .od-designer .od-workspace { grid-template-columns: 195px minmax(0, 1fr); }
+  .od-design-app .od-designer .od-topbar h1 { font-size: 17px; }
+  .od-design-app .od-designer .od-inspector { grid-column: 1 / -1; }
+}
+@media (max-width: 650px) {
+  .od-design-app .od-designer .od-topbar { padding: 14px 12px; gap: 10px; }
+  .od-design-app .od-designer .od-topbar h1 { font-size: 16px; }
+  .od-design-app .od-designer .od-projectbar { padding: 12px; }
+  .od-design-app .od-designer .od-workspace { display: flex; padding: 12px 10px; gap: 14px; }
+  .od-design-app .od-designer :is(.od-sidebar, .od-main, .od-inspector) { width: 100%; min-width: 0; }
+  .od-design-app .od-designer .od-readout { gap: 8px; margin-bottom: 14px; }
+  .od-design-app .od-designer .od-readout > div { padding: 12px; }
+  .od-design-app .od-designer .od-readout strong { font-size: 23px; }
+  .od-design-app .od-designer .od-analysis-tabs { padding: 0; }
+  .od-design-app .od-designer .od-analysis-tabs button { padding: 12px 8px; }
+  .od-design-app .od-designer .od-canvas-tools { padding: 12px; }
+  .od-design-app .od-designer .od-section-title { padding: 12px; }
+  .od-design-app .od-designer .od-catalog-list { padding-left: 12px; padding-right: 12px; }
+  .od-design-app .od-designer .od-model-details { padding: 12px 16px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .od-design-app .od-designer button { transition: none; }
+  .od-design-app .od-designer .od-modal-backdrop { backdrop-filter: none; }
+}

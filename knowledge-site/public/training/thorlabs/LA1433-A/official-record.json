@@ -1,0 +1,71 @@
+{
+  "retrievedAt": "2026-09-30T10:55:43.244152+00:00",
+  "api": "https://www.thorlabs.com/graphql",
+  "product": {
+    "code": "LA1433-A",
+    "name": "LA1433-A",
+    "familyPageUrlTL": "/n-bk7-plano-convex-lenses-ar-coating-350---700-nm",
+    "properties": [],
+    "assets": [
+      {
+        "name": "4437-E0W.pdf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.pdf?v=0116120723",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-e0w.pdf?v=0116120723",
+        "size": 0,
+        "description": "CAD PDF"
+      },
+      {
+        "name": "4437-E0W.dxf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.dxf?v=0116120724",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-e0w.dxf?v=0116120724",
+        "size": 0,
+        "description": "CAD DXF"
+      },
+      {
+        "name": "4437-E0W.sldprt",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.sldprt?v=0116120724",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-e0w.sldprt?v=0116120724",
+        "size": 0,
+        "description": "Solidworks"
+      },
+      {
+        "name": "4437-E0W.step",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.step?v=0116120725",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-e0w.step?v=0116120725",
+        "size": 0,
+        "description": "Step"
+      },
+      {
+        "name": "4437-S02.zar",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-s02.zar?v=0116120723",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-s02.zar?v=0116120723",
+        "size": 0,
+        "description": "Zemax"
+      },
+      {
+        "name": "4437-S03.zmx",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-s03.zmx?v=0116120725",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/l/la/la1/la1433-a/4437-s03.zmx?v=0116120725",
+        "size": 0,
+        "description": "Zemax (ZMX)"
+      }
+    ]
+  },
+  "downloads": [
+    {
+      "name": "4437-E0W.pdf",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.pdf?v=0116120723",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "4437-E0W.step",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-e0w.step?v=0116120725",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "4437-S03.zmx",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/l/la/la1/la1433-a/4437-s03.zmx?v=0116120725",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}

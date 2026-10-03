@@ -1,0 +1,72 @@
+{
+  "code": "AC254-100-A",
+  "dataSheetUrlTL": null,
+  "descriptionsWithFallbacksTL": [
+    {
+      "content": null,
+      "reviewType": "PerItemNoteEUR"
+    },
+    {
+      "content": null,
+      "reviewType": "CalibrationTerms"
+    },
+    {
+      "content": "/item/ac254-100-a",
+      "reviewType": "ItemUrl"
+    },
+    {
+      "content": "[[\"Unmounted Achromatic Doublets, AR Coated: 400 - 700 nm\",\"/unmounted-achromatic-doublets-ar-coated-400---700-nm\"],[\"Cemented Achromatic Doublets\",\"/cemented-achromatic-doublets\"],[\"Achromatic Lenses\",\"/achromatic-lenses\"],[\"Optical Lenses\",\"/optical-lenses\"],[\"Optical Elements\",\"/optical-elements\"],[\"Optics\",\"/optics\"],[\"All Products\",\"/main-visual-navigation\"],[\"AC254-100-A\",\"/item/ac254-100-a\"]]",
+      "reviewType": "Breadcrumb"
+    },
+    {
+      "content": "f = 100 mm, Ø1\" Achromatic Doublet, ARC: 400 - 700 nm",
+      "reviewType": "Title"
+    },
+    {
+      "content": null,
+      "reviewType": "CalibrationInstructions"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNoteJPY"
+    },
+    {
+      "content": "Unmounted Achromatic Doublets, AR Coated: 400 - 700 nm",
+      "reviewType": "FamilyPageName"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNoteCNY"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNoteSEK"
+    },
+    {
+      "content": "/unmounted-achromatic-doublets-ar-coated-400---700-nm",
+      "reviewType": "FamilyPageUrl"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNoteBRL"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNoteGBP"
+    },
+    {
+      "content": null,
+      "reviewType": "PerItemNote"
+    }
+  ],
+  "infoIconTabsTL": [
+    {
+      "title": "Focal Length Shift",
+      "content": "<p style=\"text-align: center;\"><img src=\"https://thin01mstroc282prod.dxcloud.episerver.net/contentassets/68274de7e6bb43adbb697cbbb7811897/ac254-100-a_flshift.gif?v=1202102811\" alt=\"AC254-100-A Focal Length Shift\" width=\"450\" height=\"313\" /></p><p style=\"text-align: center;\">Click <a href=\"https://thin01mstroc282prod.dxcloud.episerver.net/contentassets/68274de7e6bb43adbb697cbbb7811897/ac254-100-a_flshift.xlsx?v=1202102811\">here</a> to download an Excel file containing the data shown in the plot.</p>"
+    },
+    {
+      "title": "Theoretical Transmission",
+      "content": "<p style=\"text-align: center;\"><img src=\"https://thin01mstroc282prod.dxcloud.episerver.net/contentassets/010cd21e1926487b9c20ca31c1d7b29b/ac254-100-a_450.gif?v=1202102812\" alt=\"AC254-100-A Transmission\" /></p><p style=\"text-align: center;\">Click <a href=\"https://thin01mstroc282prod.dxcloud.episerver.net/contentassets/010cd21e1926487b9c20ca31c1d7b29b/ac254-100-a.xlsx?v=1202102812\">here</a> to download an Excel file containing the theoretical data shown in the plot above.&nbsp;The shaded region on the plot indicates the specified wavelength range for the lens. Theoretical transmission includes only transmission of the lens material and does not include absorption from the epoxy used.</p>"
+    }
+  ]
+}

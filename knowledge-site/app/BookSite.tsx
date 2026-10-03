@@ -416,6 +416,10 @@ export function BookSite() {
         <button className="sidebar-search" onClick={openSearch}><SearchIcon /><span>搜索全书</span><kbd>Ctrl K</kbd></button>
         <nav className="book-nav" aria-label="全书目录">
           <button className={`nav-home ${activeSlug === "home" ? "active" : ""}`} onClick={() => navigateTo("home")}>阅读总览</button>
+          <section className="nav-part" aria-label="光学实验室">
+            <h2>LAB · 光学实验室</h2>
+            <a className="nav-chapter" href="/optics/"><span>↗</span>光学实验室</a>
+          </section>
           {groupedChapters.map((group, partIndex) => <section className="nav-part" key={group.part}>
             <h2>PART {String(partIndex).padStart(2, "0")} · {group.part}</h2>
             {group.chapters.map((item) => <div className="nav-chapter-block" key={item.slug}>
@@ -446,6 +450,14 @@ export function BookSite() {
             <dl className="book-stats"><div><dt>{book.stats.chapters}</dt><dd>正式章节</dd></div><div><dt>{book.stats.figures}</dt><dd>书稿图形</dd></div><div><dt>{book.stats.tables}</dt><dd>数据表格</dd></div><div><dt>{book.stats.displayEquations}</dt><dd>行间公式</dd></div></dl>
           </div>
           <figure className="cover-stage"><div className="cover-halo" /><div className="cover-frame"><img src="/cover.webp" width="780" height="503" fetchPriority="high" alt="PCSEL 器件结构示意图" /></div><figcaption><span>DEVICE CONCEPT</span><span>有源区与表面出光结构</span></figcaption></figure>
+          <section aria-labelledby="optics-entry-title" style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px 32px", border: "1px solid #cbdce7", borderRadius: 12, padding: "26px 28px", background: "#f2f8fb" }}>
+            <div style={{ flex: "1 1 260px" }}>
+              <span className="eyebrow" style={{ marginBottom: 9 }}>OPTICS LAB · 光学实验室</span>
+              <h2 id="optics-entry-title" style={{ margin: "0 0 10px", fontSize: 23, lineHeight: 1.4 }}>光学实验室</h2>
+              <p style={{ margin: 0, color: "#596470", fontSize: 14, lineHeight: 1.8 }}>从教程与光路实训开始，在同一实验室自由设计。组合透镜、光阑、反射镜与分光镜，分析光束、焦面和探测支路，并保存可复算的工程。</p>
+            </div>
+            <div className="home-actions" style={{ marginTop: 0 }}><a href="/optics/tutorial/">教程与实训</a><a href="/optics/designer/">自由设计 <span aria-hidden="true" style={{ marginLeft: 12 }}>↗</span></a></div>
+          </section>
           <section className="home-map" aria-label="全书学习路径"><div><span>01</span><h2>从物理图像开始</h2><p>建立开放周期系统、半导体有源腔和真实器件三重视角。</p></div><div><span>02</span><h2>把理论交给数值方法</h2><p>明确 CWT、PWEM、RCWA、FDTD 与 FEM 各自回答什么问题。</p></div><div><span>03</span><h2>最终回到可制造器件</h2><p>用热、电、光耦合和不确定性分析检验设计结论。</p></div></section>
         </article> : chapterLoading ? <section className="content-state" aria-live="polite"><div className="loading-mark">PCSEL</div><p>正在加载本章…</p></section> : chapterError ? <section className="content-state" role="alert"><h1>本章暂时无法显示</h1><p>{chapterError}</p><button onClick={() => window.location.reload()}>重新加载本章</button></section> : chapter && activeMetadata ? <article className="chapter-view" ref={contentRef}>
           <header className="chapter-header"><div className="breadcrumbs"><button onClick={() => navigateTo("home")}>首页</button><span>/</span><span>{chapter.part}</span></div><span className="chapter-index">{chapter.chapterNumber ? `CHAPTER ${String(chapter.chapterNumber).padStart(2, "0")}` : chapter.navLabel}</span><h1>{chapter.title}</h1><div className="chapter-meta"><span>{chapter.headings.length} 个主题</span><span>内容更新：{chapter.sourceUpdated}</span><a href="/book.pdf" target="_blank" rel="noreferrer">对照原书</a></div></header>

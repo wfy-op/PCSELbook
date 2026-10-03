@@ -1,0 +1,78 @@
+{
+  "retrievedAt": "2026-09-30T10:55:52.630780+00:00",
+  "api": "https://www.thorlabs.com/graphql",
+  "product": {
+    "code": "AC254-100-A",
+    "name": "AC254-100-A",
+    "familyPageUrlTL": "/unmounted-achromatic-doublets-ar-coated-400---700-nm",
+    "properties": [],
+    "assets": [
+      {
+        "name": "20529-E0W.pdf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.pdf?v=0116101917",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.pdf?v=0116101917",
+        "size": 0,
+        "description": "CAD PDF"
+      },
+      {
+        "name": "20529-E0W.dxf",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.dxf?v=0116101918",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.dxf?v=0116101918",
+        "size": 0,
+        "description": "CAD DXF"
+      },
+      {
+        "name": "20529-E0W.sldprt",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.sldprt?v=0116101918",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.sldprt?v=0116101918",
+        "size": 0,
+        "description": "Solidworks"
+      },
+      {
+        "name": "20529-E0W.step",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.step?v=0116101918",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.step?v=0116101918",
+        "size": 0,
+        "description": "Step"
+      },
+      {
+        "name": "20529-E0W.html",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.html?v=0116101919",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.html?v=0116101919",
+        "size": 0,
+        "description": "eDrawing / 3D Model"
+      },
+      {
+        "name": "20529-S02.zar",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-s02.zar?v=0116101917",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-s02.zar?v=0116101917",
+        "size": 0,
+        "description": "Zemax"
+      },
+      {
+        "name": "20529-S03.zmx",
+        "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-s03.zmx?v=0116101917",
+        "optiUrl": "https://media.thorlabs.com/globalassets/items/a/ac/ac2/ac254-100-a/20529-s03.zmx?v=0116101917",
+        "size": 0,
+        "description": "Zemax (ZMX)"
+      }
+    ]
+  },
+  "downloads": [
+    {
+      "name": "20529-E0W.pdf",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.pdf?v=0116101917",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "20529-E0W.step",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-e0w.step?v=0116101918",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "20529-S03.zmx",
+      "url": "https://thin01mstroc282prod.dxcloud.episerver.net/globalassets/items/a/ac/ac2/ac254-100-a/20529-s03.zmx?v=0116101917",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}
