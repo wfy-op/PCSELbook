@@ -8,8 +8,8 @@ export function sceneAtScanValue(scene: FoldedScene, options: FoldedScanOptions,
   const element = scene.elements.find(e => e.id === options.elementId);
   if (!element) throw new Error('扫描元件不存在。');
   if (!['x', 'y', 'angleDeg', 'focal'].includes(options.parameter)) throw new Error('不支持此扫描变量。');
-  if (options.parameter === 'focal' && element.kind !== 'lens') throw new Error('焦距只适用于透镜。');
-  return parseFoldedScene({ ...scene, elements: scene.elements.map(e => e.id === element.id ? { ...e, [options.parameter]: value } : e) });
+  if (options.parameter === 'focal' && element.kind !== 'lens' && element.kind !== 'objective') throw new Error('焦距只适用于透镜或物镜。');
+  return parseFoldedScene({ ...scene, elements: scene.elements.map(e => e.id === element.id ? { ...e, [options.parameter]: value, ...(options.parameter === 'focal' && e.objective ? { objective: { ...e.objective, catalogSku: undefined } } : {}) } : e) });
 }
 
 /** Every sample is an independent geometric trace. Missing/zero-power targets are never optima. */

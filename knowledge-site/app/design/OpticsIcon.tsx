@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react'
 
 export type OpticsIconName =
-  | 'lens' | 'iris' | 'mirror' | 'splitter' | 'detector' | 'source'
+  | 'lens' | 'objective' | 'iris' | 'mirror' | 'splitter' | 'detector' | 'source'
   | 'save' | 'undo' | 'redo' | 'import' | 'export' | 'report'
   | 'grid' | 'book' | 'layers' | 'arrowRight' | 'check' | 'search'
   | 'settings' | 'scan' | 'target' | 'optics' | 'chevronDown'
 
 const shapes: Record<OpticsIconName, ReactNode> = {
+  objective: <><path d="M5 3h14v5H5zM7 8v8l3 5h4l3-5V8M7 13h10M10 21v-3h4v3" /><path d="M3 5h2m14 0h2" /></>,
   chevronDown: <path d="m6 9 6 6 6-6" />,
   lens: <><path d="M12 3C7.7 7.6 7.7 16.4 12 21C16.3 16.4 16.3 7.6 12 3Z" /><path d="M2.5 12H8M16 12h5.5" /></>,
   iris: <><circle cx="12" cy="12" r="9" /><path d="m11 3 5 5-1 6M20 8h-7l-4 4M20 17l-3-6-6-2M13 21l-5-5 1-6M4 16h7l4-4M4 7l3 6 6 2" /></>,

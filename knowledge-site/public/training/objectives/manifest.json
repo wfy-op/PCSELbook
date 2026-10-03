@@ -1,0 +1,32 @@
+[
+  {
+    "sku": "RMS4X",
+    "retrievedAt": "2026-10-03T16:41:01.086273+00:00",
+    "record": "/training/objectives/RMS4X.json"
+  },
+  {
+    "sku": "RMS10X",
+    "retrievedAt": "2026-10-03T16:41:01.094885+00:00",
+    "record": "/training/objectives/RMS10X.json"
+  },
+  {
+    "sku": "RMS20X",
+    "retrievedAt": "2026-10-03T16:41:01.075298+00:00",
+    "record": "/training/objectives/RMS20X.json"
+  },
+  {
+    "sku": "RMS40X",
+    "retrievedAt": "2026-10-03T16:41:04.499226+00:00",
+    "record": "/training/objectives/RMS40X.json"
+  },
+  {
+    "sku": "MY10X-803",
+    "retrievedAt": "2026-10-03T16:41:04.684283+00:00",
+    "record": "/training/objectives/MY10X-803.json"
+  },
+  {
+    "sku": "MY20X-804",
+    "retrievedAt": "2026-10-03T16:41:04.520280+00:00",
+    "record": "/training/objectives/MY20X-804.json"
+  }
+]

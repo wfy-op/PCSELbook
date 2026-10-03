@@ -1,0 +1,69 @@
+{
+  "retrievedAt": "2026-10-03T16:41:04.499226+00:00",
+  "api": "https://www.thorlabs.com/graphql",
+  "product": {
+    "code": "RMS40X",
+    "name": "RMS40X",
+    "familyPageUrlTL": "/imaging-microscope-objectives",
+    "properties": [],
+    "descriptionsWithFallbacksTL": [
+      {
+        "content": null,
+        "reviewType": "CalibrationTerms"
+      },
+      {
+        "content": "/imaging-microscope-objectives",
+        "reviewType": "FamilyPageUrl"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteJPY"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteSEK"
+      },
+      {
+        "content": "<p>40X Evident Plan Achromat Objective, 0.65 NA, 0.6 mm WD</p>",
+        "reviewType": "Title"
+      },
+      {
+        "content": null,
+        "reviewType": "CalibrationInstructions"
+      },
+      {
+        "content": "/item/rms40x",
+        "reviewType": "ItemUrl"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteGBP"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteBRL"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteEUR"
+      },
+      {
+        "content": "[[\"Imaging Microscope Objectives, Air\",\"/imaging-microscope-objectives\"],[\"Objective Lenses, Scan Lenses, and Tube Lenses\",\"/objective-lenses-scan-lenses-and-tube-lenses\"],[\"Optical Systems\",\"/optical-systems\"],[\"Optics\",\"/optics\"],[\"All Products\",\"/main-visual-navigation\"],[\"RMS40X\",\"/item/rms40x\"]]",
+        "reviewType": "Breadcrumb"
+      },
+      {
+        "content": "Imaging Microscope Objectives, Air",
+        "reviewType": "FamilyPageName"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteCNY"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNote"
+      }
+    ],
+    "infoIconTabsTL": []
+  }
+}

@@ -14,8 +14,10 @@
  * https://www.edmundoptics.com/knowledge-center/application-notes/optics/geometrical-optics-101-paraxial-ray-tracing-calculations/
  * https://www.thorlabs.com/NewGroupPage9_PF.cfm?ObjectGroup_ID=4808
  */
+import { objectiveDefaults, objectiveParts, objectiveWarnings, parseObjectiveModel, type ObjectiveModel } from './objective-model.ts';
+
 export type FoldedPoint = { x: number; y: number };
-export type FoldedKind = 'lens' | 'iris' | 'mirror' | 'beamsplitter' | 'detector';
+export type FoldedKind = 'lens' | 'objective' | 'iris' | 'mirror' | 'beamsplitter' | 'detector';
 export type FoldedSource = FoldedPoint & {
   directionDeg: number; diameter: number; fullAngle: number; rayCount: number;
   intensity: number; wavelength: number; model: 'fan' | 'extended';
@@ -23,6 +25,7 @@ export type FoldedSource = FoldedPoint & {
 export type FoldedElement = FoldedPoint & {
   id: string; kind: FoldedKind; name: string; angleDeg: number;
   diameter: number; aperture: number; focal: number; reflectance: number; transmittance: number;
+  objective?: ObjectiveModel;
 };
 export type FoldedScene = {
   version: 1; name: string; source: FoldedSource;
@@ -51,7 +54,7 @@ export type FoldedTraceOptions = { maxEvents?: number; maxSegments?: number; min
 
 const EPS = 1e-8;
 const DEG = Math.PI / 180;
-const kinds: FoldedKind[] = ['lens', 'iris', 'mirror', 'beamsplitter', 'detector'];
+const kinds: FoldedKind[] = ['lens', 'objective', 'iris', 'mirror', 'beamsplitter', 'detector'];
 const dot = (a: FoldedPoint, b: FoldedPoint) => a.x * b.x + a.y * b.y;
 const add = (a: FoldedPoint, b: FoldedPoint): FoldedPoint => ({ x: a.x + b.x, y: a.y + b.y });
 const scale = (a: FoldedPoint, k: number): FoldedPoint => ({ x: a.x * k, y: a.y * k });
@@ -62,13 +65,15 @@ const unit = (a: FoldedPoint): FoldedPoint => scale(a, 1 / Math.hypot(a.x, a.y))
 const wrapAngle = (r: number) => Math.atan2(Math.sin(r), Math.cos(r));
 
 export function foldedElement(kind: FoldedKind, id: string, x = 250, y = 250): FoldedElement {
-  const names: Record<FoldedKind, string> = { lens: '薄透镜', iris: '光阑', mirror: '反射镜', beamsplitter: '半透半反镜', detector: '探测面' };
+  const names: Record<FoldedKind, string> = { lens: '薄透镜', objective: '等效物镜', iris: '光阑', mirror: '反射镜', beamsplitter: '半透半反镜', detector: '探测面' };
   const diameter = kind === 'detector' ? 40 : kind === 'lens' || kind === 'iris' ? 25.4 : 36;
+  const objective = kind === 'objective' ? parseObjectiveModel(objectiveParts[1]) : undefined;
   return {
     id, kind, name: names[kind], x, y, angleDeg: kind === 'mirror' || kind === 'beamsplitter' ? -45 : 0,
     diameter, aperture: kind === 'detector' ? diameter : kind === 'lens' || kind === 'iris' ? 22.86 : 32,
     focal: 100, reflectance: kind === 'beamsplitter' ? .5 : kind === 'mirror' ? 1 : 0,
     transmittance: kind === 'beamsplitter' ? .5 : kind === 'lens' || kind === 'iris' ? 1 : 0,
+    ...(objective ? { ...objectiveDefaults(objective), objective, transmittance: 1 } : {}),
   };
 }
 export function blankFoldedScene(): FoldedScene {
@@ -78,7 +83,7 @@ export function blankFoldedScene(): FoldedScene {
     elements: [],
   };
 }
-export function foldedPresets(): Record<'mirror' | 'split' | 'focus' | 'blank', FoldedScene> {
+export function foldedPresets(): Record<'mirror' | 'split' | 'focus' | 'objective' | 'blank', FoldedScene> {
   const blank = blankFoldedScene();
   const mirror: FoldedScene = { ...blankFoldedScene(), name: '90° 折转光路', elements: [
     foldedElement('mirror', 'mirror-1', 320, 150),
@@ -96,7 +101,13 @@ export function foldedPresets(): Record<'mirror' | 'split' | 'focus' | 'blank', 
     foldedElement('mirror', 'mirror-1', 300, 150),
     { ...foldedElement('detector', 'detector-1', 300, 200), angleDeg: 90 },
   ] };
-  return { mirror, split, focus, blank };
+  const objective: FoldedScene = { ...blankFoldedScene(), name: '10× 物镜与筒镜成像',
+    source: { ...blank.source, diameter: .1, fullAngle: 40, model: 'extended' },
+    elements: [foldedElement('objective', 'objective-1', 78, 150),
+      { ...foldedElement('lens', 'tube-lens', 320, 150), name: '理想筒镜 f180', focal: 180 },
+      foldedElement('detector', 'image-1', 500, 150)],
+  };
+  return { mirror, split, focus, objective, blank };
 }
 
 function record(input: unknown, label: string): Record<string, unknown> {
@@ -144,7 +155,8 @@ export function parseFoldedScene(input: unknown): FoldedScene {
     const defaults = foldedElement(kind, e.id);
     const diameter = number(e.diameter, '元件物理直径', .01, 500);
     const focal = number(e.focal, '焦距', -10000, 10000, defaults.focal);
-    if (kind === 'lens' && Math.abs(focal) < 1) throw new Error('薄透镜焦距绝对值必须不小于 1 mm');
+    if ((kind === 'lens' || kind === 'objective') && (Math.abs(focal) < 1 || kind === 'objective' && focal < 0)) throw new Error('透镜 |f| ≥ 1 mm；物镜焦距须为正。');
+    const objective = kind === 'objective' ? parseObjectiveModel(e.objective) : undefined;
     const reflectance = number(e.reflectance, '反射率', 0, 1, defaults.reflectance);
     const transmittance = number(e.transmittance, '透射率', 0, 1, defaults.transmittance);
     if (kind === 'beamsplitter' && reflectance + transmittance > 1 + 1e-12) throw new Error('分光镜反射率与透射率之和不能大于 1');
@@ -153,6 +165,7 @@ export function parseFoldedScene(input: unknown): FoldedScene {
       x: number(e.x, '元件 X', bounds.minX, bounds.maxX), y: number(e.y, '元件 Y', bounds.minY, bounds.maxY),
       angleDeg: number(e.angleDeg, '法线角度', -3600, 3600), diameter,
       aperture: number(e.aperture, '有效孔径', .001, diameter), focal, reflectance, transmittance,
+      ...(objective ? { objective } : {}),
     };
   });
   return { version: 1, name: name(raw.name, '工程名称', '自由空间光路'), bounds, source, elements };
@@ -286,5 +299,6 @@ export function traceFoldedScene(input: FoldedScene, options: FoldedTraceOptions
   energy.balanceError = energy.input - energy.captured - energy.escaped - energy.absorbed - energy.unresolved;
   if (energy.escaped > scene.source.intensity * 1e-6) warnings.add('有光线离开画布；有限物理元件之外的光线会绕过元件，离开画布不等于被吸收。');
   if (energy.absorbed > scene.source.intensity * 1e-6) warnings.add('孔径遮挡或设定的 R + T 损耗吸收了部分采样功率。');
+  for (const e of scene.elements) if (e.objective) for (const warning of objectiveWarnings(e.objective, scene.source.wavelength)) warnings.add(warning);
   return { segments, detectors, footprints, energy, sourceRayCount: initial.length, warnings: [...warnings] };
 }

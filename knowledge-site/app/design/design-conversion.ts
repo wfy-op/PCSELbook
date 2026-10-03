@@ -12,7 +12,7 @@ export function convertSequentialProject(p: DesignProject): FoldedScene {
     source: { x: 0, y: p.source.offset, directionDeg: p.source.tilt * 180 / (1000 * Math.PI), diameter: p.source.diameter, fullAngle: p.source.fullAngle, rayCount: 25, intensity: 1, wavelength: p.source.wavelength, model: p.source.model },
     bounds: { minX: -100, maxX: p.screen + 100, minY: -halfHeight, maxY: halfHeight },
     elements: [
-      ...p.elements.map(e => ({ id: /^[a-zA-Z0-9_-]{1,64}$/.test(e.id) ? e.id : crypto.randomUUID(), kind: e.kind, name: e.name.trim() || (e.kind === 'lens' ? '薄透镜' : '光阑'), x: e.z, y: e.y, angleDeg: 0, diameter: e.diameter, aperture: e.aperture, focal: e.focal, reflectance: 0, transmittance: 1 })),
+      ...p.elements.map(e => ({ id: /^[a-zA-Z0-9_-]{1,64}$/.test(e.id) ? e.id : crypto.randomUUID(), kind: e.objective ? 'objective' : e.kind, name: e.name.trim() || (e.kind === 'lens' ? '薄透镜' : '光阑'), x: e.z, y: e.y, angleDeg: 0, diameter: e.diameter, aperture: e.aperture, focal: e.focal, reflectance: 0, transmittance: 1, ...(e.objective ? { objective: e.objective } : {}) })),
       { id: crypto.randomUUID(), kind: 'detector' as const, name: p.screenAperture > 0 ? '原目标面' : '原目标面（有限视场）', x: p.screen, y: 0, angleDeg: 0, diameter: Math.max(25.4, aperture), aperture, focal: 100, reflectance: 0, transmittance: 0 },
     ],
   });

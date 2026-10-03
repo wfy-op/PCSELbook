@@ -1,0 +1,69 @@
+{
+  "retrievedAt": "2026-10-03T16:41:04.684283+00:00",
+  "api": "https://www.thorlabs.com/graphql",
+  "product": {
+    "code": "MY10X-803",
+    "name": "MY10X-803",
+    "familyPageUrlTL": "/long-working-distance-objectives",
+    "properties": [],
+    "descriptionsWithFallbacksTL": [
+      {
+        "content": "/long-working-distance-objectives",
+        "reviewType": "FamilyPageUrl"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteEUR"
+      },
+      {
+        "content": null,
+        "reviewType": "CalibrationInstructions"
+      },
+      {
+        "content": "/item/my10x-803",
+        "reviewType": "ItemUrl"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteJPY"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteBRL"
+      },
+      {
+        "content": "[[\"Long Working Distance Objectives\",\"/long-working-distance-objectives\"],[\"Objective Lenses, Scan Lenses, and Tube Lenses\",\"/objective-lenses-scan-lenses-and-tube-lenses\"],[\"Optical Systems\",\"/optical-systems\"],[\"Optics\",\"/optics\"],[\"All Products\",\"/main-visual-navigation\"],[\"MY10X-803\",\"/item/my10x-803\"]]",
+        "reviewType": "Breadcrumb"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteGBP"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteCNY"
+      },
+      {
+        "content": "10X Mitutoyo Plan Apochromat Objective, 436 - 656 nm, 0.28 NA, 34 mm WD",
+        "reviewType": "Title"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNote"
+      },
+      {
+        "content": null,
+        "reviewType": "PerItemNoteSEK"
+      },
+      {
+        "content": null,
+        "reviewType": "CalibrationTerms"
+      },
+      {
+        "content": "Long Working Distance Objectives",
+        "reviewType": "FamilyPageName"
+      }
+    ],
+    "infoIconTabsTL": []
+  }
+}

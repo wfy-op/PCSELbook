@@ -13,6 +13,8 @@
  * https://www.rp-photonics.com/m2_factor.html
  */
 
+import { objectiveDefaults, objectivePupil, objectiveWarnings, parseObjectiveModel, type ObjectiveModel } from './objective-model.ts';
+
 export type DesignSource = {
   mode: 'geometric' | 'gaussian'; model: 'fan' | 'extended';
   diameter: number; fullAngle: number; offset: number; tilt: number;
@@ -21,7 +23,8 @@ export type DesignSource = {
 export type DesignElement = {
   id: string; kind: 'lens' | 'iris'; name: string; sku?: string;
   z: number; y: number; focal: number; diameter: number; aperture: number;
-  apertureBasis?: 'assumed-90-percent' | 'custom';
+  apertureBasis?: 'assumed-90-percent' | 'estimated-objective-pupil' | 'custom';
+  objective?: ObjectiveModel;
 };
 export type DesignCatalogPart = {
   sku: string; focal: number; diameter: number; aperture: number;
@@ -84,6 +87,11 @@ export const blankProject = (): DesignProject => ({
 export const customDesignLens = (id: string, z = 150): DesignElement => ({
   id, kind: 'lens', name: '自定义正透镜', z, y: 0, focal: 50, diameter: 25.4, aperture: 22.86, apertureBasis: 'custom',
 });
+export function catalogDesignObjective(part: ObjectiveModel & { sku: string }, id: string, z = 150): DesignElement {
+  const objective = parseObjectiveModel(part);
+  return { ...customDesignLens(id, z), name: `${part.sku} · ${part.magnification}× 物镜`,
+    ...objectiveDefaults(objective), objective, apertureBasis: 'estimated-objective-pupil' };
+}
 export const catalogDesignLens = (part: DesignCatalogPart, id: string, z = 150): DesignElement => ({
   ...customDesignLens(id, z), name: part.sku, sku: part.sku, focal: part.focal,
   diameter: part.diameter, aperture: part.aperture, apertureBasis: 'assumed-90-percent',
@@ -277,6 +285,7 @@ export function analyzeDesign(project: DesignProject): DesignAnalysis {
   const bfl = afocal ? null : -systemMatrix.A / systemMatrix.C;
   const gaussian = project.source.mode === 'gaussian' ? gaussianAnalysis(project, elements) : null;
   const warnings: string[] = [];
+  for (const e of elements) if (e.objective) warnings.push(...objectiveWarnings(e.objective, project.source.wavelength));
   if (trace.maxSlope > .1) warnings.push('光线斜率超过 0.1 rad，近轴结果仅作粗略参考。');
   if (elements.some((e, i) => i > 0 && e.z - elements[i - 1].z < 1)) warnings.push('元件主平面间距小于 1 mm；本模型不验证镜片厚度及机械干涉。');
   if (trace.passed !== trace.total && !gaussian) warnings.push('部分几何采样光线被孔径截断；采样通过数不代表功率透过率。');
@@ -311,11 +320,14 @@ export function parseDesignProject(input: unknown, catalog: readonly DesignCatal
   if (!finite(screenAperture, 0, 100)) throw new Error('目标面孔径无效（0 表示不限制，最大 100 mm）。');
   const ids = new Set<string>();
   const elements: DesignElement[] = raw.elements.map(e => {
-    if (!object(e) || !['lens', 'iris'].includes(String(e.kind)) || typeof e.id !== 'string' || !e.id.trim() || e.id.length > 80 || ids.has(e.id) || typeof e.name !== 'string' || e.name.length > 120 || !finite(e.z, .1, screen - .1) || !finite(e.y, -100, 100) || !finite(e.focal, -5000, 5000) || Math.abs(e.focal) < 5 || !finite(e.diameter, .1, 100) || !finite(e.aperture, .01, e.diameter)) throw new Error('元件 ID、位置、孔径或焦距无效（|f| 至少 5 mm）。');
+    if (!object(e) || !['lens', 'iris'].includes(String(e.kind)) || typeof e.id !== 'string' || !e.id.trim() || e.id.length > 80 || ids.has(e.id) || typeof e.name !== 'string' || e.name.length > 120 || !finite(e.z, .1, screen - .1) || !finite(e.y, -100, 100) || !finite(e.focal, -5000, 5000) || Math.abs(e.focal) < (e.objective === undefined ? 5 : 1) || !finite(e.diameter, .1, 100) || !finite(e.aperture, .01, e.diameter)) throw new Error('元件 ID、位置、孔径或焦距无效（透镜 |f| ≥ 5 mm，物镜 f ≥ 1 mm）。');
+    if (e.objective !== undefined && (e.kind !== 'lens' || e.focal < 1)) throw new Error('物镜必须是正焦距等效透镜。');
+    const objective = e.objective === undefined ? undefined : parseObjectiveModel(e.objective);
     ids.add(e.id);
     const part = e.kind === 'lens' && typeof e.sku === 'string' ? catalog.find(p => p.sku === e.sku && Math.abs(p.focal - Number(e.focal)) < 1e-8 && Math.abs(p.diameter - Number(e.diameter)) < 1e-8) : undefined;
     return { id: e.id, kind: e.kind as DesignElement['kind'], name: e.name, z: e.z, y: e.y, focal: e.focal, diameter: e.diameter, aperture: e.aperture,
-      ...(part ? { sku: part.sku } : {}), apertureBasis: part && Math.abs(part.aperture - e.aperture) < 1e-8 ? 'assumed-90-percent' : 'custom' };
+      ...(part ? { sku: part.sku } : {}), ...(objective ? { objective } : {}),
+      apertureBasis: objective && Math.abs(objectivePupil(objective) - e.aperture) < 1e-8 ? 'estimated-objective-pupil' : part && Math.abs(part.aperture - e.aperture) < 1e-8 ? 'assumed-90-percent' : 'custom' };
   });
   return { version: 2, name: raw.name, screen, screenAperture, elements,
     source: { mode: s.mode as DesignSource['mode'], model: s.model as DesignSource['model'], diameter: s.diameter, fullAngle: s.fullAngle, offset: s.offset, tilt: s.tilt, wavelength: s.wavelength, w0: s.w0, waistZ: s.waistZ, m2: s.m2 } };

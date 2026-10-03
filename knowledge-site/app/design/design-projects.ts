@@ -1,4 +1,5 @@
-import { blankProject, customDesignLens, parseDesignProject, type DesignProject } from './design-engine';
+import { blankProject, catalogDesignObjective, customDesignLens, parseDesignProject, type DesignProject } from './design-engine';
+import { objectiveParts } from './objective-model';
 import catalog from '../training/thorlabs-catalog.json';
 
 export type DesignGoal = { kind: 'focus' | 'diameter' | 'collimation'; value: number };
@@ -11,6 +12,7 @@ export const presets = [
   { id: 'relay', name: '4f 中继', description: '50 / 100 mm · 倒像倍率 −2' },
   { id: 'pump', name: '扩束后聚焦', description: '三片理想透镜 · 光泵设计起点' },
   { id: 'gaussian', name: 'Gaussian 聚焦', description: '532 nm · 理想单透镜' },
+  { id: 'objective', name: '10× 物镜与筒镜成像', description: 'f18 / f180 mm · 物面到像面' },
   { id: 'blank', name: '空白光路', description: '从光源与目标面开始' },
 ];
 export function presetProject(id: string): DesignProject {
@@ -22,6 +24,7 @@ export function presetProject(id: string): DesignProject {
   if (id === 'relay') { p.source.model = 'extended'; p.source.fullAngle = 30; p.source.diameter = 2; p.elements = [lens(50, 50), lens(200, 100)]; p.screen = 300; }
   if (id === 'pump') { p.source.diameter = 2; p.elements = [lens(60, 50), lens(210, 100), lens(330, 75)]; p.screen = 405; }
   if (id === 'gaussian') { p.source.mode = 'gaussian'; p.source.wavelength = 532; p.source.w0 = 1; p.source.waistZ = 100; p.source.m2 = 1; p.elements = [lens(100, 100)]; p.screen = 200; }
+  if (id === 'objective') { p.source.model = 'extended'; p.source.diameter = .1; p.source.fullAngle = 40; p.elements = [catalogDesignObjective(objectiveParts[1], crypto.randomUUID(), 18), { ...lens(260, 180), name: '理想筒镜 f180' }]; p.screen = 440; }
   return p;
 }
 export function parseDesignFile(input: unknown): DesignFile {

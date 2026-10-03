@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { foldedLabels } from './folded-labels';
 import type { FoldedScene } from './folded-engine';
 import { bestFoldedScanPoint, scanFoldedParameter, sceneAtScanValue, type FoldedScanOptions, type FoldedScanParameter, type FoldedScanPoint } from './folded-scan';
 
@@ -11,13 +12,15 @@ function Field({ label, value, change, min, max, unit }: { label: string; value:
 }
 
 export function FoldedScan({ scene, commit }: { scene: FoldedScene; commit: (next: FoldedScene) => void }) {
-  const fallback = scene.elements.find(e => e.kind === 'lens') ?? scene.elements[0];
+  const fallback = scene.elements.find(e => e.kind === 'lens' || e.kind === 'objective') ?? scene.elements[0];
   const [elementId, setElementId] = useState(fallback?.id ?? '');
   const [detectorId, setDetectorId] = useState(scene.elements.find(e => e.kind === 'detector')?.id ?? '');
   const [parameter, setParameter] = useState<FoldedScanParameter>('x');
   const element = scene.elements.find(e => e.id === elementId) ?? fallback;
   const detector = scene.elements.find(e => e.id === detectorId && e.kind === 'detector') ?? scene.elements.find(e => e.kind === 'detector');
-  const activeParameter = parameter === 'focal' && element?.kind !== 'lens' ? 'x' : parameter;
+  const lensLike = element?.kind === 'lens' || element?.kind === 'objective';
+  const labelsById = foldedLabels(scene);
+  const activeParameter = parameter === 'focal' && !lensLike ? 'x' : parameter;
   const [min, setMin] = useState((fallback?.x ?? 250) - 30);
   const [max, setMax] = useState((fallback?.x ?? 250) + 30);
   const [minCapture, setMinCapture] = useState(10);
@@ -48,9 +51,9 @@ export function FoldedScan({ scene, commit }: { scene: FoldedScene; commit: (nex
     <div className="od-section-title"><h2 id="fd-scan-title">按需求扫描空间光路</h2><span>21 点实际追迹 · 先预览再应用</span></div>
     <p>选择变量和目标探测器，比较一维采样 RMS；同时要求探测器接收足够的输入份额。无接收与追迹未完成的点不会被选为最优。</p>
     <div className="fd-scan-controls">
-      <label className="od-select-field">扫描元件<select aria-label="空间扫描元件" value={element?.id ?? ''} onChange={e => { setElementId(e.target.value); centerRange(e.target.value, activeParameter); }}>{scene.elements.map(e => <option key={e.id} value={e.id}>{e.name} · {e.id.slice(0, 8)}</option>)}</select></label>
-      <label className="od-select-field">变量<select aria-label="空间扫描变量" value={activeParameter} onChange={e => { const param = e.target.value as FoldedScanParameter; setParameter(param); centerRange(element?.id ?? '', param); }}>{Object.entries(labels).filter(([p]) => p !== 'focal' || element?.kind === 'lens').map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-      <label className="od-select-field">目标探测器<select aria-label="空间扫描目标探测器" value={detector?.id ?? ''} onChange={e => setDetectorId(e.target.value)}>{scene.elements.filter(e => e.kind === 'detector').map(e => <option key={e.id} value={e.id}>{e.name} · {e.id.slice(0, 8)}</option>)}</select></label>
+      <label className="od-select-field">扫描元件<select aria-label="空间扫描元件" value={element?.id ?? ''} onChange={e => { setElementId(e.target.value); centerRange(e.target.value, activeParameter); }}>{scene.elements.map(e => <option key={e.id} value={e.id}>{labelsById.get(e.id)!.label}</option>)}</select></label>
+      <label className="od-select-field">变量<select aria-label="空间扫描变量" value={activeParameter} onChange={e => { const param = e.target.value as FoldedScanParameter; setParameter(param); centerRange(element?.id ?? '', param); }}>{Object.entries(labels).filter(([p]) => p !== 'focal' || lensLike).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+      <label className="od-select-field">目标探测器<select aria-label="空间扫描目标探测器" value={detector?.id ?? ''} onChange={e => setDetectorId(e.target.value)}>{scene.elements.filter(e => e.kind === 'detector').map(e => <option key={e.id} value={e.id}>{labelsById.get(e.id)!.label}</option>)}</select></label>
       <Field label="空间扫描起始值" value={min} min={-10000} max={10000} change={setMin} /><Field label="空间扫描结束值" value={max} min={-10000} max={10000} change={setMax} />
       <Field label="最小接收份额" value={minCapture} min={0} max={100} unit="%" change={setMinCapture} />
     </div>
