@@ -91,6 +91,25 @@ R/T 是可编辑的非相干功率系数，满足 R+T≤1；无损联动开关�
 
 桌面空间模式的元件库和参数面板可独立滚动；手机继续使用局部画布缩放和表格滚动。现有两种模式的完整浏览器流程已复核，结果、截图与本地静态构建保存在忽略的 `outputs/design-v6-*`。本次没有上传 Cloudflare。
 
+## 工作台交互与本地验收
+
+Impeccable 界面优化沿用暖白与深绿风格。`WorkspacePanel.tsx` 在宽度低于 1100 px 时默认收起器件库和参数面板，选择新元件时展开参数；桌面保持两侧面板可用。导入、导出与报告集中到“工程文件”，保存副本、撤销和重做直接可见。模型切换支持左右方向键、Home 和 End，并同步键盘焦点。空间画布的标签与选择区域按屏幕尺寸缩放，画布下方的选择菜单提供完整元件名称；实际光学坐标、计算模型、工程格式及存储键保持原样。实验室手机页头高度为 116 px，教程锚点采用同一高度避让。
+
+浏览器验收脚本已纳入版本管理：`scripts/qa_optical_lab.mjs`。先确认现有本地服务可用，再在 `knowledge-site` 目录运行：
+
+```powershell
+npm run qa:optics
+```
+
+脚本默认动态导入已安装的 `playwright`，使用 Microsoft Edge 访问 `http://127.0.0.1:5175`；不启动服务，在独立的临时浏览器上下文中检查导航、草稿与工程往返、键盘操作、折叠面板和响应式布局。JSON 结果与截图默认写入忽略的 `outputs/optical-lab-qa/`；以实际生成的结果确认通过情况。可选环境变量为：
+
+- `PCSEL_PLAYWRIGHT_MODULE`：现有 Playwright 模块标识或 `file://` URL，无需为检查重复安装依赖。
+- `PCSEL_OPTICS_URL`：已运行的预览服务地址。
+- `PCSEL_OPTICS_QA_OUTPUT`：结果目录，支持相对于 `knowledge-site` 的路径或绝对路径。
+- `PCSEL_OPTICS_BROWSER_CHANNEL`：已安装的浏览器通道，默认 `msedge`。
+
+网站文件由父目录 PCSELbook 仓库统一管理。本次使用 `codex/optical-lab-impeccable` 分支，功能基线已保存为 `4f7fab3`，界面调整单独提交。按相关文件清单暂存，避免 `git add .` / `git add -A` 混入其他书稿或审阅改动；构建、截图和临时文件留在忽略的 `outputs/`。本地提交不会自动推送远端或上传 Cloudflare。
+
 ## 阅读进度与章节跳转
 
 - 章节、小节、滚动位置和更新时间保存在浏览器 `localStorage` 的 `pcsel-reading-progress-v1` 中。

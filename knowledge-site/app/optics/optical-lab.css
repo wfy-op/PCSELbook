@@ -35,6 +35,9 @@ html.ol-document, body.ol-document { overflow-x: clip; overflow-y: visible; }
 .ol-pages a[aria-current=page] { background: #fff; color: #19614e; font-weight: 600; box-shadow: 0 2px 6px #24473412; }
 .ol-book-link { font-size: 12px; white-space: nowrap; }
 .ol-book-link span { margin-left: 5px; }
+.ol-lab ::selection { color: #163f30; background: #d3e9dc; }
+.ol-lab :is(input, textarea) { caret-color: #176d55; }
+.ol-lab a:focus-visible { outline: 2px solid #176d55; outline-offset: 3px; }
 
 /* The shared header owns page navigation; model controls remain within design. */
 .ol-lab .od-design-app .od-mode-switch { position: static; min-height: 66px; padding: 10px 24px; gap: 18px; background: #f8faf6; box-shadow: none; }
@@ -52,16 +55,18 @@ html.ol-document, body.ol-document { overflow-x: clip; overflow-y: visible; }
 }
 
 @media (max-width: 720px) {
-  .ol-lab { --ol-header-height: 128px; }
-  .ol-header { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 12px 14px; }
+  .ol-lab { --ol-header-height: 116px; }
+  .ol-header { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 14px; }
   .ol-mark { width: 38px; height: 38px; border-radius: 10px; }
   .ol-brand strong { font-size: 16px; }
   .ol-book-link { font-size: 11px; }
   .ol-pages { grid-row: 2; grid-column: 1 / -1; }
-  .ol-pages a { flex: 1; padding: 9px 12px; }
-  .ol-lab .od-design-app .od-mode-switch { gap: 8px; padding: 10px 12px; flex-wrap: wrap; }
+  .ol-pages a { flex: 1; min-height: 44px; padding: 9px 12px; }
+  .ol-lab .od-design-app .od-mode-switch { gap: 0; min-height: 60px; padding: 6px 12px; flex-wrap: wrap; }
+  .ol-lab .ol-model-label { display: none; }
   .ol-lab .od-design-app .od-mode-switch [role=tablist] { flex: 1 1 100%; width: 100%; }
   .ol-lab .od-design-app .od-mode-switch [role=tab] { padding: 9px 6px; }
+  .ol-lab .od-mode-detail { display: none; }
 }
 
 @media print {
