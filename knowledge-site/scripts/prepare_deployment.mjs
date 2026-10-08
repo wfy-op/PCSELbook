@@ -43,4 +43,4 @@ try { history = JSON.parse(await readFile(historyPath, 'utf8')); } catch (e) { i
 if (checked.length) history.push(report);
 await writeFile(historyPath, JSON.stringify(history, null, 2), 'utf8');
 await writeFile(path.join(reportDir, 'deployment-preflight.json'), JSON.stringify(report, null, 2), 'utf8');
-console.log(`Release preparation passed: ${modules.length} pure calculation modules; ${checked.length} temporary files recycled (${report.bytes} bytes).`);
+console.log(`Release preparation passed: static-book deployment audit verified; ${checked.length} temporary files recycled (${report.bytes} bytes).`);
