@@ -23,54 +23,11 @@ npm run sync:book
 
 ## 光学实验室
 
-在 `knowledge-site` 目录运行 `npm run dev:training`，打开 `http://127.0.0.1:5175/optics/`。此命令直接启动 Vite，使用已有教材数据，不执行书稿同步。5175 已登记给本项目；恢复服务前检查全局端口表和所有绑定地址的实际监听，冲突时另选登记端口，不停止其他项目。
+实验室是 [独立项目](../optical-lab/README.md)，网址为 <https://optical-lab-feiyang.pages.dev/>。教材首页和侧栏仅提供跳转链接。光学源码、规格资料、计算与验收脚本已移到 `../optical-lab/`；在该目录使用 `npm run dev`，本机端口为登记的 5175。
 
-- `/optics/tutorial/`：八节任务课程、近轴练习、组内泵浦案例和浏览器内实操记录。
-- `/optics/designer/`：空间布局为主的设计工作台，另保留顺序 ABCD/Gaussian 模式。
+旧 `/optics/`、`/optics/tutorial/`、`/optics/designer/` 和 training/design 地址跳转到独立站。`/optics/migrate/` 留在教材域名，导出原浏览器实验室记录，再到新首页底部导入。阅读记录与实验室记录分开，跨域迁移必须通过导出/导入。
 
-首页和教材侧栏提供统一实验室入口，页头在教程与设计间导航。旧 `/training/optical-bench/`、`/design/optical-bench/` 继续兼容无尾斜线地址。页面间切换恢复已持久化草稿；教材搜索不索引这些工作区，阅读进度保持独立。布局和路由维护入口为 `app/optics/OpticalLab.tsx`、`src/main.tsx` 与 `scripts/finalize_static_site.mjs`。
-
-### 设计、计算与模型边界
-
-空间画布优先占据桌面操作区域，装备库按类别展开选择，参数面板固定范围仅在画布行内，小屏使用不挤动画布的底部面板；查看结果时自动收起。网格和吸附间隔独立输入毫米；元件图标与光线线宽仅调整显示，不修改真实坐标。探测器按工程顺序编号 D1、D2……，画布、选择器、读数、扫描和导出使用同一标记。
-
-空间模式支持最多48个薄透镜、物镜、柱透镜、光阑、平面镜、分光镜和探测面。`app/design/core/folded-engine.ts` 追迹三维方向及有限圆形光学面的真实交点，布局中心与法线位于 XY，Z 为第二横轴；薄透镜和物镜仍使用局部近轴主面。椭圆 Gaussian/均匀源独立设置两个轴的直径、发散全角（mrad）及横截面旋转；Gaussian 完整宽度为1/e²定义。旧工程继续使用原一维采样，可显式启用二维光束。
-
-探测器显示实际接收样本、等比例二维功率分箱、积分剖面、质心、两轴/径向 RMS 与主轴。R/T 是非相干功率系数，接收、逸出、吸收、未完成四项保持守恒。柱透镜通过两个轴的焦距与滚转建模；球差、彗差、像散使用用户定义的瞳面 OPD 多项式及实际梯度，不是厂家处方或标准化 Zernike RMS。强度图是几何采样密度，不能解释为衍射 PSF；零几何尺寸不等于零物理光斑或无限辐照度。
-
-`core/folded-optimizer.ts` 联合搜索有界 X/Y、法线与焦距变量，具有追迹预算、进度、取消、最低接收份额和功率核算约束。候选先比较再应用，工程或条件变化后旧候选失效；单变量21点扫描仍保留。有限局部搜索不保证全局最优。
-
-顺序模式由 `core/design-engine.ts` 独立计算空气近轴 ABCD、最佳几何交会、Gaussian q、1/e²半径和有效波长 M²近似。其 y-RMS 是一维子午统计，参考光线不是强度权重，截光后的 Gaussian 包络仍是未截断参考。Gaussian 顺序工程不能直接复制为空间功率模型；几何处方转换保留原工程和空间撤销记录。
-
-这两种模型未实现真实曲率/厚度/玻璃色散、多片厂家处方、完整三维倾斜偏心机构、相干衍射、偏振或容差分析，不能宣称已达到 Zemax/OpticStudio 等效精度。完整公式、数据流、目录依据、交接和云端准备见 [光学工作台文档](docs/optics-workbench.md)。
-
-### 器件数据与工程文件
-
-装备库包含十二款 Thorlabs 球面/消色差透镜、六款常用无限远物镜、三个柱透镜型号和折转分光参考器件。官方原始记录分别保存在 `public/training/thorlabs/`、`objectives/`、`cylindrical/`；公开接口只用于手动采集，启动和计算不依赖联网。球面模型通光孔径为外径90%的教学假设；柱透镜21mm孔径取官方历史目录 >21mm 的保守下界。工程文件下载返回403时不绕过控制，未获得的厚度/BFL/处方不编造。
-
-物镜采用 `f = f_tube / M` 和估算瞳径 `2 NA f`；Evident 配180mm筒镜、Mitutoyo配200mm筒镜。WD 是机械工作距离；25.4mm默认遮挡范围不是镜筒结构。可见光型号不能据此认证940nm性能，高NA全孔径、盖玻片和真实多片像差未还原。改变光学参数后清除目录归属；自定义 OPD 是单独的用户模型。
-
-顺序 JSON 外壳为 `pcsel-optics-design` / `formatVersion:1`，包含 DesignProject v2；草稿/工程库为 `pcsel-optics-designer-draft-v2`、`pcsel-optics-designer-library-v2`。空间外壳为 `pcsel-folded-optics` / `formatVersion:1`、FoldedScene v1；存储键为 `pcsel-folded-optics-draft-v1`、`pcsel-folded-optics-library-v1`。两种工程库各最多20份副本；旧文件可读，新增椭圆源、双轴焦距、滚转和OPD可选字段随保存与严格校验的JSON/HTML导出保留。CSV包含光源行及完整模型参数；HTML内嵌实际二维分箱、剖面、来源数据和完整工程。
-
-教程记录、组内案例草稿、旧自由搭建台与新版设计存储互相独立。`PumpCaseStudy.tsx` 的组内照片只确认蓝色光纤泵光入口，其余拓扑/数值是教学假设。课程观察记录键为 `pcsel-training-demo-notes-v1`，案例为 `pcsel-optical-pump-case-draft-v1`，旧16元件自由台为 `pcsel-optical-playground-v1`；均不跨浏览器或设备同步。
-
-### 验收、目录与云端准备
-
-计算核心集中在六个无DOM/存储依赖的 `app/design/core/` 模块；`FoldedDesigner` 管理工程状态，`FoldedWorkspace` 组合画布/参数/探测器，`EquipmentLibrary` 维护统一装备选择，导出和转换留在设计层。未来可把核心调用放入Web Worker或云任务；当前无需服务器、数据库或空服务目录。
-
-```powershell
-npm run test
-npm run typecheck
-npm run lint
-npm run build:optics
-npm run qa:workbench
-```
-
-`build:optics` 使用已有教材数据生成独立静态路由，精简并审计 `dist/client`；不触发教材生成，也不上传。`qa:workbench` 组合原实验室回归和当前空间工作台验收，使用一次性浏览器上下文，不修改用户草稿或启动服务。报告、实际基准、截图、工程导出与清理清单统一放在忽略的 `outputs/optics-workbench/`，从实际结果确认通过情况。可复用 `scripts/build_workbench_report.py` 按验证JSON生成自包含 `outputs/optics-workbench/index.html`；缺失或失败的证据不会标成通过。
-
-浏览器脚本接受 `PCSEL_PLAYWRIGHT_MODULE`（已安装模块或file URL）、`PCSEL_OPTICS_URL`（已运行地址）、`PCSEL_OPTICS_QA_OUTPUT`（输出目录）、`PCSEL_OPTICS_BROWSER_CHANNEL`（默认msedge）。各脚本默认目录可用输出变量统一；避免重复安装依赖或反复截图。数值基准覆盖旧工程、实际矩阵/双轴传播、反射/柱透镜互易、圆孔径守恒、OPD梯度及实际优化改进；性能与误差引用同目录的真实基准。
-
-网站由父目录PCSELbook仓库管理，在 `codex/optical-lab-impeccable` 分支按相关清单暂存，避免 `git add .` / `git add -A` 混入书稿或审阅改动。本地提交不等于推送或发布授权；真正上传仅使用审计通过的 `dist/client`。历史可重建临时产物优先移入回收站，保留教材、原始来源、原对话诊断证据、Git历史和运行日志。所有本地输出及 `.openai` 配置禁止发布。
+路由维护入口为 `src/main.tsx`、`scripts/finalize_static_site.mjs` 与 `app/StorageTransfer.tsx`。教材构建不依赖实验室源代码；完整教学/模型/发布说明见 [实验室文档](../optical-lab/docs/optics-workbench.md)。
 
 ## 阅读进度与章节跳转
 
@@ -105,6 +62,6 @@ Cloudflare 上传必须等待用户明确命令，不会因书稿更新或本地
 npm run deploy:pages
 ```
 
-该命令先检查计算代码边界并回收明确的临时产物，再执行完整 `check` 和部署审计，通过后才用 Direct Upload 发布到 `pcsel-knowledge-site.pages.dev`。站点只包含公开静态资源，没有登录、写接口或服务器状态。
+该命令先核对静态站发布边界并回收明确的临时产物，再执行完整 `check` 和部署审计，通过后才用 Direct Upload 发布到 `pcsel-knowledge-site.pages.dev`。站点只包含公开静态资源，没有登录、写接口或服务器状态。
 
-光学界面更新可使用 `npm run deploy:pages:optics`，保留已有教材静态数据，依次执行代码边界审查、临时文件回收、生产构建、测试、lint、类型检查和上传目录审计。发布前还须通过 `npm run qa:workbench` 与 `npm run qa:usability`。这些整理步骤是以后每次优化上传前的必要操作，不通过不得跳过；详情见 [发布前固定门槛](docs/optics-workbench.md#发布前固定门槛)。
+教材页面、外链或跳转更新可使用 `npm run deploy:pages:static`，保留已有教材数据，依次执行临时产物回收、构建、测试、lint、类型检查和上传负载审计。实验室更新只在独立项目执行自己的发布命令。这些整理步骤是以后每次优化上传前的必要操作，不通过不得跳过。旧 `build:optics` / `deploy:pages:optics` 仅作为教材静态发布的兼容命令。

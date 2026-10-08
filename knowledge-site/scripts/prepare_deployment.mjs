@@ -3,31 +3,10 @@ import { readdir, readFile, realpath, stat, mkdir, writeFile } from 'node:fs/pro
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import ts from 'typescript';
-
 const root = fileURLToPath(new URL('../', import.meta.url));
-const core = path.join(root, 'app/design/core');
 const reportDir = path.join(root, 'outputs/optics-workbench');
-const modules = [];
-const forbiddenGlobals = new Set(['window', 'document', 'localStorage', 'sessionStorage', 'fetch', 'XMLHttpRequest']);
-for (const name of (await readdir(core)).filter(n => n.endsWith('.ts')).sort()) {
-  const source = ts.createSourceFile(name, await readFile(path.join(core, name), 'utf8'), ts.ScriptTarget.Latest, true);
-  const dependencies = [];
-  function visit(node) {
-    if (ts.isImportDeclaration(node)) {
-      const dependency = node.moduleSpecifier.text;
-      if (!dependency.startsWith('./') || dependency.includes('..')) throw new Error(`Core dependency escapes pure calculation layer: ${name} -> ${dependency}`);
-      dependencies.push(dependency);
-    }
-    if (ts.isIdentifier(node) && forbiddenGlobals.has(node.text)) throw new Error(`Browser/IO dependency in calculation layer: ${name} -> ${node.text}`);
-    ts.forEachChild(node, visit);
-  }
-  visit(source);
-  for (const dependency of dependencies) await stat(path.resolve(core, dependency));
-  modules.push({ name, dependencies });
-}
-if (!modules.length) throw new Error('Calculation core is missing.');
-
+const modules = [{ name: 'static-book-payload-audit', dependencies: [] }];
+await stat(path.join(root, 'scripts/audit_deploy_output.mjs'));
 // Only disposable PDF page previews and obsolete launcher logs. Reports, raw
 // specifications, book data, Git history and prior QA evidence are excluded.
 const candidates = [];

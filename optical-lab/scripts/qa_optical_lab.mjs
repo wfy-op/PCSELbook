@@ -139,7 +139,7 @@ async function screenshot(filename) {
 async function switchPage(route) {
   const name = route.includes('tutorial') ? '教程与实训' : '设计工作台';
   await page.getByRole('navigation', { name: '光学实验室分页面', exact: true }).getByRole('link', { name, exact: true }).click();
-  await page.waitForURL(`**${route}`);
+  await page.waitForURL(new URL(route.includes('tutorial') ? '/' : '/designer/', `${base}/`).href);
   await page.waitForLoadState('networkidle');
   await page.locator(route.includes('tutorial') ? '#ob-course' : '.od-mode-switch').waitFor();
 }
@@ -170,7 +170,7 @@ async function layout(label) {
 }
 
 async function anchor(label) {
-  await page.getByRole('navigation', { name: '教程页内目录', exact: true }).getByRole('link', { name: '透镜与光路', exact: true }).click();
+  await page.locator('#ob-challenges').getByRole('link', { name: '需要更多步骤？继续八节基础实训与实操记录', exact: true }).click();
   await page.waitForFunction(() => {
     const course = document.getElementById('ob-course').getBoundingClientRect();
     const header = document.querySelector('.ol-header').getBoundingClientRect();
@@ -378,9 +378,9 @@ try {
         const navigation = page.getByRole('navigation', { name: '光学实验室分页面', exact: true });
         assert.equal(await page.locator('.ol-header').count(), 1);
         assert.equal(await navigation.locator('a[aria-current="page"]').count(), 1);
-        assert.equal(await navigation.locator('a[aria-current="page"]').getAttribute('href'), `/optics/${selected}/`);
-        assert.deepEqual(await navigation.getByRole('link').evaluateAll(links => links.map(link => link.getAttribute('href'))), ['/optics/tutorial/', '/optics/designer/']);
-        assert.match(await page.getByRole('link', { name: '光学实验室首页', exact: true }).innerText(), /光学实验室\s+PCSELbook · Optical Lab/);
+        assert.equal(await navigation.locator('a[aria-current="page"]').getAttribute('href'), selected === 'tutorial' ? '/' : '/designer/');
+        assert.deepEqual(await navigation.getByRole('link').evaluateAll(links => links.map(link => link.getAttribute('href'))), ['/', '/designer/']);
+        assert.match(await page.getByRole('link', { name: '光学实验室首页', exact: true }).innerText(), /光学实验室\s+Optical Lab · 光路教学/);
         return { title: await page.title() };
       });
     }
@@ -425,7 +425,7 @@ try {
       await switchPage('/optics/tutorial/');
       await page.getByRole('tab', { name: /实操记录/ }).click();
       await observationField().fill(observation);
-      assert.equal((await readKey(storage.notes)).records['lens-pair'].measurements, observation);
+      assert.equal((await readKey(storage.notes)).records['setup'].measurements, observation);
     });
     await check('canonical designer return preserves geometry, source aperture, name and modes', async () => {
       await switchPage('/optics/designer/');
@@ -526,15 +526,10 @@ try {
         return anchor(viewport.label);
       });
     }
-    if (!recheckCompact) await check('book homepage has unified sidebar and canonical optical lab entry card', async () => {
-      await page.setViewportSize({ width: 1420, height: 1000 });
-      await page.goto(new URL('/', `${base}/`).href, { waitUntil: 'networkidle' });
-      await page.locator('#optics-entry-title').waitFor();
-      assert.equal(await page.locator('.book-nav a[href="/optics/"]').count(), 1);
-      assert.match(await page.locator('.book-nav a[href="/optics/"]').innerText(), /光学实验室/);
-      const links = await page.locator('section[aria-labelledby="optics-entry-title"] a').evaluateAll(nodes => nodes.map(node => ({ text: node.innerText, href: node.getAttribute('href') })));
-      assert.deepEqual(links.map(link => link.href), ['/optics/tutorial/', '/optics/designer/']);
-      return { sidebar: await page.locator('.book-nav a[href="/optics/"]').innerText(), links };
+    if (!recheckCompact) await check('standalone homepage links back to the original book', async () => {
+      await goto('/');
+      assert.equal(await page.locator('.ol-book-link').getAttribute('href'), 'https://pcsel-knowledge-site.pages.dev/');
+      assert.equal(await page.locator('#ob-equipment').count(), 1);
     });
   }
   await check('browser page errors absent', async () => assert.deepEqual(results.errors, []));

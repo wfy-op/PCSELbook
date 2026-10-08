@@ -1,0 +1,42 @@
+{
+  "name": "optical-lab-feiyang",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5175 --strictPort",
+    "build": "vite build && node scripts/finalize.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "lint": "eslint app src scripts tests vite.config.ts",
+    "typecheck": "tsc --noEmit",
+    "clean:deploy": "node scripts/prepare_deployment.mjs",
+    "prepare:deploy": "npm run clean:deploy && npm run build && npm run test && npm run lint && npm run typecheck",
+    "deploy:pages": "npm run prepare:deploy && wrangler pages deploy dist --project-name optical-lab-feiyang --branch main",
+    "qa:workbench": "node scripts/qa_optical_lab.mjs --no-screenshots && node scripts/qa_spatial_workbench.mjs",
+    "qa:usability": "node scripts/qa_usability.mjs",
+    "qa:learning": "node scripts/qa_learning.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "eslint": "9.39.4",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "16.4.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.59.3",
+    "vite": "8.0.13",
+    "wrangler": "4.92.0"
+  },
+  "type": "module"
+}
