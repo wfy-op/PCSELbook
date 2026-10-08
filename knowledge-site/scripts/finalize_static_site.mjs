@@ -25,11 +25,12 @@ for (const metadata of manifest.chapters) {
   await writeFile(path.join(directory, "index.html"), page, "utf8");
 }
 
-await mkdir(path.join(output, "optics/migrate"), { recursive: true });
-await writeFile(path.join(output, "optics/migrate/index.html"), shell);
+await mkdir(path.join(output, "optical-lab-migration"), { recursive: true });
+await writeFile(path.join(output, "optical-lab-migration/index.html"), shell);
 const redirects = [
-  "/optics/migrate /optics/migrate/ 301",
-  "/optics/migrate/ /optics/migrate/index.html 200",
+  "/optics/migrate /optical-lab-migration/ 301",
+  "/optics/migrate/ /optical-lab-migration/ 301",
+  "/optics/migrate/index.html /optical-lab-migration/ 301",
   "/optics https://optical-lab-feiyang.pages.dev/ 301",
   "/optics/tutorial https://optical-lab-feiyang.pages.dev/ 301",
   "/optics/tutorial/ https://optical-lab-feiyang.pages.dev/ 301",

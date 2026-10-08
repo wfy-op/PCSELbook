@@ -25,7 +25,7 @@ npm run sync:book
 
 实验室是 [独立项目](../optical-lab/README.md)，网址为 <https://optical-lab-feiyang.pages.dev/>。教材首页和侧栏仅提供跳转链接。光学源码、规格资料、计算与验收脚本已移到 `../optical-lab/`；在该目录使用 `npm run dev`，本机端口为登记的 5175。
 
-旧 `/optics/`、`/optics/tutorial/`、`/optics/designer/` 和 training/design 地址跳转到独立站。`/optics/migrate/` 留在教材域名，导出原浏览器实验室记录，再到新首页底部导入。阅读记录与实验室记录分开，跨域迁移必须通过导出/导入。
+旧 `/optics/`、`/optics/tutorial/`、`/optics/designer/` 和 training/design 地址跳转到独立站。迁移导出页 `/optical-lab-migration/` 留在教材域名；旧 `/optics/migrate/` 同域跳转到此页。导出原浏览器实验室记录，再到新首页底部导入。阅读记录与实验室记录分开，跨域迁移必须通过导出/导入。
 
 路由维护入口为 `src/main.tsx`、`scripts/finalize_static_site.mjs` 与 `app/StorageTransfer.tsx`。教材构建不依赖实验室源代码；完整教学/模型/发布说明见 [实验室文档](../optical-lab/docs/optics-workbench.md)。
 
