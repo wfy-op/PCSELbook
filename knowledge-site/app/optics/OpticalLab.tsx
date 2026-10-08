@@ -23,7 +23,7 @@ export function OpticalLab({ page }: { page: LabPage }) {
     };
   }, []);
   useEffect(() => {
-    document.title = `${page === 'tutorial' ? '教程与实训' : '自由设计工作台'} · 光学实验室 · PCSELbook`;
+    document.title = `${page === 'tutorial' ? '教程与实训' : '设计工作台'} · 光学实验室 · PCSELbook`;
   }, [page]);
 
   return <div className={`ol-lab ol-${page}`}>
@@ -34,7 +34,7 @@ export function OpticalLab({ page }: { page: LabPage }) {
       </a>
       <nav className="ol-pages" aria-label="光学实验室分页面">
         <a href="/optics/tutorial/" aria-current={page === 'tutorial' ? 'page' : undefined}><OpticsIcon name="book" size={18} /><span>教程与实训</span></a>
-        <a href="/optics/designer/" aria-current={page === 'designer' ? 'page' : undefined}><OpticsIcon name="optics" size={18} /><span>自由设计</span></a>
+        <a href="/optics/designer/" aria-current={page === 'designer' ? 'page' : undefined}><OpticsIcon name="optics" size={18} /><span>设计工作台</span></a>
       </nav>
       <a className="ol-book-link" href="/">返回教材 <span aria-hidden="true">↗</span></a>
     </header>

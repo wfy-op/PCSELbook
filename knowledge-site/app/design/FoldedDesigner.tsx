@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import lensCatalog from '../training/thorlabs-catalog.json';
 import { foldedElement, foldedPresets, parseFoldedScene, traceFoldedScene, type FoldedElement, type FoldedScene } from './core/folded-engine';
 import { objectiveDefaults, objectiveParts, parseObjectiveModel } from './core/objective-model';
@@ -6,7 +6,7 @@ import foldedCatalog from './folded-catalog.json';
 import { cylindricalParts } from './equipment-catalog';
 import { foldedLabels } from './folded-labels';
 import { EquipmentLibrary } from './EquipmentLibrary';
-import { FoldedCanvas, FoldedInspector, DetectorSpots } from './FoldedWorkspace';
+import { FoldedCanvas, FoldedInspector, DetectorSpots, DetectorPreview } from './FoldedWorkspace';
 import { FoldedOptimizer } from './FoldedOptimizer';
 import { FoldedScan } from './FoldedScan';
 import { downloadText } from './design-export';
@@ -63,6 +63,7 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
   const result = useMemo(() => traceFoldedScene(displayScene), [displayScene]);
   const labels = useMemo(() => foldedLabels(scene), [scene]);
   const [selected, setSelected] = useState('source');
+  const [previewDetector, setPreviewDetector] = useState('');
   const [drawer, setDrawer] = useState<'parts' | 'saved' | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(() => window.matchMedia('(min-width: 1100px)').matches);
   useEffect(() => {
@@ -82,7 +83,29 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
   const dialog = useRef<HTMLDialogElement>(null);
   const inputFile = useRef<HTMLInputElement>(null);
   const current = scene.elements.find(e => e.id === selected);
-  const select = (id: string) => { setSelected(id); setInspectorOpen(true); };
+  const viewport = useRef({ x: scene.source.x, y: scene.source.y, span: 80 });
+  const detector = result.detectors.find(d => d.elementId === previewDetector) ?? result.detectors.find(d => d.elementId === selected) ?? result.detectors[0];
+  const closeInspector = useCallback(() => { setInspectorOpen(false); document.querySelector<SVGElement>('#fd-layout-svg [aria-pressed="true"]')?.focus({ preventScroll: true }); }, []);
+  useEffect(() => {
+    const close = (e: KeyboardEvent) => { if (e.key === 'Escape' && inspectorOpen && e.target instanceof Element && e.target.closest('#fd-parameter-panel')) { e.preventDefault(); closeInspector(); } };
+    window.addEventListener('keydown', close); return () => window.removeEventListener('keydown', close);
+  }, [inspectorOpen, closeInspector]);
+  useEffect(() => {
+    if (!inspectorOpen) return;
+    const scroll = () => {
+      if (window.matchMedia('(min-width: 1100px)').matches) return;
+      const resultsTop = document.querySelector('.fd-results')?.getBoundingClientRect().top;
+      const panelTop = document.getElementById('fd-parameter-panel')?.getBoundingClientRect().top;
+      if (resultsTop !== undefined && panelTop !== undefined && resultsTop < panelTop) setInspectorOpen(false);
+    };
+    window.addEventListener('scroll', scroll, { passive: true });
+    return () => window.removeEventListener('scroll', scroll);
+  }, [inspectorOpen]);
+  const select = (id: string, revealLayout = true) => {
+    setSelected(id); setInspectorOpen(true);
+    if (scene.elements.find(e => e.id === id)?.kind === 'detector') setPreviewDetector(id);
+    if (revealLayout && !window.matchMedia('(min-width: 1100px)').matches) document.querySelector('.fd-canvas')?.scrollIntoView({ block: 'start', behavior: 'instant' });
+  };
   const commit = (next: FoldedScene) => {
     try {
       const checked = parseFoldedScene(next);
@@ -116,7 +139,9 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
     const folded = foldedCatalog.parts.find(p => p.sku === identifier);
     const kind: FoldedElement['kind'] = lens ? 'lens' : cylinder ? 'cylindrical' : objective ? 'objective' : folded ? folded.kind === 'splitter' ? 'beamsplitter' : 'mirror' : identifier as FoldedElement['kind'];
     if (!Object.hasOwn(kindNames, kind)) return;
-    const e = foldedElement(kind, crypto.randomUUID(), posX ?? (scene.bounds.minX + scene.bounds.maxX) / 2, posY ?? (scene.bounds.minY + scene.bounds.maxY) / 2);
+    const at = viewport.current;
+    const offset = at.span * (.16 + (scene.elements.length % 3) * .06);
+    const e = foldedElement(kind, crypto.randomUUID(), clamp(posX ?? at.x + offset, scene.bounds.minX, scene.bounds.maxX), clamp(posY ?? at.y, scene.bounds.minY, scene.bounds.maxY));
     if (lens) Object.assign(e, { name: `${lens.sku} · 等效薄透镜`, focal: lens.focal, diameter: lens.diameter, aperture: lens.aperture });
     if (cylinder) Object.assign(e, { name: `${cylinder.sku} · 等效柱透镜`, focal: cylinder.focal, diameter: cylinder.diameter, aperture: cylinder.aperture, focalSagittal: null, rollDeg: 0 });
     if (objective) { e.name = `${objective.sku} · ${objective.magnification}× 物镜`; e.objective = parseObjectiveModel(objective); Object.assign(e, objectiveDefaults(e.objective)); }
@@ -141,7 +166,7 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
     commit({ ...scene, elements: [...scene.elements, e] }); select(e.id);
   };
   const importText = () => {
-    try { if (new Blob([jsonText]).size > 250_000) throw new Error('工程文件最大 250 KB。'); const next = parseFoldedEngineeringFile(JSON.parse(jsonText), parseFoldedScene); load(next); setImportOpen(false); } catch (error) { setImportError(error instanceof Error ? error.message : '无法读取工程。'); }
+    try { if (new Blob([jsonText]).size > 250_000) throw new Error('工程文件最大 250 KB。'); const next = parseFoldedEngineeringFile(JSON.parse(jsonText), parseFoldedScene); load(next); setImportOpen(false); } catch (error) { setImportError(error instanceof SyntaxError ? 'JSON 格式不正确。请检查引号、逗号与括号，或重新选择本工作台导出的完整工程文件；当前工程未修改。' : error instanceof Error ? error.message : '无法读取工程，请重新选择导出的 JSON 文件。'); }
   };
   const exportReport = () => {
     const svg = document.getElementById('fd-layout-svg')?.cloneNode(true) as SVGSVGElement | undefined;
@@ -162,10 +187,12 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
     </div>
     <p className={`fd-notice ${!stored ? 'fd-alert' : ''}`} role="status">{!stored ? '浏览器无法保存草稿，请导出工程文件。' : notice}</p>
     <div className="fd-workspace-actions"><div><button aria-expanded={drawer === 'parts'} aria-controls="fd-equipment-drawer" onClick={() => setDrawer(drawer === 'parts' ? null : 'parts')}><OpticsIcon name="layers" size={16} />元件库</button><button aria-expanded={drawer === 'saved'} aria-controls="fd-equipment-drawer" onClick={() => setDrawer(drawer === 'saved' ? null : 'saved')}><OpticsIcon name="save" size={16} />我的工程</button><button aria-expanded={inspectorOpen} aria-controls="fd-parameter-panel" onClick={() => setInspectorOpen(v => !v)}><OpticsIcon name="settings" size={16} />{inspectorOpen ? '收起参数' : '显示参数'}</button></div><div className="fd-budget-inline" aria-label="光路能量预算"><span>接收 <strong>{percentage(result.energy.captured, result.energy.input)}</strong></span><span>损耗 <strong>{percentage(result.energy.absorbed, result.energy.input)}</strong></span><span>逸出 <strong>{percentage(result.energy.escaped, result.energy.input)}</strong></span><span>未完成 <strong>{percentage(result.energy.unresolved, result.energy.input)}</strong></span></div></div>
-    <main className={`fd-grid${inspectorOpen ? '' : ' fd-wide-canvas'}`} id="fd-workspace">
+    <main id="fd-workspace">
+    <div className={`fd-grid${inspectorOpen ? '' : ' fd-wide-canvas'}`}>
       {drawer && <aside id="fd-equipment-drawer" className="fd-library fd-equipment-drawer" aria-label="空间元件库"><div className="fd-drawer-header"><strong>{drawer === 'parts' ? '元件选型' : '我的工程'}</strong><button aria-label="关闭元件与工程" onClick={() => setDrawer(null)}>关闭</button></div>{drawer === 'parts' ? <EquipmentLibrary onPick={add} prefix="folded" compact /> : <><p className="fd-hint">最多保留 20 份副本；草稿自动保存。</p>{library.length ? library.map(item => <article className="fd-saved-card" key={item.id}><strong>{item.scene.name}</strong><small>{new Date(item.savedAt).toLocaleString('zh-CN')} · {item.scene.elements.length} 个元件</small><div><button onClick={() => load(item.scene)}>打开</button><button onClick={() => downloadText('folded-optics-project.json', 'application/json;charset=utf-8', JSON.stringify(foldedEngineeringFile(item.scene), null, 2))}>导出</button><button onClick={() => removeSaved(item.id)}>移除</button></div></article>) : <p className="fd-empty">尚无工程副本。设计完成后点击“保存副本”。</p>}</>}</aside>}
-      <div className="fd-main"><FoldedCanvas key={canvasKey} scene={scene} result={result} selected={selected} select={select} commit={commit} add={add} onPreview={setPreview} />{!scene.source.beam && <div className="fd-legacy-source"><span>当前工程保留原一维光源采样。</span><button onClick={enableBeam}>启用二维椭圆光束</button></div>}</div>
-      {inspectorOpen && <aside id="fd-parameter-panel" className="fd-inspector" aria-label="空间参数设置"><div className="fd-inspector-header"><h3>参数设置</h3><button aria-pressed={selected === 'source'} onClick={() => select('source')}>光源</button></div><FoldedInspector scene={scene} current={current} source={source} element={element} bounds={bounds} duplicate={duplicate} remove={() => remove()} /></aside>}
+      <div className="fd-main"><FoldedCanvas key={canvasKey} scene={scene} result={result} selected={selected} select={select} commit={commit} add={add} onPreview={setPreview} viewportRef={viewport} />{!scene.source.beam && <div className="fd-legacy-source"><span>当前工程保留原一维光源采样。</span><button onClick={enableBeam}>启用二维椭圆光束</button></div>}</div>
+      {inspectorOpen && <aside id="fd-parameter-panel" className="fd-inspector" aria-label="空间参数设置"><div className="fd-inspector-header"><h3>参数设置</h3><button aria-pressed={selected === 'source'} onClick={() => select('source')}>光源</button><button onClick={closeInspector}>返回光路</button></div>{detector && <div className="fd-detector-preview" aria-label="当前探测器读数"><DetectorPreview detector={detector} /><div><select aria-label="参数预览探测器" value={detector.elementId} onChange={e => setPreviewDetector(e.target.value)}>{result.detectors.map(d => <option key={d.elementId} value={d.elementId}>{labels.get(d.elementId)?.tag}</option>)}</select><span>接收 {percentage(detector.power, result.energy.input)} · RMS {fmt(detector.spot.rms2D)} mm</span></div></div>}<div className="fd-inspector-scroll"><FoldedInspector key={selected} scene={scene} current={current} source={source} element={element} bounds={bounds} duplicate={duplicate} remove={() => remove()} sourceRayCount={result.sourceRayCount} /></div></aside>}
+    </div>
       <div className="fd-results">
         <DetectorSpots scene={displayScene} result={result} />
         <FoldedOptimizer scene={scene} result={result} onApply={commit} />

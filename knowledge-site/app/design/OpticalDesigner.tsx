@@ -46,7 +46,7 @@ export function OpticalDesigner() {
     <nav className="od-mode-switch" aria-label="设计模式">
       <span className="ol-model-label">计算模型</span>
       <div role="tablist" aria-label="计算模型">
-        <button ref={sequentialTab} id="od-sequential-tab" role="tab" aria-label="顺序光路 · Gaussian / 优化" tabIndex={mode === 'sequential' ? 0 : -1} aria-selected={mode === 'sequential'} aria-controls="od-sequential-panel" onKeyDown={changeModelWithKeyboard} onClick={() => setMode('sequential')}><OpticsIcon name="layers" size={17} /><span>顺序光路<span className="od-mode-detail"> · Gaussian / 优化</span></span></button>
+        <button ref={sequentialTab} id="od-sequential-tab" role="tab" aria-label="顺序光路 · ABCD / 高斯束" tabIndex={mode === 'sequential' ? 0 : -1} aria-selected={mode === 'sequential'} aria-controls="od-sequential-panel" onKeyDown={changeModelWithKeyboard} onClick={() => setMode('sequential')}><OpticsIcon name="layers" size={17} /><span>顺序光路<span className="od-mode-detail"> · ABCD / 高斯束</span></span></button>
         <button ref={spatialTab} id="od-spatial-tab" role="tab" aria-label="空间光路 · 折转 / 分光" tabIndex={mode === 'spatial' ? 0 : -1} aria-selected={mode === 'spatial'} aria-controls="od-spatial-panel" onKeyDown={changeModelWithKeyboard} onClick={() => setMode('spatial')}><OpticsIcon name="splitter" size={17} /><span>空间光路<span className="od-mode-detail"> · 折转 / 分光</span></span></button>
       </div><span className="od-local-badge"><i />本地工作台</span>
     </nav>

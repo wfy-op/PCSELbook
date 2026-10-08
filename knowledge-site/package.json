@@ -18,14 +18,19 @@
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "optimize:deploy": "node scripts/optimize_deploy_output.mjs",
     "audit:deploy": "node scripts/audit_deploy_output.mjs",
-    "deploy:pages": "npm run check && npm run audit:deploy && wrangler pages deploy dist/client --project-name pcsel-knowledge-site --branch main",
+    "deploy:pages": "npm run prepare:deploy && wrangler pages deploy dist/client --project-name pcsel-knowledge-site --branch main",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
     "qa:optics": "node scripts/qa_optical_lab.mjs",
     "check": "npm run build && npm run test && npm run lint && npm run typecheck",
     "typecheck": "tsc --noEmit",
     "lint": "eslint app src scripts tests vite.config.ts",
     "build:optics": "vite build && node scripts/finalize_static_site.mjs && npm run optimize:deploy && npm run audit:deploy",
-    "qa:workbench": "node scripts/qa_optical_lab.mjs --no-screenshots && node scripts/qa_spatial_workbench.mjs"
+    "qa:workbench": "node scripts/qa_optical_lab.mjs --no-screenshots && node scripts/qa_spatial_workbench.mjs",
+    "clean:deploy": "node scripts/prepare_deployment.mjs",
+    "prepare:deploy": "npm run clean:deploy && npm run check",
+    "prepare:deploy:optics": "npm run clean:deploy && npm run build:optics && npm run test && npm run lint && npm run typecheck",
+    "deploy:pages:optics": "npm run prepare:deploy:optics && wrangler pages deploy dist/client --project-name pcsel-knowledge-site --branch main",
+    "qa:usability": "node scripts/qa_usability.mjs"
   },
   "dependencies": {
     "katex": "^0.18.4",

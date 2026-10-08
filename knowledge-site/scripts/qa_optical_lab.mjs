@@ -84,7 +84,7 @@ async function goto(route) {
   await page.locator('.ol-header').waitFor();
 }
 const spatialTab = () => page.getByRole('tab', { name: '空间光路 · 折转 / 分光', exact: true });
-const sequentialTab = () => page.getByRole('tab', { name: '顺序光路 · Gaussian / 优化', exact: true });
+const sequentialTab = () => page.getByRole('tab', { name: '顺序光路 · ABCD / 高斯束', exact: true });
 const panel = model => page.getByRole('tabpanel').filter({ has: model === 'spatial'
   ? page.getByRole('textbox', { name: '空间工程名称', exact: true })
   : page.getByRole('textbox', { name: '工程名称', exact: true }) });
@@ -137,7 +137,7 @@ async function screenshot(filename) {
   if (!results.screenshots.includes(target)) results.screenshots.push(target);
 }
 async function switchPage(route) {
-  const name = route.includes('tutorial') ? '教程与实训' : '自由设计';
+  const name = route.includes('tutorial') ? '教程与实训' : '设计工作台';
   await page.getByRole('navigation', { name: '光学实验室分页面', exact: true }).getByRole('link', { name, exact: true }).click();
   await page.waitForURL(`**${route}`);
   await page.waitForLoadState('networkidle');

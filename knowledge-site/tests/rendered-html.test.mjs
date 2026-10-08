@@ -158,7 +158,9 @@ test("book synchronization and deployment cleanup are part of the standard workf
   assert.match(packageJson.scripts["sync:book"], /compile:book.*generate:figures.*generate:book.*generate:font.*prerender_math/);
   assert.match(packageJson.scripts.build, /sync:book|prepare:content/);
   assert.match(packageJson.scripts.build, /optimize:deploy.*audit:deploy/);
-  assert.match(packageJson.scripts["deploy:pages"], /check.*audit:deploy.*wrangler pages deploy/);
+  assert.match(packageJson.scripts["deploy:pages"], /prepare:deploy.*wrangler pages deploy/);
+  assert.match(packageJson.scripts["prepare:deploy"], /clean:deploy.*check/);
+  assert.match(packageJson.scripts["prepare:deploy:optics"], /clean:deploy.*build:optics.*test.*lint.*typecheck/);
 });
 
 test("production export has independent chapter routes and a compact clean payload", async () => {
@@ -175,7 +177,14 @@ test("production export has independent chapter routes and a compact clean paylo
   }
   const outputFiles = await walk(outputDirectory);
   const relativeFiles = outputFiles.map((file) => decodeURIComponent(file.pathname));
-  assert.ok(outputFiles.length < 200, `deployment contains ${outputFiles.length} files`);
+  const publicFiles = await walk(new URL('../public/', import.meta.url));
+  // Content and source records grow with the book/catalog. Budget the generated
+  // chapter routes plus tool shells and bundles, rather than a stale fixed total.
+  const bundledFonts = (await walk(new URL('../node_modules/katex/dist/fonts/', import.meta.url))).filter(file => file.pathname.endsWith('.woff2'));
+  // Five lab shells, index, and two application bundles in addition to public
+  // content, chapter shells and the package's modern math fonts.
+  const budget = publicFiles.length + manifest.chapters.length + bundledFonts.length + 8;
+  assert.ok(outputFiles.length <= budget, `deployment contains ${outputFiles.length} files (content-derived budget ${budget})`);
   assert.ok(relativeFiles.every((file) => !/[.](?:ttf|woff|map)$/i.test(file)), "legacy or debugging files remain in deployment");
   assert.ok(relativeFiles.every((file) => !file.endsWith("/figures/manifest.json")), "build-only figure manifest remains in deployment");
   assert.ok(relativeFiles.every((file) => !["/file.svg", "/globe.svg", "/window.svg"].some((suffix) => file.endsWith(suffix))), "starter icons remain in deployment");
