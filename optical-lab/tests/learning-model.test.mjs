@@ -1,7 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { componentResult, challengeScene, evaluateChallenge, addExpansionLens } from '../app/training/learning-model.ts';
+import { componentResult, challengeScene, evaluateChallenge, addExpansionLens, focusExperiment, apertureExperiment } from '../app/training/learning-model.ts';
 const near = (a,b) => assert.ok(Math.abs(a-b)<1e-8, `${a} != ${b}`);
+test('intro screen scan resolves convergence, focus and re-expansion without clipping', () => {
+  for (const distance of [40,60,100,160,220]) {
+    const { result } = focusExperiment(distance);
+    near(result.span,16*Math.abs(1-distance/100));
+    assert.equal(result.passed,17);
+    near(result.angleSpan,160);
+    near(focusExperiment(distance,false).result.span,16);
+  }
+});
+test('intro aperture conserves sampled power and leaves surviving ray directions unchanged', () => {
+  const open = apertureExperiment(32).result;
+  near(open.energy.escaped,1);
+  const openRays = new Map(open.segments.filter(s=>s.event==='escape').map(s=>[s.rootId,s]));
+  for (const aperture of [2,4,16,32]) {
+    const result = apertureExperiment(aperture).result;
+    near(result.energy.absorbed+result.energy.escaped,1);
+    if (aperture<26.2) assert.ok(result.energy.absorbed>0);
+    for(const ray of result.segments.filter(s=>s.event==='escape')) {
+      const original=openRays.get(ray.rootId);
+      near((ray.end.y-ray.start.y)/(ray.end.x-ray.start.x),(original.end.y-original.start.y)/(original.end.x-original.start.x));
+    }
+  }
+});
 test('single-component lessons compute refraction, reflection, clipping and absorption', () => {
   const positive = componentResult('positive',280,0,100);
   const negative = componentResult('negative',280,0,100);

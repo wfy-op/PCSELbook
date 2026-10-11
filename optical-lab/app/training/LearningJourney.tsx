@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { equipmentCards } from './course';
 import { traceBench } from './bench-engine';
 import { thinLens } from './optics';
+import { OpticsIntroduction } from './OpticsIntroduction';
 import { addExpansionLens, challengeScene, challenges, componentResult, evaluateChallenge, teachingTools, type ToolId } from './learning-model';
 import './learning.css';
+import './introduction.css';
 
 function Range({ label, value, min, max, unit = 'mm', onChange }: { label: string; value: number; min: number; max: number; unit?: string; onChange: (value: number) => void }) {
   return <label className="lj-range"><span>{label}<output>{value} {unit}</output></span><input type="range" aria-label={label} min={min} max={max} value={value} onChange={event => onChange(Number(event.target.value))} /></label>;
@@ -26,8 +28,10 @@ export function ComponentTeaching() {
     setX(Math.round(Math.max(100, Math.min(440, local.x - 40))));
     setY(Math.round(Math.max(-35, Math.min(35, 260 - local.y))));
   }
-  return <section className="ob-container lj-section" id="ob-equipment" aria-labelledby="lj-tools-title">
-    <div className="ob-section-head"><div><h2 id="lj-tools-title">1. 认识元件，亲手改变光线</h2><p>先选择器件，再拖动画布上的调节点，或用滑块精确调整。</p></div><a href="#ob-challenges">下一步：计算与闯关</a></div>
+  return <section className="ob-container lj-section lj-opening" id="ob-equipment" aria-labelledby="lj-tools-title">
+    <div className="li-opening-head"><h2 id="lj-tools-title">1. 先动手，再认识元件</h2></div>
+    <OpticsIntroduction />
+    <div className="ob-section-head li-library-head" id="ob-component-lab"><div><h3>自己换一件器材，再试一次</h3><p>现在选择其他元件，拖动画布上的调节点，或用滑块精确调整。</p></div><a href="#ob-challenges">下一步：计算与闯关</a></div>
     <div className="lj-tool-picker" role="group" aria-label="选择教学元件">{teachingTools.map(t => <button type="button" key={t.id} aria-pressed={id === t.id} onClick={() => select(t.id)}>{t.title}</button>)}</div>
     <div className="lj-teaching"><div className="lj-plot"><svg viewBox="0 0 720 510" role="img" aria-label={`${tool.title}可调光路，所有线段由几何追迹计算`}>
       <defs><clipPath id="lj-tool-clip"><rect x="40" y="20" width="640" height="480" /></clipPath></defs>

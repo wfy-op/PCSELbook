@@ -1,0 +1,91 @@
+.ob-page .lj-journey-hero {
+  max-width: 880px;
+  width: calc(100% - 88px);
+  padding-inline: 0;
+  padding-top: 40px;
+  padding-bottom: 0;
+}
+.ob-page .lj-journey-hero h1 { font-size: 42px; line-height: 1.35; margin-bottom: 16px; text-wrap: balance; }
+.ob-page .lj-journey-hero p { max-width: 44em; margin-bottom: 16px; }
+.li-skip-intro { font-size: 14px; color: #285c4f; text-underline-offset: 4px; }
+.ob-page .lj-opening { padding-top: 32px; }
+.li-introduction { max-width: 880px; margin-inline: auto; }
+.li-opening-head { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.li-experiment { padding-bottom: 24px; }
+.li-experiment + .li-experiment { padding-top: 52px; border-top: 1px solid #d8e1d7; }
+.li-experiment h3 { margin: 0 0 16px; font-size: 28px; line-height: 1.4; letter-spacing: -.02em; }
+.li-experiment > p { font-size: 18px; max-width: 44em; margin: 0 0 24px; }
+.li-incoming { color: #8c6019; font-weight: 600; }
+.li-outgoing { color: #356f91; font-weight: 600; }
+.li-figure { margin: 28px 0 16px; }
+.li-diagram { display: block; width: 100%; height: auto; overflow: visible; }
+.li-diagram text { font-family: inherit; font-size: 16px; fill: #335c4f; }
+.li-diagram .li-small-label { font-size: 14px; fill: #52685c; }
+.li-diagram .li-outgoing-label { fill: #356f91; }
+.li-diagram .li-angle-label { font-size: 26px; fill: #356f91; font-variant-numeric: tabular-nums; }
+.li-axis { stroke: #cdd9cf; stroke-width: 1; stroke-dasharray: 3 5; }
+.li-source { stroke: #a16c16; stroke-width: 4; }
+.li-lens { fill: #d9e7de; fill-opacity: .35; stroke: #194c42; stroke-width: 2; }
+.li-focus-guide { stroke: #66868d; stroke-width: 1; stroke-dasharray: 4 5; }
+.li-distance { fill: none; stroke: #567867; stroke-width: 1.2; }
+.li-iris { stroke: #194c42; stroke-width: 8; }
+.li-screen { cursor: ew-resize; }
+.li-screen:hover > line { stroke-width: 7; }
+.li-screen:focus-visible { outline: none; }
+.li-screen:focus-visible > rect { stroke: #194c42; stroke-width: 2; stroke-dasharray: 3 3; }
+.li-figure figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; font-size: 12px; line-height: 1.6; color: #52685c; }
+.lj-section .li-motion-button { display: inline-flex; gap: 6px; align-items: center; border: 0; background: transparent; padding: 8px 0; font-size: 12px; min-height: 44px; }
+.li-motion-button svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.lj-section .li-motion-button:disabled { cursor: default; color: #52685c; }
+.li-flow { opacity: 0; pointer-events: none; }
+.li-flow path { animation: li-ray-direction 2.4s linear infinite; animation-play-state: paused; }
+.li-diagram.is-playing .li-flow { opacity: 1; }
+.li-diagram.is-playing .li-flow path { animation-play-state: running; }
+@keyframes li-ray-direction { to { stroke-dashoffset: -25; } }
+.li-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 24px; }
+.li-slider { flex: 1 1 300px; max-width: 440px; display: block; }
+.li-slider > span { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+.li-slider output { color: #194c42; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.li-slider input { display: block; width: 100%; min-height: 44px; margin: 2px 0 0; accent-color: #246657; cursor: ew-resize; }
+.li-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.li-controls button { min-height: 44px; font-size: 13px; }
+.li-presets button[aria-pressed=true] { background: #194c42; border-color: #194c42; color: #fff; }
+.lj-section .li-observation { padding: 16px 0; margin-bottom: 20px; border-block: 1px solid #d8e1d7; color: #285747; font-size: 16px; }
+.li-observation strong { margin-right: 10px; }
+.li-observation b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.li-takeaway { color: #435e53; }
+.li-model-note { padding-block: 12px 24px; color: #52685c; font-size: 14px; line-height: 1.8; }
+.li-model-note summary { cursor: pointer; min-height: 44px; display: list-item; }
+.li-model-note p { margin: 12px 0; }
+.li-library-head { margin-top: 44px; padding-top: 36px; border-top: 1px solid #d8e1d7; scroll-margin-top: 160px; }
+.li-library-head h3 { font-size: 26px; margin: 0 0 12px; }
+.li-library-head p { margin: 0; }
+.lj-journey-hero :focus-visible, .li-introduction :focus-visible { outline: 3px solid #346e60; outline-offset: 3px; }
+.lj-journey-hero ::selection { background: #cfe1d2; }
+@media (max-width: 760px) {
+  .ob-page .lj-journey-hero { padding-top: 28px; width: calc(100% - 36px); }
+  .ob-page .lj-journey-hero h1 { font-size: 30px; }
+  .ob-page .lj-journey-hero p, .li-experiment > p { font-size: 16px; }
+  .ob-page .lj-opening { padding-top: 28px; }
+  .li-experiment h3 { font-size: 23px; margin-bottom: 12px; }
+  .li-experiment + .li-experiment { padding-top: 36px; }
+  .li-figure { margin-block: 16px 12px; }
+  .li-diagram text { font-size: 23px; }
+  .li-diagram .li-small-label { font-size: 20px; }
+  .li-diagram .li-angle-label { font-size: 32px; }
+  .li-controls { gap: 8px 12px; margin-bottom: 16px; }
+  .li-slider { flex-basis: 100%; max-width: none; }
+  .li-slider > span { font-size: 14px; }
+  .lj-section .li-observation { font-size: 15px; }
+  .li-library-head { scroll-margin-top: 168px; }
+  .li-library-head h3 { font-size: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .li-flow path { animation: none; }
+  .li-flow { display: none; }
+}
+@media print {
+  .li-controls, .li-motion-button, .li-skip-intro { display: none !important; }
+  .li-flow { display: none; }
+  .li-experiment { break-inside: avoid; }
+}

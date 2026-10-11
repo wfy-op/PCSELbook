@@ -93,7 +93,7 @@ export function OpticalBenchTraining() {
     <a className="ob-skip" href="#ob-equipment">跳到元件教学</a>
     <div className="ob-topbar"><div className="ob-container ob-topbar-inner"><span className="ob-top-label">教程目录</span><nav className="ob-top-links" aria-label="教程页内目录"><a href="#ob-equipment">1 元件认识</a><a href="#ob-challenges">2 计算与闯关</a><a href="#ob-free">3 自由搭建</a><a href="#ob-pump-case">4 真实光路</a></nav><button className="ob-print-button" type="button" onClick={() => window.print()}>打印</button></div></div>
     <main>
-      <section className="ob-container lj-journey-hero" aria-labelledby="ob-title"><h1 id="ob-title">从认识元件，<br />到搭起自己的光路。</h1><p>先动一片镜，看光线怎样改变。再用公式完成计算与搭建，最后把所学带到自由设计和真实实验台。</p><nav className="lj-journey-route" aria-label="四步学习路线"><a href="#ob-equipment">1. 元件功能与可动光路</a><a href="#ob-challenges">2. 公式、计算与搭建闯关</a><a href="#ob-free">3. 自由搭建光路</a><a href="#ob-pump-case">4. 对照真实光路</a></nav></section>
+      <section className="ob-container lj-journey-hero" aria-labelledby="ob-title"><h1 id="ob-title">从一束光，认识光路。</h1><p>移动一块屏、转一面镜、收小一个孔。先看见光线的变化，再用公式搭起自己的光路。</p><a className="li-skip-intro" href="#ob-challenges">已经熟悉元件？直接开始计算与闯关</a></section>
       <ComponentTeaching />
       <LearningChallenges />
       <div className="ob-container"><aside className="ob-safety-note"><span className="ob-note-icon" aria-hidden="true">i</span><p><strong>上台之前</strong> · 先完成本组现场培训。光源、挡光与防护条件由带教者确认；网页练习用于理解操作，不替代现场验收。</p><a href="https://ehs.stanford.edu/manual/laser-safety-manual/laser-alignment-guidelines" target="_blank" rel="noreferrer">对准原则 <span aria-hidden="true">↗</span></a></aside></div>

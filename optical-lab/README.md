@@ -12,6 +12,8 @@
 
 九类元件教学调用实际空间追迹，支持拖动、滑块和方向键；机械支撑本身无光学功率，消色差镜只演示等效焦距。三关分别为平行光聚焦、两倍正正扩束、关联扇形源准直，同时校验计算、判断与所有光线实际通过的结果。关卡答案在页内切换时保留，关闭页面后练习进度重置。原八节实训、实操记录与自由工作台继续保留。
 
+教程开头先用三个图文小实验认识聚焦、反射和截光：一次突出一个变量，滑块旁直接解释计算结果，再进入完整元件教学。图文节奏参考 Bartosz Ciechanowski 的 [Cameras and Lenses](https://ciechanow.ski/cameras-and-lenses/)，代码与图示独立实现。所有光线仍由现有引擎计算；播放只示意传播方向，离开视口、切到后台或启用减少动态效果时暂停。
+
 ## 结构与模型
 
 | 目录 | 职责 |
@@ -30,6 +32,7 @@
 
 ```text
 npm run prepare:deploy
+npm run qa:introduction
 npm run qa:learning
 npm run qa:workbench
 npm run qa:usability

@@ -16,7 +16,8 @@
     "deploy:pages": "npm run prepare:deploy && wrangler pages deploy dist --project-name optical-lab-feiyang --branch main",
     "qa:workbench": "node scripts/qa_optical_lab.mjs --no-screenshots && node scripts/qa_spatial_workbench.mjs",
     "qa:usability": "node scripts/qa_usability.mjs",
-    "qa:learning": "node scripts/qa_learning.mjs"
+    "qa:learning": "node scripts/qa_learning.mjs",
+    "qa:introduction": "node scripts/qa_introduction.mjs"
   },
   "dependencies": {
     "react": "19.2.6",

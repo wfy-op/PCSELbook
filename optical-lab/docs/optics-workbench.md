@@ -92,6 +92,8 @@ npm run deploy:pages
 
 教程按四阶段排列：`ComponentTeaching` 单元件功能/可动追迹 → `LearningChallenges` 公式、计算、问答与搭建判定（后接八节实训记录）→ 基础自由台与设计工作台 → `PumpCaseStudy` 现场照片及原始记录。九类元件默认使用 16 mm 平行束和实际 XY 追迹；消色差不绘制未计算的色散，支杆仅作为机械参考。`learning-model.ts` 复用原引擎，不另造光路或只按数值答案判通过。
 
+`OpticsIntroduction` 在九类元件操作台前提供三个按阅读顺序展开的小实验。聚焦实验以 16 mm 平行束、f = 100 mm 薄透镜和可动屏演示会聚及越过焦点后的展开，支持取走镜片比较；镜面实验显示实际反射方向与初始参考方向；光阑实验使用全角 40 mrad 的发散束，统计实际被截光线。显示的纵向放大仅作用于 SVG 坐标，数值仍使用原单位和追迹结果。吸收比例为 17 条一维等权光线的离散份额；未模拟真实玻璃曲率或衍射光斑。动画默认关闭、离开视口和页面隐藏时暂停、减少动态效果时保持静态。`npm run qa:introduction` 检查桌面/手机真实操作、键盘/拖动、重置与这些动态设置。
+
 独立项目地址为 <https://optical-lab-feiyang.pages.dev/>，构建、依赖和 Cloudflare 发布与 PCSELbook 分开。教材侧栏及首页改为外链，旧光学路由通过 `_redirects` 跳转。教材的 `/optics/migrate/` 保留在旧域名，用于导出其浏览器存储；新教程末尾 `StorageMigration` 先验证文件，再让用户明确替换同类记录。两个域名互不共享 localStorage，原键名与工程格式保持兼容。原验收及冻结诊断等历史资料继续保存在 `knowledge-site/outputs/`，不转入发布包。
 
 新增教学纯模块：`training/bench-engine.ts`（关联/扩展源与薄透镜）、`optics.ts`（对准/成像）、`lens-system.ts`（组合镜矩阵）、`learning-model.ts`（元件场景和闯关判定）。发布准备审查这四个模块及设计六核心模块的依赖和 IO 边界。

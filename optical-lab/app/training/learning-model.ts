@@ -30,6 +30,19 @@ export function componentResult(id: ToolId, x: number, y: number, parameter: num
   const scene = componentScene(id, x, y, parameter);
   return { scene, result: traceFoldedScene(scene) };
 }
+
+/** Intro experiments share the production tracers; display magnification is UI-only. */
+export function focusExperiment(distance: number, lensEnabled = true) {
+  const lens = { ...customLens('intro-lens', 200), focal: 100 };
+  const scene: BenchScene = { version: 1, diameter: 16, fullAngle: 0, sourceModel: 'fan', screen: lens.z + distance, elements: lensEnabled ? [lens] : [] };
+  return { scene, result: traceBench(scene), focalDistance: lens.focal };
+}
+export function apertureExperiment(aperture: number) {
+  const scene = componentScene('iris', 280, 0, aperture);
+  scene.source.fullAngle = 40;
+  return { scene, result: traceFoldedScene(scene) };
+}
+
 export const challenges: { id: Exclude<Mission, 'free'>; title: string; formula: string; problem: string; answer: number; unit: string; hint: string; question: string; options: string[]; correct: number }[] = [
   { id: 'focus', title: '平行光聚焦', formula: '平行入射：焦面距薄透镜 f；一般成像：1/f = 1/u + 1/v，m = −v/u。', problem: '平行光通过 f = 100 mm 的正透镜，焦面应距镜片多少 mm？', answer: 100, unit: 'mm', hint: '平行光相当于 u → ∞，所以 v = f。镜片放在 z = 200 mm，目标面应在 z = 300 mm。', question: '在一个位置看到小光斑，能说明已经准直吗？', options: ['能，只要光斑小', '不能，那也可能是焦点'], correct: 1 },
   { id: 'expand', title: '两倍正正扩束', formula: '平行输入、平行输出：d = f₁ + f₂，束径倍率 |M| = |f₂/f₁|。', problem: '两片正透镜 f₁ = 50 mm、f₂ = 100 mm，需要多大镜间距？', answer: 150, unit: 'mm', hint: '第一片放 z = 100 mm，第二片放 z = 250 mm。输入范围 4 mm，输出应为 8 mm，且仍然平行。', question: '缩小光阑直到只剩一根光线，算完成扩束吗？', options: ['不算，需要全部光线通过且满足束径与角度目标', '算，最后一根光线没有发散'], correct: 0 },
