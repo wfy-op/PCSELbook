@@ -102,17 +102,17 @@ $2\sigma_d$ 则指两条对角镜面 $y=\pm x$（$\sigma_{d,+}$ 和 $\sigma_{d,-
 
 上述判据的正式版本可写成“张量积包含全对称表示”。但在初次使用阶段，只需记住：\textbf{模式 irrep 必须与法向辐射通道 irrep 相容，耦合才可能非零。}
 
-\cref{fig:ch08_irrep_radiation_gate} 给出这条规则的最小工作流。它把“看场图觉得亮或暗”的经验判断，改写成 three-step gate：先确定 little group，再给模式和辐射通道分别贴 irrep，最后检查张量积是否含全对称表示。
+\cref{fig:ch08_irrep_radiation_gate} 给出这条规则的最小工作流。它把“看场图觉得亮或暗”的经验判断改写成三步：先确定小群，再给模式和辐射通道分别贴 irrep，最后检查张量积是否含全对称表示。
 
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch08_irrep_radiation_gate}
-  \caption{Gamma 点模式的 irrep--辐射通道守门流程。in-plane little-group 匹配只决定 direct normal radiation 是否被对称性允许；真正的辐射强度仍需结合三维 slab、纵向奇偶性、层栈不对称和有限尺寸计算。}
+  \caption{Gamma 点模式 irrep 与辐射通道的匹配判断流程。面内小群匹配决定法向直接辐射是否被对称性允许。}
   \label{fig:ch08_irrep_radiation_gate}
 \end{figure}
 
 \begin{PitfallBox}
-必须把一句话反复记住：\textbf{in-plane little-group 匹配只是必要的第一层筛选，不是三维 slab 中法向辐射强度的充分判据。} 一个模式即便在平面内表示上允许 direct normal radiation，真实辐射强度仍会继续受纵向奇偶性、层栈不对称、上下光锥和有限厚度矢量混合的共同影响。
+\textbf{面内小群匹配是必要条件，不是三维 slab 中法向辐射强度的充分判据。} 即便面内表示允许法向直接辐射，真实辐射强度仍受纵向奇偶性、层栈不对称、上下光锥和有限厚度矢量混合的共同影响。
 \end{PitfallBox}
 
 
@@ -121,7 +121,7 @@ $2\sigma_d$ 则指两条对角镜面 $y=\pm x$（$\sigma_{d,+}$ 和 $\sigma_{d,-
 \[
 \mathcal{G}_{\Gamma}=C_{4v}.
 \]
-它有四个一维不可约表示 $A_1,A_2,B_1,B_2$ 和一个二维不可约表示 $E$。对 PCSEL 读者来说，最重要的是知道这些 irrep 分别意味着什么，而非把角色表背下来。一个可反复使用的最小表见 \cref{tab:c4v-irrep}.
+它有四个一维不可约表示 $A_1,A_2,B_1,B_2$ 和一个二维不可约表示 $E$。对 PCSEL 读者来说，最重要的是知道这些 irrep 分别意味着什么，而非把角色表背下来。一个可反复使用的最小表见 \cref{tab:c4v-irrep}。
 
 \begin{table}[htbp]
   \centering
@@ -142,7 +142,7 @@ $2\sigma_d$ 则指两条对角镜面 $y=\pm x$（$\sigma_{d,+}$ 和 $\sigma_{d,-
   \end{tabularx}
 \end{table}
 
-对 PCSEL 最常用的结论是：\textbf{在 $C_{4v}$ 下，法向自由空间的两支横向平面波偏振 $(\hat{\bm x},\hat{\bm y})$ 张成二维表示 $E$。} 因此，若只看平面内 little group 选择规则，直接允许法向辐射的模式族首先应与 $E$ 表示匹配；属于 $A_1,A_2,B_1,B_2$ 的模式，在 exact $\Gamma$ 点更容易成为 symmetry-protected dark family。
+对 PCSEL 最常用的结论是：\textbf{在 $C_{4v}$ 下，法向自由空间的两支横向平面波偏振 $(\hat{\bm x},\hat{\bm y})$ 张成二维表示 $E$。} 因此，若只看平面内 little group 选择规则，直接允许法向辐射的模式族首先应与 $E$ 表示匹配；属于 $A_1,A_2,B_1,B_2$ 的模式，在 exact $\Gamma$ 点更容易成为对称保护的暗模族。
 
 \section{三角晶格 \texorpdfstring{$\Gamma$}{Gamma} 点：\texorpdfstring{$C_{6v}$}{C6v} 分类}
 对理想三角晶格或等价的六重旋转晶格，$\Gamma$ 点小群为
@@ -183,7 +183,7 @@ M_{\beta\alpha}
 若 $\alpha$ 与 $\beta$ 不匹配，则在保持该对称性的前提下 $M_{\beta\alpha}=0$。这就是 symmetry-protected BIC 最小判断规则的群论版本。
 
 \subsection{把选择定则写成真正可复用的张量积条件}
-若要把上面的口头规则升级成可重复使用的教材工具，就应把“允许耦合”写成群表示的张量积条件。设模式属于 irrep $\Gamma_{\mathrm{mode}}$，辐射通道属于 irrep $\Gamma_{\mathrm{rad}}$，而耦合算符属于 irrep $\Gamma_{\mathrm{op}}$，则矩阵元
+“允许耦合”可以写成群表示的张量积条件。设模式属于 irrep $\Gamma_{\mathrm{mode}}$，辐射通道属于 irrep $\Gamma_{\mathrm{rad}}$，而耦合算符属于 irrep $\Gamma_{\mathrm{op}}$，则矩阵元
 \[
 \langle \mathrm{rad}|\hat{\mathcal O}|\mathrm{mode}\rangle
 \]
@@ -207,7 +207,7 @@ A_1.
 \end{equation}
 在本书使用的最小实表示框架中，这通常进一步退化为一条最便于操作的判据：\textbf{模式 irrep 与法向辐射通道 irrep 相同或含有与之兼容的分量时，direct radiation 在对称性上才是允许的。} 因此前文会把“方格晶格看 $E$，三角晶格看 $E_1$”说成第一性筛选规则，而不只是经验口诀\cite{sakoda2005,hsu2016}。
 
-\cref{eq:selection_rule_tensor} 给出的只是\emph{对称性允许性}，不是耦合强度大小。也就是说，满足该条件只说明矩阵元可以非零，并不保证它一定很大；而一旦不满足，则在保持对应对称性的前提下矩阵元必须为零。对 PCSEL 而言，这也是“允许法向辐射”和“实际辐射有多强”必须分两步判断的原因。
+\cref{eq:selection_rule_tensor} 给出的只是\emph{对称性允许性}，不是耦合强度大小。也就是说，满足该条件只说明矩阵元可以非零，并不保证它一定很大；而一旦不满足，则在保持对应对称性的前提下矩阵元必须为零。
 
 于是，对 PCSEL 最有用的两句话是：
 \begin{itemize}
@@ -217,7 +217,7 @@ A_1.
 因此，拿到一个新结构后，读者应先问的是“它在 $\Gamma$ 点属于哪个 irrep，这个 irrep 是否与法向辐射通道匹配”，而非“这模看起来亮不亮”。若不匹配，则 exact $\Gamma$ 点直接法向辐射被对称性禁止；若匹配，则 direct radiation 至少在对称性上是允许的，后面再讨论耦合强弱、损耗大小和器件级阈值。
 
 \subsection{如何从数值模场中真正给出 irrep 标签}
-教材若只告诉读者“先标 irrep”，但不说数值上怎么标，这套工具就还不够可操作。最小可执行流程如下。
+数值上给模式贴 irrep 标签的流程如下。
 
 对单个近似非简并模式 $u$，先选取 little group 的生成元，例如方格晶格常取 $C_4$ 与一条镜面 $\sigma_v$。把数值模场作用一次对称变换后，与原场做归一化重叠：
 \begin{equation}
@@ -296,7 +296,7 @@ I_{xy}\propto q_x^2q_y^2\ee^{-(q_x^2+q_y^2)/2}.
 \]
 所以第二列在整条 $q_x=0$ 线上为零，峰在 $(\pm\sqrt2,0)$；第三列在两条坐标轴上为零，峰在 $(\pm\sqrt2,\pm\sqrt2)$。零点来自有符号振幅的相消，不能对近场强度直接做傅里叶变换。
 
-教学取 $w=\SI{100}{\micro\meter}$、真空波长 \SI{940}{nm}、空气出光，由 $k_x=k_0\sin\theta_x$ 得第二列峰在 $\theta_x\simeq\pm0.121^\circ$，适用小角度近轴近似。脚本采用 $512\times512$ 网格、$12w$ 窗口并检查 Parseval 能量守恒。输入先归一化至相同积分功率，下排再分别按峰值归一化以看清形状，所以不能从颜色比较绝对峰值功率。真实 slab 远场仍需辐射面矢量场、介质阻抗和近远场变换，不能拿晶胞内导模直接替代这里的出射孔径。
+教学取 $w=\SI{100}{\micro\meter}$、真空波长 \SI{940}{nm}、空气出光，由 $k_x=k_0\sin\theta_x$ 得第二列峰在 $\theta_x\simeq\pm0.121^\circ$，适用小角度近轴近似。脚本采用 $512\times512$ 网格、$12w$ 窗口并检查 Parseval 能量守恒。输入先归一化至相同积分功率，下排再分别按峰值归一化以看清形状，所以不能从颜色比较绝对峰值功率。真实 slab 远场还需要辐射面矢量场、介质阻抗和近远场变换。
 
 \section{偏振选择为什么常常和模式分裂绑在一起}
 回到上一章的模式竞争图像。若两个正交偏振候选模在理想结构中简并，那么真实器件需要某种机制让其中一个在净增益排序上占优。常见的路径有两条：
@@ -314,7 +314,7 @@ I_{xy}\propto q_x^2q_y^2\ee^{-(q_x^2+q_y^2)/2}.
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch08_four_mode_triplet.tex}
-  \caption{四个行波分量、四个本征态与三个频率家族。(a) 行波是展开基底；(b) 四波共同重组为两个单重态和一个含两个态的双重态；(c) 破坏保护双重态的面内对称性，可解除简并。图中不是实际频率标尺，并非任意扰动都会分裂双重态。}
+  \caption{四个行波分量、四个本征态与三个频率家族。(a) 行波是展开基底；(b) 四波共同重组为两个单重态和一个含两个态的双重态；(c) 破坏保护双重态的面内对称性，可解除简并。频率轴为示意。}
   \label{fig:ch08_four_mode_triplet}
 \end{figure}
 
@@ -337,7 +337,7 @@ I_{xy}\propto q_x^2q_y^2\ee^{-(q_x^2+q_y^2)/2}.
 \[
 \rho=\frac{I_{\max}-I_{\min}}{I_{\max}+I_{\min}}
 \]
-换算得到偏振度 $\rho\approx0.8$\cite{vafadar2023uvpc}。这个例子说明“偏振被锁定”应落到带测量协议的强度比或偏振度上；它也不意味着所有材料平台、孔形和工作点都应达到同一数值。
+换算得到偏振度 $\rho\approx0.8$\cite{vafadar2023uvpc}。这个例子说明“偏振被锁定”应落到带测量协议的强度比或偏振度上。
 \end{ExampleBox}
 
 \section{拿到一个新结构后，如何自己做 \texorpdfstring{$\Gamma$}{Gamma} 点模标注}
@@ -349,7 +349,7 @@ I_{xy}\propto q_x^2q_y^2\ee^{-(q_x^2+q_y^2)/2}.
   \item 若 mode irrep 与 radiation irrep 不匹配，则 exact $\Gamma$ 点 direct radiation 被对称性禁止，优先检查它是否属于 symmetry-protected BIC family；
   \item 若随后加入对称性破缺，再问原 irrep 在子群下怎样分裂，以及哪一支更容易获得目标偏振和远场。
 \end{enumerate}
-这套流程不能替代全波仿真，但足以在拿到一个新单胞时，先完成“模标注、偏振判断、BIC 初筛”三项前置工作，而不是一开始就进行无约束参数扫描。
+拿到一个新单胞时，这套流程先完成“模标注、偏振判断、BIC 初筛”三项前置工作，避免一开始就进行无约束参数扫描。
 
 若某一偏振态在二维平面模型中显示出明显优势，但该优势依赖的实际上是上下完全对称的假设，那么一旦放到真实外延层栈中，这种结论可能翻转。偏振设计必须把纵向不对称也纳入模型。
 
@@ -375,7 +375,7 @@ H_f=f_0 I+\begin{bmatrix}s\delta&0\\0&-s\delta\end{bmatrix},
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{figures/computed/ellipticity_split.pdf}
-  \caption{椭圆化例子的二模本征频率。横轴为椭圆度百分数，纵轴为相对 $f_0$ 的频移；直线来自本节给定的一阶模型，不是实际孔结构仿真。分裂表示简并解除，不表示哪支一定激射。}
+  \caption{椭圆化例子的二模本征频率。横轴为椭圆度百分数，纵轴为相对 $f_0$ 的频移；直线来自本节给定的一阶模型。}
   \label{fig:ellipse-example}
 \end{figure}
 
@@ -428,7 +428,7 @@ H_f=f_0 I+\begin{bmatrix}s\delta&0\\0&-s\delta\end{bmatrix},
   \item 局部热热点和电流非均匀会使原本对称的模式结构偏斜。
 \end{itemize}
 
-因此，本章给出的是偏振与远场的光学框架，而不是器件级稳定性判据。某种偏振与远场能否在工作区间内保持稳定，还需在热-电-光耦合章节中判断。
+某种偏振与远场能否在工作区间内保持稳定，要在热-电-光耦合章节中判断。
 
 \section*{回看本章}
 PCSEL 的偏振与远场是模式本征结构、对称性和辐射选择规则的结果，而非输出端的附加现象。可操作的起点是在 $\Gamma$ 点按 little group 的不可约表示分类模式：方格晶格用 $C_{4v}$，三角晶格用 $C_{6v}$；法向辐射通道分别最小地属于 $E$ 和 $E_1$。建立这一标注后，偏振选择、symmetry-protected BIC 判断、双简并分裂和远场工程可归入同一分类工具。对称性破缺既可作为设计手段，也可能成为不可控扰动。偏振与远场工程必须同时考虑平面内晶格、纵向外延、有限尺寸以及工作点变化。

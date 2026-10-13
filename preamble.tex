@@ -123,9 +123,9 @@
   boxrule=0.6pt,
   arc=1pt
 }
-\newtcolorbox{IntuitionBox}{title=直觉框,fonttitle=\heiti,colframe=blue!60!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{IntuitionBox}{title=物理直觉,fonttitle=\heiti,colframe=blue!60!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{RigorousBox}[1][★]{title=严格表述（难度 #1）,fonttitle=\heiti,colframe=red!60!black,colback=white,enhanced,breakable,sharp corners}
-\newtcolorbox{ExampleBox}{title=例子,fonttitle=\heiti,colframe=green!40!black,colback=white,enhanced,breakable,sharp corners}
+\newtcolorbox{ExampleBox}[1][]{title={例子\if\relax\detokenize{#1}\relax\else：#1\fi},fonttitle=\heiti,colframe=green!40!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{PitfallBox}{title=易错点,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{WarningBox}[1][]{title={#1},fonttitle=\heiti,colframe=orange!90!black,colback=white,enhanced,breakable,sharp corners}
 \newtcolorbox{WhatCouldGoWrong}{title=可能出错处,fonttitle=\heiti,colframe=orange!80!black,colback=white,enhanced,breakable,sharp corners}
@@ -427,5 +427,5 @@
 \hbadness=10000
 \vbadness=10000
 
-% 红线回指：阶段 2 警告去重机制。重复出现的层级警告压缩为对 ch02 六条红线的半句回指。
-\newcommand{\RedlineRef}[1]{{\small （⚠~红线~\##1，见 \cref{sec:six-redlines}）}}
+% 回指 ch02 六组层级区分中的第 #1 组。
+\newcommand{\RedlineRef}[1]{{\small （见\cref{sec:six-redlines}第~#1~组）}}

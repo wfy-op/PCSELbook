@@ -6,7 +6,7 @@
 \begin{itemize}
   \item 建立本书统一的坐标系、时间因子与频率约定。
   \item 统一“模、Bloch 模、$\Gamma$ 点、带边、被动共振、阈值增益、阈值电流”等术语含义。
-  \item 明确本书中不同模型层级的关系，避免跨层误读结论。
+  \item 明确本书中不同模型层级的关系，判断一个结论属于哪一层。
 \end{itemize}
 
 \paragraph{读前准备}
@@ -14,7 +14,7 @@
 
 \paragraph{阅读主线}
 \ChapterModelLevel{L1→L4（层级接口总览）}
-本章不推导新的器件结果，而是固定全书使用的共同语言：先固定 benchmark 教学器件与高频符号工具页，再统一坐标和频域约定，随后说明模型层级与术语边界，最后给出阅读全书时必须守住的六条“红线”。晶格与倒格矢记号在 \cref{ch:bloch} 首用处建立，归一化约定在 \cref{ch:cwt-min} 首用处说明。
+本章固定全书使用的共同语言：先固定 benchmark 教学器件与高频符号表，再统一坐标和频域约定，随后说明模型层级与术语含义，最后归纳六组需要区分的概念。晶格与倒格矢记号在 \cref{ch:bloch} 首用处建立，归一化约定在 \cref{ch:cwt-min} 首用处说明。
 
 \section{为什么在第二章先停下来统一语言}
 初学者读 PCSEL 文献时，最先遇到的困难往往是同一个词在不同上下文里意思变了，而非公式本身。比如“阈值”这个词，在某些地方指的是阈值增益，在另一些地方指的是阈值电流；“模式”有时指无限周期的 Bloch 模，有时又指有限器件里的实际振荡模；“TE 模”在二维教材里是严格分类，在 slab 结构里却经常只是近似称呼。若不先限定这些边界，后续公式和结论容易被跨层误读。
@@ -22,7 +22,7 @@
 因此，本章的作用是给后续所有推导建立语义基础：为全书固定坐标、符号和模型层级。
 
 \section{本书默认的 benchmark 教学器件}
-为了避免读者在前半本不断在脑中切换不同器件，本书从这里开始固定一个默认教学参照：\textbf{方格晶格 air-hole slab PCSEL}。除非某章明确声明换了结构，否则本书的几何、对称性、PWEM 候选模、CWT 四波图像、单胞筛选、有限阵列检查与 worked example 都默认围绕这一 benchmark 展开。
+本书从这里开始固定一个默认教学参照：\textbf{方格晶格 air-hole slab PCSEL}。除非某章明确声明换了结构，否则本书的几何、对称性、PWEM 候选模、CWT 四波图像、单胞筛选、有限阵列检查与 worked example 都默认围绕这一 benchmark 展开。
 
 它的最小身份是：
 \begin{itemize}
@@ -41,34 +41,34 @@
   \label{fig:ch02_benchmark_device}
 \end{figure}
 
-\paragraph{两类贯穿案例及证据边界}
-为了让后半本的器件章节持续追踪同一组对象，本书把案例分成两个层次。B0 是可计算的教学基准，用于演示从外延到热回写的接口；R1 是有文献依据的性能锚点，用于检验放大后的设计逻辑。两者不能混写：B0 的参数带有\textbf{[本书算例]}标记，不代表已发表器件的完整外延配方；R1 只引用论文明确报告的尺寸和性能，不用缺失的层厚、电流或温升数据补齐故事。
+\paragraph{两类贯穿案例}
+后半本的器件章节持续追踪两个对象。B0 是可计算的教学基准，参数带\textbf{[本书算例]}标记，用于演示从外延到热回写的接口；R1 是文献报告的性能锚点，只使用论文给出的尺寸和性能，用于检验放大后的设计逻辑。
 
 \begin{table}[htbp]
   \centering
   \small
-  \caption{贯穿全书的双层案例。B0 提供透明的计算输入，R1 提供可追溯的实验性能边界。}
+  \caption{贯穿全书的两类案例：B0 提供计算输入，R1 提供实验性能锚点。}
   \label{tab:benchmark_pair}
   \setlength{\tabcolsep}{4pt}
   \begin{tabularx}{\textwidth}{@{}p{1.0cm}p{3.2cm}YY@{}}
     \toprule
     代号 & 身份与尺度 & 本书采用的数据 & 在器件章节中的用途 \\
     \midrule
-    B0 & \textbf{[本书算例]} GaAs-like 方格圆孔 PCSEL，目标波长 \SI{940}{nm} & 上、下 SCH 各约 \SI{200}{nm}，3--5 个 InGaAs 量子阱；热学入门估算先用直径 \SI{200}{\micro\meter} 的热源。具体组分、掺杂和接触参数必须在真实项目中重新标定 & \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 依次交接 $n_{\mathrm{eff}}$、重叠因子、局域增益、$J(x,y)$ 与 $T(x,y,z)$ \\
-    R1 & \textbf{[文献值]} Noda--Yoshida 双晶格放大路线 & \SI{500}{\micro\meter} 级器件达到约 \SI{10}{W} 脉冲输出；\SI{1}{mm} 级器件实现 \SI{10}{W} 连续输出与低于 \SI{1.23}{kHz} 的内禀线宽；\SI{3}{mm} 级器件实现 \SI{50}{W} 连续输出和约 \ang{0.05} 发散角\cite{yoshida2019,yoshida2023,noda2023tutorial} & \cref{ch:single-mode-design,ch:metrics} 用这些公开指标检验模鉴别、热补偿和性能报告是否保持在证据边界内 \\
+    B0 & \textbf{[本书算例]} GaAs-like 方格圆孔 PCSEL，目标波长 \SI{940}{nm} & 上、下 SCH 各约 \SI{200}{nm}，3--5 个 InGaAs 量子阱；热学入门估算先用直径 \SI{200}{\micro\meter} 的热源 & \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} 依次交接 $n_{\mathrm{eff}}$、重叠因子、局域增益、$J(x,y)$ 与 $T(x,y,z)$ \\
+    R1 & \textbf{[文献值]} Noda--Yoshida 双晶格放大路线 & \SI{500}{\micro\meter} 级器件达到约 \SI{10}{W} 脉冲输出；\SI{1}{mm} 级器件实现 \SI{10}{W} 连续输出与低于 \SI{1.23}{kHz} 的内禀线宽；\SI{3}{mm} 级器件实现 \SI{50}{W} 连续输出和约 \ang{0.05} 发散角\cite{yoshida2019,yoshida2023,noda2023tutorial} & \cref{ch:single-mode-design,ch:metrics} 用这些公开指标检验模鉴别与热补偿设计 \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-这并非说全书结论只对这一类器件成立，而是说：\textbf{若某章没有特别声明，我们优先把抽象公式和分类工具投影回这一个统一对象。} 这样做的好处是，读者从 \cref{ch:bloch,ch:gamma,ch:pwe} 读到 \cref{ch:workflow,ch:worked-example} 时，脑中追踪的是同一个器件在不同层级的投影，而不是每章换一个新结构。
+\textbf{若某章没有特别声明，抽象公式和分类工具都投影回这一个对象。} 这样，读者从 \cref{ch:bloch,ch:gamma,ch:pwe} 读到 \cref{ch:workflow,ch:worked-example} 时，追踪的是同一个器件在不同层级的投影，而不是每章换一个新结构。
 
 \section{前置工具页：全书最高频符号先一次看全}
-为了避免读者在后文反复翻页找定义，本节把全书最高频、且最容易跨层混淆的量先压成一张工具表。更完整版本见书末术语表，但这里先给出读书时最常需要随手回看的核心对象。
+本节把全书最高频、最容易跨层混淆的量列成一张表，完整版本见书末术语表。
 
 \begin{table}[htbp]
   \centering
   \scriptsize
-  \caption{全书最高频核心符号的前置工具页。表中“典型量级”用于\textbf{[教学示意]}与\textbf{[本书算例]}对齐，跨平台定量比较需回到各章文献值与边界条件。}
+  \caption{全书最高频的核心符号。“典型单位/量级”列为\textbf{[教学示意]}。}
   \label{tab:core_symbols_toolpage}
   \setlength{\tabcolsep}{3pt}
   \begin{tabularx}{\textwidth}{@{}p{2.25cm}p{1.55cm}p{2.25cm}Y@{}}
@@ -96,7 +96,7 @@
   \item 当需要把平面内向量单独拿出来时，记作 $\rho=(x,y)$。
 \end{itemize}
 
-这个约定看似简单，但会反复用到。因为对PCSEL而言，纵向与横向承担的是不同物理角色：纵向层栈决定导模约束、外延不对称和吸收层分布；横向周期结构决定Bloch模分类、布拉格耦合与远场工程。后文如果不特别说明，看到"纵向"就默认与外延层栈相关，看到"面内"就默认与二维周期和横向模式选择相关。
+这个约定看似简单，但会反复用到。因为对PCSEL而言，纵向与横向承担的是不同物理角色：纵向层栈决定导模约束、外延不对称和吸收层分布；横向周期结构决定Bloch模分类、布拉格耦合与远场工程。后文如果不特别说明，看到“纵向”就默认与外延层栈相关，看到“面内”就默认与二维周期和横向模式选择相关。
 
 
 \section{时间因子与复频率：为什么符号约定会影响物理解释}
@@ -149,7 +149,7 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 
 \begin{table}[htbp]
   \centering
-  \caption{PCSEL 四层建模体系的接口规范。以“计算阈值电流”为例说明数据如何在各层之间传递。每一层的输出成为下一层的输入，形成完整的证据链。}
+  \caption{PCSEL 四层建模体系的接口规范。以“计算阈值电流”为例说明数据如何在各层之间传递。每一层的输出成为下一层的输入。}
   \label{tab:ch02_model_hierarchy_interface}
   \input{figures/tab_ch02_model_hierarchy_interface}
 \end{table}
@@ -178,11 +178,11 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 \bottomrule
 \end{tabular}
 \end{center}
-若结论跨越了当前层级（例如用被动 $Q$ 直接报告阈值电流），就是“层级偷换”——这是全书反复提醒的最常见错误。
+若结论跨越了当前层级，例如用被动 $Q$ 直接报告阈值电流，就是“层级偷换”。
 \end{IntuitionBox}
 
-\section{几个最容易混淆的术语：先立边界，细节由首用章展开}
-下面四对术语会反复出现。它们的完整辨析放在各自的首用章节（“模 vs Bloch 模”见 \cref{ch:bloch}，“$\Gamma$ 点 vs 带边”见 \cref{ch:gamma}，“被动共振 vs 有源阈值”与“阈值增益 vs 阈值电流”见 \cref{ch:threshold}），高频混淆对照表统一收在 \cref{ch:glossary}。这里只先立四条最低边界：
+\section{几个最容易混淆的术语}
+下面四对术语会反复出现。它们的完整辨析放在各自的首用章节（“模 vs Bloch 模”见 \cref{ch:bloch}，“$\Gamma$ 点 vs 带边”见 \cref{ch:gamma}，“被动共振 vs 有源阈值”与“阈值增益 vs 阈值电流”见 \cref{ch:threshold}），高频混淆对照表统一收在 \cref{ch:glossary}。这里先给出四条区分：
 \begin{itemize}
   \item “模”泛指满足给定方程和边界条件的场分布；“Bloch 模”专指无限周期结构中满足 Bloch 条件的本征场，天然属于 L1 层；
   \item $\Gamma$ 点是布里渊区中心（$\kvec=\bm{0}$）；带边是群速度趋近于零的位置——两者可能重合，但不是同义词；
@@ -195,7 +195,7 @@ k_0=\frac{\omega}{c}=\frac{2\pi}{\lambda}.
 \end{PitfallBox}
 
 \section{如何阅读后续章节：每一章都在回答链条上的哪一环}
-为了让整本书读起来像一条连续链，而不是二十多篇松散讲义，这里先给出主线。
+全书主线可以写成一条链：
 
 \begin{equation}
 \begin{aligned}
@@ -240,19 +240,19 @@ I_{\mathrm{th},m}.
     \cref{ch:pwe,ch:rcwa,ch:fdtd-fem,ch:method-compare} & 候选模目录、被动损耗、有限尺寸远场、方法互证结果 & \cref{ch:epitaxial-optics,ch:workflow,ch:worked-example} 用来进入器件层与完整建模链 \\
     \cref{ch:epitaxial-optics,ch:qw-gain,ch:electrical,ch:eto-coupling} & 纵向重叠、模增益映射、注入分布、温度场与工作窗口 & \cref{ch:single-mode-design,ch:robustness,ch:dynamics,ch:metrics} 用来定义真实器件层面的稳定性与性能 \\
     \cref{ch:electrical,ch:eto-coupling} & 载流子分布 $N(\rvec)$、局部温度 $T(\rvec)$ 与电热回写系数 & \cref{ch:electrical,ch:eto-coupling} 中把 $T(\rvec)$ 反馈进迁移率/增益/折射率模型，完成 L3\textrightarrow{}L4 闭环 \\
-    \cref{ch:workflow,ch:worked-example,ch:failure-modes} & 正向流程、执行样例、反向诊断 & \cref{ch:device-appendix,ch:sim-appendix} 用来固化为可复核的研究模板 \\
+    \cref{ch:workflow,ch:worked-example,ch:failure-modes} & 正向流程、执行样例、反向诊断 & \cref{ch:device-appendix,ch:sim-appendix} 把它们整理成研究模板 \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
 
-\section{全书需要反复区分的六类边界}
+\section{全书反复区分的六组概念}
 \label{sec:six-redlines}
-到这里，可以把本章压缩成六条阅读边界。后文重复触及这些误区时，统一用“⚠ 红线 \#N”半句回指本节，不再整段重述：
+本章的层级约定可以归结为六组需要区分的概念：
 \begin{figure}[htbp]
   \centering
   \input{figures/fig_ch02_six_redlines}
-  \caption{“六条红线”可视化速记图。后文首次触及对应误区时，统一用“⚠ 红线 \#N”作边注提示。}
+  \caption{六组需要区分的概念。每组左侧是较低层级的模型结果，右侧是还需要更多物理才能回答的较高层级问题。}
   \label{fig:ch02_six_redlines}
 \end{figure}
 \begin{enumerate}
@@ -263,7 +263,6 @@ I_{\mathrm{th},m}.
   \item 二维教学模型不是三维 slab 结构结论，除非已明确说明哪些纵向自由度被压缩进了等效参数（2D \textrightarrow{} 3D 层级替换）；
   \item 线性阈值代理不是阈上稳态激光理论，除非已显式引入有源自洽场或饱和非线性框架（L2 \textrightarrow{} 阈上动力学）。
 \end{enumerate}
-如果读者在后续章节中不断回看这六条，整本书会清楚得多。
 
 \section*{回看本章}
 本章的任务是把全书的语义基础固定下来。自此以后，看到坐标、频域符号、$\Gamma$ 点、带边、阈值增益、阈值电流等术语，都应自动联想到它们所属的模型层级与物理含义。

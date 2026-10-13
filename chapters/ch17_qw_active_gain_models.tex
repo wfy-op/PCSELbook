@@ -6,7 +6,7 @@
 \begin{itemize}
   \item 理解为什么 PCSEL 的有源区设计不能停留在“放入若干量子阱并赋予一个经验增益谱”这种层面。
   \item 掌握单量子阱（SQW）、多量子阱（MQW）、应变工程、TE/TM 增益差异以及阻挡层设计在 PCSEL 中各自回答什么器件问题。
-  \item 建立“能带工程 $\rightarrow$ 材料增益 $\rightarrow$ 模增益 $\rightarrow$ 阈值载流子需求”的完整教材链，并明确它仍不等于阈值电流。
+  \item 建立“能带工程 $\rightarrow$ 材料增益 $\rightarrow$ 模增益 $\rightarrow$ 阈值载流子需求”的完整链条。
 \end{itemize}
 
 \paragraph{读前准备}
@@ -14,19 +14,19 @@
 
 \paragraph{阅读主线}
 \ChapterModelLevel{L2}
-上一章已经说明，量子阱并非孤立插入在层栈中的一层发光材料，而是与 SCH、异质结台阶和损耗重叠一起决定器件工作点的核心部件。本章进一步把这个结构转化为有源区工程语言。我们先从“为什么量子阱增益必须和能带工程一起讨论”开始，随后依次分析 SQW 与 MQW 的设计权衡、应变与 TE/TM 增益差异、限制层与电子/空穴阻挡层的作用，再把材料增益映射到模增益，最后明确指出：即便这一整条链已经写清，器件级阈值电流仍要等 \cref{ch:electrical,ch:eto-coupling} 才能闭合。
+上一章已经说明，量子阱并非孤立插入在层栈中的一层发光材料，而是与 SCH、异质结台阶和损耗重叠一起决定器件工作点的核心部件。本章进一步把这个结构转化为有源区工程语言。我们先从“为什么量子阱增益必须和能带工程一起讨论”开始，随后依次分析 SQW 与 MQW 的设计权衡、应变与 TE/TM 增益差异、限制层与电子/空穴阻挡层的作用，再把材料增益映射到模增益，最后说明这条链怎样接到 \cref{ch:electrical,ch:eto-coupling} 的阈值电流计算。
 
 \paragraph{贯穿案例 B0：把层栈变成增益输入}
-本章沿用 B0 的 3--5 个 InGaAs 量子阱和上一章算得的 $\Gamma_{\mathrm{opt}}$。真正进入计算前，还必须用目标材料的阱宽、组分、应变和温度数据重新标定材料增益
+本章沿用 B0 的 3--5 个 InGaAs 量子阱和上一章算得的 $\Gamma_{\mathrm{opt}}$。材料增益
 \[
-g_{\mathrm{mat}}=g_{\mathrm{mat}}(\omega,N,T).
+g_{\mathrm{mat}}=g_{\mathrm{mat}}(\omega,N,T)
 \]
-本书不把这些未指定参数伪装成已知的文献配方。本章的交付量是增益峰 $\lambda_g(N,T)$、透明载流子密度以及 $g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}g_{\mathrm{mat}}$，它们随后与冷腔损耗共同给出 $N_{\mathrm{th}}$，但还不能直接给出 $I_{\mathrm{th}}$。
+由目标材料的阱宽、组分、应变和温度确定。本章的交付量是增益峰 $\lambda_g(N,T)$、透明载流子密度以及 $g_{\mathrm{mod}}=\Gamma_{\mathrm{opt}}g_{\mathrm{mat}}$，它们与冷腔损耗共同给出 $N_{\mathrm{th}}$。
 
-\section{为什么本章不能写成一般半导体激光器的量子阱综述}
+\section{PCSEL 有源区要回答的问题}
 量子阱和增益模型看上去像半导体激光器的一般话题，但对 PCSEL 来说，它们必须围绕一个更具体的问题来组织：前面章节已经给出一组候选模、辐射损耗和阈值增益需求，现在有源区究竟能否在真实外延层里把这些候选模中的某一支推到阈值之上？
 
-这句话的关键在于“某一支模式”。PCSEL 要问的是：哪一支面内反馈模式会在特定纵向重叠和横向分布下得到最大的有效模增益；知道材料“有增益”还不够。因此，有源区工程必须从一开始就和 \cref{ch:threshold,ch:polarization,ch:epitaxial-optics,ch:electrical,ch:eto-coupling} 同时对接。若把这一章写成一般性的 QW 增益综述，就会失去它在本书主线中的位置。
+这句话的关键在于“某一支模式”。PCSEL 要问的是：哪一支面内反馈模式会在特定纵向重叠和横向分布下得到最大的有效模增益；知道材料“有增益”还不够。因此，有源区工程必须从一开始就和 \cref{ch:threshold,ch:polarization,ch:epitaxial-optics,ch:electrical,ch:eto-coupling} 同时对接。
 
 \section{量子阱为什么是 PCSEL 有源区的自然选择}
 量子阱（Quantum Well, QW）之所以在 PCSEL 中几乎成为默认有源区，根本原因是它适合满足两个器件需求，而非笼统地“比体材料更先进”。第一，要在有限注入与有限损耗条件下提供足够高的材料增益；第二，要让增益谱、偏振选择和工作波长可以被材料与结构参数共同调节。
@@ -93,24 +93,16 @@ g_{\mathrm{pk}}(N,T)
 -a_{\lambda}(N,T)\,\Delta\lambda^2.
 \label{eq:gain_detuning_parabolic}
 \end{equation}
-\cref{eq:gain_detuning_parabolic} 是教材化的最小代理模型，而非通用材料定律；
+\cref{eq:gain_detuning_parabolic} 是峰值附近的代理模型，
 其中 $a_{\lambda}$ 的量纲为 $\mathrm{cm}^{-1}\mathrm{nm}^{-2}$，以保证量纲与增益一致。
-其适用窗口必须绑定材料平台与工作波段。以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，
+其适用窗口随材料平台与工作波段而定。以 1.55\,\si{\micro\meter} InP 系 PCSEL 报道为例，
 增益谱半高宽常见于 $20$--$30\,\mathrm{nm}$ 量级，抛物线近似在峰值附近
 $|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 可用于一阶估算
-\cite{wang2024,zhou2024nside1550pcsel}。对 GaN/深紫外等平台，谱形与展宽机制差异更大，
-应重新标定窗口，而不能平移复用这一范围\cite{coldren2012,lu2025deepuvpcsel}。
+\cite{wang2024,zhou2024nside1550pcsel}。对 GaN/深紫外等平台，谱形与展宽机制差异更大，窗口需要单独标定\cite{coldren2012,lu2025deepuvpcsel}。
 这个代理模型的作用，是把“模式波长是否落在增益峰附近”写成阈值链中的可计算量。
 
-\section{2024--2026 前沿补充：跨材料平台增益窗口不可直接平移}
-最新器件结果进一步强调了“平台绑定”的必要性：可见光 GaN-PCSEL、1.55~$\mu$m InP-PCSEL 与深紫外 PCSEL 的增益谱宽、温漂和可用工作窗口并不共享同一组经验常数\cite{taguchi2024greenpcsel,aoki2024stable1550pcsel,lu2025deepuvpcsel}。因此，本章所有失谐、增益窗口与阈值裕量参数，都应写成“平台 + 温区 + 注入条件”三元条件化形式。
-
-对工程读者，一个实用准则是：
-\begin{itemize}
-  \item 在同平台内，可把 \cref{eq:gain_detuning_parabolic} 作为前端筛选代理；
-  \item 跨平台比较时，不复用“同一数值窗口”，只复用“同一判断流程”；
-  \item 进入器件级结论前，必须经由电热回写重新校准增益峰位置与有效窗口。
-\end{itemize}
+\section{2024--2026 前沿补充：不同材料平台的增益窗口}
+可见光 GaN-PCSEL、1.55~$\mu$m InP-PCSEL 与深紫外 PCSEL 的增益谱宽、温漂和可用工作窗口各不相同\cite{taguchi2024greenpcsel,aoki2024stable1550pcsel,lu2025deepuvpcsel}，失谐、增益窗口与阈值裕量参数要按平台、温区和注入条件分别给出。同一平台内，可把 \cref{eq:gain_detuning_parabolic} 作为前端筛选代理；跨平台比较时，复用的是判断流程，而不是数值窗口。增益峰位置还会随电热工作点漂移，见 \cref{ch:eto-coupling}。
 
 \begin{figure}[htbp]
   \centering
@@ -150,7 +142,7 @@ $|\Delta\lambda|\lesssim10\,\mathrm{nm}$ 可用于一阶估算
  g_{m,\mathrm{mod}} \approx \Gamma_m g_{\mathrm{mat},p(m)} - \alpha_{m,\mathrm{int}},
 \label{eq:gmod_pol}
 \end{equation}
-其中 $p(m)$ 表示该模主要采样的偏振分量。\cref{eq:gmod_pol} 属于\textbf{光学模与有源材料的接口公式}。它清楚地说明：同一组量子阱参数，对不同偏振候选模给出的有效增益未必相同。PCSEL 的偏振选择，并非纯冷腔对称性问题，也是二者共同作用的结果，而非纯材料问题。
+其中 $p(m)$ 表示该模主要采样的偏振分量。\cref{eq:gmod_pol} 属于\textbf{光学模与有源材料的接口公式}。它清楚地说明：同一组量子阱参数，对不同偏振候选模给出的有效增益未必相同。PCSEL 的偏振选择由冷腔对称性和有源材料共同决定。
 
 若想把这种联合选择写得更定量，可再引入模式对 TE/TM 分量的采样权重 $\eta_{m,\mathrm{TE}}$ 与 $\eta_{m,\mathrm{TM}}$，满足
 \[
@@ -205,7 +197,7 @@ g_{\mathrm{mod,th}}=\alpha_{\mathrm{rad}}+\alpha_{\mathrm{int}}
 \quad\text{比较}.
 \label{eq:gain_chain_compact}
 \end{equation}
-只有沿着这条链逐层下去，读者才不会把“材料增益峰更高”误当成“目标模式阈值一定更低”。
+沿这条链逐层走下去就能看到：材料增益峰更高，不等于目标模式阈值更低。
 
 若有源区填充在空间上并不均匀，则应写成加权积分形式
 \begin{equation}
@@ -260,12 +252,12 @@ g_N\,\delta N
  g_{\mathrm{mat}} = g_0 \ln\!\left(\frac{N}{N_{\mathrm{tr}}}\right).
 \label{eq:gain_log}
 \end{equation}
-这两类模型都非常有用，但它们的正确身份必须被说清：它们是\textbf{真实器件问题的简化代理模型}。如果你的目标只是比较几个晶格参数和层栈方案在阈值附近的大致排序，这类模型足够高效；如果你的目标已经变成宽温区、强应变、多偏振耦合或高注入工作点的准确预测，就必须使用更真实的材料增益模型，把量子阱能级、谱线展宽、温度漂移和偏振分量显式纳入。
+这两类模型是\textbf{简化代理模型}：比较几个晶格参数和层栈方案在阈值附近的大致排序时，它们足够高效；宽温区、强应变、多偏振耦合或高注入工作点的预测，则需要把量子阱能级、谱线展宽、温度漂移和偏振分量显式纳入更真实的材料增益模型。
 
-在 PCSEL 里，之所以要比一般教材更强调这点，是因为前面章节的冷腔候选模本身就很多。一旦增益模型过于粗糙，你很容易得到看似“模式 A 只比模式 B 高一点阈值裕量”的结论，但这点差别完全可能只是模型粗化误差，而非真实器件物理。因此，使用任何简化增益模型时都应写明参数来源、适用注入区间、温度范围和应变/偏振适用性。
+PCSEL 的冷腔候选模本身就很多。增益模型过于粗糙时，“模式 A 只比模式 B 高一点阈值裕量”这类结论可能只是模型误差。因此，比较近邻候选模时，增益模型的误差必须小于要比较的阈值裕量。
 
-\section{为什么到这里仍然不能推出阈值电流}
-当本章写到这里，读者已经具备一条完整而严格的符号链：
+\section{从阈值载流子到阈值电流}
+到这里，读者已经具备一条完整的符号链：
 \begin{equation}
 \begin{aligned}
 \bigl[\text{阱宽、势垒、应变、阻挡层}\bigr]
@@ -276,42 +268,36 @@ g_N\,\delta N
 \end{aligned}
 \label{eq:symbol_chain_gain}
 \end{equation}
-这条链已经足够说明“为什么同一个冷腔模式，在不同有源区工程下会有不同阈值载流子需求”。但它仍然没有告诉你：外加电流是否能在真实器件中把这些阱均匀填充、是否会发生电子泄漏、空穴注入不足、串联电阻抬高和发热回写。也就是说，\cref{eq:symbol_chain_gain} 的终点仍是一个\textbf{光学与材料层级的阈值条件}，还不是器件级阈值电流。
-
-这也是本章最需要与 \cref{ch:electrical} 衔接的地方。只要读者在这里形成“有了 MQW 和一个增益模型，阈值电流就差不多出来了”的印象，后面的器件主线就会立刻被破坏。
+这条链说明了同一个冷腔模式为什么在不同有源区工程下会有不同的阈值载流子需求。要从 $N_{\mathrm{th}}$ 走到阈值电流，还需要知道外加电流能否在真实器件中把这些阱均匀填充，以及电子泄漏、空穴注入不足、串联电阻和发热回写的影响。
 若要直接查看“从外加电流到阈值成立”的器件级方程链，请跳转到 \cref{ch:electrical,eq:poisson_dd,eq:ith_chain,eq:ith_condition}；若要查看显式载流子-光子速率方程形式，请见 \cref{ch:dynamics,eq:rate_N,eq:rate_S}。
 
-\begin{PitfallBox}
-“量子阱设计好了、模增益公式也写出来了，所以阈值电流只剩下一个换算因子”是错误的。只要载流子在各阱之间分配不均、阻挡层设计不完整或注入受热反馈影响，本章给出的只是阈值载流子需求，而不是外加电流的器件答案。
-\end{PitfallBox}
-
 \section*{回看本章}
-PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线来组织。SQW 与 MQW 的选择、应变工程、TE/TM 增益差异、势垒与阻挡层设计，共同决定材料增益能否在真实层栈中转化为目标模式的有效模增益。\cref{ch:epitaxial-optics} 给出的 SCH 与能带台阶在这里继续发挥作用：它们既决定载流子是否被真正限制在有源区，也决定有源区与模式的纵向重叠。到本章结束时，读者应当已经清楚：从材料增益到模增益的链条已经建立，但它仍不能直接越级给出阈值电流，因为电流路径、接触和热反馈还没有进入求解。
+PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线来组织。SQW 与 MQW 的选择、应变工程、TE/TM 增益差异、势垒与阻挡层设计，共同决定材料增益能否在真实层栈中转化为目标模式的有效模增益。\cref{ch:epitaxial-optics} 给出的 SCH 与能带台阶在这里继续发挥作用：它们既决定载流子是否被真正限制在有源区，也决定有源区与模式的纵向重叠。到本章结束时，从材料增益到模增益的链条已经建立；电流路径、接触和热反馈在后续两章进入求解。
 
-\begin{ConnectionBox}{从冷腔到增益补偿：连接第 3--8 章的模式分析与本章的有源区设计}
-回顾本书的理论架构，我们可以清晰地看到两条主线的汇合：
+\begin{ConnectionBox}{从冷腔到增益补偿：连接冷腔模式分析与本章的有源区设计}
+回顾本书的理论架构，可以看到两条主线的汇合：
 
-\textbf{主线一（第 3--8 章）：冷腔模式分析}
+\textbf{主线一（\crefrange{ch:maxwell}{ch:polarization}）：冷腔模式分析}
 \begin{itemize}
-  \item 第 3 章：从 Maxwell 方程导出周期介质中的本征问题
-  \item 第 4--5 章：Bloch 定理与能带结构，识别$\Gamma$点候选模式
-  \item 第 6--8 章：面内反馈机制、偏振选择、远场对称性
+  \item \cref{ch:maxwell}：从 Maxwell 方程导出周期介质中的本征问题
+  \item \cref{ch:bloch,ch:gamma}：Bloch 定理与能带结构，识别$\Gamma$点候选模式
+  \item \cref{ch:feedback,ch:polarization}：面内反馈机制、偏振选择、远场对称性
   \item \textbf{核心产出：}被动结构的复频率$\tilde{\omega}_n=\omega_n-i\gamma_n$，其中$\gamma_n$包含辐射损耗+$Q_\text{out}$
 \end{itemize}
 
-\textbf{主线二（第 17--19 章）：有源区增益与注入}
+\textbf{主线二（\crefrange{ch:qw-gain}{ch:eto-coupling}）：有源区增益与注入}
 \begin{itemize}
-  \item 第 17 章：量子阱材料增益$g_\text{mat}(\omega,N,T)$→模增益$g_\text{mod}$
-  \item 第 18 章：电注入、输运、泄漏与非均匀填充
-  \item 第 19 章：热效应对增益谱和折射率的回写
+  \item 本章：量子阱材料增益$g_\text{mat}(\omega,N,T)$→模增益$g_\text{mod}$
+  \item \cref{ch:electrical}：电注入、输运、泄漏与非均匀填充
+  \item \cref{ch:eto-coupling}：热效应对增益谱和折射率的回写
   \item \textbf{核心产出：}给定注入条件下的净增益能力$g_\text{net}(N,T,I)$
 \end{itemize}
 
 \textbf{两条主线的交汇点：阈值条件}
 \[
-\underbrace{g_{\mathrm{mod}}(N_{\mathrm{th}},T)}_{\text{第 17 章}}
+\underbrace{g_{\mathrm{mod}}(N_{\mathrm{th}},T)}_{\text{有源区}}
 =
-\underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{第 3--8 章}}
+\underbrace{\alpha_{\mathrm{i}}+\alpha_{\mathrm{rad}}}_{\text{冷腔分析}}
 =
 \frac{\omega_0}{Q\,v_{\mathrm{en},m}}
 =
@@ -320,7 +306,7 @@ PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线�
 
 这个等式的深刻含义是：\textbf{阈值载流子浓度}$N_\text{th}$\textbf{是冷腔品质因数$Q$的函数}，而非一个孤立的材料参数。高$Q$模式（如 BIC 或 quasi-BIC）之所以重要，正是因为它们降低了$\alpha_\text{rad}$，从而降低了对$g_\text{mod}$的需求，进而降低了$N_\text{th}$。
 
-这也解释了为什么本书反复强调"先做冷腔分析，再做有源区优化"的顺序：如果连被动结构的$Q_\text{out}$都不知道，就无法判断某个增益峰值偏移是否会致命；如果不清楚模式的近场分布，就无法准确计算$\Gamma_\text{QW}$。因此，本章的所有公式都必须建立在第 3--8 章的模式信息之上，而不能脱离具体模式空谈"材料增益大小"。
+这也解释了为什么本书反复强调“先做冷腔分析，再做有源区优化”的顺序：如果连被动结构的$Q_\text{out}$都不知道，就无法判断某个增益峰值偏移是否会致命；如果不清楚模式的近场分布，就无法准确计算$\Gamma_\text{QW}$。因此，本章的所有公式都建立在冷腔分析给出的模式信息之上。
 \end{ConnectionBox}
 
 \section*{练习题}
@@ -336,9 +322,9 @@ PCSEL 的有源区工程，必须围绕真实模式而不是抽象材料谱线�
 
 \section*{延伸阅读}
 \begin{itemize}
-  \item 下一章将从本章的 $N_{\mathrm{th}}$ 与局域增益分布出发，解释接触、电流扩展层、孔径和漂移-扩散输运为什么会把这些理想条件重新改写成真实器件电流分布。 阅读时应同时核对本章变量在后续模型中的定义和适用范围。
+  \item 下一章将从本章的 $N_{\mathrm{th}}$ 与局域增益分布出发，解释接触、电流扩展层、孔径和漂移-扩散输运为什么会把这些理想条件重新改写成真实器件电流分布。
 
-  \item 若想补充量子阱增益与应变工程的经典背景，可对照 \cite{coldren2012} 中相关章节阅读，但阅读时要始终把问题放回 PCSEL 的模式选择与面发射器件约束中。 阅读时应重点核对量子阱、有源区与模增益映射的标准假设和文献参数范围。
+  \item 若想补充量子阱增益与应变工程的经典背景，可对照 \cite{coldren2012} 中相关章节阅读，但阅读时要始终把问题放回 PCSEL 的模式选择与面发射器件约束中。
 
-  \item 若想对照不同材料平台中有源区工程如何进入真实 PCSEL，可参考 \cite{matsubara2008,yoshida2023,zhoupan2023}。 阅读时应重点核对量子阱、有源区与模增益映射的标准假设和文献参数范围。
+  \item 若想对照不同材料平台中有源区工程如何进入真实 PCSEL，可参考 \cite{matsubara2008,yoshida2023,zhoupan2023}。
 \end{itemize}

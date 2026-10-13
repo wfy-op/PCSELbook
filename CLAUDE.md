@@ -5,6 +5,7 @@
 - `knowledge-site/` is the public, static, read-only knowledge site generated from the book.
 - The website is tracked as regular files in this parent repository. Its former standalone Git history is preserved locally at `knowledge-site/outputs/git-history-before-parent-tracking-20260917`; do not publish that directory or the local `.openai` hosting configuration.
 - Never hand-edit generated `knowledge-site/public/data/chapters/*.json` content.
+- Keep `generate_book_data.py` box argument/title rules aligned with `preamble.tex`; nested boxes/lists, accents and literal code options must survive HTML conversion. Book navigation/reading progress uses the `.reading-pane` scroll container, not document scrolling.
 - `cd knowledge-site; npm run sync:book` compiles a stale PDF and regenerates figures, chapter data, font subset, and KaTeX HTML.
 - `npm run dev` performs an initial sync and watches book sources for further local synchronization.
 - `npm run check` performs a synchronized production build, payload cleanup, tests, lint, and type checking.

@@ -48,7 +48,12 @@ type ReadingProgress = {
   updatedAt: string;
 };
 
+type PartGroup = { part: string; kicker: string; front: boolean; chapters: ChapterMetadata[] };
+
 const READING_PROGRESS_KEY = "pcsel-reading-progress-v1";
+const LAB_URL = "https://optical-lab-feiyang.pages.dev/";
+const SEARCH_LIMIT = 60;
+const PART_NUMERALS = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 
 function readReadingProgress(): ReadingProgress | null {
   if (typeof window === "undefined") return null;
@@ -97,8 +102,36 @@ function CloseIcon() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>;
 }
 
-function ArrowIcon({ direction }: { direction: "left" | "right" }) {
-  return <svg className={direction === "right" ? "arrow-right" : ""} viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>;
+function ArrowIcon({ direction }: { direction: "left" | "right" | "up" }) {
+  return <svg className={`arrow-${direction}`} viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7" /></svg>;
+}
+
+function ExternalIcon() {
+  return <svg className="external-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4" /></svg>;
+}
+
+function chapterLabel(item: Pick<ChapterMetadata, "chapterNumber" | "navLabel">) {
+  return item.chapterNumber ? `第 ${item.chapterNumber} 章` : item.navLabel;
+}
+
+function chapterRange(chapters: ChapterMetadata[]) {
+  const numbers = chapters.map((item) => item.chapterNumber).filter((value): value is number => value !== null);
+  if (!numbers.length) return "";
+  const first = Math.min(...numbers);
+  const last = Math.max(...numbers);
+  return first === last ? `第 ${first} 章` : `第 ${first}–${last} 章`;
+}
+
+function groupParts(chapters: ChapterMetadata[]): PartGroup[] {
+  const groups = new Map<string, ChapterMetadata[]>();
+  for (const item of chapters) groups.set(item.part, [...(groups.get(item.part) ?? []), item]);
+  let numbered = 0;
+  return [...groups.entries()].map(([part, items]) => {
+    const front = items.every((item) => item.chapterNumber === null);
+    const kicker = front ? "" : part.startsWith("附录") ? "附录" : `第${PART_NUMERALS[numbered] ?? numbered + 1}部分`;
+    if (!front && !part.startsWith("附录")) numbered += 1;
+    return { part, kicker, front, chapters: items };
+  });
 }
 
 function routeFromLocation(chapters: ChapterMetadata[]) {
@@ -156,11 +189,16 @@ export function BookSite() {
   const [selectedResult, setSelectedResult] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [readingProgress, setReadingProgress] = useState<ReadingProgress | null>(() => readReadingProgress());
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const compact = useCompactLayout();
   const contentRef = useRef<HTMLElement>(null);
+  const paneRef = useRef<HTMLElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const searchPanelRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
   const pendingRestoreRef = useRef<ReadingProgress | null>(null);
@@ -309,6 +347,42 @@ export function BookSite() {
     };
   }, [activeHeading, activeSlug, chapter]);
 
+  // Reading progress bar and back-to-top visibility follow the reading pane scroll.
+  useEffect(() => {
+    const pane = paneRef.current;
+    if (!pane) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const range = pane.scrollHeight - pane.clientHeight;
+      const ratio = range > 0 ? Math.min(1, Math.max(0, pane.scrollTop / range)) : 0;
+      progressRef.current?.style.setProperty("transform", `scaleX(${ratio})`);
+      setShowBackToTop(pane.scrollTop > pane.clientHeight * 1.2);
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    pane.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      pane.removeEventListener("scroll", onScroll);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [book, chapter, activeSlug, chapterLoading]);
+
+  // Keep the current chapter and section visible inside the sidebar without moving the page.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav || (compact && !menuOpen)) return;
+    const item = nav.querySelector<HTMLElement>(".nav-sections button.active") ?? nav.querySelector<HTMLElement>(".nav-chapter[aria-current='page']");
+    if (!item) return;
+    const navBox = nav.getBoundingClientRect();
+    const itemBox = item.getBoundingClientRect();
+    if (itemBox.top < navBox.top + 40 || itemBox.bottom > navBox.bottom - 40) {
+      nav.scrollTop += itemBox.top - navBox.top - nav.clientHeight * 0.3;
+    }
+  }, [activeSlug, activeHeading, chapter, compact, menuOpen]);
+
   const openSearch = useCallback(() => {
     previousFocus.current = document.activeElement as HTMLElement;
     setSearchOpen(true);
@@ -361,11 +435,7 @@ export function BookSite() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [openSearch, searchOpen]);
 
-  const groupedChapters = useMemo(() => {
-    const groups = new Map<string, ChapterMetadata[]>();
-    for (const item of book?.chapters ?? []) groups.set(item.part, [...(groups.get(item.part) ?? []), item]);
-    return [...groups.entries()].map(([part, chapters]) => ({ part, chapters }));
-  }, [book]);
+  const groupedChapters = useMemo(() => groupParts(book?.chapters ?? []), [book]);
 
   const searchResults = useMemo<SearchResult[]>(() => {
     const cleanQuery = query.trim();
@@ -383,8 +453,12 @@ export function BookSite() {
         results.push({ ...item, heading: section, snippet: snippetAround(section.text, cleanQuery), score: headingMatch ? 90 : 50 });
       }
     }
-    return results.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "zh-CN")).slice(0, 60);
+    return results.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "zh-CN")).slice(0, SEARCH_LIMIT);
   }, [query, searchIndex]);
+
+  useEffect(() => {
+    resultsRef.current?.querySelector<HTMLElement>("button.selected")?.scrollIntoView({ block: "nearest" });
+  }, [selectedResult]);
 
   if (!book) {
     return <main className="loading-screen"><div className="loading-mark">PCSEL</div>{loadError ? <><p role="alert">{loadError}</p><button onClick={loadManifest}>重新加载</button></> : <p>正在载入知识结构…</p>}</main>;
@@ -397,6 +471,9 @@ export function BookSite() {
   const firstChapter = book.chapters.find((item) => item.chapterNumber === 1) ?? book.chapters[0];
   const savedChapter = readingProgress ? book.chapters.find((item) => item.slug === readingProgress.slug) ?? null : null;
   const savedHeading = savedChapter && readingProgress?.heading ? savedChapter.headings.find((item) => item.id === readingProgress.heading) ?? null : null;
+  const frontMatter = groupedChapters.filter((group) => group.front).flatMap((group) => group.chapters);
+  const mainParts = groupedChapters.filter((group) => !group.front);
+  const reading = activeSlug !== "home";
 
   return <>
     <a className="skip-link" href="#main-content">跳到正文</a>
@@ -410,21 +487,20 @@ export function BookSite() {
       {menuOpen && <button className="drawer-backdrop" onClick={() => setMenuOpen(false)} aria-label="关闭目录" />}
       <aside ref={sidebarRef} id="book-sidebar" className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-brand">
-          <button onClick={() => navigateTo("home")}><span className="brand-kicker">PHOTONIC CRYSTAL</span><strong>{book.title}</strong></button>
+          <button className="brand-button" onClick={() => navigateTo("home")}>
+            <span className="brand-mark" aria-hidden="true">PC</span>
+            <span className="brand-text"><span className="brand-kicker">PCSEL 知识站</span><strong>{book.title}</strong></span>
+          </button>
           <button className="sidebar-close" onClick={() => setMenuOpen(false)} aria-label="关闭目录"><CloseIcon /></button>
         </div>
         <button className="sidebar-search" onClick={openSearch}><SearchIcon /><span>搜索全书</span><kbd>Ctrl K</kbd></button>
-        <nav className="book-nav" aria-label="全书目录">
-          <button className={`nav-home ${activeSlug === "home" ? "active" : ""}`} onClick={() => navigateTo("home")}>阅读总览</button>
-          <section className="nav-part" aria-label="光学实验室">
-            <h2>LAB · 光学实验室</h2>
-            <a className="nav-chapter" href="https://optical-lab-feiyang.pages.dev/"><span>↗</span>光学实验室</a>
-          </section>
-          {groupedChapters.map((group, partIndex) => <section className="nav-part" key={group.part}>
-            <h2>PART {String(partIndex).padStart(2, "0")} · {group.part}</h2>
+        <nav ref={navRef} className="book-nav" aria-label="全书目录">
+          <button className={`nav-home ${activeSlug === "home" ? "active" : ""}`} onClick={() => navigateTo("home")} aria-current={activeSlug === "home" ? "page" : undefined}>阅读总览</button>
+          {groupedChapters.map((group) => <section className="nav-part" key={group.part} aria-label={group.part}>
+            <h2>{group.kicker && <span className="nav-part-kicker">{group.kicker}</span>}<span>{group.part}</span></h2>
             {group.chapters.map((item) => <div className="nav-chapter-block" key={item.slug}>
-              <button className={`nav-chapter ${activeSlug === item.slug ? "active" : ""}`} onClick={() => navigateTo(item.slug)} title={item.title} aria-current={activeSlug === item.slug ? "page" : undefined}>
-                <span>{item.navLabel}</span>{item.title}
+              <button className={`nav-chapter ${activeSlug === item.slug ? "active" : ""}`} onClick={() => navigateTo(item.slug)} aria-current={activeSlug === item.slug ? "page" : undefined}>
+                <span className="nav-number">{item.navLabel}</span><span className="nav-title">{item.title}</span>
               </button>
               {activeSlug === item.slug && item.headings.length > 0 && <div className="nav-sections">
                 {item.headings.filter((heading) => heading.level <= 3).map((heading) => <button key={heading.id} className={`${heading.level === 3 ? "nav-subsection" : ""} ${activeHeading === heading.id ? "active" : ""}`} onClick={() => navigateTo(item.slug, heading.id)}>{heading.title}</button>)}
@@ -432,39 +508,85 @@ export function BookSite() {
             </div>)}
           </section>)}
         </nav>
-        <div className="sidebar-footer"><span>{book.stats.pdfPages} 页 · {book.stats.figures} 图 · {book.stats.displayEquations} 组公式</span><a href="/book.pdf" target="_blank" rel="noreferrer">下载原书 PDF</a></div>
+        <div className="sidebar-footer">
+          <a className="sidebar-link" href={LAB_URL}><span>光学实验室</span><ExternalIcon /></a>
+          <a className="sidebar-link" href="/book.pdf" target="_blank" rel="noreferrer"><span>下载 PDF</span><small>{book.stats.pdfPages} 页</small></a>
+        </div>
       </aside>
 
-      <main id="main-content" className="reading-pane" tabIndex={-1}>
+      <main ref={paneRef} id="main-content" className="reading-pane" tabIndex={-1}>
+        {reading && <div className="reading-progress" aria-hidden="true"><div ref={progressRef} /></div>}
         {activeSlug === "home" ? <article className="home-view">
-          <div className="home-copy"><span className="eyebrow">PCSEL KNOWLEDGE BASE · {book.edition}</span><h1>{book.title}</h1>
-            <p className="pcsel-full-name">光子晶体面发射激光器</p>
-            <dl className="pcsel-name-parts" aria-label="PCSEL 名称拆解">
-              <div><dt>PC · Photonic Crystal</dt><dd>光子晶体：周期结构让面内传播的光相互耦合，形成反馈。</dd></div>
-              <div><dt>SE · Surface-Emitting</dt><dd>面发射：光从芯片表面输出，而不是从侧边端面输出。</dd></div>
-              <div><dt>L · Laser</dt><dd>激光器：有源区提供增益，补偿损耗后形成激光振荡。</dd></div>
-            </dl>
-            <p className="home-lead">从周期介质中的 Maxwell 方程出发，贯通 Bloch 理论、能带、对称性、BIC、耦合波理论、数值仿真与真实器件物理。</p>
-            <div className="home-actions">{savedChapter && readingProgress ? <button onClick={() => navigateTo(savedChapter.slug, "", readingProgress)}>继续阅读 · {savedChapter.chapterNumber ? `第 ${savedChapter.chapterNumber} 章` : savedChapter.navLabel}</button> : <button onClick={() => navigateTo(firstChapter.slug)}>从第一章开始</button>}{savedChapter && <button className="secondary" onClick={() => navigateTo(firstChapter.slug)}>从第一章开始</button>}<a href="/book.pdf" target="_blank" rel="noreferrer">打开 {book.stats.pdfPages} 页原书</a></div>
-            {savedChapter && <p className="reading-progress-note">本机已自动记录：{savedChapter.title}{savedHeading ? ` · ${savedHeading.title}` : ""}</p>}
-            <dl className="book-stats"><div><dt>{book.stats.chapters}</dt><dd>正式章节</dd></div><div><dt>{book.stats.figures}</dt><dd>书稿图形</dd></div><div><dt>{book.stats.tables}</dt><dd>数据表格</dd></div><div><dt>{book.stats.displayEquations}</dt><dd>行间公式</dd></div></dl>
-          </div>
-          <figure className="cover-stage"><div className="cover-halo" /><div className="cover-frame"><img src="/cover.webp" width="780" height="503" fetchPriority="high" alt="PCSEL 器件结构示意图" /></div><figcaption><span>DEVICE CONCEPT</span><span>有源区与表面出光结构</span></figcaption></figure>
-          <section aria-labelledby="optics-entry-title" style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px 32px", border: "1px solid #cbdce7", borderRadius: 12, padding: "26px 28px", background: "#f2f8fb" }}>
-            <div style={{ flex: "1 1 260px" }}>
-              <span className="eyebrow" style={{ marginBottom: 9 }}>OPTICS LAB · 光学实验室</span>
-              <h2 id="optics-entry-title" style={{ margin: "0 0 10px", fontSize: 23, lineHeight: 1.4 }}>光学实验室</h2>
-              <p style={{ margin: 0, color: "#596470", fontSize: 14, lineHeight: 1.8 }}>从教程与光路实训开始，在同一实验室自由设计。组合透镜、光阑、反射镜与分光镜，分析光束、焦面和探测支路，并保存可复算的工程。</p>
+          <section className="home-hero" aria-labelledby="home-title">
+            <div className="home-copy">
+              <span className="eyebrow">PCSEL 知识站 · {book.edition}</span>
+              <h1 id="home-title">{book.title}</h1>
+              <p className="pcsel-full-name">光子晶体面发射激光器<span lang="en">Photonic-Crystal Surface-Emitting Laser</span></p>
+              <p className="home-lead">从周期介质中的 Maxwell 方程出发，贯通 Bloch 理论、能带、对称性、BIC、耦合波理论、数值仿真与真实器件物理。</p>
+              <div className="home-actions">
+                {savedChapter && readingProgress
+                  ? <button className="primary" onClick={() => navigateTo(savedChapter.slug, "", readingProgress)}>继续阅读 · {chapterLabel(savedChapter)}</button>
+                  : <button className="primary" onClick={() => navigateTo(firstChapter.slug)}>从第 1 章开始</button>}
+                {savedChapter && <button onClick={() => navigateTo(firstChapter.slug)}>从第 1 章开始</button>}
+                <a href="/book.pdf" target="_blank" rel="noreferrer">打开 {book.stats.pdfPages} 页 PDF</a>
+              </div>
+              {savedChapter && <p className="reading-progress-note">本机已记录阅读位置：{savedChapter.title}{savedHeading ? ` · ${savedHeading.title}` : ""}</p>}
             </div>
-            <div className="home-actions" style={{ marginTop: 0 }}><a href="https://optical-lab-feiyang.pages.dev/">教程与实训</a><a href="https://optical-lab-feiyang.pages.dev/designer/">自由设计 <span aria-hidden="true" style={{ marginLeft: 12 }}>↗</span></a></div>
+            <figure className="cover-stage"><div className="cover-frame"><img src="/cover.webp" width="780" height="503" fetchPriority="high" alt="PCSEL 器件结构示意图" /></div><figcaption><span>DEVICE CONCEPT</span><span>有源区与表面出光结构</span></figcaption></figure>
           </section>
-          <section className="home-map" aria-label="全书学习路径"><div><span>01</span><h2>从物理图像开始</h2><p>建立开放周期系统、半导体有源腔和真实器件三重视角。</p></div><div><span>02</span><h2>把理论交给数值方法</h2><p>明确 CWT、PWEM、RCWA、FDTD 与 FEM 各自回答什么问题。</p></div><div><span>03</span><h2>最终回到可制造器件</h2><p>用热、电、光耦合和不确定性分析检验设计结论。</p></div></section>
+
+          <dl className="pcsel-name-parts" aria-label="PCSEL 名称拆解">
+            <div><dt><abbr>PC</abbr>Photonic Crystal</dt><dd>光子晶体：周期结构让面内传播的光相互耦合，形成反馈。</dd></div>
+            <div><dt><abbr>SE</abbr>Surface-Emitting</dt><dd>面发射：光从芯片表面输出，而不是从侧边端面输出。</dd></div>
+            <div><dt><abbr>L</abbr>Laser</dt><dd>激光器：有源区提供增益，补偿损耗后形成激光振荡。</dd></div>
+          </dl>
+
+          <dl className="book-stats" aria-label="书稿规模">
+            <div><dt>{book.stats.chapters}</dt><dd>章</dd></div>
+            <div><dt>{book.stats.figures}</dt><dd>幅图</dd></div>
+            <div><dt>{book.stats.tables}</dt><dd>张表</dd></div>
+            <div><dt>{book.stats.displayEquations}</dt><dd>组行间公式</dd></div>
+          </dl>
+
+          <section className="book-structure" aria-labelledby="structure-title">
+            <header className="section-heading">
+              <h2 id="structure-title">全书结构</h2>
+              <p>从开放周期系统的电磁学出发，经降阶理论与数值方法进入器件物理，最后落到可复核的仿真工作流。</p>
+              {frontMatter.length > 0 && <div className="front-links" aria-label="前置内容">{frontMatter.map((item) => <button key={item.slug} onClick={() => navigateTo(item.slug)}>{item.title}</button>)}</div>}
+            </header>
+            <div className="structure-grid">
+              {mainParts.map((group) => <section className="structure-part" key={group.part} aria-label={group.part}>
+                <header><span className="structure-kicker">{group.kicker}</span><h3>{group.part}</h3><span className="structure-range">{chapterRange(group.chapters)}</span></header>
+                <ol>{group.chapters.map((item) => <li key={item.slug}><button onClick={() => navigateTo(item.slug)}><span>{item.chapterNumber ?? item.navLabel}</span>{item.title}</button></li>)}</ol>
+              </section>)}
+            </div>
+          </section>
+
+          <section className="lab-entry" aria-labelledby="lab-entry-title">
+            <div className="lab-entry-copy">
+              <span className="eyebrow">OPTICS LAB</span>
+              <h2 id="lab-entry-title">光学实验室</h2>
+              <p>从教程与光路实训开始，在同一实验室自由设计。组合透镜、光阑、反射镜与分光镜，分析光束、焦面和探测支路，并保存可复算的工程。</p>
+            </div>
+            <div className="lab-entry-actions"><a className="primary" href={LAB_URL}>教程与实训</a><a href={`${LAB_URL}designer/`}>自由设计<ExternalIcon /></a></div>
+          </section>
         </article> : chapterLoading ? <section className="content-state" aria-live="polite"><div className="loading-mark">PCSEL</div><p>正在加载本章…</p></section> : chapterError ? <section className="content-state" role="alert"><h1>本章暂时无法显示</h1><p>{chapterError}</p><button onClick={() => window.location.reload()}>重新加载本章</button></section> : chapter && activeMetadata ? <article className="chapter-view" ref={contentRef}>
-          <header className="chapter-header"><div className="breadcrumbs"><button onClick={() => navigateTo("home")}>首页</button><span>/</span><span>{chapter.part}</span></div><span className="chapter-index">{chapter.chapterNumber ? `CHAPTER ${String(chapter.chapterNumber).padStart(2, "0")}` : chapter.navLabel}</span><h1>{chapter.title}</h1><div className="chapter-meta"><span>{chapter.headings.length} 个主题</span><span>内容更新：{chapter.sourceUpdated}</span><a href="/book.pdf" target="_blank" rel="noreferrer">对照原书</a></div></header>
+          <header className="chapter-header">
+            <nav className="breadcrumbs" aria-label="当前位置"><button onClick={() => navigateTo("home")}>首页</button><span aria-hidden="true">/</span><span>{chapter.part}</span></nav>
+            <span className="chapter-index">{chapterLabel(chapter)}</span>
+            <h1>{chapter.title}</h1>
+            <div className="chapter-meta">
+              {chapter.headings.length > 0 && <span>{chapter.headings.filter((heading) => heading.level === 2).length} 节</span>}
+              <span>源稿更新 {chapter.sourceUpdated}</span>
+              <a href="/book.pdf" target="_blank" rel="noreferrer">对照 PDF</a>
+            </div>
+          </header>
           <ChapterBody html={chapter.html} />
-          <nav className="chapter-pagination" aria-label="章节翻页">{previous ? <button onClick={() => navigateTo(previous.slug)}><ArrowIcon direction="left" /><span><small>上一篇</small>{previous.title}</span></button> : <span />}{next ? <button className="next" onClick={() => navigateTo(next.slug)}><span><small>下一篇</small>{next.title}</span><ArrowIcon direction="right" /></button> : <span />}</nav>
+          <nav className="chapter-pagination" aria-label="章节翻页">{previous ? <button onClick={() => navigateTo(previous.slug)}><ArrowIcon direction="left" /><span><small>上一篇 · {chapterLabel(previous)}</small>{previous.title}</span></button> : <span />}{next ? <button className="next" onClick={() => navigateTo(next.slug)}><span><small>下一篇 · {chapterLabel(next)}</small>{next.title}</span><ArrowIcon direction="right" /></button> : <span />}</nav>
         </article> : null}
       </main>
+
+      {reading && <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => paneRef.current?.scrollTo({ top: 0, behavior: "smooth" })} aria-label="回到本章开头" tabIndex={showBackToTop ? 0 : -1} aria-hidden={!showBackToTop}><ArrowIcon direction="up" /></button>}
     </div>
 
     {searchOpen && <div className="search-overlay" role="dialog" aria-modal="true" aria-labelledby="search-title">
@@ -474,7 +596,8 @@ export function BookSite() {
         if (event.key === "ArrowUp") { event.preventDefault(); setSelectedResult((value) => Math.max(0, value - 1)); }
         if (event.key === "Enter" && searchResults[selectedResult]) { const result = searchResults[selectedResult]; navigateTo(result.slug, result.heading?.id); }
       }} placeholder="搜索概念、公式、方法或章节…" aria-label="搜索关键词" aria-controls="search-results" /><button onClick={() => setSearchOpen(false)} aria-label="关闭搜索">ESC</button></div>
-        <div id="search-results" className="search-results" aria-live="polite">{searchError ? <div className="search-empty" role="alert"><strong>搜索不可用</strong><span>{searchError}</span></div> : !searchIndex ? <div className="search-empty"><strong>正在加载全文索引…</strong></div> : !query.trim() ? <div className="search-empty"><strong>全文检索</strong><span>支持中文单字、英文缩写、概念、公式和章节名。</span></div> : searchResults.length ? searchResults.map((result, index) => <button key={`${result.slug}-${result.heading?.id ?? "chapter"}`} className={selectedResult === index ? "selected" : ""} onMouseEnter={() => setSelectedResult(index)} onClick={() => navigateTo(result.slug, result.heading?.id)}><span className="result-part">{result.part}</span><strong><Highlight text={result.heading?.title ?? result.title} query={query.trim()} /></strong>{result.heading && <small>{result.title}</small>}<p><Highlight text={result.snippet} query={query.trim()} /></p></button>) : <div className="search-empty"><strong>没有找到匹配内容</strong><span>尝试缩短关键词或使用英文缩写。</span></div>}</div>
+        <div ref={resultsRef} id="search-results" className="search-results" aria-live="polite">{searchError ? <div className="search-empty" role="alert"><strong>搜索不可用</strong><span>{searchError}</span></div> : !searchIndex ? <div className="search-empty"><strong>正在加载全文索引…</strong></div> : !query.trim() ? <div className="search-empty"><strong>全文检索</strong><span>支持中文单字、英文缩写、概念、公式和章节名。</span></div> : searchResults.length ? searchResults.map((result, index) => <button key={`${result.slug}-${result.heading?.id ?? "chapter"}`} className={selectedResult === index ? "selected" : ""} onMouseEnter={() => setSelectedResult(index)} onClick={() => navigateTo(result.slug, result.heading?.id)}><span className="result-part">{result.part}</span><strong><Highlight text={result.heading?.title ?? result.title} query={query.trim()} /></strong>{result.heading && <small>{result.title}</small>}<p><Highlight text={result.snippet} query={query.trim()} /></p></button>) : <div className="search-empty"><strong>没有找到匹配内容</strong><span>尝试缩短关键词或使用英文缩写。</span></div>}</div>
+        <footer className="search-footer"><span><kbd>↑</kbd><kbd>↓</kbd>选择</span><span><kbd>Enter</kbd>打开</span><span><kbd>Esc</kbd>关闭</span>{query.trim() && searchIndex ? <span className="search-count">{searchResults.length >= SEARCH_LIMIT ? `显示前 ${SEARCH_LIMIT} 条` : `${searchResults.length} 条结果`}</span> : null}</footer>
       </section>
     </div>}
   </>;

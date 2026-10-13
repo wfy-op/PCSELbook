@@ -1,12 +1,12 @@
 {
-  "sourceHash": "ccb1827bedd5aa6700ac266d14941ed75761e85962278c31aab60ee16ed2c3ba",
+  "sourceHash": "8635c7f7c0cb053bf78042538aef3a8a730e717197973f502492a834afd8a2b9",
   "count": 84,
   "figures": {
     "fig:ch01_laser_comparison": {
       "file": "001-fig-ch01_laser_comparison.webp",
       "number": "1.1",
       "chapter": "chapters/ch01_introduction.tex",
-      "caption": "四种常见结构的比较。虚线双箭头表示反馈，实线箭头表示输出。(a) FP 边发射：端面反射形成面内往返；(b) VCSEL：上下 DBR 提供垂直反馈；(c) DFB：一维光栅提供沿波导的反馈，常从端面出光；(d) PCSEL：二维周期结构提供面内反馈，并耦合到法向辐射。DFB 可以属于 EEL，图中分列是为了比较反馈结构。",
+      "caption": "四种常见结构的比较。虚线双箭头表示反馈，实线箭头表示输出。(a) FP 边发射：端面反射形成面内往返；(b) VCSEL：上下 DBR 提供垂直反馈；(c) DFB：一维光栅提供沿波导的反馈，常从端面出光；(d) PCSEL：二维周期结构提供面内反馈，并耦合到法向辐射。",
       "width": 998,
       "height": 743
     },
@@ -30,7 +30,7 @@
       "file": "004-fig-ch01_pcsel_light_output_chain.webp",
       "number": "1.4",
       "chapter": "chapters/ch01_introduction.tex",
-      "caption": "PCSEL 从有源导模到法向出光的五步证据链。量子阱先提供材料增益，层栈形成面内导模，二维光子晶体在 Γ^(2) 点建立面内反馈，周期散射打开法向辐射通道，最后由损耗、增益、有限尺寸、注入和热反馈共同决定真实起振模式。",
+      "caption": "PCSEL 从有源导模到法向出光的五个环节。量子阱先提供材料增益，层栈形成面内导模，二维光子晶体在 Γ^(2) 点建立面内反馈，周期散射打开法向辐射通道，最后由损耗、增益、有限尺寸、注入和热反馈共同决定真实起振模式。",
       "width": 998,
       "height": 274
     },
@@ -62,7 +62,7 @@
       "file": "008-fig-ch02_six_redlines.webp",
       "number": "2.3",
       "chapter": "chapters/ch02_mathematical_roadmap.tex",
-      "caption": "“六条红线”可视化速记图。后文首次触及对应误区时，统一用“⚠ 红线 \\#N”作边注提示。",
+      "caption": "六组需要区分的概念。每组左侧是较低层级的模型结果，右侧是还需要更多物理才能回答的较高层级问题。",
       "width": 998,
       "height": 360
     },
@@ -142,7 +142,7 @@
       "file": "018-fig-abcd-envelopes.webp",
       "number": "5.2",
       "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
-      "caption": "ABCD 四波组合的教学示意。每格横纵坐标为一个周期，红、蓝表示标量包络的正、负值，白色为节点；格下给出按 (+x,-x,+y,-y) 排列的归一化系数。A/B 同时包含两个方向的波对；C/D 张成同一双重态子空间。此图用四波解析叠加计算，展示相位组合，不是三维电场仿真，也不把颜色当作光强。字母沿用本节教学约定，不表示跨参数不变的频率排序。",
+      "caption": "ABCD 四波组合的教学示意。每格横纵坐标为一个周期，红、蓝表示标量包络的正、负值，白色为节点；格下给出按 (+x,-x,+y,-y) 排列的归一化系数。A/B 同时包含两个方向的波对；C/D 张成同一双重态子空间。图中为四波解析叠加得到的标量包络。",
       "width": 998,
       "height": 325
     },
@@ -150,7 +150,7 @@
       "file": "019-fig-ch05_gamma_point_physics.webp",
       "number": "5.3",
       "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
-      "caption": "相邻晶胞对应位置的 Bloch 相位。每个方格是一个晶胞，箭头是复振幅的相位指针，不是光线传播方向。上排 Γ 点的指针相同；下排取 k_xa=π/2，依次相差 90^i̧rc。图中不画晶胞内部场，也不由相位图直接推断远场瓣数；非 Γ 点的单个 Bloch 波不必产生四个辐射瓣。",
+      "caption": "相邻晶胞对应位置的 Bloch 相位。每个方格是一个晶胞，箭头是复振幅的相位指针，不是光线传播方向。上排 Γ 点的指针相同；下排取 k_xa=π/2，依次相差 90^i̧rc。",
       "width": 998,
       "height": 552
     },
@@ -166,7 +166,7 @@
       "file": "021-fig-square_hole_teaching_setup.webp",
       "number": "5.5",
       "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
-      "caption": "正方晶格第一布里渊区。坐标单位为 2π/a，故区边界在 1/2，不是 1。外框是完整第一布里渊区，浅色三角形只是不可约区域；蓝线按 Γ--X--M--Γ 行走。X 是边中点，M 是角点；不要把三角形当作完整布里渊区。",
+      "caption": "正方晶格第一布里渊区。坐标单位为 2π/a，故区边界在 1/2，不是 1。外框是完整第一布里渊区，浅色三角形只是不可约区域；蓝线按 Γ--X--M--Γ 行走。X 是边中点，M 是角点。",
       "width": 998,
       "height": 597
     },
@@ -182,9 +182,9 @@
       "file": "023-fig-ch05_band_diagram_guardrails.webp",
       "number": "5.7",
       "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
-      "caption": "能带图的证据边界。能带图可以直接给出候选频率、高对称点、简并与平坦趋势；但辐射损耗、远场、有限尺寸、净模增益、注入和热反馈都需要后续模型补齐。",
+      "caption": "从能带图到器件层问题。能带图直接给出候选频率、高对称点、简并与平坦趋势；辐射损耗、远场、有源区重叠和有限尺寸要由后续模型计算；阈值电流、单模稳定性和热窗口还需要注入与热反馈。",
       "width": 998,
-      "height": 350
+      "height": 336
     },
     "fig:triangular-bz": {
       "file": "024-fig-triangular-bz.webp",
@@ -198,7 +198,7 @@
       "file": "025-fig-triangular-feedback.webp",
       "number": "5.9",
       "chapter": "chapters/ch05_band_gamma_mode_selection.tex",
-      "caption": "三角晶格 I--IV 家族的主导面内波矢示意，按文献 图 2 的命名重新绘制。I：两支反向波，等价方向另有同类波对；II：夹角 120^i̧rc 的三支波，另有时间反演伙伴；III：第一圈六支导波；IV：更高阶 Γ 的六支导波。各格分别归一化长度，IV 的物理波矢更长，且方向相对第一圈转过 30^i̧rc。箭头不是实空间光线路径，本图不是能带数值计算。",
+      "caption": "三角晶格 I--IV 家族的主导面内波矢示意，按文献 图 2 的命名重新绘制。I：两支反向波，等价方向另有同类波对；II：夹角 120^i̧rc 的三支波，另有时间反演伙伴；III：第一圈六支导波；IV：更高阶 Γ 的六支导波。各格分别归一化长度，IV 的物理波矢更长，且方向相对第一圈转过 30^i̧rc。箭头表示波矢方向，不是实空间光线路径。",
       "width": 998,
       "height": 810
     },
@@ -262,7 +262,7 @@
       "file": "033-fig-ch08_irrep_radiation_gate.webp",
       "number": "8.1",
       "chapter": "chapters/ch08_polarization_symmetry_farfield.tex",
-      "caption": "Gamma 点模式的 irrep--辐射通道守门流程。in-plane little-group 匹配只决定 direct normal radiation 是否被对称性允许；真正的辐射强度仍需结合三维 slab、纵向奇偶性、层栈不对称和有限尺寸计算。",
+      "caption": "Gamma 点模式 irrep 与辐射通道的匹配判断流程。面内小群匹配决定法向直接辐射是否被对称性允许。",
       "width": 998,
       "height": 323
     },
@@ -286,7 +286,7 @@
       "file": "036-fig-ch08_four_mode_triplet.webp",
       "number": "8.4",
       "chapter": "chapters/ch08_polarization_symmetry_farfield.tex",
-      "caption": "四个行波分量、四个本征态与三个频率家族。(a) 行波是展开基底；(b) 四波共同重组为两个单重态和一个含两个态的双重态；(c) 破坏保护双重态的面内对称性，可解除简并。图中不是实际频率标尺，并非任意扰动都会分裂双重态。",
+      "caption": "四个行波分量、四个本征态与三个频率家族。(a) 行波是展开基底；(b) 四波共同重组为两个单重态和一个含两个态的双重态；(c) 破坏保护双重态的面内对称性，可解除简并。频率轴为示意。",
       "width": 998,
       "height": 362
     },
@@ -294,7 +294,7 @@
       "file": "037-fig-ellipse-example.webp",
       "number": "8.5",
       "chapter": "chapters/ch08_polarization_symmetry_farfield.tex",
-      "caption": "椭圆化例子的二模本征频率。横轴为椭圆度百分数，纵轴为相对 f_0 的频移；直线来自本节给定的一阶模型，不是实际孔结构仿真。分裂表示简并解除，不表示哪支一定激射。",
+      "caption": "椭圆化例子的二模本征频率。横轴为椭圆度百分数，纵轴为相对 f_0 的频移；直线来自本节给定的一阶模型。",
       "width": 998,
       "height": 513
     },
@@ -398,7 +398,7 @@
       "file": "050-fig-pwem_python_band_result.webp",
       "number": "13.4",
       "chapter": "chapters/ch12_pwe_eigen_methods.tex",
-      "caption": "由本书项目附带的 Python 脚本实际计算得到的二维标量 H_z PWEM 能带图。结构为正方晶格圆形空气孔，高折射率背景取 ǎrepsilon_b=3.4^2，孔半径取 r/a=0.30，截断为 |m|,|n| 2。该图是教学型被动无限周期结果，不是 slab PCSEL 的最终器件结论。",
+      "caption": "由本书项目附带的 Python 脚本实际计算得到的二维标量 H_z PWEM 能带图。结构为正方晶格圆形空气孔，高折射率背景取 ǎrepsilon_b=3.4^2，孔半径取 r/a=0.30，截断为 |m|,|n| 2。",
       "width": 998,
       "height": 502
     },
@@ -406,7 +406,7 @@
       "file": "051-fig-ch13_rcwa_discretization.webp",
       "number": "14.1",
       "chapter": "chapters/ch13_rcwa_open_periodic_threshold.tex",
-      "caption": "RCWA中的阶梯近似离散化策略。(a)原始连续剖面：倾斜光栅或曲面结构，其介电常数分布在空间中连续变化；(b)阶梯近似：将结构沿z方向切割为N层，每层内部介电常数在平面内周期分布但在z方向恒定，层与层之间通过边界条件连接；(c)收敛性：随着层数N增加，阶梯近似逐渐逼近真实剖面，RCWA解收敛到严格解。离散化层数必须通过“层数-目标量”收敛曲线确定；“倾角较小时 20--50 层常可收敛”仅可作为[工程经验]初值，不可替代收敛检验。",
+      "caption": "RCWA中的阶梯近似离散化策略。(a)原始连续剖面：倾斜光栅或曲面结构，其介电常数分布在空间中连续变化；(b)阶梯近似：将结构沿z方向切割为N层，每层内部介电常数在平面内周期分布但在z方向恒定，层与层之间通过边界条件连接；(c)收敛性：随着层数N增加，阶梯近似逐渐逼近真实剖面，RCWA解收敛到严格解。离散化层数由“层数--目标量”收敛曲线确定，倾角较小时 20--50 层是常用的[工程经验]初值。",
       "width": 998,
       "height": 503
     },
@@ -414,7 +414,7 @@
       "file": "052-fig-rcwa_square_hole_triptych.webp",
       "number": "14.2",
       "chapter": "chapters/ch13_rcwa_open_periodic_threshold.tex",
-      "caption": "正方晶格圆孔 slab 的可复现 RCWA 算例。左：被动反射、透射及能量守恒检查；中：候选共振附近的定向细扫；右：在高折射率区域加入三组小负介电常数虚部后的线性增益代理。右图只说明给定实频谱怎样随小信号增益改变，不是自洽激光阈值解。",
+      "caption": "正方晶格圆孔 slab 的可复现 RCWA 算例。左：被动反射、透射及能量守恒检查；中：候选共振附近的定向细扫；右：在高折射率区域加入三组小负介电常数虚部后的线性增益代理。",
       "width": 998,
       "height": 315
     },
@@ -422,7 +422,7 @@
       "file": "053-fig-ch14_fdtd_setup.webp",
       "number": "15.1",
       "chapter": "chapters/ch14_fdtd_fem_for_pcsel.tex",
-      "caption": "有限 PCSEL 阵列的三维 FDTD 配置。源的偏振与位置决定可激发的模态子空间；时域监视器用于提取复频率；近远场面同时记录切向电场与磁场。PML 距离、厚度和网格只在扫描后确定，不采用跨结构固定值。",
+      "caption": "有限 PCSEL 阵列的三维 FDTD 配置。源的偏振与位置决定可激发的模态子空间；时域监视器用于提取复频率；近远场面同时记录切向电场与磁场。PML 距离、厚度和网格由参数扫描确定。",
       "width": 998,
       "height": 534
     },
@@ -478,7 +478,7 @@
       "file": "060-fig-qw-overlap.webp",
       "number": "17.5",
       "chapter": "chapters/ch16_epitaxial_optical_structure.tex",
-      "caption": "Python 实际求解的教学波导。上图是材料折射率，下图分别为峰值归一化的 |E_y|^2（TE_0）和 |H_y|^2（TM_0）；粉色带标出三个量子阱。 两种场各自归一化，不能按曲线高度比较实际功率，也不能共用 TE 电场重叠公式。",
+      "caption": "Python 实际求解的教学波导。上图是材料折射率，下图分别为峰值归一化的 |E_y|^2（TE_0）和 |H_y|^2（TM_0）；粉色带标出三个量子阱。 两种场各自归一化，不能按曲线高度比较实际功率。",
       "width": 998,
       "height": 724
     },
@@ -598,9 +598,9 @@
       "file": "075-fig-ch22_evidence_stage_gates.webp",
       "number": "25.2",
       "chapter": "chapters/ch22_practical_simulation_workflow.tex",
-      "caption": "PCSEL 仿真工作流中的证据门禁。L1 允许给出候选模目录，L2 允许给出光学阈值排序，L3 才开始讨论注入与阈值电流来源，L4 才能讨论热回写后的工作窗口；实验回验需要独立不确定度和未参与拟合的观测量。",
+      "caption": "PCSEL 仿真工作流中的阶段门槛。L1 允许给出候选模目录，L2 允许给出光学阈值排序，L3 才开始讨论注入与阈值电流来源，L4 才能讨论热回写后的工作窗口；实验回验需要独立不确定度和未参与拟合的观测量。",
       "width": 998,
-      "height": 229
+      "height": 152
     },
     "fig:workflow-map": {
       "file": "076-fig-workflow-map.webp",

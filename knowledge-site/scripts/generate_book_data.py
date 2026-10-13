@@ -21,24 +21,52 @@ MANIFEST_PATH = DATA_ROOT / "book-manifest.json"
 SEARCH_INDEX_PATH = DATA_ROOT / "search-index.json"
 
 
-BOX_TITLES = {
-    "IntuitionBox": "直觉框",
-    "RigorousBox": "严格表述",
-    "ExampleBox": "例子",
-    "PitfallBox": "易错点",
-    "WarningBox": "提示",
-    "WhatCouldGoWrong": "可能出错处",
-    "NoteBox": "注记",
-    "notebox": "注记",
-    "ConnectionBox": "知识连接",
-    "NumericalInsightBox": "数值洞见",
-    "ApplicationBox": "应用提示",
-    "ReviewBox": "回看",
-    "SymmetryQuick": "对称性速成",
-    "ConvergenceCriteria": "收敛判据",
-    "ResourceAlertBox": "资源提示",
-    "PrerequisiteBox": "前置知识",
-    "NormalizationRemark": "归一化说明",
+# Box environments from preamble.tex: (argument style, title template, default title).
+# "none" boxes take no title argument (a leading [...] such as RigorousBox difficulty is ignored),
+# "optional" boxes read the title from [...], and "required" boxes from the first {...}
+# (NoteBox-style boxes may put tcolorbox options in a leading [...]).
+BOX_SPECS: dict[str, tuple[str, str, str]] = {
+    "IntuitionBox": ("none", "", "物理直觉"),
+    "RigorousBox": ("none", "", "严格表述"),
+    "ExampleBox": ("optional", "例子：{}", "例子"),
+    "PitfallBox": ("none", "", "易错点"),
+    "WarningBox": ("optional", "{}", "提示"),
+    "warningbox": ("optional", "{}", "提示"),
+    "WhatCouldGoWrong": ("none", "", "可能出错处"),
+    "NoteBox": ("required", "{}", "注记"),
+    "notebox": ("optional", "{}", "注记"),
+    "ConnectionBox": ("required", "{}", "知识连接"),
+    "NumericalInsightBox": ("required", "{}", "数值洞见"),
+    "ApplicationBox": ("required", "{}", "应用提示"),
+    "ReviewBox": ("required", "{}", "回看"),
+    "SymmetryQuick": ("none", "", "对称性速成"),
+    "ConvergenceCriteria": ("required", "{}", "收敛判据"),
+    "ResourceAlertBox": ("required", "{}", "资源提示"),
+    "PrerequisiteBox": ("required", "{}", "前置知识"),
+    "NormalizationRemark": ("required", "{}", "归一化说明"),
+    "NumericalErrorBox": ("none", "", "数值误差控制"),
+    "CrossValidationBox": ("none", "", "交叉验证协议"),
+    "PracticalTipBox": ("none", "", "实用技巧"),
+    "ReportingStandardBox": ("none", "", "报告规范"),
+    "ExperimentalAlignmentBox": ("none", "", "实验对标要求"),
+    "EthicsReminderBox": ("none", "", "学术诚信提醒"),
+    "ComparisonBox": ("required", "{}", "对比"),
+    "MathematicalFoundationBox": ("required", "数学基础：{}", "数学基础"),
+    "AssumptionAuditBox": ("required", "假设审查：{}", "假设审查"),
+    "SymmetryToolkitBox": ("required", "对称性工具箱：{}", "对称性工具箱"),
+    "DimensionCheckNote": ("optional", "量纲检查：{}", "量纲检查"),
+    "MaterialPropertyBox": ("optional", "{}", "材料参数"),
+    "MaterialSpecificityBox": ("optional", "{}", "材料特异性"),
+    "ModelAssumptionBox": ("optional", "{}", "模型假设"),
+    "ReciprocityConditionBox": ("optional", "{}", "互易性条件"),
+    "MinRunnableBox": ("required", "最小可计算例子：{}", "最小可计算例子"),
+    "CommonPitfallBox": ("required", "常见错误：{}", "常见错误"),
+    "EngineeringIntuitionBox": ("required", "工程直觉：{}", "工程直觉"),
+}
+
+TEXT_ACCENTS = {
+    "'": "́", "`": "̀", '"': "̈", "^": "̂",
+    "~": "̃", "=": "̄", ".": "̇",
 }
 
 GREEK_TEXT = {
@@ -228,6 +256,27 @@ def split_top_level(source: str, separator: str) -> list[str]:
     return parts
 
 
+def find_environment_end(source: str, environment: str, start: int) -> int:
+    """Return the index of the \\end that closes an environment opened before start."""
+    begin = f"\\begin{{{environment}}}"
+    end = f"\\end{{{environment}}}"
+    depth = 1
+    cursor = start
+    while True:
+        next_end = source.find(end, cursor)
+        if next_end < 0:
+            return -1
+        next_begin = source.find(begin, cursor)
+        if 0 <= next_begin < next_end:
+            depth += 1
+            cursor = next_begin + len(begin)
+            continue
+        depth -= 1
+        if depth == 0:
+            return next_end
+        cursor = next_end + len(end)
+
+
 def extract_environment_body(block: str, environments: tuple[str, ...]) -> str | None:
     for environment in environments:
         marker = f"\\begin{{{environment}}}"
@@ -413,6 +462,9 @@ def unit_text(source: str) -> str:
         r"\hertz": "Hz",
         r"\volt": "V",
         r"\ampere": "A",
+        r"\degreeCelsius": "°C",
+        r"\celsius": "°C",
+        r"\percent": "%",
         r"\degree": "°",
     }
     text = source
@@ -560,6 +612,12 @@ class HtmlConverter:
             flags=re.S,
         )
         source = re.sub(
+            r"(?<!\\)\\\((.+?)\\\)",
+            lambda match: self.math_token(match.group(1), False),
+            source,
+            flags=re.S,
+        )
+        source = re.sub(
             r"(?<!\\)\$(?!\$)(.+?)(?<!\\)\$",
             lambda match: self.math_token(match.group(1), False),
             source,
@@ -590,7 +648,14 @@ class HtmlConverter:
                 f'<a href="{html.escape(args[0], quote=True)}" target="_blank" rel="noreferrer">{html.escape(args[0])}</a>'
             ),
         )
-        for command, tag in (("textbf", "strong"), ("emph", "em"), ("textit", "em"), ("texttt", "code")):
+        text = replace_command(
+            text,
+            "texttt",
+            1,
+            # Typewriter text keeps literal double hyphens such as command-line options.
+            lambda args, _opt, _star: self.stash(f"<code>{self.inline(args[0].replace('--', self.stash('--')))}</code>"),
+        )
+        for command, tag in (("textbf", "strong"), ("emph", "em"), ("textit", "em")):
             text = replace_command(
                 text,
                 command,
@@ -644,6 +709,15 @@ class HtmlConverter:
             lambda args, _opt, _star: self.stash(f'<span id="{html.escape(args[0], quote=True)}"></span>'),
         )
         text = text.replace(r"\basicq", "[基础]").replace(r"\midq", "[进阶]").replace(r"\hardq", "[综合]")
+        text = re.sub(
+            r"(?<!\\)\\([\"'`^~=.])\s*\{?([A-Za-z])\}?",
+            lambda match: unicodedata.normalize("NFC", match.group(2) + TEXT_ACCENTS[match.group(1)]),
+            text,
+        )
+        text = re.sub(r"(?<!\\)\\[,;:]", " ", text)
+        text = re.sub(r"(?<!\\)\\!", "", text)
+        text = re.sub(r"(?<!\\)\\ ", " ", text)
+        text = text.replace("---", "—").replace("--", "–")
         text = text.replace(r"\%", "%").replace(r"\_", "_").replace(r"\&", "&").replace(r"\#", "#")
         text = text.replace(r"\textbackslash", "\\").replace("~", "\u00a0")
         for command, symbol in GREEK_TEXT.items():
@@ -711,13 +785,13 @@ class HtmlConverter:
                 f'width="{asset.get("width", "")}" height="{asset.get("height", "")}" '
                 f'alt="{html.escape(accessible_alt(caption_raw), quote=True)}" /></a>'
             )
-            source_note = f'图 {asset.get("number", "")} · 原始 LaTeX/TikZ 图源独立渲染'
+            number = f'<span class="figure-number">图 {html.escape(str(asset.get("number", "")))}</span>'
         else:
             visual = '<div class="figure-fallback">该图的独立图源尚未生成</div>'
-            source_note = "图源缺失"
+            number = ""
         return (
             f'<figure id="{anchor}" class="book-figure">{visual}'
-            f'<figcaption>{caption}<span class="figure-source">{html.escape(source_note)}</span></figcaption>'
+            f"<figcaption>{number}{caption}</figcaption>"
             "</figure>"
         )
 
@@ -747,7 +821,7 @@ class HtmlConverter:
             raw_row = raw_row.strip()
             if not raw_row or raw_row.startswith("\\caption") or raw_row.startswith("\\label"):
                 continue
-            cells = [self.inline(cell.strip()) for cell in split_top_level(raw_row, "&")]
+            cells = [self.inline(self.replace_lists(cell.strip())) for cell in split_top_level(raw_row, "&")]
             if any(re.sub(r"<[^>]+>", "", cell).strip() for cell in cells):
                 rows.append(cells)
         if not rows:
@@ -762,7 +836,7 @@ class HtmlConverter:
         caption = f"<caption>{number}{self.inline(caption_raw)}</caption>" if caption_raw else ""
         id_attr = f' id="{html.escape(label, quote=True)}"' if label else ""
         note_raw = command_argument(block, "parbox", argument_number=2) or ""
-        note = f'<p class="table-note">{self.inline(note_raw)}</p>' if note_raw else ""
+        note = f'<div class="table-note">{self.inline(note_raw)}</div>' if note_raw else ""
         return (
             f'<div class="table-scroll"{id_attr}><table class="book-table">'
             + caption
@@ -786,23 +860,56 @@ class HtmlConverter:
             source,
             flags=re.S,
         )
+        # Tables typeset directly in the text (e.g. inside center or a box) have no float.
+        source = re.sub(
+            r"\\begin\{(tabularx|tabular\*?)\}.*?\\end\{\1\}",
+            lambda match: f"\n\n{self.stash(self.render_table(match.group(0)))}\n\n",
+            source,
+            flags=re.S,
+        )
         return source
 
     def replace_boxes(self, source: str) -> str:
-        for environment, default_title in BOX_TITLES.items():
-            pattern = re.compile(
-                rf"\\begin\{{{re.escape(environment)}\}}(?:\[[^]]*\])?(?:\{{([^{{}}]*)\}})?(.*?)\\end\{{{re.escape(environment)}\}}",
-                re.S,
-            )
-
-            def render(match: re.Match[str], environment: str = environment, default_title: str = default_title) -> str:
-                title = match.group(1) or default_title
-                body = self.fragment(match.group(2))
-                return (
-                    f'\n\n{self.stash(f"<aside class=\"callout callout-{environment.lower()}\"><div class=\"callout-title\">{self.inline(title)}</div><div>{body}</div></aside>")}\n\n'
+        for environment, (style, template, default_title) in BOX_SPECS.items():
+            begin = f"\\begin{{{environment}}}"
+            pieces: list[str] = []
+            cursor = 0
+            while True:
+                start = source.find(begin, cursor)
+                if start < 0:
+                    pieces.append(source[cursor:])
+                    break
+                scan = start + len(begin)
+                probe = scan
+                while probe < len(source) and source[probe] in " \t":
+                    probe += 1
+                optional_argument = ""
+                if probe < len(source) and source[probe] == "[":
+                    optional = consume_group(source, probe, "[", "]")
+                    if optional:
+                        optional_argument, scan = optional
+                required_argument = ""
+                if style == "required":
+                    probe = scan
+                    while probe < len(source) and source[probe].isspace():
+                        probe += 1
+                    parsed = consume_group(source, probe)
+                    if parsed:
+                        required_argument, scan = parsed
+                end = find_environment_end(source, environment, scan)
+                if end < 0:
+                    pieces.append(source[cursor:])
+                    break
+                argument = {"required": required_argument, "optional": optional_argument}.get(style, "").strip()
+                title = template.format(argument) if argument else default_title
+                body = self.fragment(source[scan:end])
+                rendered = (
+                    f'<aside class="callout callout-{environment.lower()}">'
+                    f'<div class="callout-title">{self.inline(title)}</div><div>{body}</div></aside>'
                 )
-
-            source = pattern.sub(render, source)
+                pieces.append(source[cursor:start] + f"\n\n{self.stash(rendered)}\n\n")
+                cursor = end + len(f"\\end{{{environment}}}")
+            source = "".join(pieces)
         for environment, label in (
             ("definition", "定义"),
             ("theorem", "定理"),
@@ -829,14 +936,29 @@ class HtmlConverter:
         return source
 
     def replace_lists(self, source: str) -> str:
-        list_pattern = re.compile(r"\\begin\{(itemize|enumerate)\}(.*?)\\end\{\1\}", re.S)
-        for _ in range(6):
+        # Convert innermost lists first so nested and repeated lists all become HTML.
+        list_pattern = re.compile(
+            r"\\begin\{(itemize|enumerate|description)\}(?:\[[^\]]*\])?"
+            r"((?:(?!\\begin\{(?:itemize|enumerate|description)\}).)*?)\\end\{\1\}",
+            re.S,
+        )
+        while True:
             match = list_pattern.search(source)
             if not match:
                 break
-            tag = "ul" if match.group(1) == "itemize" else "ol"
-            items = re.split(r"\\item(?:\[[^]]*\])?", match.group(2))[1:]
-            rendered = f"<{tag}>" + "".join(f"<li>{self.fragment(item)}</li>" for item in items) + f"</{tag}>"
+            kind = match.group(1)
+            tag = "ol" if kind == "enumerate" else "ul"
+            parts = re.split(r"\\item(?![A-Za-z])(?:\[([^\]]*)\])?", match.group(2))
+            items: list[str] = []
+            for index in range(1, len(parts), 2):
+                body = self.fragment(parts[index + 1])
+                label = (parts[index] or "").strip()
+                if label:
+                    label_html = f'<strong class="item-label">{self.inline(label)}</strong> '
+                    body = f"<p>{label_html}{body[3:]}" if body.startswith("<p>") else label_html + body
+                items.append(f"<li>{body}</li>")
+            css = ' class="description-list"' if kind == "description" else ""
+            rendered = f"<{tag}{css}>" + "".join(items) + f"</{tag}>"
             source = source[: match.start()] + f"\n\n{self.stash(rendered)}\n\n" + source[match.end() :]
         return source
 
@@ -1197,10 +1319,11 @@ def plain_from_html(body: str) -> str:
     def replace_math(match: re.Match[str]) -> str:
         return " " + latex_math_to_text(html.unescape(match.group(1))) + " "
 
+    text = re.sub(r'<a class="heading-anchor"[^>]*>#</a>', "", body)
     text = re.sub(
         r'<span class="math-source">\\(?:\(|\[)(.*?)\\(?:\)|\])</span>',
         replace_math,
-        body,
+        text,
         flags=re.S,
     )
     text = html.unescape(re.sub(r"<[^>]+>", " ", text))

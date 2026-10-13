@@ -29,7 +29,7 @@ html.ol-document, body.ol-document { overflow-x: clip; overflow-y: visible; }
 .ol-brand { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .ol-mark { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 12px; background: #164d40; color: #f1fff5; }
 .ol-brand strong { display: block; font-size: 17px; font-weight: 650; color: #203c35; }
-.ol-brand small { display: block; font-size: 10px; margin-top: 3px; color: #647c73; letter-spacing: .035em; }
+.ol-brand small { display: block; font-size:11.5px; margin-top: 3px; color: #5b7169; letter-spacing: .035em; }
 .ol-pages { display: flex; gap: 4px; padding: 4px; border: 1px solid #e0e9e1; border-radius: 12px; background: #f4f6f3; }
 .ol-pages a { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 40px; padding: 9px 24px; border-radius: 8px; font-size: 13px; white-space: nowrap; }
 .ol-pages a[aria-current=page] { background: #fff; color: #19614e; font-weight: 600; box-shadow: 0 2px 6px #24473412; }
@@ -59,7 +59,7 @@ html.ol-document, body.ol-document { overflow-x: clip; overflow-y: visible; }
   .ol-header { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 14px; }
   .ol-mark { width: 38px; height: 38px; border-radius: 10px; }
   .ol-brand strong { font-size: 16px; }
-  .ol-book-link { font-size: 11px; }
+  .ol-book-link { font-size:12px; }
   .ol-pages { grid-row: 2; grid-column: 1 / -1; }
   .ol-pages a { flex: 1; min-height: 44px; padding: 9px 12px; }
   .ol-lab .od-design-app .od-mode-switch { gap: 0; min-height: 60px; padding: 6px 12px; flex-wrap: wrap; }

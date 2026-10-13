@@ -11,5 +11,5 @@ export function StorageTransfer({ mode }: { mode: 'export' }) {
       setMessage(`已导出 ${Object.keys(entries).length} 类实验室记录。在独立实验室首页底部选择“迁移旧工程与记录”并导入此文件。`);
     } catch { setMessage('无法读取浏览器记录。请检查浏览器存储设置后重试。'); }
   }
-  return <main style={{ maxWidth: 720, margin: '60px auto', padding: 24, lineHeight: 1.8 }} data-mode={mode}><h1>将旧实验室记录带到新网址</h1><p>实验室已独立发布。两个域名的浏览器存储互不共享；此页仅导出实验室草稿、工程库和实训记录。</p><button type="button" onClick={download}>导出当前浏览器的旧记录</button><p role="status">{message}</p><p><a href="https://optical-lab-feiyang.pages.dev/#ob-migration">打开独立光学实验室并导入</a></p><a href="/">返回 PCSELbook</a></main>;
+  return <main className="migration-page" data-mode={mode}><h1>将旧实验室记录带到新网址</h1><p>实验室已独立发布。两个域名的浏览器存储互不共享；此页仅导出实验室草稿、工程库和实训记录。</p><button type="button" onClick={download}>导出当前浏览器的旧记录</button><p role="status">{message}</p><div className="migration-links"><a href="https://optical-lab-feiyang.pages.dev/#ob-migration">打开独立光学实验室并导入</a><a href="/">返回 PCSELbook</a></div></main>;
 }

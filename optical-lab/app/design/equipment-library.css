@@ -2,18 +2,18 @@
 .eq-library ::selection { color: #124c3c; background: #cfe8da; }
 .eq-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .eq-heading h3 { margin: 0; font-size: 14px; font-weight: 650; }
-.eq-heading>span { color: #53695e; font-size: 11px; font-variant-numeric: tabular-nums; }
+.eq-heading>span { color: #53695e; font-size:12px; font-variant-numeric: tabular-nums; }
 .eq-search { display: flex; align-items: center; gap: 7px; color: #53695e; padding: 0 9px; border: 1px solid #dce5df; border-radius: 8px; background: #fbfcfa; }
 .od-design-app .eq-library .eq-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: 9px 0; font-size: 12px; caret-color: #167c69; }
 .od-design-app .eq-library .eq-search input::placeholder { color: #53695e; }
 .eq-search:focus-within { outline: 2px solid #167c69; outline-offset: 2px; background: #fff; }
 .od-design-app .eq-library .eq-search input:focus-visible { outline: 0; }
-.eq-hint { margin: 9px 0 13px; color: #53695e; font-size: 11px; line-height: 1.65; }
+.eq-hint { margin: 9px 0 13px; color: #53695e; font-size:12px; line-height: 1.65; }
 .eq-group { border-top: 1px solid #dce5df; }
 .eq-library button { font: inherit; }
 .od-design-app .eq-library button.eq-group-toggle { display: flex; align-items: center; gap: 9px; width: 100%; padding: 11px 2px; border: 0; border-radius: 0; background: transparent; color: #203c35; text-align: left; }
 .eq-group-toggle strong { flex: 1; font-size: 12px; font-weight: 650; }
-.eq-group-toggle>span { color: #53695e; font-size: 11px; font-variant-numeric: tabular-nums; }
+.eq-group-toggle>span { color: #53695e; font-size:12px; font-variant-numeric: tabular-nums; }
 .eq-group-toggle[aria-expanded=true]>.optics-icon:last-child { transform: rotate(180deg); }
 .od-design-app .eq-library button.eq-group-toggle:disabled { opacity: 1; cursor: default; }
 .eq-group-items { margin: 0 0 11px; }
@@ -21,18 +21,18 @@
 .od-design-app .eq-library button.eq-item-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 8px; border: 0; border-radius: 7px; background: transparent; color: #203c35; text-align: left; }
 .eq-item-toggle>span { flex: 1; min-width: 0; }
 .eq-item-toggle strong { display: block; font-size: 12px; font-weight: 600; overflow-wrap: anywhere; }
-.eq-item-toggle small { display: block; margin-top: 3px; font-size: 11px; color: #53695e; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.eq-item-toggle small { display: block; margin-top: 3px; font-size:12px; color: #53695e; line-height: 1.5; font-variant-numeric: tabular-nums; }
 .od-design-app .eq-library button.eq-item-toggle:hover:not(:disabled), .od-design-app .eq-library button.eq-item-toggle[aria-expanded=true] { background: #edf5f0; color: #175b48; }
 .eq-item-toggle[aria-expanded=true]>.optics-icon { transform: rotate(180deg); }
 .od-design-app .eq-library button:focus-visible, .od-design-app .eq-library a:focus-visible { outline: 2px solid #167c69; outline-offset: 2px; }
 .eq-details { padding: 3px 8px 13px; }
-.eq-badge { display: inline-block; color: #215a45; background: #edf5f0; padding: 3px 6px; border-radius: 4px; font-size: 10px; }
-.eq-details dl { margin: 10px 0; font-size: 11px; }
+.eq-badge { display: inline-block; color: #215a45; background: #edf5f0; padding: 3px 6px; border-radius: 4px; font-size:11.5px; }
+.eq-details dl { margin: 10px 0; font-size:12px; }
 .eq-details dl>div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 3px 7px; padding: 4px 0; }
 .eq-details dt { color: #53695e; }
 .eq-details dd { margin: 0; color: #203c35; text-align: right; font-variant-numeric: tabular-nums; }
-.eq-details p { margin: 9px 0; color: #53695e; line-height: 1.75; font-size: 11px; overflow-wrap: anywhere; }
-.eq-reference-links { display: flex; flex-wrap: wrap; gap: 7px 10px; margin-bottom: 11px; font-size: 11px; }
+.eq-details p { margin: 9px 0; color: #53695e; line-height: 1.75; font-size:12px; overflow-wrap: anywhere; }
+.eq-reference-links { display: flex; flex-wrap: wrap; gap: 7px 10px; margin-bottom: 11px; font-size:12px; }
 .od-design-app .eq-library a { color: #176c55; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .od-design-app .eq-library a:hover { color: #104b3a; }
 .od-design-app .eq-library button.eq-add { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; border: 1px solid #176d55; border-radius: 7px; padding: 8px; background: #176d55; color: #fff; }

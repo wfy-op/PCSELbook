@@ -38,7 +38,13 @@ async function runLatexmk() {
       "-outdir=build",
       "-jobname=pcselbook",
       "main.tex",
-    ], { cwd: sourceRoot, stdio: "inherit" });
+    ], {
+      cwd: sourceRoot,
+      stdio: "inherit",
+      // latexmk runs BibTeX inside build/. Under Git Bash it may resolve Perl from MSYS and
+      // prepend /c/... paths that MiKTeX BibTeX cannot read, so also expose the native path.
+      env: { ...process.env, BIBINPUTS: [sourceRoot, process.env.BIBINPUTS].filter(Boolean).join(path.delimiter) },
+    });
     child.once("error", reject);
     child.once("exit", (code) => code === 0 ? resolve() : reject(new Error(`latexmk exited with code ${code}`)));
   });

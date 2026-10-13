@@ -3,7 +3,7 @@
 \label{ch:math-appendix}
 
 \input{figures/fig_ch25_math_object_map}
-本附录集中列出正文共用的时间因子、傅里叶展开、开放模归一化、互易与微扰公式。\cref{fig:ch25_math_object_map}是查阅索引；第一次阅读可依次查看时间约定、周期/Bloch 展开、QNM 归一化与非厄米微扰。不同文献若采用相反时间因子，介质虚部、复频率虚部和损耗符号会整体翻转，引用公式前必须先换到本书约定。
+本附录集中列出正文共用的时间因子、傅里叶展开、开放模归一化、互易与微扰公式。\cref{fig:ch25_math_object_map}是查阅索引；第一次阅读可依次查看时间约定、周期/Bloch 展开、QNM 归一化与非厄米微扰。
 
 \section{时间因子与频域约定：先把增益和损耗的符号说清楚}
 全书统一采用时间因子
@@ -40,7 +40,7 @@ P_{\mathrm{abs}} = \frac{\omega\varepsilon_0}{2}\Im\,\varepsilon\,|\E|^2,
 
 \cref{eq:passive_epsilon_sign,eq:absorption_density_appendix} 都依赖于本书统一采用的时间因子 \(\ee^{-\ii\omega t}\)。若改用 \(\ee^{+\ii\omega t}\)，则介质虚部和复频率虚部的物理判据会整体翻转。任何引用外部文献中的损耗或增益公式时，都必须先检查其时间因子约定。
 
-为了避免正文不同章节在符号上“看起来一样、其实约定不同”，这里把本附录与主文完全一致的傅里叶变换约定写清楚。时间傅里叶变换采用
+傅里叶变换约定与正文一致。时间傅里叶变换采用
 \begin{equation}
 \hat f(\omega)
 =
@@ -65,7 +65,7 @@ f(x,y)
 \iint \tilde f(k_x,k_y)\,\ee^{+\ii(k_x x+k_y y)}\,\dd k_x\,\dd k_y.
 \label{eq:spatial_ft_inverse}
 \end{equation}
-把这一步写明的价值在于：后面近远场变换、角谱传播、频率噪声谱以及 RCWA/FDTD/FEM 的谱量定义，都能回到同一组符号，而不会在章节切换时悄悄换掉正负号。
+后面近远场变换、角谱传播、频率噪声谱以及 RCWA/FDTD/FEM 的谱量定义，都回到这同一组符号。
 
 \section{周期介质中的傅里叶展开：为什么卷积会反复出现}
 正文的 PWEM、RCWA 和 CWT 之所以看起来形式不同，却总会出现相似的矩阵耦合项，根源在于周期介质中的傅里叶卷积。设平面内周期单胞为 $A_c$，倒格矢为 $\gvec$。任意满足该周期的标量场 $f(\rvec_\parallel)$ 都可展开为
@@ -103,7 +103,7 @@ f_{\gvec}=\frac{1}{A_c}\int_{A_c} f(\rvec_\parallel)\ee^{-\ii\gvec\cdot\rvec_\pa
 \end{equation}
 因此周期结构中的本征问题总会变成“一个分量与许多倒格矢分量耦合”的矩阵问题。PWEM 把这个卷积直接写成平面波矩阵；RCWA 把它写进层内本征模矩阵；CWT 则主动只保留少数最重要的耦合项。
 
-若单胞几何只保留最强的四个一级傅里叶分量，那么 CWT 中保留的四波耦合，本质上就是把\cref{eq:convolution_appendix} 从无限维卷积截断成最小闭合子空间。它的物理解释更强，但严格性当然不如 RCWA 或大基底 PWEM。
+若单胞几何只保留最强的四个一级傅里叶分量，那么 CWT 中保留的四波耦合，本质上就是把\cref{eq:convolution_appendix} 从无限维卷积截断成最小闭合子空间。它的物理解释更强，精度则低于 RCWA 或大基底 PWEM。
 
 \section{开放 Maxwell 问题的函数空间直觉：为什么普通 Hilbert 空间不够}
 
@@ -249,7 +249,7 @@ E_n(x) \sim E_0 \ee^{\ii \tilde{k}_n |x|}, \qquad \tilde{k}_n = \frac{\tilde{\om
 \begin{itemize}
   \item \textbf{有限尺寸散射体}: 若介电常数扰动$\Delta\varepsilon(\rvec)$具有紧支集 (compact support)，则 QNM集合在散射体外部的区域内是完备的。
   
-  \item \textbf{色散介质}: 当$\varepsilon(\omega)$显含频率时，需要在扩展的状态空间（包含介质极化自由度）中讨论完备性。此时 QNM可能与连续谱混合，形成所谓的"quasinormal continuum"。
+  \item \textbf{色散介质}: 当$\varepsilon(\omega)$显含频率时，需要在扩展的状态空间（包含介质极化自由度）中讨论完备性。此时 QNM可能与连续谱混合，形成所谓的“quasinormal continuum”。
   
   \item \textbf{高 Q 值近似}: 对于高品质因子腔($Q\gg1$)，前几个主导 QNM通常足以精确描述腔内的场分布，即使数学上不完备，工程上也足够准确。
 \end{itemize}
@@ -286,7 +286,7 @@ E_n(x) \sim E_0 \ee^{\ii \tilde{k}_n |x|}, \qquad \tilde{k}_n = \frac{\tilde{\om
 \left[\nabla^2 + k_0^2\varepsilon(\rvec)\right]\psi(\rvec) = -s(\rvec),
 \label{eq:scalar_helmholtz_source}
 \end{equation}
-其中$s(\rvec)$是源项。我们希望找到一个"单位点源的响应"$G(\rvec,\rvec')$，使得对任意源分布都能通过叠加原理写出解：
+其中$s(\rvec)$是源项。我们希望找到一个“单位点源的响应”$G(\rvec,\rvec')$，使得对任意源分布都能通过叠加原理写出解：
 \begin{equation}
 \psi(\rvec) = \int G(\rvec,\rvec') s(\rvec')\,\dd^3 r'.
 \label{eq:green_solution_integral}
@@ -326,7 +326,7 @@ G &= G_0 + G_0(k_0^2\Delta\varepsilon)G_0 + G_0(k_0^2\Delta\varepsilon)G_0(k_0^2
 \end{align}
 其中$T$算符总结了所有阶次的散射过程。
 
-Dyson 方程的核心思想是"递归"：要知道总的散射响应，可以先问"第一次散射发生在哪里"，然后再问"散射之后的传播又如何"。这种自相似的结构正是 Green 函数方法强大之处的源泉。
+Dyson 方程的核心思想是“递归”：要知道总的散射响应，可以先问“第一次散射发生在哪里”，然后再问“散射之后的传播又如何”。这种自相似的结构正是 Green 函数方法强大之处的源泉。
 
 \subsection{矢量 Green 张量与 Maxwell 方程}
 对真实的电磁场问题，我们需要处理的是矢量波动方程。此时 Green 函数推广为一个二阶张量$\overline{\bm{G}}(\rvec,\rvec')$（也称为 dyadic Green's function），满足：
@@ -411,7 +411,7 @@ A_n=
 \end{WhatCouldGoWrong}
 
 \section{伴随模、双正交与广义归一化}
-一旦算子不再自伴，右模本身通常不足以完成投影与微扰分析。对第一次接触这套语言的读者，最稳妥的直觉是：\textbf{先把左模看成做投影时的测试函数，而不要先把它想成“另一支也要单独观察到的物理场”。}
+一旦算子不再自伴，右模本身通常不足以完成投影与微扰分析。一个有用的直觉是：\textbf{先把左模看成做投影时的测试函数，而不要先把它想成“另一支也要单独观察到的物理场”。}
 
 \paragraph{伴随算子是什么？} 选定一个内积 $\langle\cdot,\cdot\rangle$ 后，伴随算子由“分部积分后的移项”定义：
 \begin{equation}
@@ -456,7 +456,7 @@ A_n=
 \right]\dd V,
 \label{eq:qnm_normalization_appendix}
 \end{equation}
-其中 $\Psi_n=(\E_n,\Hf_n)$，且积分区域包含物理区与 PML \cite{sauvan2013qnm,kristensen2015qnm}。这个表达式的意义不在于要求读者把它背下来，而在于明确三件事：
+其中 $\Psi_n=(\E_n,\Hf_n)$，且积分区域包含物理区与 PML \cite{sauvan2013qnm,kristensen2015qnm}。这个表达式说明了三件事：
 \begin{enumerate}
   \item 广义归一化里经常不出现普通的复共轭；
   \item 材料色散会直接进入归一化，而不是只出现在“材料模型”章节；
@@ -516,7 +516,7 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 \label{eq:q_complexfreq_appendix}
 \end{equation}
 
-这个推导之所以需要在附录里明确写出，是因为很多实际文稿会把 $1/\gamma$ 直接称为“光子寿命”，或者把振幅衰减率和能量衰减率混用。对被动光学问题，这种混淆可能只差一个因子 2；但一旦进入阈值条件、线宽估计和速率方程接口，这个因子 2 就会在不同模块之间制造系统偏差。
+很多文稿会把 $1/\gamma$ 直接称为“光子寿命”，或者把振幅衰减率和能量衰减率混用。对被动光学问题，这种混淆可能只差一个因子 2；但一旦进入阈值条件、线宽估计和速率方程接口，这个因子 2 就会在不同模块之间制造系统偏差。
 
 \section{互易性：为什么许多耦合公式其实来自同一个定理}
 正文中的耦合模理论、微扰公式和灵敏度分析，背后都有一个共同工具，即 Lorentz 互易性。设两组场 $(\E_1,\Hf_1)$ 和 $(\E_2,\Hf_2)$ 在同一线性、时不变、局域介质中分别满足
@@ -526,9 +526,7 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 \mu=\mu^{\mathsf T},
 \label{eq:reciprocity_tensor_condition}
 \end{equation}
-所对应的 Maxwell 方程。\cref{eq:reciprocity_tensor_condition} 是这一节最关键的适用范围前提：它排除了磁光、旋光、显式时变调制和其他非互易介质。只有在这一前提下，下面的 Lorentz 互易性推导才按最熟悉的对称形式成立。
-
-本节默认介质张量满足 \cref{eq:reciprocity_tensor_condition}。若器件包含磁光偏置、时空调制或其他非互易机制，则互易关系必须改写，不能直接把本节公式平移过去。
+所对应的 Maxwell 方程。\cref{eq:reciprocity_tensor_condition} 是这一节的适用前提：它排除了磁光、旋光、显式时变调制、非局域响应和其他非互易介质；器件包含这类机制时，互易关系需要改写。
 
 \begin{align}
 \nabla\times\E_1 &= +\ii\omega\mu\Hf_1,
@@ -571,8 +569,6 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 \end{equation}
 
 \cref{eq:lorentz_reciprocity_appendix} 的价值在于，它为“某个局域扰动为什么会以某种重叠积分方式耦合到目标模”提供了统一解释。很多看起来不同的耦合系数公式，本质上都能追溯到互易性与边界条件。
-
-互易性并非无条件成立。若介质存在显著非互易效应、时变调制、磁光非对称张量或非局域响应，则\cref{eq:lorentz_reciprocity_appendix} 需要修改，甚至可能失效。将其直接套用到所有有源介质问题上是不严谨的。
 
 \section{一阶微扰公式：什么时候它是定理，什么时候它只是工程近似}
 现在可以回到正文中最关键的开放系统数学缺口：非厄米一阶扰动到底应怎样写。若先从最一般的角度出发，把本征问题写成
@@ -618,7 +614,7 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 \end{equation}
 它的物理意义仍然非常直观：若正的电场能量主要落在折射率增大的区域，则共振频率通常下降。正文中关于热漂移、材料修正和几何微扰的许多定性判断，都可用这一公式快速给出方向感。
 
-但这里必须准确区分三种层级。
+这里要区分三种层级。
 
 第一层，\textbf{严格定理层级}：\cref{eq:nonhermitian_first_order_appendix}。只要左模、右模、伴随算子和归一化框架是自洽的，它就是开放系统一阶扰动的正确起点。  
 
@@ -635,9 +631,9 @@ Q = \omega_r\tau_p = \frac{\omega_r}{2\gamma}.
 \end{PitfallBox}
 
 \section{这些数学工具在 PCSEL 仿真中怎么实际使用}
-附录的价值，最终还是要回到建模实践。对本书关心的 PCSEL 问题，这些工具至少有四类直接用途。
+这些工具在 PCSEL 建模中有五类直接用途。
 
-第一，用时间因子和复频率关系检查损耗与增益符号是否在不同模块间保持一致。若 RCWA、FDTD 和器件增益模型对介质虚部的正负含义不一致，必须立即停下来修正。
+第一，用时间因子和复频率关系检查损耗与增益符号是否在不同模块间保持一致。若 RCWA、FDTD 和器件增益模型对介质虚部的正负含义不一致，先统一约定，再比较结果。
 
 第二，用 Fourier-Bloch 展开理解数值方法之间的联系。这样在比较 PWEM、RCWA 和 CWT 时，读者就知道它们差别主要在截断和投影，而不是在“互相矛盾的物理定律”。
 
@@ -751,7 +747,7 @@ $E$ & 2 & 0 & -2 & 0 & 0 & $(x,y)$, $(R_x,R_y)$ \\
 \end{center}
 \renewcommand{\arraystretch}{1.0}
 
-表中每一行的物理含义：当对该 irrep 的基函数施加相应的对称操作时，函数乘以对应的特征标值（$+1$ 保持不变，$-1$ 改变符号）。例如，$A_1$ 表示在所有 8 个操作下都不变——这是"完全对称"的表示；而 $E$ 是二维表示，其特征标为 0 意味着两个基函数在该操作下互相交换或线性组合。
+表中每一行的物理含义：当对该 irrep 的基函数施加相应的对称操作时，函数乘以对应的特征标值（$+1$ 保持不变，$-1$ 改变符号）。例如，$A_1$ 表示在所有 8 个操作下都不变——这是“完全对称”的表示；而 $E$ 是二维表示，其特征标为 0 意味着两个基函数在该操作下互相交换或线性组合。
 
 \textbf{PCSEL 中的模式分类实操步骤}：
 \begin{enumerate}
@@ -798,7 +794,7 @@ $E$   &       &       &       &       & $A_1\oplus A_2\oplus B_1\oplus B_2$ \\
   \item $A_1 \leftrightarrow A_1$ 跃迁：$A_1 \otimes B_2 \otimes A_1 = B_2 \not\supset A_1$ ✗ （对称性禁戒）
   \item $B_1 \leftrightarrow E$ 跃迁：$B_1 \otimes B_2 \otimes E = A_2 \otimes E = E \not\supset A_1$ ✗ （禁戒）
 \end{itemize}
-这解释了为什么某些对称性保护的 BIC 无法向自由空间辐射——是因为对称性从根本上禁止了这种耦合，而非因为"损耗太小"。
+这解释了为什么某些对称性保护的 BIC 无法向自由空间辐射——是因为对称性从根本上禁止了这种耦合，而非因为“损耗太小”。
 
 \textbf{实例分析 2：法向辐射通道的 irrep}\\
 在 $\Gamma$ 点，法向辐射对应的是横向均匀平面波，其两支线偏振 $(\hat{x},\hat{y})$ 构成 $E$ 表示的基。因此：
@@ -808,7 +804,7 @@ $E$   &       &       &       &       & $A_1\oplus A_2\oplus B_1\oplus B_2$ \\
 \end{itemize}
 因此，高阶带边模式（通常是 $E$ 表示）可表面发射，而基模（通常是 $A_1$）可能成为暗模。
 
-\textbf{对称性破缺与不可约表示分解}：当结构发生某种变形或引入各向异性时，对称性会降低。设原始对称群为 $G$，破缺后的子群为 $H \subset G$。此时 $G$ 的每个 irrep 按照一定规则"分解"为 $H$ 的若干个 irrep 的直和。这个过程称为\textbf{分支律}(branching rule)。
+\textbf{对称性破缺与不可约表示分解}：当结构发生某种变形或引入各向异性时，对称性会降低。设原始对称群为 $G$，破缺后的子群为 $H \subset G$。此时 $G$ 的每个 irrep 按照一定规则“分解”为 $H$ 的若干个 irrep 的直和。这个过程称为\textbf{分支律}(branching rule)。
 
 对于 PCSEL 常见的 $C_{4v} \to C_{2v}$ 破缺（例如引入椭圆形孔或矩形晶格），分解规则如下：
 \begin{align}
@@ -824,7 +820,7 @@ E(C_{4v}) &\to B_1(C_{2v}) \oplus B_2(C_{2v}).
 \begin{itemize}
   \item \textbf{双重态分裂}: $E$ 表示分解为两个不同的单重态 $B_1$ 和 $B_2$。这意味着原本简并的一对模式会发生能量劈裂，劈裂大小正比于对称性破缺强度。
   
-  \item \textbf{偏振锁定}: 分裂后的两个模式分别继承原 $E$ 表示的两个正交基，对应固定的线偏振方向。这在实验中表现为输出光的偏振方向被"钉扎"在某个晶轴方向。
+  \item \textbf{偏振锁定}: 分裂后的两个模式分别继承原 $E$ 表示的两个正交基，对应固定的线偏振方向。这在实验中表现为输出光的偏振方向被“钉扎”在某个晶轴方向。
   
   \item \textbf{选择规则放宽}: 由于 $C_{2v}$ 的特征标表更简单（只有 4 个一维 irrep），原来在 $C_{4v}$ 中被禁戒的某些跃迁可能在 $C_{2v}$ 中变得允许。这可以用来解释为何轻微的结构不对称会导致 BIC 泄漏出有限的辐射。
 \end{itemize}
@@ -838,7 +834,7 @@ E(C_{4v}) &\to B_1(C_{2v}) \oplus B_2(C_{2v}).
 
 
 \section{关键量的首次定义位置索引}
-为便于读者在正文各章之间快速定位，本节给出全书最重要的派生量与合成量在何处首次引入或定义的参考索引。注意：基础物理量（如 $\E$、$\omega$、$\kvec$ 等）不列，只列出由多个基础量组合而成、或由特定物理机制引入的派生量。
+本节列出跨章使用的派生量与合成量首次定义的位置。基础物理量（如 $\E$、$\omega$、$\kvec$ 等）不列。
 
 \begin{longtable}{p{0.30\textwidth}p{0.62\textwidth}}
 \toprule
@@ -872,8 +868,6 @@ $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}�
 \bottomrule
 \end{longtable}
 
-这条索引的设计目的只有一个：让读者在遇到某个量时，能在 30 秒内找到它在主线上的定义位置，而不是在各章符号之间来回猜测。本索引不追求穷举，只覆盖"跨越两个以上章节使用"的派生量。基础符号的定义应在各章首次使用时已经明确，此处不再重复。
-
 \begin{table}[htbp]
   \centering
   \caption{本附录数学工具在正文中的应用位置}
@@ -881,13 +875,13 @@ $\partial\omega_m/\partial T,\;\partial\gamma_m/\partial T$ & \cref{ch:cwt-3d}�
     \toprule
     数学工具 & 正文应用 & 具体用途 \\
     \midrule
-    时间因子约定 & 第 3,7,17 章 & 统一损耗/增益符号 \\
-    Bloch-Floquet 展开 & 第 4,5,12 章 & PWEM/RCWA 的平面波基底 \\
-    QNM 双正交归一化 & 第 11 章 & 非厄米微扰公式 \\
-    互易定理 & 第 8,13 章 & 远场 - 近场关联 \\
-    留数定理 & 第 13 章 & RCWA 散射矩阵极点分析 \\
-    卷积矩阵构造 & 第 12,13 章 & 周期介质的傅里叶因子化 \\
-    复频率-$Q$关系 & 第 3,7,8b 章 & BIC/quasi-BIC的$Q$值定义 \\
+    时间因子约定 & \cref{ch:maxwell,ch:threshold,ch:epitaxial-optics} & 统一损耗/增益符号 \\
+    Bloch-Floquet 展开 & \cref{ch:bloch,ch:pwe,ch:rcwa} & PWEM/RCWA 的平面波基底 \\
+    QNM 双正交归一化 & \cref{ch:maxwell,ch:cmt} & 非厄米微扰公式 \\
+    互易定理 & \cref{ch:gamma,ch:cmt} & $\Gamma$ 点群速度、耦合矩阵转置对称 \\
+    留数定理 & \cref{ch:rcwa} & RCWA 散射矩阵极点分析 \\
+    卷积矩阵构造 & \cref{ch:pwe,ch:rcwa} & 周期介质的傅里叶因子化 \\
+    复频率-$Q$关系 & \cref{ch:maxwell,ch:threshold,ch:bic} & BIC/quasi-BIC 的 $Q$ 值定义 \\
     \bottomrule
   \end{tabular}
 \end{table}

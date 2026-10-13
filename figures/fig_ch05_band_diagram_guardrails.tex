@@ -8,7 +8,7 @@
     arrow/.style={->,thick},
     ok/.style={draw=green!45!black,fill=green!7,rounded corners=2pt,align=left,font=\footnotesize},
     next/.style={draw=blue!55!black,fill=blue!6,rounded corners=2pt,align=left,font=\footnotesize},
-    stop/.style={draw=red!65!black,fill=red!6,rounded corners=2pt,align=left,font=\footnotesize}
+    device/.style={draw=violet!55!black,fill=violet!5,rounded corners=2pt,align=left,font=\footnotesize}
   }
 
   \node[title] at (2.15,5.05) {能带图本身};
@@ -37,20 +37,20 @@
     有源区重叠和内部损耗\\
     有限阵列边缘泄漏
   };
-  \node[stop,text width=4.35cm,minimum height=2.7cm,anchor=north] (cannot) at (16.25,4.85) {
-    \textbf{不能直接宣称}\\
-    最低阈值电流\\
-    高功率单模稳定\\
+  \node[device,text width=4.35cm,minimum height=2.7cm,anchor=north] (cannot) at (16.25,4.85) {
+    \textbf{器件层问题}\\
+    阈值电流\\
+    高功率单模稳定性\\
     热稳定工作窗口\\
-    实验远场一定如此
+    实测远场
   };
 
   \draw[arrow,green!45!black] (3.8,3.8) -- (can.west);
   \draw[arrow,blue!55!black] (can.east) -- (need.west);
-  \draw[arrow,red!65!black] (need.east) -- (cannot.west);
+  \draw[arrow,violet!55!black] (need.east) -- (cannot.west);
 
   \node[draw=black!50,rounded corners=2pt,fill=gray!5,align=center,text width=15.1cm,font=\footnotesize] at (10.55,-0.35) {
-    边界句：band diagram 给出“候选资格”，不给出“器件判决”。真正的 PCSEL 结论要把 band、radiation、finite size、gain、injection 和 thermal 放在同一条证据链上。
+    能带图给出候选资格；器件层问题要依次加入辐射、有限尺寸、增益、注入和热反馈后回答。
   };
 \end{tikzpicture}%
 }
