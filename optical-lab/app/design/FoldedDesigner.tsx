@@ -156,8 +156,8 @@ export function FoldedDesigner({ initialScene }: { initialScene?: FoldedScene })
     try { localStorage.setItem(LIBRARY, JSON.stringify(next)); setLibrary(next); setNotice(`已保存「${scene.name}」的空间工程副本。`); } catch { setNotice('保存失败，请导出 JSON 文件。'); }
   };
   const removeSaved = (id: string) => { const next = library.filter(e => e.id !== id); try { localStorage.setItem(LIBRARY, JSON.stringify(next)); setLibrary(next); } catch { setNotice('浏览器存储不可用，未移除副本。'); } };
-  const undo = () => { setPreview(null); setHistory(h => h.past.length ? { past: h.past.slice(0, -1), present: h.past.at(-1)!, future: [h.present, ...h.future] } : h); setSelected('source'); };
-  const redo = () => { setPreview(null); setHistory(h => h.future.length ? { past: [...h.past, h.present].slice(-60), present: h.future[0], future: h.future.slice(1) } : h); setSelected('source'); };
+  const undo = () => { const next = history.past.at(-1); if (!next) return; setPreview(null); setHistory(h => ({ past: h.past.slice(0, -1), present: next, future: [h.present, ...h.future] })); setSelected(id => id === 'source' || next.elements.some(e => e.id === id) ? id : 'source'); };
+  const redo = () => { const next = history.future[0]; if (!next) return; setPreview(null); setHistory(h => ({ past: [...h.past, h.present].slice(-60), present: next, future: h.future.slice(1) })); setSelected(id => id === 'source' || next.elements.some(e => e.id === id) ? id : 'source'); };
   const remove = (id = current?.id) => { if (!id) return; commit({ ...scene, elements: scene.elements.filter(e => e.id !== id) }); setSelected('source'); };
   const duplicate = () => {
     if (!current) return;

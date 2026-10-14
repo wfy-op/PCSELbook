@@ -71,7 +71,7 @@ try {
     await focus.getByRole('button', { name: '静态演示' }).waitFor();
     assert.ok(await focus.getByRole('button', { name: '静态演示' }).isDisabled());
     assert.equal(await focus.locator('.li-flow path').first().evaluate(e => getComputedStyle(e).animationName),'none');
-    assert.equal(await page.getByRole('group',{name:'选择教学元件'}).getByRole('button').count(),9);
+    assert.equal(await page.getByRole('group',{name:'选择教学元件'}).getByRole('button').count(),12);
     assert.equal(await page.locator('#ob-challenges').getByRole('group',{name:'选择关卡'}).getByRole('button').count(),3);
     const controls = await page.locator('.li-controls button, .li-slider input, .li-motion-button').evaluateAll(nodes=>nodes.map(e=>e.getBoundingClientRect().height));
     assert.ok(controls.every(height=>height>=44));

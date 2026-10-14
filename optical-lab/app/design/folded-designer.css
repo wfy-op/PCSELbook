@@ -74,3 +74,7 @@
 
 .fd-mini-spot{position:relative;flex:0 0 44px;width:44px;height:44px;background:#081620;display:flex;align-items:center;justify-content:center;color:#e1f0e5;font-size:11.5px}.fd-mini-spot canvas{image-rendering:pixelated;min-width:1px;min-height:1px}.fd-detector-preview>div:last-child{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}.od-design-app .fd-workbench .fd-detector-preview select{min-height:32px;padding:4px;font-size:12px}
 .fd-reception-guide{font-size:12px;line-height:1.7;color:#446754;margin:8px 0 0}
+.fd-angle-control{padding:10px 0;border-bottom:1px solid #e1e9e3;margin-bottom:10px}
+.fd-angle-actions{display:flex;gap:6px}.od-design-app .fd-workbench .fd-angle-actions button{flex:1;min-height:36px;padding:5px 8px;font-variant-numeric:tabular-nums}
+.fd-rotation-handle{cursor:crosshair;touch-action:none;outline:none}.fd-rotation-handle:hover .fd-rotation-knob{fill:#edf6f0}.fd-rotation-handle:focus-visible .fd-rotation-knob{stroke:#16785a;stroke-width:3;filter:drop-shadow(0 0 3px #16785a66)}
+@media(max-width:1099px){.od-design-app .fd-workbench .fd-angle-actions button{min-height:44px}}

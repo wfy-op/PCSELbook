@@ -24,6 +24,29 @@ try {
     await tool.getByRole('button',{name:'光阑',exact:true}).click(); await tool.getByRole('slider',{name:'有效口径',exact:true}).fill('4');
     assert.match(await tool.locator('.lj-readout').innerText(),/截获吸收 (?!0\.0)/);
     for (const name of ['负透镜','消色差透镜','功率探头','挡光器','支杆与底座','透镜架与位移台','正透镜']) await tool.getByRole('button',{name,exact:true}).click();
+    assert.equal(await tool.getByRole('group',{name:'选择教学元件'}).getByRole('button').count(),12);
+    await tool.getByRole('button',{name:'柱透镜',exact:true}).click();
+    const spot=tool.locator('.lj-spot');
+    assert.ok(Number(await spot.getAttribute('data-rms-u'))<1e-6);
+    assert.ok(Number(await spot.getAttribute('data-rms-v'))>3);
+    assert.equal(await spot.locator('circle').count(),289);
+    await tool.getByRole('slider',{name:'聚焦方向角（绕光轴）',exact:true}).fill('90');
+    assert.ok(Number(await spot.getAttribute('data-rms-v'))<1e-6);
+    assert.ok(Number(await spot.getAttribute('data-rms-u'))>3);
+    await tool.getByRole('slider',{name:'元件到屏距离 d',exact:true}).fill('150');
+    assert.ok(Number(await spot.getAttribute('data-rms-v'))>1);
+    if(!process.argv.includes('--no-screenshots')) await tool.locator('.lj-teaching').screenshot({path:`${out}/cylindrical-${width}.png`});
+    await tool.getByRole('button',{name:'分光镜',exact:true}).click();
+    await tool.getByRole('slider',{name:'反射比例 R',exact:true}).fill('30');
+    assert.match(await tool.locator('.lj-readout').innerText(),/D1 透射接收 70\.0% · D2 反射接收 30\.0%/);
+    await tool.getByRole('button',{name:'物镜',exact:true}).click();
+    for (const magnification of [4,10,20,40]) {
+      await tool.getByLabel('参考物镜',{exact:true}).selectOption(String(magnification));
+      await tool.getByRole('slider',{name:'元件到屏距离 d',exact:true}).fill(String(180/magnification));
+      assert.match(await tool.locator('.lj-objective-spec').innerText(),new RegExp(`等效焦距 ${180/magnification} mm`));
+      assert.ok(Number(await spot.getAttribute('data-rms-u'))<1e-6 && Number(await spot.getAttribute('data-rms-v'))<1e-6);
+    }
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
     const challenge=page.locator('#ob-challenges .lj-challenge:visible');
     await challenge.getByRole('button',{name:'检查本关',exact:true}).click(); assert.match(await challenge.locator('.lj-grade [role=status]').innerText(),/还需完成/);
     await challenge.getByLabel('计算答案',{exact:true}).fill('100'); await challenge.getByLabel('不能，那也可能是焦点',{exact:true}).check();
@@ -52,7 +75,7 @@ try {
     assert.match(await page.locator('#ob-migration [role=status]').innerText(),/已校验 1/);
     await Promise.all([page.waitForEvent('domcontentloaded'), page.locator('#ob-migration').getByRole('button',{name:'替换同类记录并重新加载'}).click()]); await page.waitForLoadState('networkidle');
     assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('pcsel-optical-playground-v1'))),fixture);
-    checks.push({width,status:'pass',checks:'ordered sections, no overflow, nine computed tools, keyboard control, three complete challenges, retained answers, migration error/success'});
+    checks.push({width,status:'pass',checks:'ordered sections, no overflow, twelve computed tools, cylinder line focus and roll, actual splitter powers, four objective focal planes, keyboard control, three complete challenges, retained answers, migration error/success'});
     await context.close();
   }
   assert.deepEqual(errors,[]);

@@ -5,6 +5,7 @@ import { ObjectiveInfo } from './ObjectiveInfo';
 import { OpticsIcon } from './OpticsIcon';
 
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+const angle = (v: number) => ((v + 180) % 360 + 360) % 360 - 180;
 const fmt = (v: number | null, digits = 3) => v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
 export function NumberField({ label, value, min, max, unit = 'mm', step = 1, change, nonzero = false }: { label: string; value: number; min: number; max: number; unit?: string; step?: number; change: (v: number) => void; nonzero?: boolean }) {
   const [draft, setDraft] = useState<string | null>(null);
@@ -27,6 +28,13 @@ function fitBounds(scene: FoldedScene) {
   const pad = Math.max(35, ...scene.elements.map(e => e.diameter / 2 + 15));
   return { minX: Math.min(...x) - pad, maxX: Math.max(...x) + pad, minY: Math.min(...y) - pad, maxY: Math.max(...y) + pad };
 }
+function AngleControl({ label, value, change, axial = false }: { label: string; value: number; change: (v: number) => void; axial?: boolean }) {
+  return <div className="fd-angle-control">
+    <NumberField label={label} value={angle(value)} min={-180} max={180} unit="°" step={.1} change={v => change(angle(v))} />
+    <div className="fd-angle-actions"><button type="button" aria-label={`${label}：顺时针旋转5度`} onClick={() => change(angle(value - 5))}>−5°</button><button type="button" aria-label={`${label}：逆时针旋转5度`} onClick={() => change(angle(value + 5))}>+5°</button><button type="button" aria-label={`${label}：归零`} onClick={() => change(0)}>归零</button></div>
+    <p className="fd-hint">{axial ? '绕光轴旋转聚焦方向：0° 聚焦 u，90° 聚焦 v；与 XY 平面旋转独立。' : '按朝向法线计角：0° 向右，90° 向上，逆时针为正。也可拖动画布上的圆形旋转柄。'}</p>
+  </div>;
+}
 export function FoldedCanvas({ scene, result, selected, select, commit, add, onPreview, viewportRef }: { scene: FoldedScene; result: FoldedAnalysis; selected: string; select: (id: string, revealLayout?: boolean) => void; commit: (s: FoldedScene) => void; add: (kind: string, x?: number, y?: number) => void; onPreview: (s: FoldedScene | null) => void; viewportRef: React.RefObject<{ x: number; y: number; span: number }> }) {
   const svg = useRef<SVGSVGElement>(null);
   const frame = useRef<HTMLDivElement>(null);
@@ -42,7 +50,7 @@ export function FoldedCanvas({ scene, result, selected, select, commit, add, onP
   const [controlsOpen, setControlsOpen] = useState(() => typeof window === 'undefined' || window.innerWidth > 760);
   const [preview, setPreview] = useState<FoldedScene | null>(null);
   const latestPreview = useRef<FoldedScene | null>(null);
-  const drag = useRef<{ id: string; base: FoldedScene; origin: { x: number; y: number }; start: { x: number; y: number } } | null>(null);
+  const drag = useRef<{ id: string; mode: 'move' | 'rotate'; angle: number; base: FoldedScene; origin: { x: number; y: number }; start: { x: number; y: number } } | null>(null);
   const pendingFrame = useRef<number | null>(null);
   const p = preview ?? scene;
   const labels = foldedLabels(p);
@@ -66,7 +74,24 @@ export function FoldedCanvas({ scene, result, selected, select, commit, add, onP
   const world = (clientX: number, clientY: number) => { const r = svg.current!.getBoundingClientRect(); return { x: cx + (clientX - r.left - width / 2) / scale, y: cy - (clientY - r.top - height / 2) / scale }; };
   const placed = (at: { x: number; y: number }) => ({ x: clamp(snap ? Math.round(at.x / snapStep) * snapStep : Math.round(at.x * 100) / 100, scene.bounds.minX, scene.bounds.maxX), y: clamp(snap ? Math.round(at.y / snapStep) * snapStep : Math.round(at.y * 100) / 100, scene.bounds.minY, scene.bounds.maxY) });
   const stop = (cancel = false) => { if (pendingFrame.current !== null) { cancelAnimationFrame(pendingFrame.current); pendingFrame.current = null; } if (latestPreview.current && !cancel) commit(latestPreview.current); latestPreview.current = null; drag.current = null; setPreview(null); onPreview(null); };
-  const start = (event: React.PointerEvent<SVGGElement>, id: string, origin: { x: number; y: number }) => { event.preventDefault(); select(id, false); drag.current = { id, origin, base: scene, start: world(event.clientX, event.clientY) }; event.currentTarget.setPointerCapture(event.pointerId); };
+  const start = (event: React.PointerEvent<SVGGElement>, id: string, origin: { x: number; y: number }, rotate = false) => { event.preventDefault(); event.stopPropagation(); if (!rotate) select(id, false); event.currentTarget.focus({ preventScroll: true }); drag.current = { id, origin, mode: rotate ? 'rotate' : 'move', angle: id === 'source' ? scene.source.directionDeg : scene.elements.find(e => e.id === id)!.angleDeg, base: scene, start: world(event.clientX, event.clientY) }; event.currentTarget.setPointerCapture(event.pointerId); };
+  const move = (event: React.PointerEvent<SVGSVGElement>) => {
+    const d = drag.current; if (!d) return;
+    const current = world(event.clientX, event.clientY);
+    let next: FoldedScene;
+    if (d.mode === 'rotate') {
+      const delta = (Math.atan2(current.y - d.origin.y, current.x - d.origin.x) - Math.atan2(d.start.y - d.origin.y, d.start.x - d.origin.x)) * 180 / Math.PI;
+      const step = event.shiftKey ? 15 : .1;
+      const value = angle(Math.round((d.angle + delta) / step) * step);
+      next = d.id === 'source' ? { ...d.base, source: { ...d.base.source, directionDeg: value } } : { ...d.base, elements: d.base.elements.map(e => e.id === d.id ? { ...e, angleDeg: value } : e) };
+    } else {
+      const at = placed({ x: d.origin.x + current.x - d.start.x, y: d.origin.y + current.y - d.start.y });
+      next = d.id === 'source' ? { ...d.base, source: { ...d.base.source, ...at } } : { ...d.base, elements: d.base.elements.map(e => e.id === d.id ? { ...e, ...at } : e) };
+    }
+    latestPreview.current = next;
+    if (pendingFrame.current !== null) cancelAnimationFrame(pendingFrame.current);
+    pendingFrame.current = requestAnimationFrame(() => { pendingFrame.current = null; setPreview(next); onPreview(next); });
+  };
   const keyboard = (event: React.KeyboardEvent<SVGGElement>, id: string) => {
     if (['Enter', ' '].includes(event.key)) { event.preventDefault(); select(id); }
     const item = id === 'source' ? scene.source : scene.elements.find(e => e.id === id)!;
@@ -80,11 +105,21 @@ export function FoldedCanvas({ scene, result, selected, select, commit, add, onP
   const stride = Math.max(1, Math.ceil(result.sourceRayCount / 192));
   const segments = result.segments.filter(s => Number(s.rootId.split('-').at(-1)) % stride === 0);
   const maxPower = Math.max(...segments.map(s => s.power), 1e-12);
+  const rotating = selected === 'source' ? p.source : p.elements.find(e => e.id === selected);
+  const rotationAngle = angle(selected === 'source' ? p.source.directionDeg : p.elements.find(e => e.id === selected)?.angleDeg ?? 0);
+  const rotateKey = (event: React.KeyboardEvent<SVGGElement>) => {
+    if (event.key === 'Escape' && drag.current) { event.preventDefault(); stop(true); return; }
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home'].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    const delta = (event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -1 : 1) * (event.shiftKey ? 5 : 1);
+    const value = event.key === 'Home' ? 0 : angle(rotationAngle + delta);
+    commit(selected === 'source' ? { ...scene, source: { ...scene.source, directionDeg: value } } : { ...scene, elements: scene.elements.map(e => e.id === selected ? { ...e, angleDeg: value } : e) });
+  };
   return <section className="fd-canvas" aria-label="空间光路画布">
     <div className="fd-canvas-toolbar"><strong><OpticsIcon name="grid" size={18} />空间布局 <small>XY · mm</small></strong><div><button aria-label="缩小空间光路" onClick={() => setZoom(v => Math.max(.5, v / 1.25))}>−</button><span>{Math.round(zoom * 100)}%</span><button aria-label="放大空间光路" onClick={() => setZoom(v => Math.min(8, v * 1.25))}>＋</button><button onClick={() => { setView(fitBounds(scene)); setZoom(1); }}>适应元件</button></div></div>
     <details className="fd-display-settings" open={controlsOpen} onToggle={e => setControlsOpen(e.currentTarget.open)}><summary>显示与网格 · {grid} mm</summary><div className="fd-grid-controls"><label><input type="checkbox" checked={showRays} onChange={e => setShowRays(e.target.checked)} />光线</label><label><input type="checkbox" checked={showNormals} onChange={e => setShowNormals(e.target.checked)} />法线</label><button onClick={() => { setView(scene.bounds); setZoom(1); }}>完整区域</button><NumberField label="网格间隔" value={grid} min={.1} max={5000} step={1} change={setGrid} /><label><input type="checkbox" checked={snap} onChange={e => setSnap(e.target.checked)} />{snapStep} mm 吸附</label><NumberField label="吸附间隔" value={snapStep} min={.01} max={1000} step={1} change={setSnapStep} /><label>光线显示线宽<select aria-label="光线显示线宽" value={lineWidth} onChange={e => setLineWidth(Number(e.target.value))}><option value={.8}>细 · 0.8 px</option><option value={1.4}>清晰 · 1.4 px</option><option value={2.2}>加粗 · 2.2 px</option></select></label></div></details>
     <div ref={frame} className="fd-canvas-scroll" onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); const data = e.dataTransfer.getData('text/plain'); if (data.startsWith('folded:')) { const at = placed(world(e.clientX, e.clientY)); add(data.slice(7), at.x, at.y); } }}>
-      <svg ref={svg} id="fd-layout-svg" viewBox={`0 0 ${width} ${height}`} role="group" aria-label="可拖动和旋转元件的空间光路图" onPointerMove={e => { const d = drag.current; if (!d) return; const current = world(e.clientX, e.clientY); const at = placed({ x: d.origin.x + current.x - d.start.x, y: d.origin.y + current.y - d.start.y }); const next = d.id === 'source' ? { ...d.base, source: { ...d.base.source, ...at } } : { ...d.base, elements: d.base.elements.map(el => el.id === d.id ? { ...el, ...at } : el) }; latestPreview.current = next; if (pendingFrame.current !== null) cancelAnimationFrame(pendingFrame.current); pendingFrame.current = requestAnimationFrame(() => { pendingFrame.current = null; setPreview(next); onPreview(next); }); }} onPointerUp={() => stop()} onPointerCancel={() => stop(true)}>
+      <svg ref={svg} id="fd-layout-svg" viewBox={`0 0 ${width} ${height}`} role="group" aria-label="可拖动和旋转元件的空间光路图" onPointerMove={move} onPointerUp={() => stop()} onPointerCancel={() => stop(true)} onLostPointerCapture={() => { if (drag.current) stop(true); }} onKeyDown={e => { if (e.key === 'Escape' && drag.current) { e.preventDefault(); stop(true); } }}>
         <defs><pattern id={`grid-${uid}`} x={x(0)} y={y(0)} width={grid * scale} height={grid * scale} patternUnits="userSpaceOnUse"><path d={`M${grid * scale} 0H0V${grid * scale}`} fill="none" stroke="#dce5df" strokeWidth={.8} opacity={grid * scale < 3 ? .16 : 1} /></pattern><clipPath id={`clip-${uid}`}><rect x="38" y="14" width={Math.max(1, width - 50)} height={Math.max(1, height - 49)} /></clipPath></defs>
         <rect width={width} height={height} fill="#fafcfb" /><g clipPath={`url(#clip-${uid})`}><rect x="38" y="14" width={width - 50} height={height - 49} fill={`url(#grid-${uid})`} /><rect x={x(scene.bounds.minX)} y={y(scene.bounds.maxY)} width={(scene.bounds.maxX - scene.bounds.minX) * scale} height={(scene.bounds.maxY - scene.bounds.minY) * scale} fill="none" stroke="#8cae9d" strokeDasharray="4 4" />
         {showRays && segments.map((s, i) => <path key={i} d={`M${x(s.start.x)} ${y(s.start.y)}L${x(s.end.x)} ${y(s.end.y)}`} fill="none" stroke={s.event === 'blocked' ? '#ba6242' : s.branchId.includes('R') ? '#2870a2' : '#c78310'} strokeWidth={lineWidth} opacity={.22 + .5 * Math.sqrt(s.power / maxPower)} />)}
@@ -92,9 +127,16 @@ export function FoldedCanvas({ scene, result, selected, select, commit, add, onP
         {p.elements.map(e => { const actualHalf = e.diameter * scale / 2, half = Math.max(actualHalf, 13), clear = e.aperture * scale / 2; const color = e.kind === 'beamsplitter' ? '#7d5ca1' : e.kind === 'mirror' ? '#306990' : '#237d65'; return <g key={e.id} role="button" tabIndex={0} aria-label={`选择 ${e.kind === 'detector' ? labels.get(e.id)!.label : e.name}`} aria-pressed={selected === e.id} className="fd-svg-part" onPointerDown={event => start(event, e.id, e)} onClick={() => select(e.id)} onKeyDown={event => keyboard(event, e.id)}><g transform={`translate(${x(e.x)} ${y(e.y)}) rotate(${-e.angleDeg})`}><rect className="fd-part-hitbox" x="-14" y={-half - 6} width="28" height={2 * half + 12} rx="4" fill={selected === e.id ? '#16725c13' : 'transparent'} stroke={selected === e.id ? '#16725c' : 'transparent'} strokeDasharray="3 3" />
           {e.kind === 'lens' || e.kind === 'cylindrical' ? <path d={e.focal > 0 ? `M0 ${-half}Q-9 0 0 ${half}Q9 0 0 ${-half}Z` : `M-5 ${-half}Q3 0 -5 ${half}H5Q-3 0 5 ${-half}Z`} fill="#5ea18d38" stroke={color} strokeWidth="2" /> : e.kind === 'objective' ? <path d={`M-10 ${-half}H7V${-Math.min(clear, half)}H10V${Math.min(clear, half)}H7V${half}H-10Z`} fill="#d9ebe2" stroke={color} strokeWidth="2" /> : e.kind === 'iris' ? <path d={`M0 ${-half}V${-clear}M0 ${clear}V${half}`} stroke={color} strokeWidth="6" /> : <path d={`M0 ${-half}V${half}`} stroke={color} strokeWidth={e.kind === 'detector' ? 6 : 4} strokeDasharray={e.kind === 'beamsplitter' ? '5 3' : undefined} />}
           {e.kind === 'cylindrical' && <path d="M-8 -4h16m-16 8h16" stroke={color} />}{showNormals && <path d="M-22 0H26m-6-4l6 4-6 4" stroke="#83998e" strokeDasharray="3 3" fill="none" />}</g><text x={x(e.x)} y={y(e.y) - half - 12} textAnchor="middle" fontSize="12" fill="#294d3f">{labels.get(e.id)!.tag}{width >= 520 ? ` · ${e.name.length > 12 ? e.name.slice(0, 12) + '…' : e.name}` : ''}</text></g>; })}</g>
+        {rotating && <g className="fd-rotation-overlay" transform={`translate(${x(rotating.x)} ${y(rotating.y)}) rotate(${-rotationAngle})`}>
+          <path d="M16 0H54" stroke="#21705b" strokeWidth="1.5" strokeDasharray="3 3" />
+          <g className="fd-rotation-handle" transform="translate(66 0)" role="slider" tabIndex={0} aria-label={selected === 'source' ? '旋转光源方向' : '旋转所选元件'} aria-valuemin={-180} aria-valuemax={180} aria-valuenow={Number(rotationAngle.toFixed(1))} aria-valuetext={`${rotationAngle.toFixed(1)} 度；方向键微调，Home 归零`} onPointerDown={e => start(e, selected, rotating, true)} onKeyDown={rotateKey}>
+            <circle r="24" fill="transparent" /><circle className="fd-rotation-knob" r="18" fill="#fff" stroke="#21705b" strokeWidth="2" />
+            <g transform={`rotate(${rotationAngle})`}><path d="M-7 0a7 7 0 1 1 2 5m-2-1v-5h5" fill="none" stroke="#21705b" strokeWidth="1.7" /><title>拖动旋转；Shift 按 15° 吸附</title></g>
+          </g>
+        </g>}
         <rect x="0" y={height - 35} width={width} height="35" fill="#fff" /><rect width="38" height={height} fill="#fff" />{xTicks.map(v => <text key={v} x={x(v)} y={height - 16} textAnchor="middle" fontSize="11" fill="#486857">{Number(v.toFixed(3))}</text>)}{yTicks.map(v => <text key={v} x="31" y={y(v) + 4} textAnchor="end" fontSize="11" fill="#486857">{Number(v.toFixed(3))}</text>)}<text x={width - 10} y={height - 2} textAnchor="end" fontSize="11" fill="#486857">x / mm</text><text x="42" y="12" fontSize="11" fill="#486857">y / mm</text>
       </svg>
-    </div><div className="fd-canvas-selection"><label>选择元件<select aria-label="选择空间元件" value={selected} onChange={e => select(e.target.value)}><option value="source">光源</option>{scene.elements.map(e => <option key={e.id} value={e.id}>{labels.get(e.id)!.label}</option>)}</select></label><span>拖动 · 方向键 · [ / ] 旋转</span></div><div className="fd-canvas-caption">网格 {grid} mm；坐标与孔径按真实尺寸计算。小元件保留最小图标尺寸，线宽只影响显示。显示抽样 {new Set(segments.map(s => s.rootId)).size} / 计算 {result.sourceRayCount} 条。</div>
+    </div><div className="fd-canvas-selection"><label>选择元件<select aria-label="选择空间元件" value={selected} onChange={e => select(e.target.value)}><option value="source">光源</option>{scene.elements.map(e => <option key={e.id} value={e.id}>{labels.get(e.id)!.label}</option>)}</select></label><span>拖动元件移动 · 拖动圆柄旋转 · [ / ] 微调</span></div><div className="fd-canvas-caption">网格 {grid} mm；坐标与孔径按真实尺寸计算。小元件保留最小图标尺寸，线宽只影响显示。显示抽样 {new Set(segments.map(s => s.rootId)).size} / 计算 {result.sourceRayCount} 条。</div>
   </section>;
 }
 
@@ -109,7 +151,8 @@ export function FoldedInspector({ scene, current, source, element, bounds, dupli
   return <div className="fd-inspector-fields"><div className="fd-parameter-title"><strong>{current ? `${foldedLabels(scene).get(current.id)!.label}` : '光源设置'}</strong></div>
     {current && <label className="fd-select">元件名称<input aria-label="空间元件名称" value={current.name} maxLength={120} onChange={e => element({ name: e.target.value || '元件' })} /></label>}
     <div className="fd-field-pair"><NumberField label={current ? '元件 x' : '光源 x'} value={position.x} min={scene.bounds.minX} max={scene.bounds.maxX} change={x => update({ x })} /><NumberField label={current ? '元件 y' : '光源 y'} value={position.y} min={scene.bounds.minY} max={scene.bounds.maxY} change={y => update({ y })} /></div>
-    <NumberField label={current ? '表面法线方向' : '传播方向'} value={current?.angleDeg ?? s.directionDeg} min={-180} max={180} unit="°" change={v => current ? element({ angleDeg: v }) : source({ directionDeg: v })} />
+    <AngleControl label={current ? '旋转角度（XY平面）' : '传播方向'} value={current?.angleDeg ?? s.directionDeg} change={v => current ? element({ angleDeg: v }) : source({ directionDeg: v })} />
+    {current?.kind === 'cylindrical' && <AngleControl label="聚焦方向角（绕光轴）" value={current.rollDeg ?? 0} axial change={rollDeg => element({ rollDeg })} />}
     {!current ? <><label className="fd-select">光斑与采样<select aria-label="光源光斑形状" value={beam ? beam.profile : s.model} onChange={e => e.target.value === 'gaussian' || e.target.value === 'uniform' ? setBeam({ profile: e.target.value }) : source({ beam: undefined, model: e.target.value as 'fan' | 'extended' })}><option value="gaussian">椭圆高斯 · 二维</option><option value="uniform">椭圆均匀 · 二维</option><option value="extended">扩展源 · 原一维</option><option value="fan">相关扇形 · 原一维</option></select></label>
       <div className="fd-field-pair"><NumberField label={beam ? '长轴光斑直径' : '入射光源孔径'} value={s.diameter} min={.01} max={100} step={.1} change={diameter => source({ diameter })} />{beam && <NumberField label="短轴光斑直径" value={beam.diameterMinor} min={.01} max={100} step={.1} change={diameterMinor => setBeam({ diameterMinor })} />}</div>
       <div className="fd-field-pair"><NumberField label={beam ? '长轴发散全角' : '发散全角'} value={s.fullAngle} min={0} max={200} step={.1} unit="mrad" change={fullAngle => source({ fullAngle })} />{beam && <NumberField label="短轴发散全角" value={beam.fullAngleMinor} min={0} max={200} step={.1} unit="mrad" change={fullAngleMinor => setBeam({ fullAngleMinor })} />}</div>
@@ -117,7 +160,7 @@ export function FoldedInspector({ scene, current, source, element, bounds, dupli
       <NumberField label="采样精度" value={s.rayCount} min={3} max={101} step={2} unit="阶" change={rayCount => source({ rayCount: Math.round(rayCount) })} /><p className="fd-sample-count" role="status">实际追迹 {sourceRayCount} 条{beam ? ' · 阶数²，限制在 64～4096 条' : ' · 原一维采样'}</p><details className="fd-source-advanced"><summary>光源权重与波长</summary><div className="fd-field-pair"><NumberField label="输入相对权重" value={s.intensity} min={0} max={1e6} step={.1} unit="a.u." change={intensity => source({ intensity })} /><NumberField label="波长记录" value={s.wavelength} min={200} max={20000} step={1} unit="nm" change={wavelength => source({ wavelength })} /></div></details>
       <p className="fd-hint">高斯直径与发散角为完整 1/e² 宽度；均匀源为椭圆边界。位置、角度独立采样，二维最多 4096 条。旋转角基于入射横截面 u/v。</p></> : <>
       <div className="fd-field-pair"><NumberField label="表面长度 / 外径" value={current.diameter} min={.01} max={500} change={diameter => element({ diameter, aperture: Math.min(diameter, current.aperture) })} /><NumberField label="模型有效孔径" value={current.aperture} min={.001} max={current.diameter} step={.1} change={aperture => element({ aperture })} /></div>
-      {optical && <><NumberField label={current.kind === 'objective' ? '物镜等效焦距' : '薄透镜焦距'} value={current.focal} min={current.kind === 'objective' ? 1 : -10000} max={10000} nonzero change={focal => element({ focal })} />{current.kind === 'cylindrical' && <NumberField label="柱透镜轴旋转" value={current.rollDeg ?? 0} min={-180} max={180} unit="°" change={rollDeg => element({ rollDeg })} />}
+      {optical && <><NumberField label={current.kind === 'objective' ? '物镜等效焦距' : '薄透镜焦距'} value={current.focal} min={current.kind === 'objective' ? 1 : -10000} max={10000} nonzero change={focal => element({ focal })} />
         <details className="fd-aberrations"><summary>像差 · 自定义瞳面 OPD</summary><p className="fd-hint">归一化瞳面波前项，单位 µm。系数为用户输入，零值为理想薄透镜；并非厂家实测像差。</p>{(['sphericalUm', 'comaUm', 'astigmatismUm'] as const).map((key, i) => <NumberField key={key} label={['球差 W040', '彗差 W131', '像散 W222'][i]} value={current.aberration?.[key] ?? 0} min={-1000} max={1000} step={.01} unit="µm" change={v => element({ aberration: { sphericalUm: 0, comaUm: 0, astigmatismUm: 0, ...current.aberration, [key]: v } })} />)}<p className="fd-hint">W = W040 ρ⁴ + W131 uρ² + W222 (u²−v²)，u/v 为归一化瞳坐标；方向变化来自实际波前斜率。</p></details></>}
       {current.objective && <ObjectiveInfo model={current.objective} focal={current.focal} aperture={current.aperture} diameter={current.diameter} wavelength={s.wavelength} />}
       {['mirror', 'beamsplitter'].includes(current.kind) && <><NumberField label="功率反射率 R" value={current.reflectance} min={0} max={lossless ? 1 : 1 - current.transmittance} step={.01} unit="0–1" change={reflectance => element(current.kind === 'beamsplitter' && lossless ? { reflectance, transmittance: 1 - reflectance } : { reflectance })} />{current.kind === 'beamsplitter' && <><NumberField label="功率透射率 T" value={current.transmittance} min={0} max={lossless ? 1 : 1 - current.reflectance} step={.01} unit="0–1" change={transmittance => element(lossless ? { transmittance, reflectance: 1 - transmittance } : { transmittance })} /><label><input type="checkbox" checked={lossless && Math.abs(current.reflectance + current.transmittance - 1) < 1e-10} onChange={e => { setLossless(e.target.checked); if (e.target.checked) element({ transmittance: 1 - current.reflectance }); }} />保持无损 R+T=1</label></>}</>}

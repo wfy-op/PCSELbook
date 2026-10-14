@@ -118,6 +118,23 @@ async function capture(label, target, elementOnly = false) {
   else await page.screenshot({ path: path.join(output, file) });
   results.screenshots.push(file);
 }
+async function turnHandle(delta, { cancel = '', shift = false } = {}) {
+  const handle = spatial().getByRole('slider', { name: '旋转所选元件', exact: true });
+  const geometry = await handle.evaluate(node => {
+    const center = node.parentElement.getScreenCTM(), knob = node.getScreenCTM();
+    return { x: center.e, y: center.f, hx: knob.e, hy: knob.f };
+  });
+  await page.mouse.move(geometry.hx, geometry.hy); await page.mouse.down();
+  if (shift) await page.keyboard.down('Shift');
+  const radians = delta * Math.PI / 180, dx = geometry.hx - geometry.x, dy = geometry.hy - geometry.y;
+  await page.mouse.move(geometry.x + dx * Math.cos(radians) + dy * Math.sin(radians), geometry.y - dx * Math.sin(radians) + dy * Math.cos(radians), { steps: 8 });
+  // Observe the real preview before releasing; persistence is transactional.
+  await page.waitForFunction(() => document.querySelector('.fd-rotation-handle')?.getAttribute('aria-valuenow') !== '0');
+  if (cancel === 'escape') await page.keyboard.press('Escape');
+  if (cancel === 'pointer') await handle.dispatchEvent('pointercancel', { pointerId: 1, bubbles: true });
+  await page.mouse.up();
+  if (shift) await page.keyboard.up('Shift');
+}
 async function optimizerCheck(label) {
   const input = beamFixture({ detectorX: 380, rayCount: 65 });
   await importScene(input); await page.reload({ waitUntil: 'networkidle' });
@@ -258,9 +275,42 @@ try {
     await check(viewport.label + ': cylindrical single-axis focus and 90 degree roll exchange the focused axes', async () => {
       await importScene(beamFixture({ cylinder: true })); await select('qa-lens');
       let spot = await readSpot(); near(spot.rmsU, 0); assert.ok(spot.rmsV > .9);
-      await number(spatial().getByLabel('柱透镜轴旋转', { exact: true }), 90);
+      await number(spatial().getByLabel('聚焦方向角（绕光轴）', { exact: true }), 90);
       spot = await readSpot(); assert.ok(spot.rmsU > 1.9); near(spot.rmsV, 0);
       return verifySpot();
+    });
+    await check(viewport.label + ': visible rotation angle, separate cylinder roll and transactional canvas handle', async () => {
+      const normal = spatial().getByLabel('旋转角度（XY平面）', { exact: true });
+      const roll = spatial().getByLabel('聚焦方向角（绕光轴）', { exact: true });
+      await number(normal, 30);
+      assert.equal((await scene()).elements[0].rollDeg, 90);
+      await spatial().getByRole('button', { name: '旋转角度（XY平面）：逆时针旋转5度', exact: true }).click();
+      near((await scene()).elements[0].angleDeg, 35);
+      await spatial().getByRole('button', { name: '旋转角度（XY平面）：顺时针旋转5度', exact: true }).click();
+      near((await scene()).elements[0].angleDeg, 30);
+      await spatial().getByRole('button', { name: '旋转角度（XY平面）：归零', exact: true }).click();
+      await number(roll, 0); near((await scene()).elements[0].angleDeg, 0);
+      await capture(viewport.label + '-rotation-parameters', spatial().locator('.fd-inspector'), true);
+      await spatial().getByRole('button', { name: '收起参数', exact: true }).click();
+      await spatial().locator('#fd-layout-svg').scrollIntoViewIfNeeded();
+      const handle = spatial().getByRole('slider', { name: '旋转所选元件', exact: true });
+      await handle.focus(); await handle.press('ArrowRight'); near((await scene()).elements[0].angleDeg, 1);
+      await handle.press('Home');
+      const baseline = await scene();
+      await turnHandle(35);
+      const rotated = await scene(); near(rotated.elements[0].angleDeg, 35, .2);
+      assert.equal(rotated.elements[0].x, baseline.elements[0].x); assert.equal(rotated.elements[0].y, baseline.elements[0].y);
+      assert.notDeepEqual(traceFoldedScene(rotated).segments, traceFoldedScene(baseline).segments);
+      await spatial().getByRole('button', { name: '撤销', exact: true }).click(); assert.deepEqual(await scene(), baseline);
+      await spatial().getByRole('button', { name: '重做', exact: true }).click(); assert.deepEqual(await scene(), rotated);
+      await spatial().locator('#fd-layout-svg').scrollIntoViewIfNeeded();
+      await turnHandle(20, { cancel: 'escape' }); assert.deepEqual(await scene(), rotated);
+      near(Number(await handle.getAttribute('aria-valuenow')), rotated.elements[0].angleDeg);
+      await turnHandle(-20, { cancel: 'pointer' }); assert.deepEqual(await scene(), rotated);
+      await turnHandle(18, { shift: true }); near((await scene()).elements[0].angleDeg % 15, 0);
+      await spatial().getByRole('button', { name: '撤销', exact: true }).click(); assert.deepEqual(await scene(), rotated);
+      await page.reload({ waitUntil: 'networkidle' }); assert.deepEqual(await scene(), rotated);
+      return { angle: rotated.elements[0].angleDeg, originalPosition: [rotated.elements[0].x, rotated.elements[0].y], undo: 'one gesture', cancel: ['Escape', 'pointercancel'], snap: '15 degrees' };
     });
     await check(viewport.label + ': asynchronous optimization previews, cancels, blocks stale results and applies real improvement', () => optimizerCheck(viewport.label));
     await check(viewport.label + ': objective template remains legacy-compatible and 40X reference edits undo correctly', async () => {

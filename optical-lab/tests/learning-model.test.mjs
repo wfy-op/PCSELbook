@@ -58,3 +58,41 @@ test('challenge grade requires calculation, question and actual unblocked trace'
   collimate.sourceModel='extended';
   assert.equal(evaluateChallenge(2,'50',1,collimate).complete,false);
 });
+
+test('cylindrical lesson resolves a rotating line focus on the actual 2D detector', () => {
+  for (const rollDeg of [0,45,90]) {
+    const {result}=componentResult('cylindrical',280,0,100,{rollDeg,screenDistance:100});
+    const {spot}=result.detectors[0];
+    near(result.energy.captured,1); assert.equal(spot.hits.length,289);
+    assert.ok(spot.principalRmsMinor<1e-6); assert.ok(spot.principalRmsMajor>3);
+    if (rollDeg===0) { near(spot.rmsU,0); assert.ok(spot.rmsV>3); }
+    if (rollDeg===90) { near(spot.rmsV,0); assert.ok(spot.rmsU>3); }
+    if (rollDeg===45) near(spot.rmsU,spot.rmsV);
+  }
+  const defocused=componentResult('cylindrical',280,0,100,{screenDistance:150});
+  assert.ok(defocused.result.detectors[0].spot.principalRmsMinor>1);
+  near(defocused.result.energy.captured,1);
+});
+
+test('splitter lesson measures both actual branch powers including endpoints', () => {
+  for (const percent of [0,30,50,100]) {
+    const {result}=componentResult('beamsplitter',280,0,percent);
+    near(result.detectors.find(d=>d.elementId==='teaching-t').power,1-percent/100);
+    near(result.detectors.find(d=>d.elementId==='teaching-r').power,percent/100);
+    near(result.energy.captured,1); near(result.energy.balanceError,0);
+  }
+  const displaced=componentResult('beamsplitter',280,35,30).result;
+  near(displaced.detectors.find(d=>d.elementId==='teaching-r').power,0);
+  near(displaced.detectors.find(d=>d.elementId==='teaching-t').power,1); // Rays bypass the finite splitter.
+});
+
+test('objective lesson uses tube focal / magnification and never substitutes WD', () => {
+  for(const magnification of [4,10,20,40]) {
+    const {scene,result}=componentResult('objective',280,0,magnification,{screenDistance:180/magnification});
+    const objective=scene.elements[0];
+    near(objective.focal,180/magnification);
+    assert.notEqual(objective.focal,objective.objective.workingDistance);
+    near(result.energy.captured,1); near(result.detectors[0].spot.rms2D,0);
+  }
+  assert.ok(componentResult('objective',280,0,20,{screenDistance:18}).result.detectors[0].spot.rms2D>.1);
+});
